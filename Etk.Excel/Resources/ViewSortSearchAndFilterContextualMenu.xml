@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContextualMenus>
+  <ContextualMenu Name="ViewSortSearchAndFilterContextualMenu">
+    <MenuItem BeginGroup="true" Caption="(ETK) Sort Ascending" FaceId="210" Action="Etk.Excel.BindingTemplates.SortSearchAndFilter.SortSearchAndFilterMenuManager, Etk.Excel, SortAscending"/>
+    <MenuItem Caption="(ETK) Sort Descending" FaceId="211" Action="Etk.Excel.BindingTemplates.SortSearchAndFilter.SortSearchAndFilterMenuManager, Etk.Excel, SortDescending"/>
+  </ContextualMenu>
+</ContextualMenus>

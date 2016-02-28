@@ -1,0 +1,52 @@
+﻿namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
+{
+    using Etk.ModelManagement;
+    using GongSolutions.Wpf.DragDrop;
+    using MvvmBase;
+
+    class ModelPropertyViewModel : ViewModelBase,  IDropTarget
+    {
+        #region attributes and proeprties
+        public bool IsSelected
+        { get; set; }
+
+        private string header;
+        public string Header
+        {
+            get { return header; }
+            set
+            {
+                header = value;
+                OnPropertyChanged("Header");
+            }
+        }
+
+        public ModelProperty ModelProperty
+        { get; set; }
+
+        public string Name
+        { get { return ModelProperty.Name; } }
+
+        public string Description
+        { get { return ModelProperty.Description; } }
+        #endregion
+
+        #region .ctors
+        public ModelPropertyViewModel(ModelProperty modelProperty, string header)
+        {
+            ModelProperty = modelProperty;
+            Header = header;
+        }
+        #endregion
+
+        #region IDropTarget implementation
+        public void DragOver(IDropInfo dropInfo)
+        {
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+        }
+        #endregion
+    }
+}

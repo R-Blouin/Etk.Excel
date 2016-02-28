@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{10188A0E-231D-42DA-952E-A260402B3EA4}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Etk</RootNamespace>
+    <AssemblyName>Etk</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Linq.SMDynamic">
+      <HintPath>..\Dependencies\System.Linq.SMDynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BindingTemplates\BindingTemplateException.cs" />
+    <Compile Include="BindingTemplates\BindingTemplateManager.cs" />
+    <Compile Include="BindingTemplates\Context\BindingContextPart.cs" />
+    <Compile Include="BindingTemplates\Context\SortSearchAndFilter\BindingSearchContextItem.cs" />
+    <Compile Include="BindingTemplates\Context\SortSearchAndFilter\RootBindingFilter.cs" />
+    <Compile Include="BindingTemplates\Definitions\SortSearchAndFilter\BindingSearchDefinition.cs" />
+    <Compile Include="BindingTemplates\Context\SortSearchAndFilter\BindingFilterContextItem.cs" />
+    <Compile Include="BindingTemplates\Context\IBindingContextPart.cs" />
+    <Compile Include="BindingTemplates\Definitions\SortSearchAndFilter\BindingFilterDefinition.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallback.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallbacksManager.cs" />
+    <Compile Include="BindingTemplates\Definitions\Decorators\DecoratorGroup.cs" />
+    <Compile Include="BindingTemplates\Definitions\Decorators\DecoratorResult.cs" />
+    <Compile Include="BindingTemplates\Definitions\Decorators\DecoratorsManager.cs" />
+    <Compile Include="BindingTemplates\Definitions\Decorators\Decorator.cs" />
+    <Compile Include="BindingTemplates\Context\BindingContext.cs" />
+    <Compile Include="BindingTemplates\Context\BindingContextElement.cs" />
+    <Compile Include="BindingTemplates\Context\BindingContextItem.cs" />
+    <Compile Include="BindingTemplates\Context\BindingContextItemCanNotify.cs" />
+    <Compile Include="BindingTemplates\Context\IBindingContext.cs" />
+    <Compile Include="BindingTemplates\Context\IBindingContextElement.cs" />
+    <Compile Include="BindingTemplates\Context\IBindingContextItem.cs" />
+    <Compile Include="BindingTemplates\Context\IBindingContextItemCanNotify.cs" />
+    <Compile Include="BindingTemplates\Convertors\SpecificConvertors.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinition.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionComposite.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionConstante.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionDescription.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionFactory.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionField.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionHierarchical.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionKeyWord.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionMethod.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionOptional.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionProperty.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingDefinitionRoot.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingPartType.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingType.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\BindingTypeProperty.cs" />
+    <Compile Include="BindingTemplates\Definitions\Binding\IBindingDefinition.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventCallBacks\XmlDefinitions\XmlEventCallback.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventCallBacks\XmlDefinitions\XmlEventCallbacks.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\ExpanderMode.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\ITemplateDefinitionPart.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\TemplateDefinitionPart.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\TemplateLink.cs" />
+    <Compile Include="BindingTemplates\Definitions\TemplateDefinitionFromModelView.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\TemplateOption.cs" />
+    <Compile Include="CompositionManager.cs" />
+    <Compile Include="ModelManagement\DataAccessors\DataAccessor.cs" />
+    <Compile Include="ModelManagement\Definitions\XmlDefinition\XmlModelAccessorGroup.cs" />
+    <Compile Include="ModelManagement\Definitions\XmlDefinition\XmlModelLinkProperty.cs" />
+    <Compile Include="ModelManagement\Definitions\XmlDefinition\XmlModelView.cs" />
+    <Compile Include="ModelManagement\DataAccessors\IDataAccessor.cs" />
+    <Compile Include="BindingTemplates\Definitions\IDefinitionPart.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\ILinkTemplateDefinition.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\ITemplateDefinition.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\LinkedTemplateDefinition.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\LinkedTemplatePositioning.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\Orientation.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\TemplateDefinition.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\Xml\XmlTemplateLink.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\Xml\XmlTemplateDefinition.cs" />
+    <Compile Include="BindingTemplates\IBindingTemplateManager.cs" />
+    <Compile Include="ModelManagement\DataAccessors\DataAccessorInstanceType.cs" />
+    <Compile Include="ModelManagement\Definitions\XmlDefinition\XmlModelAccessor.cs" />
+    <Compile Include="ModelManagement\Definitions\XmlDefinition\XmlModelConfiguration.cs" />
+    <Compile Include="ModelManagement\Definitions\XmlDefinition\XmlModelProperty.cs" />
+    <Compile Include="ModelManagement\Definitions\XmlDefinition\XmlModelType.cs" />
+    <Compile Include="ModelManagement\IModelAccessorGroup.cs" />
+    <Compile Include="ModelManagement\IModelAccessor.cs" />
+    <Compile Include="ModelManagement\IModelDefinitionManager.cs" />
+    <Compile Include="ModelManagement\ModelLeafProperty.cs" />
+    <Compile Include="ModelManagement\IModelProperty.cs" />
+    <Compile Include="ModelManagement\IModelType.cs" />
+    <Compile Include="ModelManagement\ModelPropertyFactory.cs" />
+    <Compile Include="ModelManagement\Views\IModelView.cs" />
+    <Compile Include="ModelManagement\Views\IModelViewPart.cs" />
+    <Compile Include="ModelManagement\Views\IModelViewProperty.cs" />
+    <Compile Include="ModelManagement\ModelAccessorGroup.cs" />
+    <Compile Include="ModelManagement\ModelAccessor.cs" />
+    <Compile Include="ModelManagement\ModelProperty.cs" />
+    <Compile Include="ModelManagement\ModelDefinitionManager.cs" />
+    <Compile Include="ModelManagement\ModelLinkProperty.cs" />
+    <Compile Include="ModelManagement\ModelType.cs" />
+    <Compile Include="SortAndFilter\IFilterDefinition.cs" />
+    <Compile Include="SortAndFilter\FilterDefinitionRelation.cs" />
+    <Compile Include="SortAndFilter\FilterOnConditions.cs" />
+    <Compile Include="SortAndFilter\FilterOnValues.cs" />
+    <Compile Include="SortAndFilter\ISortersAndFilters.cs" />
+    <Compile Include="SortAndFilter\ISorterDefinition.cs" />
+    <Compile Include="SortAndFilter\SortersAndFilters.cs" />
+    <Compile Include="SortAndFilter\SortersAndFilterersFactory.cs" />
+    <Compile Include="SortAndFilter\SortDefinition.cs" />
+    <Compile Include="SortAndFilter\SortDefinitionFactory.cs" />
+    <Compile Include="BindingTemplates\Views\ITemplateView.cs" />
+    <Compile Include="BindingTemplates\Views\TemplateView.cs" />
+    <Compile Include="ModelManagement\Views\ModelView.cs" />
+    <Compile Include="ModelManagement\Views\ModelViewProperty.cs" />
+    <Compile Include="Tools\Collections\ReadOnlyDictionary.cs" />
+    <Compile Include="Tools\Collections\SerializableDictionary.cs" />
+    <Compile Include="Tools\Collections\SplitList.cs" />
+    <Compile Include="Tools\Collections\TrulyObservableCollection.cs" />
+    <Compile Include="Tools\Configuration\XmlSerializerSectionHandler.cs" />
+    <Compile Include="EtkException.cs" />
+    <Compile Include="Tools\Emit\EmitProperty.cs" />
+    <Compile Include="Tools\Emit\TypeBuilderFactory.cs" />
+    <Compile Include="Tools\Log\Extensions\ObjectExtension.cs" />
+    <Compile Include="Tools\Log\Extensions\StringExtension.cs" />
+    <Compile Include="Tools\Log\Extensions\XmlDocumentationExtension.cs" />
+    <Compile Include="Tools\Log\DefaultLogger.cs" />
+    <Compile Include="Tools\Log\ILogger.cs" />
+    <Compile Include="Tools\Log\Logger.cs" />
+    <Compile Include="Tools\Log\LoggerManager.cs" />
+    <Compile Include="Tools\Log\LogType.cs" />
+    <Compile Include="Tools\Patterns\Singleton.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools\Reflection\TypeConvertor.cs" />
+    <Compile Include="Tools\Reflection\TypeHelpers.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ModelManagement\Definitions\AttributeDefinitions\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,314 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{14413CBB-3028-462C-958D-16E96575A06F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Etk.Excel</RootNamespace>
+    <AssemblyName>Etk.Excel</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <NuGetPackageImportStamp>e66fabd8</NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="GongSolutions.Wpf.DragDrop, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\gong-wpf-dragdrop.1.0.0-ALPHA013\lib\net40\GongSolutions.Wpf.DragDrop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net40\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Dependencies\Office Interop 12\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Dependencies\Office Interop 12\Microsoft.Vbe.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop.Forms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Dependencies\Office Interop 12\Microsoft.Vbe.Interop.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>C:\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\stdole.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application\ExcelPostAsynchronousManager.cs" />
+    <Compile Include="Application\ExcelNotifyPropertyManager.cs" />
+    <Compile Include="Application\ExcelNotityPropertyContext.cs" />
+    <Compile Include="Application\IExcelApplication.cs" />
+    <Compile Include="BindingTemplates\AccessorParametersManager.cs" />
+    <Compile Include="BindingTemplates\Controls\EnumManager.cs" />
+    <Compile Include="BindingTemplates\Controls\MultiLineManager.cs" />
+    <Compile Include="BindingTemplates\Controls\Picture\ExcelBindingDefinitionPicture.cs" />
+    <Compile Include="BindingTemplates\Controls\Picture\ExcelPicture.cs" />
+    <Compile Include="BindingTemplates\Controls\Picture\ExcelPictureDefinition.cs" />
+    <Compile Include="BindingTemplates\Controls\Picture\ExcelContextItemPicture.cs" />
+    <Compile Include="BindingTemplates\Decorators\ExcelRangeDecorator.cs" />
+    <Compile Include="BindingTemplates\Decorators\ExcelDecorator.cs" />
+    <Compile Include="BindingTemplates\Decorators\ExcelDecoratorsManager.cs" />
+    <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlDecoratorItem.cs" />
+    <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelRangeDecorator.cs" />
+    <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelDecorator.cs" />
+    <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelDecorators.cs" />
+    <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionFactory.cs" />
+    <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionPartFactory.cs" />
+    <Compile Include="BindingTemplates\Renderer\ExcelRenderer.cs" />
+    <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingSearchDefinition.cs" />
+    <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingSearchContextItem.cs" />
+    <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingFilterContextItem.cs" />
+    <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingFilterDefinition.cs" />
+    <Compile Include="BindingTemplates\SortSearchAndFilter\SortSearchAndFilterMenuManager.cs" />
+    <Compile Include="BindingTemplates\Views\RenderedArea.cs" />
+    <Compile Include="ContextualMenus\ConstextualMethodRetriever.cs" />
+    <Compile Include="ContextualMenus\ContextualMenu.cs" />
+    <Compile Include="ContextualMenus\ContextualMenuItem.cs" />
+    <Compile Include="ContextualMenus\ContextualMenuFactory.cs" />
+    <Compile Include="ContextualMenus\ContextualMenuManager.cs" />
+    <Compile Include="ContextualMenus\Definition\XmlContextualMenuDefinitions.cs" />
+    <Compile Include="ContextualMenus\Definition\XmlContextualMenuPart.cs" />
+    <Compile Include="ContextualMenus\IContextualMenu.cs" />
+    <Compile Include="ContextualMenus\Definition\XmlContextualMenuDefinition.cs" />
+    <Compile Include="ContextualMenus\IContextualMenuItem.cs" />
+    <Compile Include="ContextualMenus\IContextualMenuManager.cs" />
+    <Compile Include="ContextualMenus\Definition\XmlContextualMenuItemDefinition.cs" />
+    <Compile Include="BindingTemplates\Controls\Button\ExcelBindingDefinitionButton.cs" />
+    <Compile Include="BindingTemplates\Controls\CheckBox\ExcelBindingDefinitionCheckBox.cs" />
+    <Compile Include="BindingTemplates\Controls\CheckBox\ExcelCheckBoxDefinition.cs" />
+    <Compile Include="BindingTemplates\Controls\CheckBox\ExcelCheckBox.cs" />
+    <Compile Include="BindingTemplates\Controls\CheckBox\ExcelContextItemCheckBox.cs" />
+    <Compile Include="BindingTemplates\Controls\FormulaResult\ExcelBindingDefinitionFormulaResult.cs" />
+    <Compile Include="BindingTemplates\Controls\Button\ExcelContextItemButton.cs" />
+    <Compile Include="BindingTemplates\Controls\Button\ExcelButton.cs" />
+    <Compile Include="BindingTemplates\Controls\Button\ExcelButtonDefinition.cs" />
+    <Compile Include="BindingTemplates\Controls\FormulaResult\ExcelContextItemFormulaResult.cs" />
+    <Compile Include="BindingTemplates\Controls\IExcelControl.cs" />
+    <Compile Include="BindingTemplates\Controls\NamedRange\ExcelBindingDefinitionNamedRange.cs" />
+    <Compile Include="BindingTemplates\Controls\NamedRange\ExcelNamedRangeDefinition.cs" />
+    <Compile Include="BindingTemplates\Controls\NamedRange\ExcelContextItemNamedRange.cs" />
+    <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionPart.cs" />
+    <Compile Include="BindingTemplates\Definitions\Xml\XmlExcelTemplateOption.cs" />
+    <Compile Include="BindingTemplates\Views\ExcelTemplateView.cs" />
+    <Compile Include="BindingTemplates\ExcelTemplateManager.cs" />
+    <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinition.cs" />
+    <Compile Include="BindingTemplates\Views\IExcelTemplateView.cs" />
+    <Compile Include="BindingTemplates\IExcelTemplateManager.cs" />
+    <Compile Include="BindingTemplates\Controls\Button\SortAndFilter\ExcelSortAndFilterButton.cs" />
+    <Compile Include="BindingTemplates\Renderer\ExcelRootRenderer.cs" />
+    <Compile Include="BindingTemplates\Renderer\ExcelPartRenderer.cs" />
+    <Compile Include="Application\ExcelApplication.cs" />
+    <Compile Include="BindingTemplates\Views\RenderingArea.cs" />
+    <Compile Include="ContextualMenus\IContextualPart.cs" />
+    <Compile Include="ETKExcel.cs" />
+    <Compile Include="Extensions\ApplicationExtension.cs" />
+    <Compile Include="Application\FreezeExcel.cs" />
+    <Compile Include="ModelManagement\ExcelModelDefinitionManager.cs" />
+    <Compile Include="ModelManagement\IExcelModelDefinitionManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TemplateManagement\TemplateContextualMenuManager.cs" />
+    <Compile Include="RequestManagement\Definitions\ExcelRequestDefinition.cs" />
+    <Compile Include="RequestManagement\IRequestManager.cs" />
+    <Compile Include="RequestManagement\RequestsManager.cs" />
+    <Compile Include="UI\Behaviors\BindableSelectedItemBehavior.cs" />
+    <Compile Include="UI\Converters\CustomImagePathConverter.cs" />
+    <Compile Include="UI\Converters\EnumMatchToBooleanConverter.cs" />
+    <Compile Include="UI\Converters\TypeOfConverter.cs" />
+    <Compile Include="UI\DynamicTemplateSelector.cs" />
+    <Compile Include="UI\Windows\ModelManagement\Controls\AccessorsParameters.xaml.cs">
+      <DependentUpon>AccessorsParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\ModelManagement\Controls\RequestProperties.xaml.cs">
+      <DependentUpon>RequestProperties.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UI\Windows\ModelManagement\Controls\ViewProperties.xaml.cs">
+      <DependentUpon>ViewProperties.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\ModelManagement\ParametersTemplateSelector.cs" />
+    <Compile Include="UI\Windows\ModelManagement\DynamicRequestManagementWindow.xaml.cs">
+      <DependentUpon>DynamicRequestManagementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\ModelManagement\ViewModels\AccessorParameter.cs" />
+    <Compile Include="UI\Windows\ModelManagement\ViewModels\AccessorsParametersViewModel.cs" />
+    <Compile Include="UI\Windows\ModelManagement\ViewModels\WizardViewModel.cs" />
+    <Compile Include="UI\Windows\ModelManagement\ViewModels\ModelTypeViewModel.cs" />
+    <Compile Include="UI\Windows\ModelManagement\ViewModels\RequestViewModel.cs" />
+    <Compile Include="UI\Windows\ModelManagement\ViewModels\ModelPropertyViewModel.cs" />
+    <Compile Include="UI\MvvmBase\RelayCommand.cs" />
+    <Compile Include="UI\MvvmBase\ViewModelBase.cs" />
+    <Compile Include="UI\Windows\ModelManagement\ViewModels\ViewPropertiesViewModel.cs" />
+    <Compile Include="UI\Windows\SortAndFilter\Converters\SelectionConverter.cs" />
+    <Compile Include="UI\Windows\SortAndFilter\Converters\SelectionMarginConverter.cs" />
+    <Compile Include="UI\Windows\SortAndFilter\FilterOnCondition.xaml.cs">
+      <DependentUpon>FilterOnCondition.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\SortAndFilter\FilterOnValue.xaml.cs">
+      <DependentUpon>FilterOnValue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\SortAndFilter\SortAndFilerWindow.xaml.cs">
+      <DependentUpon>SortAndFilerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\SortAndFilter\SortAndFilterManagement.cs" />
+    <Compile Include="UI\Windows\SortAndFilter\ViewModels\BindingDefinitionViewModel.cs" />
+    <Compile Include="UI\Windows\SortAndFilter\ViewModels\SortAndFilterViewModel.cs" />
+    <Compile Include="UI\Windows\SortAndFilter\ViewModels\TemplateViewModel.cs" />
+    <Compile Include="UI\Windows\SortAndFilter\ViewModels\ValueSelection.cs" />
+    <Compile Include="UI\Windows\ViewsAndtemplates\TemplateManagementWindow.xaml.cs">
+      <DependentUpon>TemplateManagementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\ViewsAndtemplates\ViewModels\TemplateManagementViewModel.cs" />
+    <Compile Include="UI\Windows\Wizard\IWizardStep.cs" />
+    <Compile Include="UI\Windows\Wizard\WizardControlViewModel.cs" />
+    <Compile Include="UI\Windows\Wizard\WizardControl.xaml.cs">
+      <DependentUpon>WizardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Wizard\WizardStepContainer.xaml.cs">
+      <DependentUpon>WizardStepContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Wizard\WizardStepContainerViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Etk\Etk.csproj">
+      <Project>{10188A0E-231D-42DA-952E-A260402B3EA4}</Project>
+      <Name>Etk</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\Windows\ModelManagement\Controls\AccessorsParameters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\ModelManagement\Controls\RequestProperties.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\ModelManagement\Controls\ViewProperties.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Resources\Controls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Resources\EtkMainStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\ModelManagement\DynamicRequestManagementWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\SortAndFilter\FilterOnCondition.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\ViewsAndtemplates\TemplateManagementWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Wizard\WizardControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Wizard\WizardStepContainer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\Windows\SortAndFilter\FilterOnValue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\Windows\SortAndFilter\SortAndFilerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\TemplateManagerAddContextualMenu.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\RequestsManagerContextualMenu.xml" />
+    <EmbeddedResource Include="Resources\TemplateManagerUpdateDeleteContextualMenu.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="UI\Windows\ModelManagement\Images\Property.png" />
+    <Resource Include="UI\Windows\ModelManagement\Images\Invoke.png" />
+    <Resource Include="UI\Windows\ModelManagement\Images\PropertyLeaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ViewSortSearchAndFilterContextualMenu.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

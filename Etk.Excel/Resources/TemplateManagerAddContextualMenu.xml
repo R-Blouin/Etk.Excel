@@ -1,0 +1,19 @@
+﻿<ContextualMenus>
+  <ContextualMenu Name="1">
+    <MenuItem BeginGroup="true" Caption="Test Contextual Menu..." FaceId="107" Action="Etk.Excel.TemplateManagement.TemplateContextualMenuManager, Etk.Excel,AddTemplate"/>
+  </ContextualMenu>
+</ContextualMenus>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
