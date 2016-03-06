@@ -28,7 +28,7 @@
 
         /// <summary> Remove and dispose a list of View.</summary>
         /// <param name="templates">The views to remove and dispose.</param>
-        void RemoveViews(IList<IExcelTemplateView> views);
+        void RemoveViews(IEnumerable<IExcelTemplateView> views);
 
         /// <summary> Remove a View.</summary>
         /// <param name="template">The View to remove and dispose.</param>

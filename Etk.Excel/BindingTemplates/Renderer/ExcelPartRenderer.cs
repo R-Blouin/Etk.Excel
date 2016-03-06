@@ -343,32 +343,30 @@
                             if (linkCpt == lastPosLink && posCurrentLink != partToRenderDefinition.Width)
                             {
                                 int vOffset = 1;
+                                int startPosition = posCurrentLink + 1;
                                 if (linkedTemplateDefinition.Positioning == LinkedTemplatePositioning.Absolute)
                                 {
-                                    int startPosition = posCurrentLink + linkedViewRenderedWidth;
-                                    if (startPosition < partToRenderDefinition.Width)
+                                    int afterWrittenPosition = posCurrentLink + linkedViewRenderedWidth;
+                                    for (int i = startPosition; i < afterWrittenPosition; i++)
                                     {
-                                        ManageVerticalTemplatePart(ref bindingContextItemsCpt, ref vOffset, contextElement, dataRow, rowId, startPosition, partToRenderDefinition.Width);
-                                        currentRowWidth += partToRenderDefinition.Width - startPosition;
+                                        if (partToRenderDefinition.DefinitionParts[rowId, i] != null)
+                                            bindingContextItemsCpt++;
                                     }
+                                    startPosition = afterWrittenPosition;
                                 }
-                                else
+                                if (startPosition < partToRenderDefinition.Width)
                                 {
-                                    int startPosition = posCurrentLink + 1;
-                                    if (startPosition < partToRenderDefinition.Width)
+                                    int realEnd = partToRenderDefinition.Width;
+                                    for (int i = partToRenderDefinition.Width - 1; i >= startPosition; i--)
                                     {
-                                        int realEnd = partToRenderDefinition.Width;
-                                        for (int i = partToRenderDefinition.Width - 1; i >= startPosition; i--)
-                                        {
-                                            if (contextElement.BindingContextItems[i] != null)
-                                                break;
-                                            realEnd--;
-                                        }
-                                        if (realEnd > 0)
-                                        {
-                                            ManageVerticalTemplatePart(ref bindingContextItemsCpt, ref vOffset, contextElement, dataRow, rowId, startPosition, realEnd);
-                                            currentRowWidth += partToRenderDefinition.Width - startPosition;
-                                        }
+                                        if (partToRenderDefinition.DefinitionParts[rowId, i] != null)
+                                            break;
+                                        realEnd--;
+                                    }
+                                    if (realEnd > startPosition)
+                                    {
+                                        ManageVerticalTemplatePart(ref bindingContextItemsCpt, ref vOffset, contextElement, dataRow, rowId, startPosition, realEnd);
+                                        currentRowWidth += realEnd - startPosition;
                                     }
                                 }
                                 if (vOffset > currentRowHeight)

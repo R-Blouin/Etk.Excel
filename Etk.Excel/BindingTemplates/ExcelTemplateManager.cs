@@ -509,7 +509,7 @@
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.RemoveViews"/> </summary> 
-        public void RemoveViews(IList<IExcelTemplateView> views)
+        public void RemoveViews(IEnumerable<IExcelTemplateView> views)
         {
             if (views == null)
                 return;

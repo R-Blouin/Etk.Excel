@@ -118,7 +118,7 @@
             }
         }
 
-        public void RemoveViews(IList<ITemplateView> views)
+        public void RemoveViews(IEnumerable<ITemplateView> views)
         {
             if (views != null)
             {
