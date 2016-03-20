@@ -36,10 +36,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GongSolutions.Wpf.DragDrop, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\gong-wpf-dragdrop.1.0.0-ALPHA013\lib\net40\GongSolutions.Wpf.DragDrop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net40\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
@@ -87,11 +83,13 @@
     <Compile Include="Application\IExcelApplication.cs" />
     <Compile Include="BindingTemplates\AccessorParametersManager.cs" />
     <Compile Include="BindingTemplates\Controls\EnumManager.cs" />
+    <Compile Include="BindingTemplates\Controls\FormulaResult\ISheetCalculate.cs" />
     <Compile Include="BindingTemplates\Controls\MultiLineManager.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelBindingDefinitionPicture.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelPicture.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelPictureDefinition.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelContextItemPicture.cs" />
+    <Compile Include="BindingTemplates\Decorators\ExcelElementDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelRangeDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelDecoratorsManager.cs" />
@@ -101,6 +99,8 @@
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelDecorators.cs" />
     <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionFactory.cs" />
     <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionPartFactory.cs" />
+    <Compile Include="BindingTemplates\Renderer\ExcelPartHorizontalRenderer.cs" />
+    <Compile Include="BindingTemplates\Renderer\ExcelPartRenderer.cs" />
     <Compile Include="BindingTemplates\Renderer\ExcelRenderer.cs" />
     <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingSearchDefinition.cs" />
     <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingSearchContextItem.cs" />
@@ -143,7 +143,7 @@
     <Compile Include="BindingTemplates\IExcelTemplateManager.cs" />
     <Compile Include="BindingTemplates\Controls\Button\SortAndFilter\ExcelSortAndFilterButton.cs" />
     <Compile Include="BindingTemplates\Renderer\ExcelRootRenderer.cs" />
-    <Compile Include="BindingTemplates\Renderer\ExcelPartRenderer.cs" />
+    <Compile Include="BindingTemplates\Renderer\ExcelPartVerticalRenderer.cs" />
     <Compile Include="Application\ExcelApplication.cs" />
     <Compile Include="BindingTemplates\Views\RenderingArea.cs" />
     <Compile Include="ContextualMenus\IContextualPart.cs" />

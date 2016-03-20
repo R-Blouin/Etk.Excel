@@ -15,6 +15,9 @@
         protected ITemplateDefinition templateDefinition;
         protected IBindingContext bindingContext;
 
+        public ExcelRootRenderer RootRenderer
+        { get; private set; }
+
         public ExcelPartRenderer HeaderPartRenderer
         { get; protected set; }
 
@@ -45,8 +48,9 @@
         { get; private set; }
 
         #region .ctors
-        public ExcelRenderer(ITemplateDefinition templateDefinition, IBindingContext bindingContext, Range firstOutputCell)
+        public ExcelRenderer(ExcelRootRenderer rootRenderer, ITemplateDefinition templateDefinition, IBindingContext bindingContext, Range firstOutputCell)
         {
+            RootRenderer = rootRenderer ?? this as ExcelRootRenderer;
             this.templateDefinition = templateDefinition;
             this.bindingContext = bindingContext;
             this.firstOutputCell = firstOutputCell;
@@ -64,7 +68,7 @@
             Range nextFirstOutputCell = null;
             if (templateDefinition.Header != null)
             {
-                HeaderPartRenderer = new ExcelPartRenderer(this, (ExcelTemplateDefinitionPart)templateDefinition.Header, bindingContext.Header, firstOutputCell, false);
+                HeaderPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Header, bindingContext.Header, firstOutputCell, false);
                 HeaderPartRenderer.Render();
                 if (HeaderPartRenderer.RenderedArea != null && HeaderPartRenderer.RenderedArea.Width != 0)
                 {
@@ -79,7 +83,7 @@
 
             if (templateDefinition.Body != null)
             {
-                BodyPartRenderer = new ExcelPartRenderer(this, (ExcelTemplateDefinitionPart)templateDefinition.Body, bindingContext.Body, nextFirstOutputCell ?? firstOutputCell, true);
+                BodyPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Body, bindingContext.Body, nextFirstOutputCell ?? firstOutputCell, true);
                 BodyPartRenderer.Render();
                 if (BodyPartRenderer.RenderedArea != null && BodyPartRenderer.RenderedArea.Width != 0)
                 {
@@ -94,7 +98,7 @@
 
             if (templateDefinition.Footer != null)
             {
-                FooterPartRenderer = new ExcelPartRenderer(this, (ExcelTemplateDefinitionPart)templateDefinition.Footer, bindingContext.Footer, nextFirstOutputCell ?? firstOutputCell, false);
+                FooterPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Footer, bindingContext.Footer, nextFirstOutputCell ?? firstOutputCell, false);
                 FooterPartRenderer.Render();
                 if (FooterPartRenderer.RenderedArea != null && FooterPartRenderer.RenderedArea.Width != 0)
                 {

@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:source="clr-namespace:Etk.ModelManagement;assembly=Etk"
              xmlns:dest="clr-namespace:Etk.Excel.UI.Windows.ModelManagement.ViewModels"
 
@@ -35,7 +34,7 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Source -->
-                <TreeView Grid.Row="0" ItemsSource="{Binding SourceProperties}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="False" dd:DragDrop.UseDefaultDragAdorner="True">
+                <TreeView Grid.Row="0" ItemsSource="{Binding SourceProperties}">
                     <TreeView.Resources>
                         <HierarchicalDataTemplate DataType="{x:Type source:ModelProperty}" ItemsSource="{Binding Properties}">
                             <StackPanel Orientation="Horizontal">
@@ -62,7 +61,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <TreeView Grid.Row="0" ItemsSource="{Binding SourceProperties}" dd:DragDrop.IsDragSource="True" dd:DragDrop.IsDropTarget="True" dd:DragDrop.UseDefaultDragAdorner="True">
+                    <TreeView Grid.Row="0" ItemsSource="{Binding SourceProperties}">
                         <TreeView.Resources>
                             <HierarchicalDataTemplate DataType="{x:Type source:ModelProperty}" ItemsSource="{Binding Properties}">
                                 <StackPanel Orientation="Horizontal">

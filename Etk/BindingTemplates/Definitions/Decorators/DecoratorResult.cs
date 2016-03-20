@@ -11,11 +11,15 @@
         public string Comment
         { get; set; }
 
+        public bool CommentAlwaysVisible
+        { get; set; }
+
         /// <summary>Construct a Decorator result</summary>
-        public DecoratorResult(int? item, string comment)
+        public DecoratorResult(int? item, string comment, bool commentVisible = false)
         {
-            this.Item = item;
-            this.Comment = comment;
+            Item = item;
+            Comment = comment;
+            CommentAlwaysVisible = commentVisible;
         }
     }
 }

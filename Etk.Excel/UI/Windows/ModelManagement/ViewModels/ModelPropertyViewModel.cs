@@ -1,10 +1,9 @@
 ﻿namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
 {
     using Etk.ModelManagement;
-    using GongSolutions.Wpf.DragDrop;
     using MvvmBase;
 
-    class ModelPropertyViewModel : ViewModelBase,  IDropTarget
+    class ModelPropertyViewModel : ViewModelBase
     {
         #region attributes and proeprties
         public bool IsSelected
@@ -40,13 +39,13 @@
         #endregion
 
         #region IDropTarget implementation
-        public void DragOver(IDropInfo dropInfo)
-        {
-        }
+        //public void DragOver(IDropInfo dropInfo)
+        //{
+        //}
 
-        public void Drop(IDropInfo dropInfo)
-        {
-        }
+        //public void Drop(IDropInfo dropInfo)
+        //{
+        //}
         #endregion
     }
 }

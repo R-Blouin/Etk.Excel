@@ -1,15 +1,15 @@
 ﻿namespace Etk.Excel.BindingTemplates.Decorators
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
     using Etk.BindingTemplates.Context;
     using Etk.BindingTemplates.Definitions.Decorators;
     using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
     using Etk.Excel.UI.Log;
     using Etk.Excel.UI.Reflection;
     using Microsoft.Office.Interop.Excel;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
 
     class DecoratorProperty
     {
@@ -100,12 +100,19 @@
                 if (decoratorRange == null)
                     RevolveDecoratorRange();
 
+                Range concernedRangeFirstCell = concernedRange.Cells[1, 1];
+
+                // We delete the previous concernedRange comment 
+                Comment comment = concernedRangeFirstCell.Comment;
+                if (comment != null)
+                    comment.Delete();
+
                 // Prepare parameters
                 object[] parameters;
-                if(addConcernedRangeParameter)
+                if (addConcernedRangeParameter)
                     parameters = new object[] { concernedRange, element.DataSource, null };
                 else
-                    parameters = new object[] { element.DataSource, null};
+                    parameters = new object[] { element.DataSource, null };
 
                 // Invoke decorator resolver
                 object result = ToInvoke.Invoke(ToInvoke.IsStatic ? null : element.DataSource, parameters);
@@ -114,6 +121,16 @@
                     DecoratorResult decoratorResult = result as DecoratorResult;
                     if (decoratorResult.Item.HasValue)
                     {
+                        if (!string.IsNullOrEmpty(decoratorResult.Comment))
+                        {
+                            concernedRangeFirstCell.AddComment(decoratorResult.Comment);
+                            Comment addedComment = concernedRangeFirstCell.Comment;
+                            addedComment.Visible = decoratorResult.CommentAlwaysVisible;
+                            Shape shape = addedComment.Shape;
+                            TextFrame textFrame = shape.TextFrame;
+                            textFrame.AutoSize = true;
+                        }
+
                         if (notOnlyColor)
                         {
                             decoratorRange[decoratorResult.Item.Value + 1].Copy();
@@ -185,6 +202,7 @@
                     {
                         concernedRange.AddComment(decoratorResult.Comment);
                         Comment addedComment = concernedRange.Comment;
+                        addedComment.Visible = decoratorResult.CommentAlwaysVisible;
                         Shape shape = addedComment.Shape;
                         TextFrame textFrame = shape.TextFrame;
                         textFrame.AutoSize = true;

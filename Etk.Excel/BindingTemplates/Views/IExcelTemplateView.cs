@@ -19,10 +19,13 @@
         /// <summary>Event calls after the rendering of the View (When the rendering is done with 'Render' function, the parameter is set to false. When the rendering is done with 'RenderDataOnly' function, the parameter is set to true</summary>
         event Action<bool> AfterRendering;
         /// <summary>Event calls when the sheet that owned the View is activate. The Parameter contains the concerned View</summary>
-        event Action<IExcelTemplateView> SheetActivation;       
+        event Action<IExcelTemplateView> SheetActivation;
 
         //RenderingArea RenderedArea { get;  }
         //bool AutoFit {get; set;}
+
+        /// <summary>Set the cell uses to clear the rendered area of the view</summary>
+        Range ClearingCell { get; set; }
 
         void SetAccessorParameters(IEnumerable<object> parameters);
     }

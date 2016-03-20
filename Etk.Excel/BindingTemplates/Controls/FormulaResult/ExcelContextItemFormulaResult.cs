@@ -6,16 +6,14 @@
     using System.Runtime.InteropServices;
     using Etk.BindingTemplates.Context;
     using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Views;
     using Microsoft.Office.Interop.Excel;
 
-    class ExcelContextItemFormulaResult : BindingContextItem, IBindingContextItemCanNotify, IExcelControl
+    class ExcelContextItemFormulaResult : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, ISheetCalculate
     {
         #region properties and attributes
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
         private ExcelBindingDefinitionFormulaResult excelBindingDefinitionFormulaResult;
         private Worksheet workSheet;
-        private Workbook workbook;
         private Application application;
         private object currentValue;
 
@@ -26,30 +24,7 @@
         { get; set; }
 
         public object OnPropertyChangedActionArgs
-        { get; set; }
-
-        //public IBindingContextItem NestedContextItem
-        //{ get; private set; }
-
-        //public System.Action<IBindingContextItem, object> OnPropertyChangedAction
-        //{
-        //    get { return NestedContextItem is IBindingContextItemCanNotify ? ((IBindingContextItemCanNotify) NestedContextItem).OnPropertyChangedAction : null;}
-        //    set
-        //    {
-        //        if (NestedContextItem is IBindingContextItemCanNotify)
-        //            ((IBindingContextItemCanNotify)NestedContextItem).OnPropertyChangedAction = value;
-        //    } 
-        //}
-
-        //public object OnPropertyChangedActionArgs
-        //{
-        //    get { return NestedContextItem is IBindingContextItemCanNotify ? ((IBindingContextItemCanNotify) NestedContextItem).OnPropertyChangedActionArgs : null;}
-        //    set
-        //    {
-        //        if (NestedContextItem != null && NestedContextItem is IBindingContextItemCanNotify)
-        //            ((IBindingContextItemCanNotify) NestedContextItem).OnPropertyChangedActionArgs = value;
-        //    } 
-        //}        
+        { get; set; }     
         #endregion
 
         #region .ctors
@@ -77,8 +52,6 @@
             this.Range = range;
             application = this.Range.Application;
             workSheet = this.Range.Worksheet;
-            workbook = workSheet.Parent as Workbook;
-            workbook.SheetCalculate += OnSheetCalculate;
         }
 
         override public void RealDispose()
@@ -90,17 +63,10 @@
                     obj.PropertyChanged -= OnPropertyChanged;
                 objectsToNotify = null;
             }
-
             if (workSheet != null)
             {
                 Marshal.ReleaseComObject(workSheet);
                 workSheet = null;
-            }
-            if (workbook != null)
-            {
-                workbook.SheetCalculate -= OnSheetCalculate;
-                Marshal.ReleaseComObject(workbook);
-                workbook = null;
             }
             if (application != null)
             {
@@ -139,22 +105,19 @@
             }
         }
 
-        private void OnSheetCalculate(object obj)
+        public void OnSheetCalculate()
         {
-            if (workSheet == obj)
+            if (Range.HasFormula && ! object.Equals(Range.Value2, currentValue))
             {
-                if (Range.HasFormula && ! object.Equals(Range.Value2, currentValue))
-                {
-                    if (application.WorksheetFunction.IsError(Range))
-                    { 
-                        Type type = excelBindingDefinitionFormulaResult.NestedBindingDefinition.BindingType;
-                        object nullValue = type.IsValueType ? Activator.CreateInstance(type) : null;
-                        excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(this.DataSource, nullValue);
-                    }
-                    else
-                        excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(this.DataSource, Range.Value2);
-                    currentValue = Range.Value2;
+                if (application.WorksheetFunction.IsError(Range))
+                { 
+                    Type type = excelBindingDefinitionFormulaResult.NestedBindingDefinition.BindingType;
+                    object nullValue = type.IsValueType ? Activator.CreateInstance(type) : null;
+                    excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(this.DataSource, nullValue);
                 }
+                else
+                    excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(this.DataSource, Range.Value2);
+                currentValue = Range.Value2;
             }
         } 
     }

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Threading.Tasks;
     using Etk.BindingTemplates.Context;
@@ -11,6 +12,8 @@
     using Etk.Excel.BindingTemplates.Views;
     using Microsoft.Office.Interop.Excel;
     using Etk.BindingTemplates.Definitions.Templates;
+    using Etk.Excel.BindingTemplates.Controls.FormulaResult;
+    using Etk.Excel.BindingTemplates.Decorators;
 
     class ExcelRootRenderer : ExcelRenderer
     {
@@ -25,13 +28,17 @@
 
         public bool IsDisposed
         { get; private set; }
+
+        public List<ExcelElementDecorator> RowDecorators
+        { get; private set; }
         #endregion
 
         #region .ctors 
         public ExcelRootRenderer(ExcelTemplateView view) 
-               : base(view.TemplateDefinition, view.BindingContext, view.FirstOutputCell)
+               : base(null, view.TemplateDefinition, view.BindingContext, view.FirstOutputCell)
         {
             this.View = view;
+            RowDecorators = new List<ExcelElementDecorator>();
             //@@ sortAndFilterButton = new ExcelSortAndFilterButton(View);
         }
         #endregion
@@ -77,6 +84,10 @@
             });
             RenderedRange.Value2 = cells;
 
+            // Element decorators managements
+            foreach(ExcelElementDecorator rowDecorator in RowDecorators)
+                rowDecorator.Resolve();
+
             // Decorators managements
             foreach (KeyValuePair<IBindingContextItem, System.Drawing.Point> kvp in decorators)
             {
@@ -99,6 +110,7 @@
                     try
                     {
                         IsClearing = true;
+                        RowDecorators.Clear();
                         if (View.ClearingCell != null)
                             View.ClearingCell.Copy(RenderedRange);
                         else
@@ -166,6 +178,16 @@
                     ret = contextItems[target.Row - View.FirstOutputCell.Row, target.Column - View.FirstOutputCell.Column];
             }
             return ret;
+        }
+
+        public void OnCalculate()
+        {
+            if (!IsDisposed && DataRows != null)
+            {
+                IEnumerable<IBindingContextItem> items = DataRows.SelectMany(r => r.Where(ci => ci is ISheetCalculate));
+                foreach (IBindingContextItem item in items)
+                    ((ISheetCalculate) item).OnSheetCalculate();
+            }
         }
 
         new public void Dispose()

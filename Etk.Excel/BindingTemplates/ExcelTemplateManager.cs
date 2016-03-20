@@ -146,6 +146,13 @@
                     view.SheetDestination.Change += OnSheetChange;
                     view.SheetDestination.SelectionChange += OnSelectionChange;
                     view.SheetDestination.BeforeDoubleClick += OnBeforeBoubleClick;
+
+                    Excel.Workbook book = view.SheetDestination.Parent as Excel.Workbook;
+                    if (book != null)
+                    {
+                        book.SheetCalculate += OnSheetCalculate;
+                        Marshal.ReleaseComObject(book);
+                    }
                 }
                 viewsBySheet[view.SheetDestination].Add(view);
             }
@@ -171,6 +178,17 @@
             }
             Marshal.ReleaseComObject(realTarget);
             realTarget = null;
+        }
+
+        private void OnSheetCalculate(object sheet)
+        {
+            List<ExcelTemplateView> views = null;
+            viewsBySheet.TryGetValue(sheet as Excel.Worksheet, out views);
+            if (views != null)
+            {
+                foreach (ExcelTemplateView view in views)
+                    view.OnSheetCalculate();
+            }
         }
 
         /// <summary>
@@ -489,6 +507,13 @@
             {
                 lock (syncRoot)
                 {
+                    Excel.Workbook book = excelView.SheetDestination.Parent as Excel.Workbook;
+                    if (book != null)
+                    {
+                        book.SheetCalculate -= OnSheetCalculate;
+                        Marshal.ReleaseComObject(book);
+                    }
+
                     ClearView(excelView);
 
                     KeyValuePair<Excel.Worksheet, List<ExcelTemplateView>> kvp = viewsBySheet.FirstOrDefault(s => s.Value.FirstOrDefault(v => v.Equals(view)) != null);

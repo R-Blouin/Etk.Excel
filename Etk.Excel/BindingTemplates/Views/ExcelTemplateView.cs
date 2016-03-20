@@ -92,7 +92,7 @@
         { get; set; }
 
         public Range ClearingCell
-        { get; private set; }
+        { get; set; }
 
         public ExcelRootRenderer Renderer
         { get; private set; }
@@ -236,6 +236,12 @@
                     base.Dispose();
                 }
             }
+        }
+
+        public void OnSheetCalculate()
+        {
+            if (IsRendered)
+                Renderer.OnCalculate();
         }
         #endregion
 
@@ -644,9 +650,9 @@
             if (AutoFit && Renderer.RenderedRange != null)
             {
                 if (TemplateDefinition.Orientation == Orientation.Horizontal)
-                    Renderer.View.SheetDestination.Rows.AutoFit();
+                    Renderer.RenderedRange.Rows.AutoFit();
                 else
-                    Renderer.View.SheetDestination.Columns.AutoFit();
+                    Renderer.RenderedRange.Columns.AutoFit();
             }
         }
         #endregion
