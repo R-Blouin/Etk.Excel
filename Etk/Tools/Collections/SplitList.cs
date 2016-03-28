@@ -1,11 +1,11 @@
 ﻿// From http://stackoverflow.com/questions/11463734/split-a-list-into-smaller-lists-of-n-size
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace Etk.Excel.UI.Collections
-{
-    using System.Collections.Generic;
-    using System.Linq;
+using System.Collections.Generic;
+using System.Linq;
 
+namespace Etk.Tools.Collections
+{
     static class ListExtension
     {
         /// <summary>
@@ -30,7 +30,7 @@ namespace Etk.Excel.UI.Collections
 
                 while (startIndex < count && (!maxCount.HasValue || (maxCount.HasValue && startIndex < maxCount)))
                 {
-                    elementCount = (startIndex + groupSize > count) ? count - startIndex : groupSize;
+                    elementCount = startIndex + groupSize > count ? count - startIndex : groupSize;
                     result.Add(valueList.GetRange(startIndex, elementCount));
                     startIndex += elementCount;
                 }

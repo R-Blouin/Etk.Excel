@@ -1,11 +1,11 @@
-﻿namespace Etk.Excel.UI.Windows.SortAndFilter.Converters
-{
-    using System;
-    using System.Globalization;
-    using System.Windows;
-    using System.Windows.Data;
-    using System.Windows.Markup;
+﻿using System;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Markup;
 
+namespace Etk.Excel.UI.Windows.SortAndFilter.Converters
+{
     [ValueConversion(typeof(object), typeof(Thickness))]  
     class SelectionMarginConverter : MarkupExtension, IValueConverter
     {

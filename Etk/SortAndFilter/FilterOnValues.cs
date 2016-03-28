@@ -1,12 +1,12 @@
-﻿namespace Etk.SortAndFilter
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates;
 
+namespace Etk.SortAndFilter
+{
     public class FilterOnValues : IFilterDefinition
     {
         public ITemplateDefinition TemplateDefinition

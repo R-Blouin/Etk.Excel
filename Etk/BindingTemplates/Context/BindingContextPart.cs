@@ -1,10 +1,10 @@
-﻿namespace Etk.BindingTemplates.Context
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.SortAndFilter;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.SortAndFilter;
 
+namespace Etk.BindingTemplates.Context
+{
     class BindingContextPart : IBindingContextPart
     {
         public IBindingContext ParentContext

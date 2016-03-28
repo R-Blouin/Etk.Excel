@@ -1,8 +1,8 @@
-﻿namespace Etk.BindingTemplates.Definitions.Templates
-{
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Definitions.Binding;
+﻿using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions.Binding;
 
+namespace Etk.BindingTemplates.Definitions.Templates
+{
     public interface ITemplateDefinitionPart
     {
         /// <summary> The template definition that owned that part.</summary>

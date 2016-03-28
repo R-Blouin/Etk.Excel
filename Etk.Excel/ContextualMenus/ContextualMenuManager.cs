@@ -1,14 +1,14 @@
-﻿namespace Etk.Excel.ContextualMenus
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using Etk.Excel.UI.Extensions;
-    using Etk.Excel.UI.Log;
-    using Microsoft.Office.Core;
-    using Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using Etk.Tools.Extensions;
+using Etk.Tools.Log;
+using Microsoft.Office.Core;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.ContextualMenus
+{
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
     class ContextualMenuManager : IContextualMenuManager, IDisposable
@@ -105,7 +105,7 @@
             catch (Exception ex)
             {
                 string message = xml.Length > 350 ? xml.Substring(0, 350) + "..." : xml;
-                throw new EtkException(string.Format("Cannot create contextual menus from xml '{0}':{1}", message, ex.Message), ex);
+                throw new EtkException(string.Format("Cannot create contextual menus from xml '{0}':{1}", message, ex.Message));
             }
         }
 
@@ -148,7 +148,7 @@
         /// <param name="cancel"></param>
         private void OnSheetBeforeRightClickViewsManagement(object sheet, Range range, ref bool cancel)
         {
-            Application application = range.Application;
+            Microsoft.Office.Interop.Excel.Application application = range.Application;
             CommandBar commandBar = application.CommandBars["Cell"];
             commandBar.Reset();
 

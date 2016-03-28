@@ -1,13 +1,13 @@
-﻿namespace Etk.BindingTemplates.Views
-{
-    using System;
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Context.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.SortAndFilter;
+﻿using System;
+using System.Collections.Generic;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Context.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.SortAndFilter;
 
+namespace Etk.BindingTemplates.Views
+{
     public class TemplateView : ITemplateView
     {
         #region attributes and properties
@@ -63,7 +63,7 @@
         #endregion
 
         #region public methods
-        virtual public void Clear()
+        public virtual void Clear()
         {
             SetDataSource(null);
         }
@@ -73,7 +73,7 @@
             return BindingContext == null ? null : BindingContext.DataSource;
         }
 
-        virtual public void SetDataSource(object dataSource)
+        public virtual void SetDataSource(object dataSource)
         {
             lock (syncRoot)
             {
@@ -82,7 +82,7 @@
             }
         }
 
-        virtual public void CreateBindingContext(object dataSource)
+        public virtual void CreateBindingContext(object dataSource)
         {
             try
             {

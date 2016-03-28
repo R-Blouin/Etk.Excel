@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.BindingTemplates.Views
-{
-    using Microsoft.Office.Interop.Excel;
+﻿using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Views
+{
     public class RenderingArea
     {
         public int XFirstCell

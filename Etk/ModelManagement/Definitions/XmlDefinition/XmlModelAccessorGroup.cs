@@ -1,11 +1,8 @@
-﻿namespace Etk.ModelManagement.Definitions.XmlDefinition
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
+namespace Etk.ModelManagement.Definitions.XmlDefinition
+{
     /// <summary> Model Accessor groups.</summary>
     public class XmlModelAccessorGroup
     {

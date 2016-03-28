@@ -1,11 +1,11 @@
 ﻿/// From: Josh Smith
 /// http://msdn.microsoft.com/en-us/magazine/dd419663.aspx
 
+using System.ComponentModel;
+using System.Diagnostics;
+
 namespace Etk.Excel.UI.MvvmBase
 {
-    using System;
-    using System.ComponentModel;
-    using System.Diagnostics;
     /// <summary>
     /// Base class for all ViewModel classes in the application.
     /// It provides support for property change notifications 

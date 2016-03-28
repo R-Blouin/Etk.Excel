@@ -1,9 +1,9 @@
-﻿namespace Etk.Excel.UI.Extensions
+﻿using System;
+using System.IO;
+using System.Xml.Serialization;
+
+namespace Etk.Tools.Extensions
 {
-    using System;
-    using System.IO;
-    using System.Xml.Serialization;
-    
     /// <summary>
     /// Extension class for the class System.String.
     /// </summary>
@@ -35,7 +35,7 @@
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Deserialize from xml '{0}' to UnderlyingType '{1}' failed: {2} {3}", input, typeof(T).Name, ex.Message, ex.InnerException == null ? string.Empty : ex.InnerException.Message), ex);
+                throw new EtkException(string.Format("Deserialize from xml '{0}' to UnderlyingType '{1}' failed: {2} {3}", input, typeof(T).Name, ex.Message, ex.InnerException == null ? string.Empty : ex.InnerException.Message));
             }
         }
     }

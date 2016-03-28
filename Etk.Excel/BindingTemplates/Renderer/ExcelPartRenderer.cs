@@ -1,16 +1,15 @@
-﻿namespace Etk.Excel.BindingTemplates.Renderer
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.BindingTemplates.Controls;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Microsoft.Office.Interop.Excel;
-    using Views;
+﻿using System;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.BindingTemplates.Controls;
+using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Excel.BindingTemplates.Views;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Renderer
+{
     abstract class ExcelPartRenderer : IDisposable
     {
         #region attributes and properties

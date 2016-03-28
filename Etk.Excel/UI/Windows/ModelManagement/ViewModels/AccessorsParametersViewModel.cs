@@ -1,11 +1,8 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
-{
-    using Etk.Excel.UI.Windows.Wizard;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+﻿using System;
+using Etk.Excel.UI.Windows.Wizard;
 
+namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
+{
     public class AccessorsParametersViewModel : IWizardStep
     {
         private WizardViewModel parent;

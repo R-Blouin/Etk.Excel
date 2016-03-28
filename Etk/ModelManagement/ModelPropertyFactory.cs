@@ -1,13 +1,13 @@
-﻿namespace Etk.ModelManagement
-{
-    using Etk.BindingTemplates.Definitions.Binding;
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Etk.BindingTemplates.Definitions.Binding;
 
+namespace Etk.ModelManagement
+{
     class ModelPropertyFactory
     {
-        static public IEnumerable<IModelProperty> CreateInstances(IModelType parent, Type type)
+        public static IEnumerable<IModelProperty> CreateInstances(IModelType parent, Type type)
         {
             List<IModelProperty> ret = new List<IModelProperty>();
             if (type != null)

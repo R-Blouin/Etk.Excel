@@ -1,15 +1,15 @@
-﻿namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
-{
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.BindingTemplates.Views;
-    using Etk.Excel.BindingTemplates.Views;
-    using Etk.SortAndFilter;
-    using MvvmBase;
-    using System;
-    using System.Collections.Generic;
-    using System.Windows.Input;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Input;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
+using Etk.Excel.BindingTemplates.Views;
+using Etk.Excel.UI.MvvmBase;
+using Etk.SortAndFilter;
 
+namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
+{
     class SortAndFilterViewModel : ViewModelBase, IDisposable
     {
         #region command

@@ -1,8 +1,8 @@
-﻿namespace Etk.ModelManagement.Definitions.XmlDefinition
-{
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
+namespace Etk.ModelManagement.Definitions.XmlDefinition
+{
     /// <summary> Xml model type definition </summary>
     public class XmlModelType
     {

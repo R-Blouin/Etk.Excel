@@ -1,12 +1,12 @@
-﻿namespace Etk.Excel.ContextualMenus
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Etk.Excel.ContextualMenus.Definition;
-    using Etk.Excel.UI.Extensions;
-    using Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Etk.Excel.ContextualMenus.Definition;
+using Etk.Tools.Extensions;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.ContextualMenus
+{
     public delegate void MenuAction(Range range);
 
     static class ContextualMenuFactory
@@ -51,7 +51,7 @@
             catch (Exception ex)
             {
                 string message = xmlValue.Length > 350 ? xmlValue.Substring(0, 350) + "..." : xmlValue;
-                throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message), ex);
+                throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message));
             }
             return ret;
         }

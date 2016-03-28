@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Log
-{
-    using System;
+﻿using System;
 
+namespace Etk.Tools.Log
+{
     /// <summary>
     /// Application logging interface
     /// </summary>

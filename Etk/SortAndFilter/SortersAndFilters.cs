@@ -1,11 +1,11 @@
-﻿namespace Etk.SortAndFilter
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using Etk.BindingTemplates.Definitions.Templates;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using Etk.BindingTemplates.Definitions.Templates;
 
+namespace Etk.SortAndFilter
+{
     public class SortersAndFilters<T> : ISortersAndFilters
     {
         #region attributes and properties

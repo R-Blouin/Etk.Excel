@@ -1,12 +1,12 @@
-﻿namespace Etk.Excel.Application
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Runtime.InteropServices;
-    using System.Threading;
-    using System.Windows.Threading;
-    using Etk.Excel.UI.Log;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Windows.Threading;
+using Etk.Tools.Log;
 
+namespace Etk.Excel.Application
+{
     class ExcelPostAsynchronousManager : IDisposable
     {
         private volatile bool waitExcelBusy = false;

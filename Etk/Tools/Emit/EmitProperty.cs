@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Emit
-{
-    using System;
+﻿using System;
 
+namespace Etk.Tools.Emit
+{
     public class EmitProperty
     {
         public string PropertyName 

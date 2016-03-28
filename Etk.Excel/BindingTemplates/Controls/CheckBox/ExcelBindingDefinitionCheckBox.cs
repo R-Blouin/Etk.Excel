@@ -1,13 +1,13 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.CheckBox
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Etk.Excel.UI.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Tools.Extensions;
 
+namespace Etk.Excel.BindingTemplates.Controls.CheckBox
+{
     class ExcelBindingDefinitionCheckBox : BindingDefinition
     {
         #region attributes and properties
@@ -39,7 +39,7 @@
             }
         }
 
-        static public ExcelBindingDefinitionCheckBox CreateInstance(ExcelTemplateDefinition templateDefinition, string definition)
+        public static ExcelBindingDefinitionCheckBox CreateInstance(ExcelTemplateDefinition templateDefinition, string definition)
         {
             ExcelBindingDefinitionCheckBox ret = null;
             if (! string.IsNullOrEmpty(definition))
@@ -53,7 +53,7 @@
                 catch (Exception ex)
                 {
                     string message = string.Format("Cannot retrieve the checkbox dataAccessor '{0}'. {1}", definition.EmptyIfNull(), ex.Message);
-                    throw new EtkException(message, ex);
+                    throw new EtkException(message);
                 }
             }
             return ret;

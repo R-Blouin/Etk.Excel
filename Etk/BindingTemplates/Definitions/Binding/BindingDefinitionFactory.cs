@@ -1,11 +1,11 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Etk.BindingTemplates.Definitions.Templates;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Etk.BindingTemplates.Definitions.Templates;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     /// <summary> Binding definition factory</summary>
     public static class BindingDefinitionFactory
     {
@@ -34,7 +34,7 @@
         /// <param name="templateDefinition">The <see cref="FilterOwner"/> that owned the <see cref="BindingDefinitionDescription"/></param>
         /// <param name="bindingDefinitionDescription">the given list of <see cref="BindingDefinitionDescription"/></param>
         /// <returns>The newly created Binding definition or an exception is an error occurs</returns>
-        static internal List<IBindingDefinition> CreateInstances(Type type, List<BindingDefinitionDescription> definitionDescriptions)
+        internal static List<IBindingDefinition> CreateInstances(Type type, List<BindingDefinitionDescription> definitionDescriptions)
         {
             List<IBindingDefinition> bindingDefinitions = new List<IBindingDefinition>();
             if (definitionDescriptions != null)
@@ -53,7 +53,7 @@
         /// <param name="sourceType">The Type on which the '<see cref="BindingDefinitionDescription"/>' is based</param>
         /// <param name="definitionDescription">The given <see cref="Type"/></param>
         /// <returns>The newly created Binding definition or an exception is an error occurs</returns>
-        static internal IBindingDefinition CreateInstance(Type sourceType, BindingDefinitionDescription definitionDescription)
+        internal static IBindingDefinition CreateInstance(Type sourceType, BindingDefinitionDescription definitionDescription)
         {
             if (definitionDescription == null || string.IsNullOrEmpty(definitionDescription.BindingExpression))
                 return null;
@@ -127,7 +127,7 @@
         /// <summary> Create a Binding definition for a given 'System.Reflection.PropertyInfo'</summary>
         /// <param name="propertyInfo">The given 'System.Reflection.PropertyInfo'</param>
         /// <returns>The newly created Bindiçng definition or an exception is an error occurs</returns>
-        static public IBindingDefinition CreateInstance(PropertyInfo propertyInfo)
+        public static IBindingDefinition CreateInstance(PropertyInfo propertyInfo)
         {
             if (propertyInfo == null)
                 return null;

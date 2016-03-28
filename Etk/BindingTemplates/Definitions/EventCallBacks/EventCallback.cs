@@ -1,11 +1,11 @@
-﻿namespace Etk.BindingTemplates.Definitions.EventCallBacks
-{
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using Etk.BindingTemplates.Context;
-    using Etk.Excel.UI.Reflection;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.Tools.Reflection;
 
+namespace Etk.BindingTemplates.Definitions.EventCallBacks
+{
     public class EventCallback
     {
         private static EventCallbacksManager eventCallbacksManager;
@@ -36,7 +36,7 @@
         #endregion
 
         #region .ctors and factory
-        private EventCallback(string ident, string description, Type firstParameterType, MethodInfo toInvoke)
+        private EventCallback(string ident, string description, MethodInfo toInvoke)
         {
             ParameterInfo[] parameters = toInvoke.GetParameters();
             if (toInvoke.ReturnType != typeof(void) || parameters == null || parameters.Count() > 3)
@@ -56,13 +56,13 @@
                 {
                     MethodInfo toInvoke = TypeHelpers.GetMethod(type, methodName);
                     if (toInvoke != null)
-                        ret = new EventCallback(ident, description, type, toInvoke);
+                        ret = new EventCallback(ident, description, toInvoke);
                 }
                 return ret;
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(string.Format("Method '{0}' not resolved:{1}", methodName, ex.Message), ex);
+                throw new ArgumentException(string.Format("Method '{0}' not resolved:{1}", methodName, ex.Message));
             }
         }
         #endregion

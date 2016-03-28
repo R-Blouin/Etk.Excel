@@ -1,7 +1,7 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System.Reflection;
+﻿using System.Reflection;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     public class BindingTypeProperty
     {
         public string Name

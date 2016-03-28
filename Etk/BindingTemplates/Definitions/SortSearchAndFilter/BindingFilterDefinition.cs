@@ -1,14 +1,14 @@
-﻿namespace Etk.BindingTemplates.Definitions.SortSearchAndFilter
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Context.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.BindingTemplates.Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Context.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
 
+namespace Etk.BindingTemplates.Definitions.SortSearchAndFilter
+{
     public abstract class BindingFilterDefinition : IDefinitionPart
     {
         #region attribuets and properties
@@ -113,7 +113,7 @@
                 return string.Format("{0} != null && {0}.ToString().ToUpper().Contains(\"{1}\")", DefinitionToFilter.Name, filterValue.ToUpper());
         }
 
-        abstract public BindingFilterContextItem CreateContextItem(ITemplateView view, IBindingContextElement parent);
+        public abstract BindingFilterContextItem CreateContextItem(ITemplateView view, IBindingContextElement parent);
         #endregion
     }
 }

@@ -1,10 +1,10 @@
-﻿namespace Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels
-{
-    using System.ComponentModel;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Etk.Excel.UI.MvvmBase;
+﻿using System.ComponentModel;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Excel.UI.MvvmBase;
 
+namespace Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels
+{
     public class TemplateManagementViewModel : ViewModelBase
     {
         #region attributes and properties

@@ -1,10 +1,10 @@
-﻿namespace Etk.Excel.UI.Extensions
-{
-    using System;
-    using System.IO;
-    using System.Runtime.Serialization;
-    using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
+namespace Etk.Tools.Extensions
+{
     public static class ObjectExtension
     {
         /// <summary>     
@@ -14,7 +14,7 @@
         /// <typeparam name="T">The type of the object to clone.</typeparam>     
         /// <param name="source">The instance to copy.</param>     
         /// <returns>The cloned object.</returns>     
-        static public T DeepClone<T>(T instance)
+        public static T DeepClone<T>(T instance)
         {
             try
             {
@@ -35,8 +35,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("DeepClone failed for UnderlyingType '{0}'.{1}", typeof(T).Name, ex.Message);
-                throw new EtkException(message, ex);
+                throw new EtkException(string.Format("DeepClone failed for UnderlyingType '{0}'.{1}", typeof(T).Name, ex.Message));
             }
         }
     }

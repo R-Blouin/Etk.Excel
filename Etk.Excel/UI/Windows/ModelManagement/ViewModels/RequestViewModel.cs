@@ -1,15 +1,14 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
-{
-    using Etk.ModelManagement;
-    using Etk.ModelManagement.Views;
-    using MvvmBase;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows.Input;
-    using Wizard;
-    using Excel = Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using Etk.Excel.UI.MvvmBase;
+using Etk.Excel.UI.Windows.Wizard;
+using Etk.ModelManagement;
+using Etk.ModelManagement.Views;
 
+namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
+{
     public class RequestViewModel : ViewModelBase, IWizardStep
     {
         #region command
@@ -27,7 +26,7 @@
 
                                 if (FirstOutputRange != null)
                                     FirstOutputRange.Select();
-                                Excel.Range range = ETKExcel.ExcelApplication.RangeSelectionDialog("Select First output range");
+                                Microsoft.Office.Interop.Excel.Range range = ETKExcel.ExcelApplication.RangeSelectionDialog("Select First output range");
                                 if (range != null)
                                     FirstOutputRange = range;
 
@@ -82,9 +81,9 @@
             }
         }
 
-        private Excel.Range caller;
-        private Excel.Range firstOutputRange;
-        public Excel.Range FirstOutputRange
+        private Microsoft.Office.Interop.Excel.Range caller;
+        private Microsoft.Office.Interop.Excel.Range firstOutputRange;
+        public Microsoft.Office.Interop.Excel.Range FirstOutputRange
         {
             get { return firstOutputRange; }
             set
@@ -185,7 +184,7 @@
         #endregion
 
         #region .ctors
-        public RequestViewModel(WizardViewModel parent, Excel.Range caller, Excel.Range firstOutputRange)
+        public RequestViewModel(WizardViewModel parent, Microsoft.Office.Interop.Excel.Range caller, Microsoft.Office.Interop.Excel.Range firstOutputRange)
         {
             this.parent = parent;
             this.caller = caller;

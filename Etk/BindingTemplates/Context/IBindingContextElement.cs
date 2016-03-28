@@ -1,9 +1,8 @@
-﻿namespace Etk.BindingTemplates.Context
-{
-    using System;
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Definitions;
+﻿using System;
+using System.Collections.Generic;
 
+namespace Etk.BindingTemplates.Context
+{
     public interface IBindingContextElement: IDisposable
     {
         IBindingContextPart ParentPart { get; }

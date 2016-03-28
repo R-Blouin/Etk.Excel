@@ -1,11 +1,11 @@
-﻿namespace Etk.Excel.BindingTemplates.Definitions
-{
-    using Etk.BindingTemplates.Definitions;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Microsoft.Office.Interop.Excel;
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Definitions
+{
     public class ExcelTemplateDefinitionPart : TemplateDefinitionPart
     {
         #region attributes and properties

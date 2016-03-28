@@ -1,8 +1,7 @@
-﻿namespace Etk.ModelManagement.Definitions.XmlDefinition
-{
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
+namespace Etk.ModelManagement.Definitions.XmlDefinition
+{
     /// <summary> Xml model view definition. Describe a view on a model type</summary>
     public class XmlModelView
     {

@@ -1,10 +1,7 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement
-{
-    using System;
-    using System.Windows;
-    using System.Windows.Controls;
-    using ViewModels;
+﻿using System.Windows.Controls;
 
+namespace Etk.Excel.UI.Windows.ModelManagement
+{
     public class ParametersTemplateSelector : DataTemplateSelector
     {
         //public DataTemplate DefaultTemplate

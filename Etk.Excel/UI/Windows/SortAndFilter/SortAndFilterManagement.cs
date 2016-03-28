@@ -1,8 +1,8 @@
-﻿namespace Etk.Excel.UI.Windows.SortAndFilter
-{
-    using System.Windows.Interop;
-    using Etk.BindingTemplates.Views;
+﻿using System.Windows.Interop;
+using Etk.BindingTemplates.Views;
 
+namespace Etk.Excel.UI.Windows.SortAndFilter
+{
     static class SortAndFilterManagement
     {
         public static void DisplaySortAndFilterWindow(ITemplateView templateView)

@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Windows.SortAndFilter
-{
-    using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
+namespace Etk.Excel.UI.Windows.SortAndFilter
+{
     /// <summary>
     /// Logique d'interaction pour FilterOnCondition.xaml
     /// </summary>

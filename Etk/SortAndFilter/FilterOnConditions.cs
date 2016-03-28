@@ -1,8 +1,8 @@
-﻿namespace Etk.SortAndFilter
-{
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates;
+﻿using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates;
 
+namespace Etk.SortAndFilter
+{
     public class FilterOnConditions : IFilterDefinition
     {
         public ITemplateDefinition TemplateDefinition

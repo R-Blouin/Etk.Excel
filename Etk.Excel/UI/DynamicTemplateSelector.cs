@@ -1,12 +1,12 @@
 ﻿// From http://www.codeproject.com/Articles/418250/WPF-Based-Dynamic-DataTemplateSelector
 /////////////////////////////////////////////////////////////////////////////////////////
 
+using System;
+using System.Windows;
+using System.Windows.Controls;
+
 namespace Etk.Excel.UI.UI.Wpf
 {
-    using System;
-    using System.Windows;
-    using System.Windows.Controls;
-
     /// <summary>
     /// Provides a means to specify DataTemplates to be selected from within WPF code
     /// </summary>

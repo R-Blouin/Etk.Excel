@@ -1,13 +1,13 @@
-﻿namespace Etk.SortAndFilter
-{
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Linq.Expressions;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates;
 
-	public class SortDefinition<T, TT> : ISorterDefinition
+namespace Etk.SortAndFilter
+{
+    public class SortDefinition<T, TT> : ISorterDefinition
 	{
 		#region attributes and properties
         public ITemplateDefinition TemplateDefinition

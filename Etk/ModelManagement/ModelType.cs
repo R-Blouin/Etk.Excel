@@ -1,14 +1,14 @@
-﻿namespace Etk.ModelManagement
-{
-    using Etk.Excel.UI.Extensions;
-    using Etk.Excel.UI.Log;
-    using Etk.Excel.UI.Reflection;
-    using Etk.ModelManagement.Definitions.XmlDefinition;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.ModelManagement.Definitions.XmlDefinition;
+using Etk.ModelManagement.Views;
+using Etk.Tools.Extensions;
+using Etk.Tools.Log;
+using Etk.Tools.Reflection;
 
+namespace Etk.ModelManagement
+{
     /// <summary> Model type definition </summary>
     public class ModelType : IModelType
     {
@@ -301,7 +301,7 @@
         //    }
         //    catch (Exception ex)
         //    {
-        //        throw new EtkException(string.Format("Model type '{0}': Cannot resolve the model type reference:{1}", Name.EmptyIfNull(), ex.Message), ex);
+        //        throw new EtkException(string.Format("Model type '{0}': Cannot resolve the model type reference:{1}", Name.EmptyIfNull(), ex.Message));
         //    }
         //}
 

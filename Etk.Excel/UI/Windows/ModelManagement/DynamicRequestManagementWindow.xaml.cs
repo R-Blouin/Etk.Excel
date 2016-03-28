@@ -1,10 +1,8 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement
-{
-    using Controls;
-    using System.Windows.Controls;
-    using ViewModels;
-    using Wizard;
+﻿using Etk.Excel.UI.Windows.ModelManagement.Controls;
+using Etk.Excel.UI.Windows.ModelManagement.ViewModels;
 
+namespace Etk.Excel.UI.Windows.ModelManagement
+{
     public partial class DynamicRequestManagementWindow
     {
         public DynamicRequestManagementWindow(WizardViewModel wizardViewModel)

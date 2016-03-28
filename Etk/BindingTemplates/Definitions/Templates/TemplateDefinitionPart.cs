@@ -1,9 +1,9 @@
-﻿namespace Etk.BindingTemplates.Definitions.Templates
-{
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
+﻿using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
 
+namespace Etk.BindingTemplates.Definitions.Templates
+{
     public class TemplateDefinitionPart : ITemplateDefinitionPart 
     {
         public ITemplateDefinition Parent
@@ -60,7 +60,7 @@
             BindingParts.Add(definition);
         }
 
-        virtual public void Init()
+        public virtual void Init()
         {
             if (FilterDefinitions != null && FilterDefinitions.Count > 0)
             {

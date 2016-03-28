@@ -1,9 +1,9 @@
-﻿namespace Etk.Excel.UI.Converters
-{
-    using System;
-    using System.Globalization;
-    using System.Windows.Data;
+﻿using System;
+using System.Globalization;
+using System.Windows.Data;
 
+namespace Etk.Excel.UI.Converters
+{
     public class CustomImagePathConverter : IValueConverter
     {
         #region IValueConverter Members

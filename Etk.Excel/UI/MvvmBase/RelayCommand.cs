@@ -1,11 +1,11 @@
 ﻿/// From: Josh Smith
 /// http://msdn.microsoft.com/en-us/magazine/dd419663.aspx
 
+using System;
+using System.Windows.Input;
+
 namespace Etk.Excel.UI.MvvmBase
 {
-    using System;
-    using System.Windows.Input;
-    
     public class RelayCommand : ICommand
     {
         #region Fields

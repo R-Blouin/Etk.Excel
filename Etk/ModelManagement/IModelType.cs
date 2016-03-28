@@ -1,9 +1,9 @@
-﻿namespace Etk.ModelManagement
-{
-    using Views;
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Etk.ModelManagement.Views;
 
+namespace Etk.ModelManagement
+{
     /// <summary> Model type definition </summary>
     public interface IModelType
     {

@@ -1,8 +1,7 @@
-﻿namespace Etk.ModelManagement
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Etk.ModelManagement
+{
     public interface IModelDefinitionManager
     {
         /// <summary> If true (if at least one model is loaded), the IModelDefinitionManager can be used.</summary>

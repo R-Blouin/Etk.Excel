@@ -1,16 +1,16 @@
 ﻿// From http://weblogs.asp.net/pwelter34/archive/2006/05/03/444961.aspx
 ///////////////////////////////////////////////////////////////////////
 
-namespace Etk.Excel.UI.Collections
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Runtime.Serialization;
-    using System.Xml;
-    using System.Xml.Schema;
-    using System.Xml.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.Serialization;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
+namespace Etk.Tools.Collections
+{
     [Serializable]
     public class SerializableDictionary<TKey, TVal> : Dictionary<TKey, TVal>, IXmlSerializable, ISerializable
     {

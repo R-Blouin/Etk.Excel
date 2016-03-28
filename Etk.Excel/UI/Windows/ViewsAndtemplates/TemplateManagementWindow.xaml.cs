@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Windows.ViewsAndtemplates
-{
-    using ViewModels;
+﻿using Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels;
 
+namespace Etk.Excel.UI.Windows.ViewsAndtemplates
+{
     /// <summary>
     /// Logique d'interaction pour TemplateManagementWindow.xaml
     /// </summary>

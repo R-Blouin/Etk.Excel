@@ -1,14 +1,13 @@
-﻿namespace Etk.BindingTemplates.Context.SortSearchAndFilter
-{
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
-    using Etk.BindingTemplates.Views;
+﻿using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
+using Etk.BindingTemplates.Views;
 
+namespace Etk.BindingTemplates.Context.SortSearchAndFilter
+{
     public abstract class BindingSearchContextItem : BindingContextItem
     {
         #region attributes and properties
-        private TemplateView view;
-        private BindingSearchDefinition definition;
+        private readonly TemplateView view;
+        private readonly BindingSearchDefinition definition;
         #endregion
 
         #region .ctors
@@ -21,12 +20,12 @@
         #endregion
 
         #region public methods
-        override public object ResolveBinding()
+        public override object ResolveBinding()
         {
             return string.IsNullOrEmpty(view.SearchValue) ? definition.Watermark : view.SearchValue;
         }
 
-        override public bool UpdateDataSource(object data, out object retValue)
+        public override bool UpdateDataSource(object data, out object retValue)
         {
             if (data != null)
             {
@@ -44,7 +43,7 @@
         #endregion
 
         #region protected methods
-        abstract protected void ExecuteSearch(ITemplateView view);
+        protected abstract void ExecuteSearch(ITemplateView view);
         #endregion
     }
 }

@@ -1,8 +1,8 @@
-﻿namespace Etk.Excel.UI.Windows.Wizard
-{
-    using System.Collections.Generic;
-    using System.Windows.Controls;
+﻿using System.Collections.Generic;
+using System.Windows.Controls;
 
+namespace Etk.Excel.UI.Windows.Wizard
+{
     /// <summary>
     /// Logique d'interaction pour ExcelDynamicViewManagementWindow.xaml
     /// </summary>

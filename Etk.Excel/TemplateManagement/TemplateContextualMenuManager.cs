@@ -1,16 +1,15 @@
-﻿namespace Etk.Excel.TemplateManagement
-{
-    using Etk.Excel.ContextualMenus;
-    using Etk.Excel.Extensions;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Reflection;
-    using System.Windows.Interop;
-    using UI.Windows.ViewsAndtemplates;
-    using UI.Windows.ViewsAndtemplates.ViewModels;
-    using Excel = Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Windows.Interop;
+using Etk.Excel.ContextualMenus;
+using Etk.Excel.Extensions;
+using Etk.Excel.UI.Windows.ViewsAndtemplates;
+using Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels;
 
+namespace Etk.Excel.TemplateManagement
+{
     class TemplateContextualMenuManager : IDisposable
     {
         #region attributes and properties
@@ -46,7 +45,7 @@
         /// <summary>
         /// Manage the templates contextual menus
         /// </summary>
-        public IEnumerable<IContextualMenu> ManageTemplateManagerContextualMenu(Excel.Worksheet sheet, Excel.Range range)
+        public IEnumerable<IContextualMenu> ManageTemplateManagerContextualMenu(Microsoft.Office.Interop.Excel.Worksheet sheet, Microsoft.Office.Interop.Excel.Range range)
         {
             List<IContextualMenu> menus = new List<IContextualMenu>();
             menus.Add(addTemplateMenu);
@@ -69,11 +68,11 @@
         #region Contextual menu method handlers   
         /// <summary> Template creation</summary>
         /// <param name="caller">Range where to create the menu</param>
-        public static void AddTemplate(Excel.Range caller)
+        public static void AddTemplate(Microsoft.Office.Interop.Excel.Range caller)
         {
             using (ExcelMainWindow excelWindow = new ExcelMainWindow(caller.Application.Hwnd))
             {
-                Excel.Range firstOutputRange = caller.Offset[0, 1];
+                Microsoft.Office.Interop.Excel.Range firstOutputRange = caller.Offset[0, 1];
 
                 TemplateManagementViewModel viewModel = new TemplateManagementViewModel(null);
                 TemplateManagementWindow window = new TemplateManagementWindow(viewModel);
@@ -88,12 +87,12 @@
         }
 
         /// <summary> Template modification</summary>
-        public static void ModifyTemplate(Excel.Range caller)
+        public static void ModifyTemplate(Microsoft.Office.Interop.Excel.Range caller)
         { 
         }
 
         /// <summary> Template suppression</summary>
-        public static void DeleteTemplate(Excel.Range caller)
+        public static void DeleteTemplate(Microsoft.Office.Interop.Excel.Range caller)
         {
         }
         #endregion

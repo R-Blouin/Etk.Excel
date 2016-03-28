@@ -1,11 +1,7 @@
-﻿namespace Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
+namespace Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions
+{
     public class XmlEventCallback
     {
         [XmlAttribute]

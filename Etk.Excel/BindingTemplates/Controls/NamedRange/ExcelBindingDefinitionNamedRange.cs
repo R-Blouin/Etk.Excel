@@ -1,16 +1,16 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.NamedRange
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Text;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Decorators;
-    using Etk.BindingTemplates.Definitions.EventCallBacks;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Etk.Excel.UI.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
+using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Tools.Extensions;
 
+namespace Etk.Excel.BindingTemplates.Controls.NamedRange
+{
     class ExcelBindingDefinitionNamedRange : IBindingDefinition
     {
         #region attributes and properties
@@ -142,7 +142,7 @@
             }
         }
 
-        static public ExcelBindingDefinitionNamedRange CreateInstance(ExcelTemplateDefinitionPart templateDefinition, ExcelNamedRangeDefinition definition, IBindingDefinition nestedBindingDefinition)
+        public static ExcelBindingDefinitionNamedRange CreateInstance(ExcelTemplateDefinitionPart templateDefinition, ExcelNamedRangeDefinition definition, IBindingDefinition nestedBindingDefinition)
         {
             try
             {
@@ -167,11 +167,11 @@
             catch (Exception ex)
             {
                 string message = string.Format("Cannot create create the named caller binding dataAccessor '{0}'. {1}", definition.Name, ex.Message);
-                throw new EtkException(message, ex);
+                throw new EtkException(message);
             }
         }
 
-        static public ExcelNamedRangeDefinition RetrieveNamedRangeDefinition(string definition)
+        public static ExcelNamedRangeDefinition RetrieveNamedRangeDefinition(string definition)
         {
             ExcelNamedRangeDefinition ret = null;
             try
@@ -183,7 +183,7 @@
             catch (Exception ex)
             {
                 string message = string.Format("Cannot retrieve the named caller dataAccessor '{0}'. {1}", definition.EmptyIfNull(), ex.Message);
-                throw new EtkException(message, ex);
+                throw new EtkException(message);
             }
             return ret;
         }

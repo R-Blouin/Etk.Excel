@@ -1,9 +1,9 @@
-﻿namespace Etk.Excel.UI.Windows.SortAndFilter
-{
-    using BindingTemplate.SortAndFilter.ViewModels;
-    using Etk.BindingTemplates.Views;
-    using System.Windows;
+﻿using System.Windows;
+using Etk.BindingTemplates.Views;
+using Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels;
 
+namespace Etk.Excel.UI.Windows.SortAndFilter
+{
     /// <summary>
     /// Logique d'interaction pour SortAndFilerWindow.xaml
     /// </summary>
@@ -11,10 +11,10 @@
     {
         public SortAndFilerWindow(ITemplateView rootTemplateView)
         {
-            if (Application.Current == null)
+            if (System.Windows.Application.Current == null)
             {
-                new Application();
-                Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+                new System.Windows.Application();
+                System.Windows.Application.Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             }
 
 

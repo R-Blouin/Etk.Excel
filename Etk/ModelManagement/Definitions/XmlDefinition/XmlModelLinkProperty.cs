@@ -1,7 +1,7 @@
-﻿namespace Etk.ModelManagement.Definitions.XmlDefinition
-{
-    using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
+namespace Etk.ModelManagement.Definitions.XmlDefinition
+{
     /// <summary> DefinitionToFilter of a model Type property that references another model type</summary>
     public class XmlModelLinkProperty
     {

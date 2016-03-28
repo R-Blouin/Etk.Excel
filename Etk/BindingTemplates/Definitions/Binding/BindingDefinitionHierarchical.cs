@@ -1,10 +1,9 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+
+namespace Etk.BindingTemplates.Definitions.Binding
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using Etk.BindingTemplates.Context;
-   
     class BindingDefinitionHierarchical : BindingDefinition
     {
         private IBindingDefinition realBindingDefinition;
@@ -23,7 +22,7 @@
             return childBindingDefinition.ResolveBinding(dataSource);
         }
 
-        override public IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
+        public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
             List<INotifyPropertyChanged> notifyPropertyChangedList = new List<INotifyPropertyChanged>();
             dataSource = realBindingDefinition.ResolveBinding(dataSource);
@@ -41,7 +40,7 @@
         private BindingDefinitionHierarchical(BindingDefinitionDescription definitionDescription) : base(definitionDescription)
         { }
 
-        static public BindingDefinitionHierarchical CreateInstance(Type type, BindingDefinitionDescription definitionDescription)
+        public static BindingDefinitionHierarchical CreateInstance(Type type, BindingDefinitionDescription definitionDescription)
         {
             try
             {
@@ -66,8 +65,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot create the 'Hierarchical BindingDefinition' '{0}'. {1}", definitionDescription.BindingExpression, ex.Message);
-                throw new BindingTemplateException(message, ex);
+                throw new BindingTemplateException(string.Format("Cannot create the 'Hierarchical BindingDefinition' '{0}'. {1}", definitionDescription.BindingExpression, ex.Message));
             }
         }
         #endregion

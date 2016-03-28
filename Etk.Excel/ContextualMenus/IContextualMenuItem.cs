@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.ContextualMenus
-{
-    using System.Reflection;
+﻿using System.Reflection;
 
+namespace Etk.Excel.ContextualMenus
+{
     interface IContextualMenuItem: IContextualPart
     {
         string Caption { get; }

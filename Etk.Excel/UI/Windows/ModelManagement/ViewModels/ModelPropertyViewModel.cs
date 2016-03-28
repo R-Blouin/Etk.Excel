@@ -1,8 +1,8 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
-{
-    using Etk.ModelManagement;
-    using MvvmBase;
+﻿using Etk.Excel.UI.MvvmBase;
+using Etk.ModelManagement;
 
+namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
+{
     class ModelPropertyViewModel : ViewModelBase
     {
         #region attributes and proeprties

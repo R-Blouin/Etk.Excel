@@ -1,11 +1,10 @@
-﻿namespace Etk.ModelManagement.Definitions.XmlDefinition
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Xml;
-    using System.Xml.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
 
+namespace Etk.ModelManagement.Definitions.XmlDefinition
+{
     [XmlRoot("ModelConfiguration")]
     public class XmlModelConfiguration
     {
@@ -27,7 +26,7 @@
         { get; set; }
 
         #region static public methods
-        static public XmlModelConfiguration CreateInstanceFromFile(string path)
+        public static XmlModelConfiguration CreateInstanceFromFile(string path)
         {
             try
             {
@@ -51,7 +50,7 @@
             }
         }
 
-        static public XmlModelConfiguration CreateInstanceFromXml(string xml)
+        public static XmlModelConfiguration CreateInstanceFromXml(string xml)
         {
             try
             {

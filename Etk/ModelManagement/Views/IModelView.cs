@@ -1,7 +1,7 @@
-﻿namespace Etk.ModelManagement.Views
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Etk.ModelManagement.Views
+{
     /// <summary> Model view definition. Describe a view on a model type</summary>
     public interface IModelView : IModelViewPart 
     {

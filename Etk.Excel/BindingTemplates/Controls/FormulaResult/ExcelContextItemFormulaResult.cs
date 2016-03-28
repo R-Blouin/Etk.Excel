@@ -1,20 +1,20 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Runtime.InteropServices;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
+{
     class ExcelContextItemFormulaResult : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, ISheetCalculate
     {
         #region properties and attributes
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
         private ExcelBindingDefinitionFormulaResult excelBindingDefinitionFormulaResult;
         private Worksheet workSheet;
-        private Application application;
+        private Microsoft.Office.Interop.Excel.Application application;
         private object currentValue;
 
         public Range Range
@@ -54,7 +54,7 @@
             workSheet = this.Range.Worksheet;
         }
 
-        override public void RealDispose()
+        public override void RealDispose()
         {
             OnPropertyChangedAction = null;
             if (objectsToNotify != null)
@@ -76,7 +76,7 @@
             Range = null;
         }
 
-        override public object ResolveBinding()
+        public override object ResolveBinding()
         {
             if (excelBindingDefinitionFormulaResult.UseFormulaBindingDefinition != null)
                 excelBindingDefinitionFormulaResult.UseFormulaBindingDefinition.UpdateDataSource(this.DataSource, (bool)Range.HasFormula);
@@ -87,7 +87,7 @@
                 return excelBindingDefinitionFormulaResult.NestedBindingDefinition.ResolveBinding(this.DataSource);
         }
 
-        override public bool UpdateDataSource(object data, out object retValue)
+        public override bool UpdateDataSource(object data, out object retValue)
         {
             if (Range.HasFormula)
                 retValue = Range.Value2;

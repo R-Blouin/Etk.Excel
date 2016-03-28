@@ -1,13 +1,13 @@
 ﻿// From https://github.com/thoemmi/Solutionizer/blob/master/Solutionizer/Infrastructure/BindableSelectedItemBehavior%20.cs
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Interactivity;
+using System.Windows.Media;
+
 namespace Etk.Excel.UI.Behaviors
 {
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Interactivity;
-    using System.Windows.Media;
-
     static class WpfHelper
     {
         /// <summary>

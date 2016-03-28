@@ -1,17 +1,17 @@
-﻿namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
-{
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.SortAndFilter;
-    using MvvmBase;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.UI.MvvmBase;
+using Etk.SortAndFilter;
 
+namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
+{
     class TemplateViewModel : ViewModelBase, IDisposable
     {
         #region attributes and properties
-        static public event Action<TemplateViewModel, BindingDefinitionViewModel> BindingDefinitionSelected;
+        public static event Action<TemplateViewModel, BindingDefinitionViewModel> BindingDefinitionSelected;
 
         private SortAndFilterViewModel parent;
 
@@ -120,7 +120,7 @@
 
                             if (selectedValues.Count() != bindingDefinition.ValueSelectionList.Count)
                             {
-                                bool OrEquals = (selectedValues.Count() <= (bindingDefinition.ValueSelectionList.Count / 2));
+                                bool OrEquals = selectedValues.Count() <= bindingDefinition.ValueSelectionList.Count / 2;
                                 IFilterDefinition element = new FilterOnValues(null, bindingDefinition.BindingDefinition, selectedValues.Select(s => s.Value), OrEquals);
                                 elements.Add(element);
                             }

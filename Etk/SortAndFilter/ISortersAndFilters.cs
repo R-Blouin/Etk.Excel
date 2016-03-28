@@ -1,9 +1,9 @@
-﻿namespace Etk.SortAndFilter
-{
-    using System;
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Definitions.Templates;
+﻿using System;
+using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions.Templates;
 
+namespace Etk.SortAndFilter
+{
     public interface ISortersAndFilters
     {
         ITemplateDefinition TemplateDefinition { get; }

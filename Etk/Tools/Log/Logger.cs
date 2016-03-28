@@ -1,11 +1,10 @@
-﻿namespace Etk.Excel.UI.Log
-{
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
-    using System.Configuration;
-    using System.Reflection;
-    using System.IO;
+﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.IO;
+using System.Reflection;
 
+namespace Etk.Tools.Log
+{
     public sealed class Logger
     {
         #region attributes and properties

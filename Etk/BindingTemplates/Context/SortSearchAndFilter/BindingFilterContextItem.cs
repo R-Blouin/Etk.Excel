@@ -1,20 +1,19 @@
-﻿namespace Etk.BindingTemplates.Context.SortSearchAndFilter
-{
-    using System;
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.BindingTemplates.Views;
-    using Etk.SortAndFilter;
+﻿using System;
+using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
+using Etk.SortAndFilter;
 
+namespace Etk.BindingTemplates.Context.SortSearchAndFilter
+{
     public abstract class BindingFilterContextItem : BindingContextItem, IFilterDefinition
     {
         #region attributes and properties
-        private TemplateView view;
-        private IBindingContextElement bindingContextElement;
-        private BindingFilterDefinition bindingFilterDefinition;
+        private readonly TemplateView view;
+        private readonly IBindingContextElement bindingContextElement;
+        private readonly BindingFilterDefinition bindingFilterDefinition;
 
         public ITemplateDefinition TemplateDefinition
         { get { return bindingFilterDefinition.FilterOwner.Parent; } }
@@ -52,12 +51,12 @@
         #endregion
 
         #region public methods
-        override public object ResolveBinding()
+        public override object ResolveBinding()
         {
             return string.IsNullOrEmpty(FilterValue) ? bindingFilterDefinition.Watermark : FilterValue;
         }
 
-        override public bool UpdateDataSource(object data, out object retValue)
+        public override bool UpdateDataSource(object data, out object retValue)
         {
             Dictionary<BindingFilterDefinition, string> filterDefinitionByElement;
             if (!view.FilterValueByFilterDefinitionByElement.TryGetValue(bindingContextElement.DataSource, out filterDefinitionByElement))
@@ -79,7 +78,7 @@
         #endregion
 
         #region protected methods
-        abstract protected void ExecuteFilter(ITemplateView view);
+        protected abstract void ExecuteFilter(ITemplateView view);
         #endregion
     }
 }

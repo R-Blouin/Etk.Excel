@@ -1,10 +1,9 @@
-﻿namespace Etk.ModelManagement.DataAccessors
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 
+namespace Etk.ModelManagement.DataAccessors
+{
     public interface IDataAccessor
     {
         Type ReturnType {get;}

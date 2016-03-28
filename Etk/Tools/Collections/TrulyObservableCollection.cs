@@ -1,12 +1,12 @@
 ﻿// http://stackoverflow.com/questions/1427471/observablecollection-not-noticing-when-item-in-it-changes-even-with-inotifyprop
 
-namespace Etk.Excel.UI.Collections
-{
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Collections.Specialized;
-    using System.ComponentModel;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
+namespace Etk.Tools.Collections
+{
     public class TrulyObservableCollection<T> : ObservableCollection<T> where T : INotifyPropertyChanged
     {
         public TrulyObservableCollection() : base()

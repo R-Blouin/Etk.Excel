@@ -1,11 +1,10 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.Reflection;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Convertors;
-    using Etk.Excel.UI.Log;
+﻿using System;
+using System.Reflection;
+using Etk.BindingTemplates.Convertors;
+using Etk.Tools.Log;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     class BindingDefinitionField : BindingDefinition
     {
         private ILogger log = Logger.Instance;
@@ -14,7 +13,7 @@
         { get; set; }
 
         #region override 'BindingDefinition' methods
-        override public object ResolveBinding(object dataSource)
+        public override object ResolveBinding(object dataSource)
         {
             try
             {
@@ -23,15 +22,13 @@
                     object ret = FieldInfo.GetValue(FieldInfo.IsStatic ? null : dataSource);
                     if (ret != null && ret is Enum)
                         return (ret as Enum).ToString();
-                    else
-                        return ret;
+                    return ret;
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                string message = string.Format("Can't Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message);
-                throw new BindingTemplateException(message, ex);
+                throw new BindingTemplateException(string.Format("Can't Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
             }
         }
 
@@ -41,7 +38,7 @@
         /// If the BindingDefinition to update is readonly, then return the currently loaded value
         /// Else return the value passed as a parameter. 
         /// </summary>
-        override public object UpdateDataSource(object dataSource, object data)
+        public override object UpdateDataSource(object dataSource, object data)
         {
             try
             {
@@ -75,7 +72,7 @@
         #endregion
 
         #region static public methods
-        static public BindingDefinitionField CreateInstance(FieldInfo fieldInfo, BindingDefinitionDescription definitionDescription)
+        public static BindingDefinitionField CreateInstance(FieldInfo fieldInfo, BindingDefinitionDescription definitionDescription)
         {
             BindingDefinitionField definition = new BindingDefinitionField(definitionDescription) {
                                                                            BindingType = fieldInfo.FieldType,

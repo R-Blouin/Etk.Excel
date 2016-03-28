@@ -1,4 +1,4 @@
-﻿namespace Etk.Excel.UI.Log
+﻿namespace Etk.Tools.Log
 {
     /// <summary>
     /// Criticality of the log

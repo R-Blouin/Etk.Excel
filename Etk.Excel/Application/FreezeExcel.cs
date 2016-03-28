@@ -1,9 +1,7 @@
-﻿namespace Etk.Excel.Application
-{
-    using System;
-    using System.Runtime.InteropServices;
-    using Excel = Microsoft.Office.Interop.Excel;
+﻿using System;
 
+namespace Etk.Excel.Application
+{
     /// <summary>
     /// Use to freeze the Excel execution the time to execute operations.
     /// Reduce the flickering during multiple updates on cells in the current Excel application.
@@ -17,7 +15,7 @@
         private bool screenUpdating;
         private bool enableEvents;
         private bool displayStatusBar;
-        private Excel.XlCalculation calculationMode;
+        private Microsoft.Office.Interop.Excel.XlCalculation calculationMode;
 
         public FreezeExcel()
         {
@@ -36,7 +34,7 @@
                         ETKExcel.ExcelApplication.Application.ScreenUpdating = false;
                         ETKExcel.ExcelApplication.Application.EnableEvents = false;
                         ETKExcel.ExcelApplication.Application.DisplayStatusBar = false;
-                        ETKExcel.ExcelApplication.Application.Calculation = Excel.XlCalculation.xlCalculationManual;
+                        ETKExcel.ExcelApplication.Application.Calculation = Microsoft.Office.Interop.Excel.XlCalculation.xlCalculationManual;
                     }
                 }
             }

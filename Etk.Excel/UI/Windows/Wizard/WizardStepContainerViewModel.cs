@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Windows.Wizard
-{
-    using Etk.Excel.UI.MvvmBase;
+﻿using Etk.Excel.UI.MvvmBase;
 
+namespace Etk.Excel.UI.Windows.Wizard
+{
     public class WizardStepContainerViewModel : ViewModelBase
     {
         public int Step

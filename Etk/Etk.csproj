@@ -35,15 +35,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Linq.SMDynamic">
       <HintPath>..\Dependencies\System.Linq.SMDynamic.dll</HintPath>
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -154,9 +151,9 @@
     <Compile Include="EtkException.cs" />
     <Compile Include="Tools\Emit\EmitProperty.cs" />
     <Compile Include="Tools\Emit\TypeBuilderFactory.cs" />
-    <Compile Include="Tools\Log\Extensions\ObjectExtension.cs" />
-    <Compile Include="Tools\Log\Extensions\StringExtension.cs" />
-    <Compile Include="Tools\Log\Extensions\XmlDocumentationExtension.cs" />
+    <Compile Include="Tools\Extensions\ObjectExtension.cs" />
+    <Compile Include="Tools\Extensions\StringExtension.cs" />
+    <Compile Include="Tools\Extensions\XmlDocumentationExtension.cs" />
     <Compile Include="Tools\Log\DefaultLogger.cs" />
     <Compile Include="Tools\Log\ILogger.cs" />
     <Compile Include="Tools\Log\Logger.cs" />

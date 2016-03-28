@@ -1,8 +1,8 @@
-﻿namespace Etk.BindingTemplates.Definitions.Decorators
-{
-    using System.Reflection;
-    using Etk.BindingTemplates.Context;
+﻿using System.Reflection;
+using Etk.BindingTemplates.Context;
 
+namespace Etk.BindingTemplates.Definitions.Decorators
+{
     /// <summary> Contains a decorator definition.
     /// Decorators are used to change the default style of the <see cref="IBindingContextItem"/></summary>
     public abstract class Decorator

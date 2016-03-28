@@ -1,13 +1,13 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
-{
-    using Etk.Excel.UI.MvvmBase;
-    using Etk.ModelManagement;
-    using Etk.ModelManagement.Views;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Wizard;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.Excel.UI.MvvmBase;
+using Etk.Excel.UI.Windows.Wizard;
+using Etk.ModelManagement;
+using Etk.ModelManagement.Views;
 
+namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
+{
     public class ViewPropertiesViewModel : ViewModelBase, IWizardStep
     {
         private WizardViewModel parent;

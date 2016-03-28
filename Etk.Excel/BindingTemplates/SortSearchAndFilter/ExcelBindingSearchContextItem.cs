@@ -1,21 +1,21 @@
-﻿namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
-{
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Context.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
-    using Etk.BindingTemplates.Views;
-    using Etk.Excel.BindingTemplates.Views;
-    using Microsoft.Office.Interop.Excel;
-    using Etk.Excel.Application;
-    using Etk.BindingTemplates.Definitions.Templates;
+﻿using System.Collections.Generic;
+using Etk.BindingTemplates.Context.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
+using Etk.Excel.Application;
+using Etk.Excel.BindingTemplates.Views;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
+{
     class ExcelBindingSearchContextItem : BindingSearchContextItem
     {
         public ExcelBindingSearchContextItem(ITemplateView view, BindingSearchDefinition definition)
                                             : base(view, definition)
         { }
 
-        override protected void ExecuteSearch(ITemplateView view)
+        protected override void ExecuteSearch(ITemplateView view)
         {
             using (FreezeExcel freezeExcel = new FreezeExcel())
             {

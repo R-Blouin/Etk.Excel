@@ -1,17 +1,17 @@
 ﻿//[assembly: log4net.Config.XmlConfigurator()]
 
+using System;
+using System.ComponentModel.Composition;
+using System.Configuration;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using Etk.Tools.Log;
+using log4net;
+using log4net.Config;
+
 namespace Etk.Log4NetWrapper
 {
-    using System;
-    using System.ComponentModel.Composition;
-    using System.Configuration;
-    using System.IO;
-    using System.Reflection;
-    using System.Text;
-    using Etk.Excel.UI.Log;
-    using log4net;
-    using log4net.Config;
-
     /// <summary>
     /// <para>Log4Net implementation of 'Etk.Excel.UI.Log.ILogger'.</para>
     /// <para>If Log4Net is not yet configurated for the current process, the class looks for its configuration:</para>

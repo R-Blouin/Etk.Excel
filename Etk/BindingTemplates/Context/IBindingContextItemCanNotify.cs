@@ -1,8 +1,8 @@
-﻿namespace Etk.BindingTemplates.Context
-{
-    using System;
-    using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
+namespace Etk.BindingTemplates.Context
+{
     public interface IBindingContextItemCanNotify : IBindingContextItem 
     {
         Action<IBindingContextItem, object> OnPropertyChangedAction { get; set; }

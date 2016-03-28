@@ -1,9 +1,9 @@
-﻿namespace Etk.Excel.ContextualMenus
-{
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Context;
-    using Microsoft.Office.Interop.Excel;
+﻿using System.Collections.Generic;
+using Etk.BindingTemplates.Context;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.ContextualMenus
+{
     class ContextualMenu : IContextualMenu 
     {
         #region properties and attributes

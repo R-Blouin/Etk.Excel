@@ -1,11 +1,11 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
+using System.Runtime.Serialization;
+
 [assembly: InternalsVisibleTo("Etk.UI")]
 
 namespace Etk.BindingTemplates
 {
-    using System;
-    using System.Runtime.Serialization;
-
     [Serializable]
     public class BindingTemplateException : EtkException
     {

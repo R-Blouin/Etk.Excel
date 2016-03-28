@@ -1,11 +1,11 @@
-﻿namespace Etk.Excel.UI.Reflection
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
+namespace Etk.Tools.Reflection
+{
     /// <summary> Internal use</summary>
     public static class TypeConvertor
     {

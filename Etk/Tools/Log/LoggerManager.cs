@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Log
-{
-    using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 
+namespace Etk.Tools.Log
+{
     /// <summary> Application logging manager (lazy singleton).</summary>
     [Export]
     class LoggerManager

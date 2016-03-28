@@ -1,9 +1,9 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement.Controls
-{
-    using Etk.Excel.UI.Windows.ModelManagement.ViewModels;
-    using System.Windows.Controls;
-    using System.Windows.Data;
+﻿using System.Windows.Controls;
+using System.Windows.Data;
+using Etk.Excel.UI.Windows.ModelManagement.ViewModels;
 
+namespace Etk.Excel.UI.Windows.ModelManagement.Controls
+{
     /// <summary>
     /// Logique d'interaction pour FilterOnValue.xaml
     /// </summary>

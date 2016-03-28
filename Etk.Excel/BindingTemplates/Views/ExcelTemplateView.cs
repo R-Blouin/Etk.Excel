@@ -1,19 +1,19 @@
-﻿namespace Etk.Excel.BindingTemplates.Views
-{
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.EventCallBacks;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.BindingTemplates.Views;
-    using Etk.Excel.Application;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Etk.Excel.BindingTemplates.Renderer;
-    using Etk.Excel.UI.Log;
-    using Microsoft.Office.Interop.Excel;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
+using Etk.Excel.Application;
+using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Excel.BindingTemplates.Renderer;
+using Etk.Tools.Log;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Views
+{
     struct SelectionPatternColor
     {
         public int ThemeColor;

@@ -1,10 +1,10 @@
-﻿namespace Etk
-{
-    using System;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Hosting;
-    using System.Reflection;
+﻿using System;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.Reflection;
 
+namespace Etk
+{
     public class CompositionManager
     {
         #region singleton

@@ -1,9 +1,9 @@
-﻿namespace Etk.Excel.Application
-{
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Context;
-    using Etk.Excel.BindingTemplates.Views;
+﻿using System.Collections.Generic;
+using Etk.BindingTemplates.Context;
+using Etk.Excel.BindingTemplates.Views;
 
+namespace Etk.Excel.Application
+{
     class ExcelNotityPropertyContext
     {
         public IBindingContextItem ContextItem

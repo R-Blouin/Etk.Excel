@@ -1,7 +1,7 @@
-﻿namespace Etk.ModelManagement
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Etk.ModelManagement
+{
     public interface IModelAccessorGroup
     {
         /// <summary>Model definition manager that owned the group.</summary>

@@ -1,7 +1,7 @@
-﻿namespace Etk.Patterns
-{
-    using System;
+﻿using System;
 
+namespace Etk.Tools.Patterns
+{
     /// <summary>Create a lazy singleton of type T </summary>
     public abstract class Singleton<T>  where T : class
     {
@@ -24,7 +24,7 @@
                                                                             }
                                                                             catch(Exception ex)
                                                                             {
-                                                                                throw new EtkException(string.Format("Singleton creation failed: {0}", ex.Message), ex);
+                                                                                throw new EtkException(string.Format("Singleton creation failed: {0}", ex.Message));
                                                                             }
                                                                         });
 

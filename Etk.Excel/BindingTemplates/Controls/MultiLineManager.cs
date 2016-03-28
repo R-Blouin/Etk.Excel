@@ -1,10 +1,9 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls
-{
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Microsoft.Office.Interop.Excel;
-    using System.Linq;
+﻿using System.Linq;
+using Etk.BindingTemplates.Context;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Controls
+{
     class MultiLineManager
     {
         public void CreateControl(IBindingContextItem item, ref Range range, ref int vOffset)

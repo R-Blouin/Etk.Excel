@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.BindingTemplates.Decorators.XmlDefinitions
-{
-    using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
+namespace Etk.Excel.BindingTemplates.Decorators.XmlDefinitions
+{
     public class XmlExcelRangeDecorator
     {
         [XmlAttribute]

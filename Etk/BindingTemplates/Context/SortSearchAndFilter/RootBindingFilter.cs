@@ -1,18 +1,18 @@
-﻿namespace Etk.BindingTemplates.Context.SortSearchAndFilter
+﻿using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
+using Etk.SortAndFilter;
+
+namespace Etk.BindingTemplates.Context.SortSearchAndFilter
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.BindingTemplates.Views;
-    using Etk.SortAndFilter;
-    
     public class RootBindingFilter : IFilterDefinition
     {
         #region attributes and properties
         private TemplateView view;
-        private BindingFilterDefinition bindingFilterDefinition;
+        private readonly BindingFilterDefinition bindingFilterDefinition;
 
         public ITemplateDefinition TemplateDefinition
         { get { return bindingFilterDefinition.FilterOwner.Parent; } }

@@ -1,7 +1,7 @@
-﻿namespace Etk.ModelManagement
-{
-    using Etk.ModelManagement.DataAccessors;
+﻿using Etk.ModelManagement.DataAccessors;
 
+namespace Etk.ModelManagement
+{
     public interface IModelAccessor
     {
         /// <summary> Group that owned this accessor.</summary>

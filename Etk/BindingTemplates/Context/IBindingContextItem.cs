@@ -1,9 +1,8 @@
-﻿namespace Etk.BindingTemplates.Context
-{
-    using System;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Views;
+﻿using System;
+using Etk.BindingTemplates.Definitions.Binding;
 
+namespace Etk.BindingTemplates.Context
+{
     public interface IBindingContextItem : IDisposable
     {
         long Id { get; }

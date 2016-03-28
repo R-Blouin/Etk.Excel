@@ -1,8 +1,8 @@
-﻿namespace Etk.Excel.ContextualMenus.Definition
-{
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
+﻿using System.Collections.Generic;
+using System.Xml.Serialization;
 
+namespace Etk.Excel.ContextualMenus.Definition
+{
     public class XmlContextualMenuDefinition : XmlContextualMenuPart
     {
         [XmlAttribute]

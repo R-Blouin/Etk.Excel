@@ -1,17 +1,17 @@
-﻿namespace Etk.BindingTemplates
-{
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.BindingTemplates.Views;
-    using Etk.Excel.UI.Log;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
+using Etk.Tools.Log;
 
+namespace Etk.BindingTemplates
+{
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
     public sealed class BindingTemplateManager
     {
-        private static object syncRoot = new object();
+        private static readonly object syncRoot = new object();
 
         #region .ctors
         private BindingTemplateManager()
@@ -21,9 +21,9 @@
         #region attributes and properties
         private ILogger log = Logger.Instance;
 
-        private Dictionary<string, TemplateDefinition> templateDescriptionById = new Dictionary<string, TemplateDefinition>();
-        private Dictionary<Guid, ITemplateView> viewById = new Dictionary<Guid, ITemplateView>();
-        private Dictionary<string, List<ITemplateView>> viewsByTemplateDefinition = new Dictionary<string, List<ITemplateView>>();
+        private readonly Dictionary<string, TemplateDefinition> templateDescriptionById = new Dictionary<string, TemplateDefinition>();
+        private readonly Dictionary<Guid, ITemplateView> viewById = new Dictionary<Guid, ITemplateView>();
+        private readonly Dictionary<string, List<ITemplateView>> viewsByTemplateDefinition = new Dictionary<string, List<ITemplateView>>();
         #endregion
 
         #region public methods
@@ -69,7 +69,7 @@
                     }
                     catch (Exception ex)
                     {
-                        throw new BindingTemplateException(string.Format("Cannot add view '{0}'.{1}", view.Ident.ToString(), ex.Message), ex);
+                        throw new BindingTemplateException(string.Format("Cannot add view '{0}'.{1}", view.Ident, ex.Message), ex);
                     }
                 }
             }

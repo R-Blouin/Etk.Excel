@@ -1,15 +1,14 @@
-﻿namespace Etk.Excel.Application
-{
-    using System;
-    using System.ComponentModel.Composition;
-    using System.Runtime.InteropServices;
-    using System.Text;
-    using System.Windows.Forms;
-    using System.Windows.Threading;
-    using Etk.Excel.Extensions;
-    using Microsoft.Office.Core;
-    using Excel = Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.ComponentModel.Composition;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Windows.Forms;
+using System.Windows.Threading;
+using Etk.Excel.Extensions;
+using Microsoft.Office.Core;
 
+namespace Etk.Excel.Application
+{
     /// <summary> Implements <see cref="IExcelApplication"/> </summary> 
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -22,7 +21,7 @@
         private ExcelPostAsynchronousManager postAsynchronousManager;
 
         /// <summary> Implements <see cref="IExcelApplication.Application"/> </summary> 
-        public Excel.Application Application
+        public Microsoft.Office.Interop.Excel.Application Application
         { get; private set; }
 
         public Dispatcher ExcelDispatcher
@@ -31,7 +30,7 @@
 
         #region .ctors
         [ImportingConstructor]
-        public ExcelApplication([Import] Excel.Application application)
+        public ExcelApplication([Import] Microsoft.Office.Interop.Excel.Application application)
         {
             try
             {
@@ -49,7 +48,7 @@
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("ExcelApplication initialization failed:{0}", ex.Message), ex);
+                throw new EtkException(string.Format("ExcelApplication initialization failed:{0}", ex.Message));
             }
         }
 
@@ -118,33 +117,33 @@
         }
 
         /// <summary> Implements <see cref="IExcelApplication.RangeSelectionDialog"/> </summary> 
-        public Excel.Range RangeSelectionDialog(string title)
+        public Microsoft.Office.Interop.Excel.Range RangeSelectionDialog(string title)
         {
-            Excel.Range selectedRange = null;
+            Microsoft.Office.Interop.Excel.Range selectedRange = null;
             if (string.IsNullOrEmpty(title))
                 title = "Select a Range";
 
             object obj = Application.InputBox(title, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, 8);
-            if (obj is Excel.Range)
-                selectedRange = obj as Excel.Range;
+            if (obj is Microsoft.Office.Interop.Excel.Range)
+                selectedRange = obj as Microsoft.Office.Interop.Excel.Range;
             return selectedRange;
         }
 
         /// <summary> Implements <see cref="IExcelApplication.GetActiveSheet"/> </summary> 
-        public Excel.Worksheet GetActiveSheet()
+        public Microsoft.Office.Interop.Excel.Worksheet GetActiveSheet()
         {
-            Excel.Worksheet ret = null;
+            Microsoft.Office.Interop.Excel.Worksheet ret = null;
             if (Application != null)
                 ret = Application.ActiveSheet; 
             return ret;
         }
 
         /// <summary> Implements <see cref="IExcelApplication.GetWorkSheetFromName"/> </summary> 
-        public Excel.Worksheet GetWorkSheetFromName(Excel.Workbook workbook, string name)
+        public Microsoft.Office.Interop.Excel.Worksheet GetWorkSheetFromName(Microsoft.Office.Interop.Excel.Workbook workbook, string name)
         {
             if(workbook != null && ! string.IsNullOrEmpty(name))
             {
-                foreach (Excel.Worksheet sheet in workbook.Worksheets)
+                foreach (Microsoft.Office.Interop.Excel.Worksheet sheet in workbook.Worksheets)
                 {
                     if (string.Equals(sheet.Name, name))
                         return sheet;

@@ -1,16 +1,15 @@
-﻿using Etk.Excel.BindingTemplates.Decorators;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.BindingTemplates.Controls;
+using Etk.Excel.BindingTemplates.Decorators;
+using Etk.Excel.BindingTemplates.Definitions;
+using Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.BindingTemplates.Controls;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Microsoft.Office.Interop.Excel;
-
     class RenderingContext
     {
         public int RowId { get; private set; }
@@ -89,6 +88,19 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
                 cptElements++;
             }
+
+            // To take into account the min number of elements to render.
+            if( Parent.MinOccurencesMethod != null)
+            {
+                IBindingContextElement parentElement = null;
+                if (bindingContextPart.ParentContext != null)
+                    parentElement = bindingContextPart.ParentContext.Parent;
+
+                int minElementsToRender = LinkedTemplateDefinition.ResolveMinOccurences(Parent.MinOccurencesMethod, parentElement);
+                if (minElementsToRender > nbrOfElement)
+                    localHeight = partToRenderDefinition.Height * minElementsToRender;
+            }
+
             Height += localHeight;
             if (Width < localWidth)
                 Width = localWidth;
@@ -211,7 +223,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         private void RenderLink(RenderingContext renderingContext, IBindingContext linkedBindingContext, Worksheet worksheetTo)
         {
-            using (ExcelRenderer linkedRenderer = new ExcelRenderer(Parent.RootRenderer, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo))
+            using (ExcelRenderer linkedRenderer = new ExcelRenderer(Parent.RootRenderer, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo, renderingContext.LinkedTemplateDefinition.MinOccurencesMethod))
             {
                 linkedRenderer.Render();
 
@@ -300,6 +312,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
                 if (realEnd > startPosition)
                 {
+                    if (renderingContext.LinkedViewRenderedWidth + startPosition - 1 > renderingContext.DataRow.Count)
+                        renderingContext.DataRow.AddRange(new IBindingContextItem[renderingContext.LinkedViewRenderedWidth + startPosition - 1 - renderingContext.DataRow.Count]);
+
                     ManageTemplatePart(renderingContext, ref bindingContextItemsCpt, ref vOffset, startPosition, realEnd);
                     renderingContext.CurrentRowWidth += realEnd - startPosition;
                 }

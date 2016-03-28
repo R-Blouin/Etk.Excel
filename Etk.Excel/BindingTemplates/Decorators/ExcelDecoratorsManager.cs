@@ -1,21 +1,20 @@
-﻿namespace Etk.Excel.BindingTemplates.Decorators
-{
-    using System;
-    using System.ComponentModel.Composition;
-    using Etk.BindingTemplates.Definitions.Decorators;
-    using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
-    using Excel = Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.ComponentModel.Composition;
+using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
 
+namespace Etk.Excel.BindingTemplates.Decorators
+{
     /// <summary>Manage the Excel decorators for the current Excel instance</summary>
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class ExcelDecoratorsManager 
     {
-        private Excel.Application excelApplication;
+        private Microsoft.Office.Interop.Excel.Application excelApplication;
         private DecoratorsManager decoratorsManager;
 
         [ImportingConstructor]
-        public ExcelDecoratorsManager([Import] Excel.Application application, [Import] DecoratorsManager decoratorsManager)
+        public ExcelDecoratorsManager([Import] Microsoft.Office.Interop.Excel.Application application, [Import] DecoratorsManager decoratorsManager)
         {
             this.excelApplication = application;
             this.decoratorsManager = decoratorsManager;
@@ -51,7 +50,7 @@
             catch (Exception ex)
             {
                 string message = xml.Length > 350 ? xml.Substring(0, 350) + "..." : xml;
-                throw new EtkException(string.Format("Cannot create decorators from xml '{0}':{1}", message, ex.Message), ex);
+                throw new EtkException(string.Format("Cannot create decorators from xml '{0}':{1}", message, ex.Message));
             }
         }
 
@@ -59,16 +58,15 @@
         /// <param name="decorator">The decorator to register</param>
         public void RegisterDecorator(ExcelRangeDecorator decorator)
         {
+            if (decorator == null)
+                return;
             try
             {
-                if (decorator != null)
-                {
-                    decoratorsManager.RegisterDecorator(decorator);
-                }
+                decoratorsManager.RegisterDecorator(decorator);
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot register decorator '{0}':{1}", decorator.Ident ?? string.Empty, ex.Message), ex);
+                throw new EtkException(string.Format("Cannot register decorator '{0}':{1}", decorator.Ident ?? string.Empty, ex.Message));
             }
         }
     }

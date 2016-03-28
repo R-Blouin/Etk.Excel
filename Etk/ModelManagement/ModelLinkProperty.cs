@@ -1,11 +1,11 @@
-﻿namespace Etk.ModelManagement
-{
-    using Etk.Excel.UI.Extensions;
-    using Etk.ModelManagement.Definitions.XmlDefinition;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.ModelManagement.Definitions.XmlDefinition;
+using Etk.Tools.Extensions;
 
+namespace Etk.ModelManagement
+{
     public class ModelLinkProperty : IModelProperty 
     {
         #region properties and attributes

@@ -1,17 +1,16 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.Button
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Reflection;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Views;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Etk.Excel.UI.Extensions;
-    using Etk.Excel.UI.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Tools.Extensions;
+using Etk.Tools.Reflection;
 
+namespace Etk.Excel.BindingTemplates.Controls.Button
+{
     class ExcelBindingDefinitionButton : BindingDefinition
     {
         #region attributes and properties
@@ -51,7 +50,7 @@
             RetrieveEnableProperty();
         }
 
-        static public ExcelBindingDefinitionButton CreateInstance(ExcelTemplateDefinition templateDefinition, string definition)
+        public static ExcelBindingDefinitionButton CreateInstance(ExcelTemplateDefinition templateDefinition, string definition)
         {
             ExcelBindingDefinitionButton ret = null;
             if (! string.IsNullOrEmpty(definition))
@@ -65,7 +64,7 @@
                 catch (Exception ex)
                 {
                     string message = string.Format("Cannot retrieve the button dataAccessor '{0}'. {1}", definition.EmptyIfNull(), ex.Message);
-                    throw new EtkException(message, ex);
+                    throw new EtkException(message);
                 }
             }
             return ret;
@@ -131,7 +130,7 @@
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Get 'Command' methodInfo information failed:{0}", ex.Message), ex);
+                    throw new EtkException(string.Format("Get 'Command' methodInfo information failed:{0}", ex.Message));
                 }
             }
         }
@@ -175,7 +174,7 @@
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException("Get 'EnableProp' property information failed", ex);
+                    throw new EtkException(string.Format("Get 'EnableProp' property information failed:{0}", ex.Message));
                 }
             }
         }

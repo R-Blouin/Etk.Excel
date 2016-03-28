@@ -1,8 +1,8 @@
-﻿namespace Etk.BindingTemplates.Convertors
+﻿using System;
+using Etk.BindingTemplates.Definitions.Binding;
+
+namespace Etk.BindingTemplates.Convertors
 {
-    using System;
-    using Etk.BindingTemplates.Definitions.Binding;
-    
     static class SpecificConvertors
     {
         public static object TryConvert(IBindingDefinition bindingDefinition, object data)
@@ -50,7 +50,7 @@
         {
             string objAsString;
             if (obj is string)
-                objAsString = (obj as string);
+                objAsString = obj as string;
             else
                 objAsString = obj.ToString();
 

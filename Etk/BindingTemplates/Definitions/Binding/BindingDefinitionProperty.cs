@@ -1,13 +1,13 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Reflection;
-    using Etk.BindingTemplates.Convertors;
-    using Etk.Excel.UI.Log;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using Etk.BindingTemplates.Convertors;
+using Etk.Tools.Log;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     class BindingDefinitionProperty : BindingDefinition
     {
         private ILogger log = Logger.Instance;
@@ -28,7 +28,7 @@
         /// <summary>
         /// List<PropertyInfo> propertyInfos:  To detect the 'new' properties
         /// </summary>
-        static public BindingDefinitionProperty CreateInstance(PropertyInfo propertyInfo, BindingDefinitionDescription definitionDescription)
+        public static BindingDefinitionProperty CreateInstance(PropertyInfo propertyInfo, BindingDefinitionDescription definitionDescription)
         {
             if (propertyInfo == null)
                 return null;
@@ -66,7 +66,7 @@
         #endregion
 
         #region override 'BindingDefinition' methods
-        override public object ResolveBinding(object dataSource)
+        public override object ResolveBinding(object dataSource)
         {
             try
             {
@@ -82,8 +82,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message);
-                throw new BindingTemplateException(message, ex);
+ throw new BindingTemplateException(string.Format("Cannot Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
             }
         }
 
@@ -96,7 +95,7 @@
         /// If the BindingDefinition to update is readonly, then return the currently loaded value
         /// Else return the value passed as a parameter.
         /// </returns>
-        override public object UpdateDataSource(object datasource, object data)
+        public override object UpdateDataSource(object datasource, object data)
         {
             try
             {
@@ -107,7 +106,7 @@
                 {
                     Type type = BindingType;
                     if (data == null)
-                        SetMethod.Invoke(SetMethod.IsStatic ? null : datasource, new object[] { (type.IsValueType ? Activator.CreateInstance(type) : null) });
+                        SetMethod.Invoke(SetMethod.IsStatic ? null : datasource, new object[] { type.IsValueType ? Activator.CreateInstance(type) : null });
                     else
                     {
                         data = SpecificConvertors.TryConvert(this, data);
@@ -123,13 +122,13 @@
             }
         }
 
-        override public IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
+        public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
             INotifyPropertyChanged notifyPropertyChanged = dataSource as INotifyPropertyChanged;
             return notifyPropertyChanged == null ? null : new INotifyPropertyChanged[] { notifyPropertyChanged };
         }
         
-        override public bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
+        public override bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
         {
             return source == dataSource && BindingExpression.Equals(args.PropertyName);
         }

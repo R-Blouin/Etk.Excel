@@ -1,9 +1,9 @@
-﻿namespace Etk.ModelManagement
-{
-    using Etk.BindingTemplates.Definitions.Binding;
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions.Binding;
 
+namespace Etk.ModelManagement
+{
     public class ModelProperty : IModelProperty
     {
         #region properties and attributes

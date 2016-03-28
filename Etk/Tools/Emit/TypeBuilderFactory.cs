@@ -1,11 +1,11 @@
-﻿namespace Etk.Excel.UI.Emit
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Reflection.Emit;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Reflection.Emit;
 
+namespace Etk.Tools.Emit
+{
     public class TypeBuilderFactory
     {
         private AssemblyBuilder assemblyBuilder = null;
@@ -25,8 +25,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("'TypeBuilderFactory' creation failed:{0}", ex.Message);
-                throw new EtkException(message, ex); 
+                throw new EtkException(string.Format("'TypeBuilderFactory' creation failed:{0}", ex.Message)); 
             }
         }
         #endregion
@@ -52,8 +51,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("'TypeBuilderFactory.CreateType' failed:{0}", ex.Message);
-                throw new EtkException(message, ex);
+                throw new EtkException(string.Format("'TypeBuilderFactory.CreateType' failed:{0}", ex.Message));
             }
         }
         #endregion

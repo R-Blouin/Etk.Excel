@@ -1,11 +1,12 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.Picture
+﻿using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Etk.Excel.BindingTemplates.Views;
+using Microsoft.Office.Interop.Excel;
+
+namespace Etk.Excel.BindingTemplates.Controls.Picture
 {
-    using Etk.Excel.BindingTemplates.Views;
-    using Microsoft.Office.Interop.Excel;
-    using System;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Threading;
     using ExcelForms = Microsoft.Vbe.Interop.Forms;
 
     class ExcelPicture : IDisposable

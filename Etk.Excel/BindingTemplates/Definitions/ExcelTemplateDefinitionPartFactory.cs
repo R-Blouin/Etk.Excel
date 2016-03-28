@@ -1,19 +1,19 @@
-﻿namespace Etk.Excel.BindingTemplates.Definitions
-{
-    using System;
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Definitions;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.BindingTemplates.Definitions.Templates.Xml;
-    using Etk.Excel.BindingTemplates.Controls.Button;
-    using Etk.Excel.BindingTemplates.Controls.CheckBox;
-    using Etk.Excel.BindingTemplates.Controls.FormulaResult;
-    using Etk.Excel.BindingTemplates.Controls.NamedRange;
-    using Etk.Excel.BindingTemplates.SortSearchAndFilter;
-    using Etk.Excel.UI.Extensions;
-    using Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Definitions.Templates.Xml;
+using Etk.Excel.BindingTemplates.Controls.Button;
+using Etk.Excel.BindingTemplates.Controls.CheckBox;
+using Etk.Excel.BindingTemplates.Controls.FormulaResult;
+using Etk.Excel.BindingTemplates.Controls.NamedRange;
+using Etk.Excel.BindingTemplates.SortSearchAndFilter;
+using Etk.Tools.Extensions;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Definitions
+{
     /// <summary> ExcelTemplateDefinitionPart factory</summary>
     class ExcelTemplateDefinitionPartFactory
     {

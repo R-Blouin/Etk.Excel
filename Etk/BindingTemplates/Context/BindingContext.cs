@@ -1,15 +1,14 @@
-﻿namespace Etk.BindingTemplates.Context
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Etk.BindingTemplates.Context.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.BindingTemplates.Views;
-    using Etk.SortAndFilter;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
+using Etk.SortAndFilter;
 
+namespace Etk.BindingTemplates.Context
+{
     public class BindingContext : IBindingContext
     {
         public ITemplateView Owner
@@ -105,9 +104,9 @@
                     }
 
                     if (TemplateDefinition.Header != null)
-                        Header = BindingContextPart.CreateHeaderOrFooterBindingContextPart(this, TemplateDefinition.Header, this.DataSource);
+                        Header = BindingContextPart.CreateHeaderOrFooterBindingContextPart(this, TemplateDefinition.Header, DataSource);
                     if (TemplateDefinition.Footer != null)
-                        Footer = BindingContextPart.CreateHeaderOrFooterBindingContextPart(this, TemplateDefinition.Footer, this.DataSource);
+                        Footer = BindingContextPart.CreateHeaderOrFooterBindingContextPart(this, TemplateDefinition.Footer, DataSource);
                 }
             }
             catch (Exception ex)

@@ -1,20 +1,19 @@
-﻿namespace Etk.Excel.BindingTemplates.Renderer
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Threading.Tasks;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Context.SortSearchAndFilter;
-    using Etk.Excel.Application;
-    using Etk.Excel.BindingTemplates.Views;
-    using Microsoft.Office.Interop.Excel;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.BindingTemplates.Controls.FormulaResult;
-    using Etk.Excel.BindingTemplates.Decorators;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Context.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.Application;
+using Etk.Excel.BindingTemplates.Controls.FormulaResult;
+using Etk.Excel.BindingTemplates.Decorators;
+using Etk.Excel.BindingTemplates.Views;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Renderer
+{
     class ExcelRootRenderer : ExcelRenderer
     {
         #region properties
@@ -34,8 +33,7 @@
         #endregion
 
         #region .ctors 
-        public ExcelRootRenderer(ExcelTemplateView view) 
-               : base(null, view.TemplateDefinition, view.BindingContext, view.FirstOutputCell)
+        public ExcelRootRenderer(ExcelTemplateView view) : base(null, view.TemplateDefinition, view.BindingContext, view.FirstOutputCell, null)
         {
             this.View = view;
             RowDecorators = new List<ExcelElementDecorator>();
@@ -44,7 +42,7 @@
         #endregion
 
         #region public methods
-        override public void Render()
+        public override void Render()
         {
             base.Render();
             RenderDataOnly();
@@ -147,7 +145,7 @@
             foreach (Range cell in target.Cells)
             {
                 IBindingContextItem contextItem = null;
-                // Be&cause of the merge cells ...
+                // Because of the merge cells ...
                 try
                 { contextItem = contextItems[cell.Row - View.FirstOutputCell.Row, cell.Column - View.FirstOutputCell.Column]; }
                 catch
@@ -190,7 +188,7 @@
             }
         }
 
-        new public void Dispose()
+        public new void Dispose()
         {
             if (!IsDisposed)
             {

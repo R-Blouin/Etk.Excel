@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.ContextualMenus
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace Etk.Excel.ContextualMenus
+{
     public interface IContextualMenu: IContextualPart
     {
         string Name { get; }

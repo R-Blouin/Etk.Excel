@@ -1,11 +1,9 @@
-﻿namespace Etk.BindingTemplates.Definitions.Templates
-{
-    using System;
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.ModelManagement;
-    using ModelManagement.DataAccessors;
+﻿using System;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.ModelManagement.DataAccessors;
 
+namespace Etk.BindingTemplates.Definitions.Templates
+{
     /// <summary>
     /// Template definition
     /// </summary>
@@ -91,7 +89,7 @@
         #endregion
 
         #region protected metrhods
-        virtual protected void Init(ITemplateDefinitionPart header, ITemplateDefinitionPart body, ITemplateDefinitionPart footer)
+        protected virtual void Init(ITemplateDefinitionPart header, ITemplateDefinitionPart body, ITemplateDefinitionPart footer)
         {
             Header = header;
             Body = body;

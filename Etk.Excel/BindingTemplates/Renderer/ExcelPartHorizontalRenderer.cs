@@ -1,17 +1,16 @@
-﻿using Etk.Excel.BindingTemplates.Decorators;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.BindingTemplates.Controls;
+using Etk.Excel.BindingTemplates.Decorators;
+using Etk.Excel.BindingTemplates.Definitions;
+using Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.BindingTemplates.Controls;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Microsoft.Office.Interop.Excel;
-
     class ExcelPartHorozontalRenderer : ExcelPartRenderer
     {
         #region .ctors and factories
@@ -27,7 +26,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
             Worksheet worksheetTo = currentRenderingTo.Worksheet;
             int cptElements = 0;
 
-            int localWidth = partToRenderDefinition.Width * bindingContextPart.ElementsToRender.Count();
+            int nbrOfElement = bindingContextPart.ElementsToRender.Count();
+            int localWidth = partToRenderDefinition.Width * nbrOfElement;
             int localHeight = partToRenderDefinition.Height;
             Range workingRange = currentRenderingTo.Resize[localHeight, localWidth];
 
@@ -67,6 +67,19 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
                 cptElements++;
             }
+
+            // To take into account the min number of elements to render.
+            if (Parent.MinOccurencesMethod != null)
+            {
+                IBindingContextElement parentElement = null;
+                if (bindingContextPart.ParentContext != null)
+                    parentElement = bindingContextPart.ParentContext.Parent;
+
+                int minElementsToRender = LinkedTemplateDefinition.ResolveMinOccurences(Parent.MinOccurencesMethod, parentElement);
+                if (minElementsToRender > nbrOfElement)
+                    localWidth = partToRenderDefinition.Width * minElementsToRender;
+            }
+
             Width += localWidth;
             if (Height < localHeight)
                 Height = localHeight;

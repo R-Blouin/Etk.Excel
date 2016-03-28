@@ -1,16 +1,16 @@
-﻿namespace Etk.Excel.UI.Reflection
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using Etk.Excel.UI.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Etk.Tools.Extensions;
 
+namespace Etk.Tools.Reflection
+{
     /// <summary> Internal use</summary>
     public static class TypeHelpers
     {
-        static private readonly object syncObj = new object();
-        static private Dictionary<Type, FieldInfo[]> fieldsByType = new Dictionary<Type, FieldInfo[]>();
+        private static readonly object syncObj = new object();
+        private static Dictionary<Type, FieldInfo[]> fieldsByType = new Dictionary<Type, FieldInfo[]>();
 
         /// <summary>Return a type given a string having 'Type,Assembly' as pattern</summary>
         /// <param name="typeName">The string containing the type definition</param>
@@ -122,7 +122,7 @@
             return ret;
         }
 
-        static private Type GetTypeInternal(string typeName)
+        private static Type GetTypeInternal(string typeName)
         {
             Type ret = null;
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -137,7 +137,7 @@
         }
 
 
-        static private Type GetTypeInternal(Assembly assembly, string typeName)
+        private static Type GetTypeInternal(Assembly assembly, string typeName)
         {
             Type ret = null;
             if (assembly != null && !string.IsNullOrEmpty(typeName))

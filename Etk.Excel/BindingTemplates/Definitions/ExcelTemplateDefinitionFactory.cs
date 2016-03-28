@@ -1,12 +1,12 @@
-﻿namespace Etk.Excel.BindingTemplates.Definitions
-{
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.BindingTemplates.Definitions.Xml;
-    using Etk.Excel.UI.Extensions;
-    using Microsoft.Office.Interop.Excel;
-    using System;
-    using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.BindingTemplates.Definitions.Xml;
+using Etk.Tools.Extensions;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Definitions
+{
     class ExcelTemplateDefinitionFactory
     {
         #region const
@@ -66,8 +66,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot create the template '{0}'. {1}", templateName.EmptyIfNull(), ex.Message);
-                throw new EtkException(message, ex);
+                throw new EtkException(string.Format("Cannot create the template '{0}'. {1}", templateName.EmptyIfNull(), ex.Message));
             }
             finally
             {
@@ -141,8 +140,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("The parsing of template '{0}' in sheet '{1}' failed: {2}", excelTemplateDefinition.Name, worksheet.Name.EmptyIfNull(), ex.Message);
-                throw new EtkException(message, ex);
+                throw new EtkException(string.Format("The parsing of template '{0}' in sheet '{1}' failed: {2}", excelTemplateDefinition.Name, worksheet.Name.EmptyIfNull(), ex.Message));
             }
         }
 

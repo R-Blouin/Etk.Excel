@@ -1,11 +1,11 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Reflection;
-    using Etk.Excel.UI.Log;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Reflection;
+using Etk.Tools.Log;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     class BindingDefinitionMethod : BindingDefinition
     {
         private ILogger log = Logger.Instance;
@@ -14,7 +14,7 @@
         { get; protected set; }
 
         #region override 'BindingDefinition' methods
-        override public object ResolveBinding(object dataSource)
+        public override object ResolveBinding(object dataSource)
         {
             try
             {
@@ -24,8 +24,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message);
-                throw new BindingTemplateException(message, ex);
+                throw new BindingTemplateException(string.Format("Cannot Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
             }
         }
 
@@ -34,7 +33,7 @@
         /// If the BindingDefinition to update is readonly, then return the currently laoded value
         /// Else return the value passed as a parameter. 
         /// </summary>
-        override public object UpdateDataSource(object dataSource, object data)
+        public override object UpdateDataSource(object dataSource, object data)
         {
            try
             {
@@ -52,7 +51,7 @@
         private BindingDefinitionMethod(BindingDefinitionDescription definitionDescription) : base(definitionDescription)
         { }
 
-        static public BindingDefinitionMethod CreateInstance(MethodInfo methodInfo)
+        public static BindingDefinitionMethod CreateInstance(MethodInfo methodInfo)
         {
             if (methodInfo == null)
                 return null;

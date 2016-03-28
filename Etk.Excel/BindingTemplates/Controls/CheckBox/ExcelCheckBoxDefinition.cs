@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.CheckBox
+﻿using System.Xml.Serialization;
+
+namespace Etk.Excel.BindingTemplates.Controls.CheckBox
 {
-    using System.Xml.Serialization;
-    
     [XmlRoot("CheckBox")]
     public class ExcelCheckBoxDefinition
     {

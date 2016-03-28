@@ -1,7 +1,7 @@
-﻿namespace Etk.ModelManagement.Definitions.XmlDefinition
-{
-    using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
+namespace Etk.ModelManagement.Definitions.XmlDefinition
+{
     public class XmlModelAccessor
     {
         /// <summary> Accessor Ident. If not supplied, then the name will be used.</summary>

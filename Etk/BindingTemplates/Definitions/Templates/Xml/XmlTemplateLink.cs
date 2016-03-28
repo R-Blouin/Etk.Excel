@@ -1,8 +1,8 @@
-﻿namespace Etk.BindingTemplates.Definitions.Templates.Xml
-{
-    using System;
-    using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
+namespace Etk.BindingTemplates.Definitions.Templates.Xml
+{
     [XmlRoot("Link")]
     public class XmlTemplateLink
     {
@@ -20,6 +20,10 @@
 
         [XmlAttribute]
         public string With
+        { get; set; }
+
+        [XmlAttribute]
+        public string MinOccurences
         { get; set; }
 
         [XmlIgnore]

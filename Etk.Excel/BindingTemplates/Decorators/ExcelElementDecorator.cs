@@ -1,8 +1,8 @@
-﻿namespace Etk.Excel.BindingTemplates.Decorators
-{
-    using Etk.BindingTemplates.Context;
-    using Microsoft.Office.Interop.Excel;
+﻿using Etk.BindingTemplates.Context;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Decorators
+{
     class ExcelElementDecorator
     {
         private readonly Range range;

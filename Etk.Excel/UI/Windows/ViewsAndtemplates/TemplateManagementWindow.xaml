@@ -4,7 +4,7 @@
                            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                            xmlns:controlsMetro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                           xmlns:MahAppsConverters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
+                           xmlns:mahAppsConverters="clr-namespace:MahApps.Metro.Converters;assembly=MahApps.Metro"
                            xmlns:dialogsMetro="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
 
                            xmlns:sys="clr-namespace:System;assembly=mscorlib"

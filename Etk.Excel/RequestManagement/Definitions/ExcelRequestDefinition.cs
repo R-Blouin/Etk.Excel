@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.RequestManagement.Definitions
-{
-    using Etk.Excel.BindingTemplates.Views;
+﻿using Etk.Excel.BindingTemplates.Views;
 
+namespace Etk.Excel.RequestManagement.Definitions
+{
     class ExcelRequestDefinition
     {
         #region properties

@@ -1,11 +1,11 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using Etk.BindingTemplates.Context;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+using Etk.BindingTemplates.Context;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     class BindingDefinitionOptional : BindingDefinition
     {
         private Dictionary<Type, IBindingDefinition> bindingDefinitionByType = new Dictionary<Type, IBindingDefinition>();
@@ -21,7 +21,7 @@
         private BindingDefinitionOptional(BindingDefinitionDescription definitionDescription) : base(definitionDescription)
         { }
         
-        static public BindingDefinitionOptional CreateInstance(BindingDefinitionDescription definitionDescription)
+        public static BindingDefinitionOptional CreateInstance(BindingDefinitionDescription definitionDescription)
         {
             if (string.IsNullOrEmpty(definitionDescription.Name))
             {

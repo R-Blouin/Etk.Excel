@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Windows.Wizard
-{
-    using System;
+﻿using System;
 
+namespace Etk.Excel.UI.Windows.Wizard
+{
     public interface IWizardStep
     {
         /// <summary>Call before 'OnNext' is called. return a object that will be passed as parameters of the 'OnNext method'</summary>

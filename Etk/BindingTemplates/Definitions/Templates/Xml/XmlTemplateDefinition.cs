@@ -1,8 +1,8 @@
-﻿namespace Etk.BindingTemplates.Definitions.Templates.Xml
-{
-    using System;
-    using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 
+namespace Etk.BindingTemplates.Definitions.Templates.Xml
+{
     public class XmlTemplateOption
     {
         [XmlAttribute]

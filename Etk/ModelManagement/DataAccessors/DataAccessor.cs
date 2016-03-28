@@ -1,11 +1,11 @@
-﻿namespace Etk.ModelManagement.DataAccessors
-{
-    using Etk.Excel.UI.Reflection;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Etk.Tools.Reflection;
 
+namespace Etk.ModelManagement.DataAccessors
+{
     public class DataAccessor : IDataAccessor
     {
         private object callingInstance;
@@ -89,7 +89,7 @@
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Connat create Data Accessor for '{0}'", bindingMethod), ex);
+                throw new EtkException(string.Format("Connat create Data Accessor for '{0}':{1}", bindingMethod, ex.Message));
             }
         }
         #endregion

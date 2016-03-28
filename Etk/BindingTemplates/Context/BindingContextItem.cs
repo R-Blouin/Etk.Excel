@@ -1,18 +1,17 @@
-﻿namespace Etk.BindingTemplates.Context
-{
-    using System;
-    using System.Threading;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Views;
-    using Etk.Excel.UI.Extensions;
-    using Etk.Excel.UI.Log;
+﻿using System;
+using System.Threading;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.Tools.Extensions;
+using Etk.Tools.Log;
 
+namespace Etk.BindingTemplates.Context
+{
     public class BindingContextItem : IBindingContextItem
     {
         #region attributes and properties
         private static long CurrentId = 0;
         
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
 
         public IBindingContextElement ParentElement
         { get; private set; }
@@ -63,11 +62,11 @@
         #endregion
 
         #region public methods
-        virtual public object ResolveBinding()
+        public virtual object ResolveBinding()
         {
             try
             {
-                return BindingDefinition == null ? null : BindingDefinition.ResolveBinding(this.DataSource);
+                return BindingDefinition == null ? null : BindingDefinition.ResolveBinding(DataSource);
             }
             catch (Exception ex)
             {
@@ -77,11 +76,11 @@
             }
         }
 
-        virtual public bool UpdateDataSource(object data, out object retValue)
+        public virtual bool UpdateDataSource(object data, out object retValue)
         {
-            if (this.BindingDefinition != null)
+            if (BindingDefinition != null)
             {
-                retValue = this.BindingDefinition.UpdateDataSource(this.DataSource, data);
+                retValue = BindingDefinition.UpdateDataSource(DataSource, data);
                 return true;
             }
             else

@@ -1,13 +1,13 @@
 ﻿// From http://www.blackwasp.co.uk/ReadOnlyDictionary.aspx
 ///////////////////////////////////////////////////////////
 
-namespace Etk.Excel.UI.Collections
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
+namespace Etk.Tools.Collections
+{
     public sealed class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         private IDictionary<TKey, TValue> _dictionary;

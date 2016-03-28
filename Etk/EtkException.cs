@@ -1,18 +1,18 @@
-﻿namespace Etk
-{
-    using System;
-    using System.Runtime.Serialization;
-    using Etk.Excel.UI.Log;
+﻿using System;
+using System.Runtime.Serialization;
+using Etk.Tools.Log;
 
+namespace Etk
+{
     [Serializable]
     public class EtkException : Exception
     {
         private ILogger log = Logger.Instance;
 
         public EtkException() : base() { }
-        
-        public EtkException(string message) 
-                                   : base(message) 
+
+        public EtkException(string message)
+                                   : base(message)
         {
             log.LogException(LogType.Error, this, message);
         }
@@ -40,6 +40,6 @@
 
         protected EtkException(SerializationInfo info, StreamingContext context)
                                       : base(info, context)
-        {}
+        { }
     }
 }

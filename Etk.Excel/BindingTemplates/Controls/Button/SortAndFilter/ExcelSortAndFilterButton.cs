@@ -1,12 +1,13 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
+﻿using System;
+using System.Reflection;
+using System.Threading;
+using Etk.Excel.BindingTemplates.Views;
+using Etk.Excel.Extensions;
+using Etk.Excel.UI.Windows.SortAndFilter;
+using Microsoft.Office.Interop.Excel;
+
+namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
 {
-    using Etk.Excel.BindingTemplates.Views;
-    using Etk.Excel.Extensions;
-    using Microsoft.Office.Interop.Excel;
-    using System;
-    using System.Reflection;
-    using System.Threading;
-    using UI.Windows.SortAndFilter;
     using ExcelForms = Microsoft.Vbe.Interop.Forms;
 
     class ExcelSortAndFilterButton : IDisposable

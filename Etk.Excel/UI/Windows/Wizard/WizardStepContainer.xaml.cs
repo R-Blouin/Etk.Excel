@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Windows.Wizard
-{
-    using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
+namespace Etk.Excel.UI.Windows.Wizard
+{
     public partial class WizardStepContainer : UserControl
     {
         WizardControlViewModel parent;

@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.Picture
+﻿using System.Xml.Serialization;
+
+namespace Etk.Excel.BindingTemplates.Controls.Picture
 {
-    using System.Xml.Serialization;
-    
     [XmlRoot("Picture")]
     public class ExcelPictureDefinition
     {

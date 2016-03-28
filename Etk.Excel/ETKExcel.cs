@@ -1,17 +1,15 @@
-﻿namespace Etk.Excel
-{
-    using Etk.Excel.Application;
-    using Etk.Excel.BindingTemplates;
-    using Etk.Excel.ContextualMenus;
-    using Etk.Excel.RequestManagement;
-    using Etk.ModelManagement;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.ComponentModel.Composition.Primitives;
-    using System.Linq;
-    using Excel = Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
+using Etk.Excel.Application;
+using Etk.Excel.BindingTemplates;
+using Etk.Excel.ContextualMenus;
+using Etk.Excel.RequestManagement;
+using Etk.ModelManagement;
 
+namespace Etk.Excel
+{
     /// <summary> 
     /// Framework main class. 
     /// Gateway to all the Etk framework fonctionalities 
@@ -23,7 +21,7 @@
         private bool isDisposed = false;
         private static readonly object syncObj = new object();
 
-        private List<Excel.Workbook> managedWorkbooks = new List<Excel.Workbook>();
+        private List<Microsoft.Office.Interop.Excel.Workbook> managedWorkbooks = new List<Microsoft.Office.Interop.Excel.Workbook>();
 
         [Import(AllowDefault = false)]
         private ExcelApplication excelApplication = null;
@@ -87,7 +85,7 @@
         #endregion
 
         #region .ctors
-        private ETKExcel(Excel.Application application)
+        private ETKExcel(Microsoft.Office.Interop.Excel.Application application)
         {
             if (application == null)
                 throw new EtkException("ETKExcel initialization: the 'application' parameter is mandatory");
@@ -110,7 +108,7 @@
         #region public methods
         /// <summary>Init the framework. Must be called before any other uses of the framework</summary>
         /// <param name="application">A reference to the current Excel application instance</param>
-        public static void Init(Excel.Application application)
+        public static void Init(Microsoft.Office.Interop.Excel.Application application)
         {
             try
             {
@@ -130,7 +128,7 @@
                         // Compose the current instance
                         CompositionManager.Instance.ComposeParts(Instance);
 
-                        Excel.Workbook workbook = application.ActiveWorkbook;
+                        Microsoft.Office.Interop.Excel.Workbook workbook = application.ActiveWorkbook;
                         Instance.AddManagedWorkbook(application.ActiveWorkbook);
 
                         application.WorkbookOpen += Instance.AddManagedWorkbook;
@@ -178,9 +176,9 @@
         #endregion
 
         #region private methods
-        private void AddManagedWorkbook(Excel.Workbook workbook)
+        private void AddManagedWorkbook(Microsoft.Office.Interop.Excel.Workbook workbook)
         {
-            Excel.Workbook managedWorkbook = Instance.managedWorkbooks.FirstOrDefault(w => w == workbook);
+            Microsoft.Office.Interop.Excel.Workbook managedWorkbook = Instance.managedWorkbooks.FirstOrDefault(w => w == workbook);
             if (managedWorkbook == null)
             {
                 managedWorkbooks.Add(workbook);
@@ -190,7 +188,7 @@
             managedWorkbook = null;
         }
 
-        private void OnWorkbookBeforeClose(Excel.Workbook workbook, ref bool cancel)
+        private void OnWorkbookBeforeClose(Microsoft.Office.Interop.Excel.Workbook workbook, ref bool cancel)
         {
             if (!cancel && workbook.Application.Workbooks.Count >= 1)
                 Instance.managedWorkbooks.Remove(workbook);

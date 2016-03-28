@@ -1,15 +1,15 @@
-﻿namespace Etk.BindingTemplates.Context
-{
-    using System;
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Context.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.SortAndFilter;
-    using Etk.BindingTemplates.Views;
+﻿using System;
+using System.Collections.Generic;
+using Etk.BindingTemplates.Context.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.BindingTemplates.Views;
+using Etk.SortAndFilter;
 
+namespace Etk.BindingTemplates.Context
+{
     class BindingContextElement : IBindingContextElement
     {
         private bool disposed;
@@ -73,7 +73,7 @@
                                 BindingContextItems.Add(item);
                             break;
                             case BindingPartType.FilterDefinition:
-                                BindingFilterContextItem filter = ((BindingFilterDefinition) definitionPart).CreateContextItem(this.ParentPart.ParentContext.Owner, this);
+                                BindingFilterContextItem filter = ((BindingFilterDefinition) definitionPart).CreateContextItem(ParentPart.ParentContext.Owner, this);
                                 if (newTemplatesFilters == null)
                                     newTemplatesFilters = new List<BindingFilterContextItem>();
                                 BindingContextItems.Add(filter);
@@ -81,7 +81,7 @@
                                     newTemplatesFilters.Add(filter);
                             break;
                             case BindingPartType.SearchDefinition:
-                                BindingSearchContextItem search = ((BindingSearchDefinition) definitionPart).CreateContextItem(this.ParentPart.ParentContext.Owner);
+                                BindingSearchContextItem search = ((BindingSearchDefinition) definitionPart).CreateContextItem(ParentPart.ParentContext.Owner);
                                 BindingContextItems.Add(search);
                             break;
                         }
@@ -103,7 +103,7 @@
                             templatedFilters.AddRange(ParentPart.ParentContext.TemplatedFilters);
                         templatedFilters.AddRange(newTemplatesFilters);
                     }
-                    BindingContext linkedContext = new BindingContext(this, this.ParentPart.ParentContext.Owner, lt.TemplateDefinition, resolvedBinding, templatedFilters);
+                    BindingContext linkedContext = new BindingContext(this, ParentPart.ParentContext.Owner, lt.TemplateDefinition, resolvedBinding, templatedFilters);
                     LinkedBindingContexts.Add(linkedContext);
                 }
 //#else

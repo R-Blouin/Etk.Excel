@@ -1,13 +1,13 @@
-﻿namespace Etk.BindingTemplates.Definitions.Templates
-{
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates.Xml;
-    using Etk.Excel.UI.Reflection;
-    using ModelManagement.DataAccessors;
-    using System;
-    using System.Linq;
-    using System.Reflection;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates.Xml;
+using Etk.ModelManagement.DataAccessors;
+using Etk.Tools.Reflection;
 
+namespace Etk.BindingTemplates.Definitions.Templates
+{
     public class TemplateOption
     {
         #region attributes and properties
@@ -94,7 +94,7 @@
                 //    }
                 //    catch (Exception ex)
                 //    {
-                //        throw new EtkException(string.Format("Cannot resolve the DataAccessor '{0}':{1}", bindingMethod, ex.Message), ex);
+                //        throw new EtkException(string.Format("Cannot resolve the DataAccessor '{0}':{1}", bindingMethod, ex.Message));
                 //    }
                 //}
                 //else
@@ -112,7 +112,7 @@
                     }
                     catch (Exception ex)
                     {
-                        throw new EtkException(string.Format("Cannot resolve 'BindingWith' '{0}':{1}", bindingWith, ex.Message), ex);
+                        throw new EtkException(string.Format("Cannot resolve 'BindingWith' '{0}':{1}", bindingWith, ex.Message));
                     }
                 }
 
@@ -128,13 +128,13 @@
                     }
                     catch (Exception ex)
                     {
-                        throw new EtkException(string.Format("Cannot resolve the expander binding definition from '{0}'. {1}", xmlTemplateOption.Expander, ex.Message), ex);
+                        throw new EtkException(string.Format("Cannot resolve the expander binding definition from '{0}'. {1}", xmlTemplateOption.Expander, ex.Message));
                     }
                 }
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Resolve the template oprion failed:{0}", ex.Message), ex);
+                throw new EtkException(string.Format("Resolve the template oprion failed:{0}", ex.Message));
             }
         }
         #endregion

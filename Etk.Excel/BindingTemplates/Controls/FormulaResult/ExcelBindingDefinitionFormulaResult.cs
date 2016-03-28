@@ -1,14 +1,14 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Etk.Excel.UI.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Tools.Extensions;
 
+namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
+{
     class ExcelBindingDefinitionFormulaResult : BindingDefinition
     {
         #region attributes and properties
@@ -20,10 +20,10 @@
         public IBindingDefinition NestedBindingDefinition
         { get; private set; }
 
-        override public string Name
+        public override string Name
         { get { return NestedBindingDefinition != null ? NestedBindingDefinition.Name : string.Empty; } }
 
-        override public string Description
+        public override string Description
         { get { return NestedBindingDefinition != null ? NestedBindingDefinition.Description : string.Empty; } }
         #endregion
 
@@ -38,7 +38,7 @@
             DefinitionDescription = new BindingDefinitionDescription();
         }
 
-        static public ExcelBindingDefinitionFormulaResult CreateInstance(ExcelTemplateDefinition templateDefinition, string definition)
+        public static ExcelBindingDefinitionFormulaResult CreateInstance(ExcelTemplateDefinition templateDefinition, string definition)
         {
             try
             {
@@ -75,36 +75,36 @@
             catch (Exception ex)
             {
                 string message = string.Format("Cannot retrieve the formula result binding dataAccessor '{0}'. {1}", definition.EmptyIfNull(), ex.Message);
-                throw new EtkException(message, ex);
+                throw new EtkException(message);
             }
         }
         #endregion
 
 
-        override public IBindingContextItem ContextItemFactory(IBindingContextElement parent)
+        public override IBindingContextItem ContextItemFactory(IBindingContextElement parent)
         {
             IBindingContextItem nestedContextItem = NestedBindingDefinition.ContextItemFactory(parent);
             return new ExcelContextItemFormulaResult(parent, this);
         }
 
         //  cannot be reached... Managed in 'ExcelContextItemFormulaResult'
-        override public object UpdateDataSource(object dataSource, object data)
+        public override object UpdateDataSource(object dataSource, object data)
         {
             return null;
         }
 
         //  cannot be reached... Managed in 'ExcelContextItemFormulaResult'
-        override public object ResolveBinding(object dataSource)
+        public override object ResolveBinding(object dataSource)
         {
             return null;
         }
 
-        override public bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
+        public override bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
         {
             return NestedBindingDefinition != null && NestedBindingDefinition.MustNotify(dataSource, source, args);
         }
 
-        override public IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
+        public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
             return NestedBindingDefinition == null ? null : NestedBindingDefinition.GetObjectsToNotify(dataSource);
         }

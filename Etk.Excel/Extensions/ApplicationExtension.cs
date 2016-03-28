@@ -1,7 +1,8 @@
-﻿namespace Etk.Excel.Extensions
+﻿using System;
+using System.Windows.Forms;
+
+namespace Etk.Excel.Extensions
 {
-    using System;
-    using System.Windows.Forms;
     using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
     /// <summary> 

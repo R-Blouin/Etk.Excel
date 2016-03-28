@@ -1,18 +1,18 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using Etk.Excel.UI.Log;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using Etk.Tools.Log;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     class BindingDefinitionComposite : BindingDefinition
     {
         #region attributes and properties
-        static private string pattern = "(?<={)(.*?)(?=})";
+        private static string pattern = "(?<={)(.*?)(?=})";
         private ILogger log = Logger.Instance;
 
         private List<IBindingDefinition> nestedDefinitions;
@@ -32,7 +32,7 @@
         #endregion
 
         #region override 'BindingDefinition' methods
-        override public object ResolveBinding(object dataSource)
+        public override object ResolveBinding(object dataSource)
         {
             try
             {
@@ -51,8 +51,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("Can't Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message);
-                throw new BindingTemplateException(message, ex);
+                throw new BindingTemplateException(string.Format("Can't Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
             }
         }
 
@@ -64,7 +63,7 @@
         /// <param name="contextItem">the data IBindingContextItem to update.</param>
         /// <param name="data">the data to update the datasource.</param>
         /// <returns></returns>
-        override public object UpdateDataSource(object dataSource, object data)
+        public override object UpdateDataSource(object dataSource, object data)
         {
             try
             {
@@ -82,7 +81,7 @@
             }
         }
 
-        override public IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
+        public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
             List<INotifyPropertyChanged> notifyPropertyChangedList = new List<INotifyPropertyChanged>();
             foreach (IBindingDefinition definition in canBeNotifiedNestedDefinitions)
@@ -94,7 +93,7 @@
             return notifyPropertyChangedList;
         }
 
-        override public bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
+        public override bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
         {
             foreach (IBindingDefinition definition in canBeNotifiedNestedDefinitions)
             {
@@ -106,7 +105,7 @@
         #endregion
 
         #region static public methods
-        static public BindingDefinitionComposite CreateInstance(Type type, BindingDefinitionDescription definitionDescription)
+        public static BindingDefinitionComposite CreateInstance(Type type, BindingDefinitionDescription definitionDescription)
         {
             try
             {
@@ -174,8 +173,7 @@
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot create the 'Composite BindingDefinition' '{0}'. {1}", definitionDescription.BindingExpression, ex.Message);
-                throw new BindingTemplateException(message, ex);
+                throw new BindingTemplateException(string.Format("Cannot create the 'Composite BindingDefinition' '{0}'. {1}", definitionDescription.BindingExpression, ex.Message));
             }
         }
         #endregion

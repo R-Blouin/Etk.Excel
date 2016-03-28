@@ -1,12 +1,11 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.NamedRange
-{
-    using System.ComponentModel;
-    using System.Runtime.InteropServices;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Views;
-    using Microsoft.Office.Interop.Excel;
+﻿using System.ComponentModel;
+using System.Runtime.InteropServices;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Controls.NamedRange
+{
     class ExcelContextItemNamedRange : BindingContextItem, IBindingContextItemCanNotify, IExcelControl
     {
         #region properties and attributes
@@ -91,7 +90,7 @@
                 ((IExcelControl) NestedContextItem).CreateControl(range);
         }
 
-        override public void RealDispose()
+        public override void RealDispose()
         {
             if (rangeName != null)
                 rangeName.Delete();
@@ -107,12 +106,12 @@
             Range = null;
         }
 
-        override public object ResolveBinding()
+        public override object ResolveBinding()
         {
             return NestedContextItem == null ? null : NestedContextItem.ResolveBinding();
         }
 
-        override public bool UpdateDataSource(object data, out object retValue)
+        public override bool UpdateDataSource(object data, out object retValue)
         {
             if(NestedContextItem != null)
                 return NestedContextItem.UpdateDataSource(data, out retValue);

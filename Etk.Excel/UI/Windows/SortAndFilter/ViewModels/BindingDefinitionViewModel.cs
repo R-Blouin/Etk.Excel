@@ -1,16 +1,16 @@
-﻿namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
-{
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using MvvmBase;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.Excel.UI.MvvmBase;
 
+namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
+{
     class BindingDefinitionViewModel : ViewModelBase, IDisposable
     {
         #region attributes and properties
-        static private event Action<TemplateViewModel, BindingDefinitionViewModel> SortOrFilterSelected;
+        private static event Action<TemplateViewModel, BindingDefinitionViewModel> SortOrFilterSelected;
 
         private TemplateViewModel parent;
         private List<IBindingContextItem> items;

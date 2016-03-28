@@ -1,13 +1,12 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions;
-    using Etk.BindingTemplates.Definitions.Decorators;
-    using Etk.BindingTemplates.Definitions.EventCallBacks;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     public interface IBindingDefinition : IDefinitionPart
     {
         /// <summary> Contains the expression used to create the binding definition</summary>

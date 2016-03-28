@@ -1,14 +1,14 @@
-﻿namespace Etk.Excel.Application
-{
-    using System;
-    using System.Collections.Concurrent;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using System.Threading;
-    using Etk.Excel.UI.Log;
-    using Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Threading;
+using Etk.Tools.Log;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.Application
+{
     class ExcelNotifyPropertyManager : IDisposable
     {
         private volatile bool waitExcelBusy;

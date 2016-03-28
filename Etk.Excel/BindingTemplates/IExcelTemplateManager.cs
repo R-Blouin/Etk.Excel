@@ -1,9 +1,10 @@
-﻿namespace Etk.Excel.BindingTemplates
+﻿using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
+using Etk.Excel.BindingTemplates.Decorators;
+using Etk.Excel.BindingTemplates.Views;
+
+namespace Etk.Excel.BindingTemplates
 {
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Definitions.EventCallBacks;
-    using Etk.Excel.BindingTemplates.Decorators;
-    using Etk.Excel.BindingTemplates.Views;
     using ExcelInterop = Microsoft.Office.Interop.Excel;
 
     public interface IExcelTemplateManager

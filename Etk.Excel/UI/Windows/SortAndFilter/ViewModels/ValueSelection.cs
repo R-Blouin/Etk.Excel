@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
-{
-    using Etk.Excel.UI.MvvmBase;
+﻿using Etk.Excel.UI.MvvmBase;
 
+namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
+{
     class ValueSelection : ViewModelBase
     {
         public object Value

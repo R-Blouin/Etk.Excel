@@ -1,13 +1,13 @@
-﻿namespace Etk.ModelManagement
-{
-    using Etk.ModelManagement.Definitions.XmlDefinition;
-    using Etk.Excel.UI.Extensions;
-    using Etk.Excel.UI.Log;
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
+using Etk.ModelManagement.Definitions.XmlDefinition;
+using Etk.Tools.Extensions;
+using Etk.Tools.Log;
 
+namespace Etk.ModelManagement
+{
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class ModelDefinitionManager : IModelDefinitionManager

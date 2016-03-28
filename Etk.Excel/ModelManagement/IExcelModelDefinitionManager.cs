@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.ModelManagement
-{
-    using Etk.ModelManagement;
+﻿using Etk.ModelManagement;
 
+namespace Etk.Excel.ModelManagement
+{
     public interface IExcelModelDefinitionManager : IModelDefinitionManager
     {
     }

@@ -1,8 +1,8 @@
-﻿namespace Etk.Excel.UI.Log
-{
-    using System;
-    using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
+namespace Etk.Tools.Log
+{
     public class DefaultLogger : ILogger
     {
         public LogType GetLogLevel() 

@@ -1,7 +1,7 @@
-﻿namespace Etk.ModelManagement
-{
-    using Etk.BindingTemplates.Definitions.Binding;
+﻿using Etk.BindingTemplates.Definitions.Binding;
 
+namespace Etk.ModelManagement
+{
     /// <summary> For the primitive type</summary>
     public class ModelLeafProperty : IModelProperty
     {

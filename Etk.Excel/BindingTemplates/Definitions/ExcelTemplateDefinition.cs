@@ -1,14 +1,14 @@
-﻿namespace Etk.Excel.BindingTemplates.Definitions
-{
-    using System;
-    using Etk.BindingTemplates.Definitions.EventCallBacks;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.ContextualMenus;
-    using Etk.Excel.UI.Extensions;
-    using Microsoft.Office.Interop.Excel;
-    using Etk.BindingTemplates.Definitions.Decorators;
-    using Etk.Excel.BindingTemplates.Decorators;
+﻿using System;
+using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.BindingTemplates.Decorators;
+using Etk.Excel.ContextualMenus;
+using Etk.Tools.Extensions;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Definitions
+{
     public class ExcelTemplateDefinition : TemplateDefinition
     {
         #region const
@@ -60,7 +60,7 @@
         #endregion
 
         #region internal metrhods
-        internal protected void ExcelInit(ITemplateDefinitionPart header, ITemplateDefinitionPart body, ITemplateDefinitionPart footer)
+        protected internal void ExcelInit(ITemplateDefinitionPart header, ITemplateDefinitionPart body, ITemplateDefinitionPart footer)
         {
             Init(header, body, footer);
 
@@ -92,7 +92,7 @@
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException("Retrieve 'ChangeSelection' method information failed", ex);
+                    throw new EtkException(string.Format("Retrieve 'ChangeSelection' method information failed:[0}", ex.Message));
                 }
             }
         }

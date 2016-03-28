@@ -1,13 +1,13 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.Button
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Reflection;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Controls.Button
+{
     class ExcelContextItemButton : BindingContextItem, IBindingContextItemCanNotify, IExcelControl
     {
         #region attributes and properties

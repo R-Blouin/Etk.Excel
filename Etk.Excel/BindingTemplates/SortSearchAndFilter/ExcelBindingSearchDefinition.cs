@@ -1,10 +1,10 @@
-﻿namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
-{
-    using System;
-    using Etk.BindingTemplates.Context.SortSearchAndFilter;
-    using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
-    using Etk.BindingTemplates.Views;
+﻿using System;
+using Etk.BindingTemplates.Context.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
+using Etk.BindingTemplates.Views;
 
+namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
+{
     public class ExcelBindingSearchDefinition : BindingSearchDefinition
     {
         #region attributes and properties
@@ -28,7 +28,7 @@
             return new ExcelBindingSearchDefinition(trimmedDefinition);
         }
 
-        override public BindingSearchContextItem CreateContextItem(ITemplateView view)
+        public override BindingSearchContextItem CreateContextItem(ITemplateView view)
         {
             return new ExcelBindingSearchContextItem(view, this);
         }

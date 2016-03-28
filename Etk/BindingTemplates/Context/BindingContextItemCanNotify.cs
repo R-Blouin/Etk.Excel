@@ -1,10 +1,10 @@
-﻿namespace Etk.BindingTemplates.Context
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using Etk.BindingTemplates.Definitions.Binding;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using Etk.BindingTemplates.Definitions.Binding;
 
+namespace Etk.BindingTemplates.Context
+{
     public class BindingContextItemCanNotify : BindingContextItem, IBindingContextItemCanNotify 
     {
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
@@ -32,7 +32,7 @@
         {
             if (objectsToNotify != null && OnPropertyChangedAction != null)
             {
-                if (BindingDefinition.MustNotify(this.DataSource, source, args))
+                if (BindingDefinition.MustNotify(DataSource, source, args))
                     OnPropertyChangedAction(this, OnPropertyChangedActionArgs);
             }
         }

@@ -1,10 +1,10 @@
-﻿namespace Etk.Excel.UI.Configuration
-{
-    using System;
-    using System.Configuration;
-    using System.Xml;
-    using System.Xml.Serialization;
+﻿using System;
+using System.Configuration;
+using System.Xml;
+using System.Xml.Serialization;
 
+namespace Etk.Tools.Configuration
+{
     /// <summary>
     /// Deserialise a section of the application config file into an instance of a given class.
     /// <para>Below, a configuration example of the App.Config</para>

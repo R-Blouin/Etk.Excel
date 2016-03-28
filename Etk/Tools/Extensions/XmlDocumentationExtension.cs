@@ -1,15 +1,15 @@
-﻿namespace Etk.Excel.UI.Extensions
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Xml.Linq;
+using System.Xml.XPath;
+
+namespace Etk.Tools.Extensions
 {
     // Reading XML Documentation at Run-Time
     // Bradley Smith - 2010/11/25
-
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Xml.Linq;
-    using System.Xml.XPath;
-
+    
     /// <summary>
     /// Provides extension methods for reading XML comments from reflected members.
     /// </summary>
@@ -34,9 +34,9 @@
         private static string GetMemberElementName(MemberInfo member)
         {
             char prefixCode;
-            string memberName = (member is Type)
+            string memberName = member is Type
                 ? ((Type)member).FullName                               // member is a Type
-                : (member.DeclaringType.FullName + "." + member.Name);  // member belongs to a Type
+                : member.DeclaringType.FullName + "." + member.Name;  // member belongs to a Type
 
             switch (member.MemberType)
             {

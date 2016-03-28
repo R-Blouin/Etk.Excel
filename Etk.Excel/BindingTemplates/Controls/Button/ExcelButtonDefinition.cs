@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.Button
+﻿using System.Xml.Serialization;
+
+namespace Etk.Excel.BindingTemplates.Controls.Button
 {
-    using System.Xml.Serialization;
-    
     [XmlRoot("Button")]
     public class ExcelButtonDefinition
     {

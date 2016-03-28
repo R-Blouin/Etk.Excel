@@ -1,10 +1,10 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System.Collections.Generic;
-    using System.Linq;
-    using Etk.BindingTemplates.Definitions.Decorators;
-    using Etk.BindingTemplates.Definitions.EventCallBacks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     public class BindingDefinitionDescription
     {
         private static DecoratorsManager decoratorsManager;
@@ -126,7 +126,7 @@
             }
         }
 
-        static public BindingDefinitionDescription CreateBindingDescription(string toAnalyze, string trimmedToAnalyze)
+        public static BindingDefinitionDescription CreateBindingDescription(string toAnalyze, string trimmedToAnalyze)
         {
             BindingDefinitionDescription ret = null;
             string bindingExpression;

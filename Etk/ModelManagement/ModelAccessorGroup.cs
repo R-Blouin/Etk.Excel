@@ -1,11 +1,11 @@
-﻿namespace Etk.ModelManagement
-{
-    using Etk.ModelManagement.Definitions.XmlDefinition;
-    using Etk.Excel.UI.Extensions;
-    using Etk.Excel.UI.Log;
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Etk.ModelManagement.Definitions.XmlDefinition;
+using Etk.Tools.Extensions;
+using Etk.Tools.Log;
 
+namespace Etk.ModelManagement
+{
     class ModelAccessorGroup : IModelAccessorGroup
     {
         #region properties and attributes

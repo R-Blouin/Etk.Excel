@@ -1,16 +1,16 @@
-﻿namespace Etk.Excel.BindingTemplates
-{
-    using Etk.Excel.Application;
-    using Etk.Excel.BindingTemplates.Views;
-    using Etk.Excel.UI.Reflection;
-    using Microsoft.Office.Interop.Excel;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using Etk.Excel.Application;
+using Etk.Excel.BindingTemplates.Views;
+using Etk.Tools.Reflection;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates
+{
     class AccessorParametersManager : IDisposable
     {
         private List<Range> rangesToListen = new List<Range>();

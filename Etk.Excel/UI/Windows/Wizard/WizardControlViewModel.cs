@@ -1,11 +1,11 @@
-﻿namespace Etk.Excel.UI.Windows.Wizard
-{
-    using MvvmBase;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Windows.Input;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Input;
+using Etk.Excel.UI.MvvmBase;
 
+namespace Etk.Excel.UI.Windows.Wizard
+{
     public class WizardControlViewModel : ViewModelBase
     {
         #region command

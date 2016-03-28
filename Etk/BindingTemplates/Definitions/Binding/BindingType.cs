@@ -1,19 +1,19 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.UI.Collections;
-    using Etk.Excel.UI.Emit;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Tools.Collections;
+using Etk.Tools.Emit;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     public class BindingType
     {
         #region properties and attributes
-        static private readonly object syncObj = new object();
-        static private int classIdent;
+        private static readonly object syncObj = new object();
+        private static int classIdent;
 
-        static private TypeBuilderFactory typeBuilderFactory = new TypeBuilderFactory("BindedTypeAssembly");
+        private static TypeBuilderFactory typeBuilderFactory = new TypeBuilderFactory("BindedTypeAssembly");
 
         public Type BindType
         { get; private set; }
@@ -31,7 +31,7 @@
         #endregion
 
         #region factory
-        static public BindingType CreateInstance(TemplateDefinition template)
+        public static BindingType CreateInstance(TemplateDefinition template)
         {
             BindingType bindingType = null;
             if (template != null)

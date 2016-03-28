@@ -1,12 +1,12 @@
-﻿namespace Etk.Excel.ContextualMenus
-{
-    using System;
-    using System.Reflection;
-    using Etk.Excel.UI.Reflection;
+﻿using System;
+using System.Reflection;
+using Etk.Tools.Reflection;
 
+namespace Etk.Excel.ContextualMenus
+{
     static class ConstextualMethodRetriever
     {
-        static public MethodInfo RetrieveContextualMethodInfo(Type mainBindingDefinitionType, string methodName)
+        public static MethodInfo RetrieveContextualMethodInfo(Type mainBindingDefinitionType, string methodName)
         {
             try
             {
@@ -14,11 +14,11 @@
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(string.Format("Method '{0}' not resolved:{0}", methodName, ex.Message), ex);
+                throw new ArgumentException(string.Format("Method '{0}' not resolved:{1}", methodName, ex.Message));
             }
         }
 
-        static public MethodInfo RetrieveContextualMethodInfo(string methodName)
+        public static MethodInfo RetrieveContextualMethodInfo(string methodName)
         {
             try
             {
@@ -26,7 +26,7 @@
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(string.Format("Method '{0}' not resolved:{0}", methodName, ex.Message), ex);
+                throw new ArgumentException(string.Format("Method '{0}' not resolved:{1}", methodName, ex.Message));
             }
         }
     }

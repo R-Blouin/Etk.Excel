@@ -1,7 +1,7 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.NamedRange
+﻿using System.Xml.Serialization;
+
+namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 {
-    using System.Xml.Serialization;
-    
     [XmlRoot("NR")]
     public class ExcelNamedRangeDefinition
     {

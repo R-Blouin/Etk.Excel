@@ -1,7 +1,7 @@
-﻿namespace Etk.ModelManagement.Definitions.XmlDefinition
-{
-    using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
+namespace Etk.ModelManagement.Definitions.XmlDefinition
+{
     /// <summary> Xml model type simple property definition</summary>
     public class XmlModelProperty
     {

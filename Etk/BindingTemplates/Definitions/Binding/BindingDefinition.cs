@@ -1,15 +1,15 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Linq;
-    using System.Text.RegularExpressions;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Decorators;
-    using Etk.BindingTemplates.Definitions.EventCallBacks;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
-    abstract public class BindingDefinition : IBindingDefinition
+namespace Etk.BindingTemplates.Definitions.Binding
+{
+    public abstract class BindingDefinition : IBindingDefinition
     {
         #region attributes and properties
         protected static Regex ValidCharExtract = new Regex("[a-zA-Z_]");
@@ -67,7 +67,7 @@
         { get; protected set; }
 
         /// <summary> Implements <see cref="IBindingDefinition.Name"/> </summary>
-        virtual public string Name
+        public virtual string Name
         { 
             get 
             {
@@ -78,7 +78,7 @@
         }
 
         /// <summary> Implements <see cref="IBindingDefinition.Description"/> </summary>
-        virtual public string Description
+        public virtual string Description
         { 
             get 
             {
@@ -164,10 +164,10 @@
         }
 
         /// <summary> Implements <see cref="IBindingDefinition.DecoratorDefinition"/> </summary>
-        abstract public object UpdateDataSource(object dataSource, object data);
+        public abstract object UpdateDataSource(object dataSource, object data);
 
         /// <summary> Implements <see cref="IBindingDefinition.ResolveBinding"/> </summary>
-        abstract public object ResolveBinding(object dataSource);
+        public abstract object ResolveBinding(object dataSource);
 
         public virtual bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
         {

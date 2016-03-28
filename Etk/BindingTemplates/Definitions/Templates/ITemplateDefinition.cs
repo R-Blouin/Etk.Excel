@@ -1,10 +1,8 @@
-﻿namespace Etk.BindingTemplates.Definitions.Templates
-{
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.ModelManagement;
-    using ModelManagement.DataAccessors;
+﻿using Etk.BindingTemplates.Definitions.Binding;
+using Etk.ModelManagement.DataAccessors;
 
+namespace Etk.BindingTemplates.Definitions.Templates
+{
     public interface ITemplateDefinition
     {
         /// <summary> Template Name</summary>

@@ -1,19 +1,18 @@
-﻿namespace Etk.BindingTemplates.Definitions.Binding
-{
-    using System;
-    using Etk.BindingTemplates.Context;
+﻿using System;
 
+namespace Etk.BindingTemplates.Definitions.Binding
+{
     class BindingDefinitionRoot : BindingDefinition
     {
         public override string Name
         { get { return null; } }
 
-        override public object UpdateDataSource(object dataSource, object data)
+        public override object UpdateDataSource(object dataSource, object data)
         { 
             return null; 
         }
 
-        override public object ResolveBinding(object dataSource)
+        public override object ResolveBinding(object dataSource)
         {
             return null;
         }
@@ -22,7 +21,7 @@
         {}
 
         #region static public methods
-        static public BindingDefinitionRoot CreateInstance(Type sourceType)
+        public static BindingDefinitionRoot CreateInstance(Type sourceType)
         {
             BindingDefinitionDescription definitionDescription = new BindingDefinitionDescription() { IsReadOnly = true };
 

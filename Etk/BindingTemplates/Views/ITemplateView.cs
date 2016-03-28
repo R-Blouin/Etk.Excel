@@ -1,11 +1,11 @@
-﻿namespace Etk.BindingTemplates.Views
-{
-    using System;
-    using System.Collections.Generic;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.SortAndFilter;
+﻿using System;
+using System.Collections.Generic;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.SortAndFilter;
 
+namespace Etk.BindingTemplates.Views
+{
     public interface ITemplateView : IDisposable
     {
         Guid Ident { get; }

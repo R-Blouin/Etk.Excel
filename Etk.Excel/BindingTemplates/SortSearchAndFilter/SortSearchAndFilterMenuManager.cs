@@ -1,17 +1,15 @@
-﻿namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
-{
-    using System;
-    using System.IO;
-    using System.Linq;
-    using System.Reflection;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.BindingTemplates.Views;
-    using Etk.Excel.ContextualMenus;
-    using Etk.SortAndFilter;
-    using Excel = Microsoft.Office.Interop.Excel;
+﻿using System.IO;
+using System.Linq;
+using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.BindingTemplates.Views;
+using Etk.Excel.ContextualMenus;
+using Etk.SortAndFilter;
 
+namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
+{
     class SortSearchAndFilterMenuManager
     {
         private IContextualMenu sortSearchAndFilersMenu;
@@ -33,7 +31,7 @@
         /// <summary>
         /// Manage the contextual menus
         /// </summary>
-        public IContextualMenu GetMenus(ExcelTemplateView view, Excel.Range range, IBindingContextItem contextItem)
+        public IContextualMenu GetMenus(ExcelTemplateView view, Microsoft.Office.Interop.Excel.Range range, IBindingContextItem contextItem)
         {
             IBindingDefinition bindingDefinition = contextItem.BindingDefinition;
             if (bindingDefinition == null || !bindingDefinition.IsBoundWithData || bindingDefinition.BindingType == null)

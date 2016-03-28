@@ -1,13 +1,13 @@
-﻿namespace Etk.ModelManagement
-{
-    using DataAccessors;
-    using Etk.Excel.UI.Extensions;
-    using Etk.Excel.UI.Log;
-    using Etk.ModelManagement.Definitions.XmlDefinition;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.ModelManagement.DataAccessors;
+using Etk.ModelManagement.Definitions.XmlDefinition;
+using Etk.Tools.Extensions;
+using Etk.Tools.Log;
 
+namespace Etk.ModelManagement
+{
     class ModelAccessor : IModelAccessor
     {
         private ILogger log = Logger.Instance;

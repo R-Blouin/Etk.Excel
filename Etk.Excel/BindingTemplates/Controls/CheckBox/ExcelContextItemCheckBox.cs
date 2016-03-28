@@ -1,13 +1,13 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.CheckBox
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
+using Microsoft.Office.Interop.Excel;
+
+namespace Etk.Excel.BindingTemplates.Controls.CheckBox
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Reflection;
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Binding;
-    using Microsoft.Office.Interop.Excel;
-    
     class ExcelContextItemCheckBox : BindingContextItem, IBindingContextItemCanNotify, IExcelControl
     {
         #region attributes and properties

@@ -1,10 +1,10 @@
-﻿namespace Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Xml.Serialization;
-    using Etk.Excel.UI.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Xml.Serialization;
+using Etk.Tools.Extensions;
 
+namespace Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions
+{
     [XmlRoot("EventCallbacks")]
     public class XmlEventCallbacks
     {
@@ -28,8 +28,7 @@
                     if (def.Length > 150)
                         def = def.Substring(0, 149) + "...";
 
-                    string message = string.Format("Cannot retrieve the Event Callback from '{0}'. {1}", def, ex.Message);
-                    throw new EtkException(message, ex);
+                    throw new EtkException(string.Format("Cannot retrieve the Event Callback from '{0}'. {1}", def, ex.Message));
                 }
             }
             return ret;

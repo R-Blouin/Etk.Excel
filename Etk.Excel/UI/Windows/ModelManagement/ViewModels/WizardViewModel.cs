@@ -1,9 +1,8 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
-{
-    using Microsoft.Office.Interop.Excel;
-    using MvvmBase;
-    using System.Windows.Input;
+﻿using Etk.Excel.UI.MvvmBase;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
+{
     public class WizardViewModel : ViewModelBase
     {
         public RequestViewModel Request
@@ -22,7 +21,7 @@
             Request = new RequestViewModel(this, caller, firstOutputRangeAddress);
         }
 
-        static public WizardViewModel CreateInstance(Range caller, Range firstOutputRangeAddress)
+        public static WizardViewModel CreateInstance(Range caller, Range firstOutputRangeAddress)
         {
             return new WizardViewModel(caller, firstOutputRangeAddress);
         }

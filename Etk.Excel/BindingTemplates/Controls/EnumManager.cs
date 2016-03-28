@@ -1,11 +1,11 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls
-{
-    using Etk.BindingTemplates.Context;
-    using Microsoft.Office.Interop.Excel;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.BindingTemplates.Context;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Controls
+{
     class EnumManager
     {
         private Dictionary<Type, string> enumByType = new Dictionary<Type, string>();

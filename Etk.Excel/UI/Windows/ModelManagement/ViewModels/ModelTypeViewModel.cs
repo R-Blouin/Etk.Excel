@@ -1,11 +1,8 @@
-﻿namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
-{
-    using Etk.ModelManagement;
-    using MvvmBase;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+﻿using Etk.Excel.UI.MvvmBase;
+using Etk.ModelManagement;
 
+namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
+{
     public class ModelTypeViewModel : ViewModelBase
     {
         #region attributes and properties

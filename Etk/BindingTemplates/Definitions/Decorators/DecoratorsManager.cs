@@ -1,11 +1,11 @@
-﻿namespace Etk.BindingTemplates.Definitions.Decorators
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using Etk.Excel.UI.Log;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using Etk.Tools.Log;
 
+namespace Etk.BindingTemplates.Definitions.Decorators
+{
     /// <summary> Manage the <see cref="Decorator"/> used in the current application</summary>
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -25,7 +25,7 @@
                 lock ((decoratorByIdent as ICollection).SyncRoot)
                 {
                     if (!decoratorByIdent.TryGetValue(ident, out ret))
-                        throw new Exception(string.Format("Cannot find Decorator '{0}'", ident ?? string.Empty));
+                        throw new Exception(string.Format("Cannot find Decorator '{0}'", ident ));
                 }
             }
             return ret;

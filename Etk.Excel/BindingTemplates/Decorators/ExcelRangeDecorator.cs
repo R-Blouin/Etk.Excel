@@ -1,16 +1,16 @@
-﻿namespace Etk.Excel.BindingTemplates.Decorators
-{
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Decorators;
-    using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
-    using Etk.Excel.UI.Log;
-    using Etk.Excel.UI.Reflection;
-    using Microsoft.Office.Interop.Excel;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
+using Etk.Tools.Log;
+using Etk.Tools.Reflection;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Decorators
+{
     class DecoratorProperty
     {
         public double FrontColor
@@ -34,14 +34,14 @@
         //private bool isRangedName;
         private string rangeId ;
         private Range decoratorRange;
-        private Application excelApplication;
+        private Microsoft.Office.Interop.Excel.Application excelApplication;
         private bool addConcernedRangeParameter;
         private bool notOnlyColor;
         private List<DecoratorProperty> decoratorProperties = null;
 
         #region .ctors and factories
         /// <summary> Constructor</summary>
-        private ExcelRangeDecorator(Application excelApplication, string ident, string description, MethodInfo toInvoke, string rangeId, bool notOnlyColor)//, bool useOnlyColors)
+        private ExcelRangeDecorator(Microsoft.Office.Interop.Excel.Application excelApplication, string ident, string description, MethodInfo toInvoke, string rangeId, bool notOnlyColor)//, bool useOnlyColors)
                                   : base(ident, description, toInvoke)    
         {
             this.notOnlyColor = notOnlyColor;
@@ -61,7 +61,7 @@
         }
 
         /// <summary> Factory</summary>
-        public static ExcelRangeDecorator CreateInstance(Application excelApplication, XmlExcelRangeDecorator xmlDecorator)
+        public static ExcelRangeDecorator CreateInstance(Microsoft.Office.Interop.Excel.Application excelApplication, XmlExcelRangeDecorator xmlDecorator)
         {
             if (xmlDecorator == null)
                 return null;
@@ -83,7 +83,7 @@
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Cannot create decorator '{0}':{1}", xmlDecorator.Ident ?? string.Empty, ex.Message), ex);
+                throw new Exception(string.Format("Cannot create decorator '{0}':{1}", xmlDecorator.Ident ?? string.Empty, ex.Message));
             }
         }
         #endregion

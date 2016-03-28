@@ -1,19 +1,22 @@
-﻿namespace Etk.Excel.BindingTemplates.Renderer
-{
-    using Etk.BindingTemplates.Context;
-    using Etk.BindingTemplates.Definitions.Templates;
-    using Etk.Excel.BindingTemplates.Definitions;
-    using Microsoft.Office.Interop.Excel;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices;
-    using Views;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Excel.BindingTemplates.Views;
+using Microsoft.Office.Interop.Excel;
 
+namespace Etk.Excel.BindingTemplates.Renderer
+{
     class ExcelRenderer : IDisposable
     {
         protected ITemplateDefinition templateDefinition;
         protected IBindingContext bindingContext;
+        protected Range firstOutputCell;
+        protected IBindingContextItem[,] contextItems;
+        protected object[,] cells;
 
         public ExcelRootRenderer RootRenderer
         { get; private set; }
@@ -27,10 +30,8 @@
         public ExcelPartRenderer FooterPartRenderer
         { get; protected set; }
 
-        protected Range firstOutputCell;
-
-        protected IBindingContextItem[,] contextItems;
-        protected object[,] cells;
+        public MethodInfo MinOccurencesMethod
+        { get; private set; }
 
         public List<List<IBindingContextItem>> DataRows
         { get; private set; }
@@ -48,19 +49,19 @@
         { get; private set; }
 
         #region .ctors
-        public ExcelRenderer(ExcelRootRenderer rootRenderer, ITemplateDefinition templateDefinition, IBindingContext bindingContext, Range firstOutputCell)
+        public ExcelRenderer(ExcelRootRenderer rootRenderer, ITemplateDefinition templateDefinition, IBindingContext bindingContext, Range firstOutputCell, MethodInfo minOccurencesMethod)
         {
             RootRenderer = rootRenderer ?? this as ExcelRootRenderer;
             this.templateDefinition = templateDefinition;
             this.bindingContext = bindingContext;
             this.firstOutputCell = firstOutputCell;
-
+            MinOccurencesMethod = minOccurencesMethod;
             DataRows = new List<List<IBindingContextItem>>();
         }
         #endregion
 
         #region public methods
-        virtual public void Render()
+        public virtual void Render()
         {
             int[] xs = new int[3];
             int[] ys = new int[3];

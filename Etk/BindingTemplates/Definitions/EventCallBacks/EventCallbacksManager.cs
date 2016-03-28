@@ -1,12 +1,12 @@
-﻿namespace Etk.BindingTemplates.Definitions.EventCallBacks
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions;
+using Etk.Tools.Log;
+
+namespace Etk.BindingTemplates.Definitions.EventCallBacks
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.ComponentModel.Composition;
-    using Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions;
-    using Etk.Excel.UI.Log;
-    
     /// <summary> Manage the <see cref="Decorator"/> used in the current application</summary>
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
@@ -37,14 +37,14 @@
             catch (Exception ex)
             {
                 string message = xml.Length > 350 ? xml.Substring(0, 350) + "..." : xml;
-                throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message), ex);
+                throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message));
             }
         }
 
 
         /// <summary> Return a <see cref="EventCallback"/> given an ident</summary>
         /// <param name="ident">the ident of the <see cref="EventCallback"/> to return</param>
-        /// <returns>If found, the <see cref="Decorator"/>, if not: null</returns>
+        /// <returns>If found, the <see cref="EventCallback"/>, if not: null</returns>
         public EventCallback GetCallback(string ident)
         {
             EventCallback ret = null;

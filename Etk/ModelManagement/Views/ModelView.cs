@@ -1,10 +1,10 @@
-﻿namespace Etk.ModelManagement.Views
-{
-    using Etk.ModelManagement.Definitions.XmlDefinition;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etk.ModelManagement.Definitions.XmlDefinition;
 
+namespace Etk.ModelManagement.Views
+{
     public class ModelView : IModelView
     {
         #region constantes
