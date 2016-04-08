@@ -22,7 +22,7 @@ namespace Etk.Excel.BindingTemplates.Views
         event Action<IExcelTemplateView> SheetActivation;
 
         //RenderingArea RenderedArea { get;  }
-        //bool AutoFit {get; set;}
+        bool AutoFit {get; set;}
 
         /// <summary>Set the cell uses to clear the rendered area of the view</summary>
         Range ClearingCell { get; set; }

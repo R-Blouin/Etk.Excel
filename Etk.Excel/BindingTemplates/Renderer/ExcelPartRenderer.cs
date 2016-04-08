@@ -70,7 +70,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public void Render()
         {
             Worksheet worksheetTo = currentRenderingTo.Worksheet;
-            if (bindingContextPart != null && bindingContextPart.ElementsToRender != null && bindingContextPart.ElementsToRender.Any())
+            if (bindingContextPart != null )
+//                && ((bindingContextPart is LinkedTemplateDefinition && ((LinkedTemplateDefinition) bindingContextPart).MinOccurencesMethod != null || bindingContextPart.ElementsToRender.ElementsToRender != null && bindingContextPart.ElementsToRender.ElementsToRender.Any())
             {
                 if (partToRenderDefinition.HasLinkedTemplates || partToRenderDefinition.ContainMultiLinesCells)
                     ManageTemplateWithLinkedTemplates();

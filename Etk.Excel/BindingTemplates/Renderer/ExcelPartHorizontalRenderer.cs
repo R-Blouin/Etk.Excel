@@ -29,6 +29,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
             int nbrOfElement = bindingContextPart.ElementsToRender.Count();
             int localWidth = partToRenderDefinition.Width * nbrOfElement;
             int localHeight = partToRenderDefinition.Height;
+            if (nbrOfElement > 0)
+            {
             Range workingRange = currentRenderingTo.Resize[localHeight, localWidth];
 
             partToRenderDefinition.DefinitionCells.Copy(workingRange);
@@ -67,6 +69,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
                 cptElements++;
             }
+                Marshal.ReleaseComObject(workingRange);
+            }
 
             // To take into account the min number of elements to render.
             if (Parent.MinOccurencesMethod != null)
@@ -77,7 +81,18 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                 int minElementsToRender = LinkedTemplateDefinition.ResolveMinOccurences(Parent.MinOccurencesMethod, parentElement);
                 if (minElementsToRender > nbrOfElement)
+                {
                     localWidth = partToRenderDefinition.Width * minElementsToRender;
+                    IBindingContextItem[] toAdd = new IBindingContextItem[minElementsToRender - nbrOfElement];
+
+                    if (Parent.DataRows.Count == 0)
+                    {
+                        for (int rowId = 0; rowId < partToRenderDefinition.Height; rowId++)
+                            Parent.DataRows.Add(new List<IBindingContextItem>());
+                    }
+                    for (int rowId = 0; rowId < partToRenderDefinition.Height; rowId++)
+                        Parent.DataRows[rowId].AddRange(toAdd);
+                }
             }
 
             Width += localWidth;
@@ -85,7 +100,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 Height = localHeight;
 
             Marshal.ReleaseComObject(worksheetTo);
-            Marshal.ReleaseComObject(workingRange);
             firstCell = null;
         }
 

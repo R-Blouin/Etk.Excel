@@ -367,8 +367,6 @@ namespace Etk.Excel.BindingTemplates.Views
                                     Renderer.RenderDataOnly();
                                     if (log.GetLogLevel() == LogType.Debug)
                                         log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", SheetDestination.Name, this.Ident, TemplateDefinition.Name);
-                                    if (AutoFit)
-                                        ExecuteAutoFit();
 
                                     if (AfterRendering != null)
                                         AfterRendering(true);

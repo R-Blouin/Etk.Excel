@@ -52,6 +52,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
             int nbrOfElement = bindingContextPart.ElementsToRender.Count();
             int localWidth = partToRenderDefinition.Width;
             int localHeight = partToRenderDefinition.Height * nbrOfElement;
+            if (localHeight > 0)
+            {
             Range workingRange = currentRenderingTo.Resize[localHeight, localWidth];
 
             partToRenderDefinition.DefinitionCells.Copy(workingRange);
@@ -88,6 +90,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
                 cptElements++;
             }
+                Marshal.ReleaseComObject(workingRange);
+            }
 
             // To take into account the min number of elements to render.
             if( Parent.MinOccurencesMethod != null)
@@ -106,7 +110,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 Width = localWidth;
 
             Marshal.ReleaseComObject(worksheetTo);
-            Marshal.ReleaseComObject(workingRange);
             firstCell = null;
         }
 
@@ -150,7 +153,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                             // Render link
                             IBindingContext linkedBindingContext = contextElement.LinkedBindingContexts[cptLinkedDefinition++];
-                            if (linkedBindingContext.Body != null && linkedBindingContext.Body.ElementsToRender != null && linkedBindingContext.Body.ElementsToRender.Any())
+                            if (linkedBindingContext.Body != null && (renderingContext.LinkedTemplateDefinition.MinOccurencesMethod != null || linkedBindingContext.Body.ElementsToRender != null && linkedBindingContext.Body.ElementsToRender.Any()))
                             {
                                 RenderLink(renderingContext, linkedBindingContext, worksheetTo);
                                 renderingContext.CurrentRowWidth += renderingContext.LinkedViewRenderedWidth;
