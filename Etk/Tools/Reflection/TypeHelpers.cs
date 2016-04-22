@@ -56,7 +56,7 @@ namespace Etk.Tools.Reflection
 
         /// <summary>Return a <see cref="System.Reflection.MethodInfo"/> given a type (not mandatory) and a method name</summary>
         /// <param name="inType">A <see cref="System.Type"/> (not mandatory) </param>
-        /// <param name="methodName">If 'inType' supplied, contains name of the method to find, if not:  must be composed this way 'Type,Assembly,Method'</param>
+        /// <param name="methodName">If 'inType' supplied, contains name of the method to find, if not:  must be composed this way 'Type,[Assembly],Method'</param>
         /// <returns>The <see cref="System.Reflection.MethodInfo"/> if it's found. If not, an 'EtkException' exception</returns>
         public static MethodInfo GetMethod(Type inType, string methodName)
         {
@@ -64,17 +64,15 @@ namespace Etk.Tools.Reflection
                 throw new EtkException("Method name cannot be null or empty");
 
             string[] methodNameElements = methodName.Split(',');
-            if (methodNameElements.Count() != 1 && methodNameElements.Count() != 3)
-                throw new EtkException("The 'method' separator is ',' and it must be composed this way 'Type,Assembly,Method' or, if the type is also supplied 'Method'");
+            if (methodNameElements.Count() != 1 && methodNameElements.Count() != 3 && 
+                (methodNameElements.Count() == 1 && inType == null))
+                throw new EtkException("The 'method' separator is ',' and it must be composed this way 'Type,[Assembly],Method' or, if the type is supplied, 'Method'");
 
             Type type;
             if (methodNameElements.Count() == 1)
             {
-                if (inType == null)
-                    throw new EtkException("The 'method' separator is ',' and it must be composed this way 'Type,Assembly,Method' or, if the type is also supplied 'Method'");
-
-                methodName = methodNameElements[0].EmptyIfNull().Trim();
                 type = inType;
+                methodName = methodNameElements[0].EmptyIfNull().Trim();
             }
             else
             {

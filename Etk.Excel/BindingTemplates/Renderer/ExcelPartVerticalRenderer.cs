@@ -219,7 +219,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 currentRenderingTo = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + gap];
                 renderingContext.CurrentRowWidth += gap;
                 if (vOffset > renderingContext.CurrentRowHeight)
+                {
+                    for (int i = renderingContext.CurrentRowHeight; i < vOffset; i++)
+                        Parent.DataRows.Add(new List<IBindingContextItem>(new IBindingContextItem[gap]));
                     renderingContext.CurrentRowHeight = vOffset;
+                }
             }
             return bindingContextItemsCpt;
         }

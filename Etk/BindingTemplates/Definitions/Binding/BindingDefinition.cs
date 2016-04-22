@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Decorators;
@@ -123,6 +124,11 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public double MultiLineFactor
         {
             get { return DefinitionDescription.MultiLineFactor; }
+        }
+
+        public MethodInfo MultiLineFactorResolver
+        {
+            get { return DefinitionDescription.MultiLineFactorResolver; }
         }
         #endregion
 

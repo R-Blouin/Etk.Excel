@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
@@ -20,7 +21,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         Type BindingType { get; }
         /// <summary> If truen then the bound property is a collection</summary>
         bool BindingTypeIsGeneric { get; }
-        /// <summary> if 'BindingTypeIsGeneric' = true, contain the generic type (For IEnumerable<double>, then contains 'double'</summary>
+        /// <summary> if 'BindingTypeIsGeneric' = true, contain the generic type base (For IEnumerable<double>, then contains 'double'</summary>
         Type BindingGenericType { get; }
         /// <summary> if 'BindingTypeIsGeneric' = true, contain the generic type (For IEnumeravle<double>, then contains 'IEnumerable'</summary>
         Type BindingGenericTypeDefinition { get; }
@@ -35,6 +36,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
         bool IsMultiLine { get; }
         /// <summary> Multiplicator to apply to the number of lines of a multi lines value</summary>
         double MultiLineFactor { get; }
+        /// <summary> Return the number of lines of a multi lines value </summary>
+        MethodInfo MultiLineFactorResolver { get; }
 
         /// <summary> True if the binding definition is read only </summary>
         bool IsReadOnly { get; }

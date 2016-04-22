@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
+using Etk.Tools.Reflection;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
@@ -59,6 +62,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public double MultiLineFactor
         { get; private set; }
 
+        public MethodInfo MultiLineFactorResolver
+        { get; private set; }
+
         #region .ctors and factories
         public BindingDefinitionDescription()
         {}
@@ -109,17 +115,42 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             OnLeftDoubleClick = EventCallbacksManager.GetCallback(methodInfoIdent);
                             continue;
                         }
-                        // MultiLine
+                        // MultiLine based on the number of line in the bound property
                         if (option.StartsWith("M="))
                         {
                             IsMultiLine = true;
                             string factor = option.Substring(2);
                             double multiLineFactor;
-                            if (double.TryParse(factor, out multiLineFactor))
+                            if (! string.IsNullOrEmpty(factor) && double.TryParse(factor, out multiLineFactor))
                                 MultiLineFactor = multiLineFactor;
                             else
                                 MultiLineFactor = 1.5;
                             continue;
+                        }
+                        // MultiLine where the number of line is determinated by a callback invocation
+                        if (option.StartsWith("ME="))
+                        {
+                            string multiLineFactorResolver = option.Substring(3);
+                            if (!string.IsNullOrEmpty(multiLineFactorResolver))
+                            {
+                                try
+                                {
+                                    MultiLineFactorResolver = TypeHelpers.GetMethod(null, multiLineFactorResolver);
+                                    if (MultiLineFactorResolver != null)
+                                    {
+                                        int parametersCpt = MultiLineFactorResolver.GetParameters().Length;
+                                        if (MultiLineFactorResolver.ReturnType != typeof(int) || 
+                                            parametersCpt > 1 ||
+                                            (parametersCpt == 1 && !(MultiLineFactorResolver.GetParameters()[0].ParameterType.IsAssignableFrom(typeof(object)))))
+                                            throw new Exception("The function prototype must be  be defined as 'int <Function Name>([param]) with 'param' inheriting from 'system.object'");
+                                        IsMultiLine = true;
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    throw new Exception(string.Format("Cannot resolve the 'ME' attribute for the binding definition '{0}'", bindingExpression), ex);
+                                }
+                            }
                         }
                     }
                 }

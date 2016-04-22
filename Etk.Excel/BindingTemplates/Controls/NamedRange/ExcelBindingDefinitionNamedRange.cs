@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Text;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
@@ -122,6 +123,11 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         public double MultiLineFactor
         {
             get { return NestedBindingDefinition == null ? 0 : NestedBindingDefinition.MultiLineFactor; }
+        }
+
+        public MethodInfo MultiLineFactorResolver
+        {
+            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.MultiLineFactorResolver; }
         }
         #endregion
         #endregion
