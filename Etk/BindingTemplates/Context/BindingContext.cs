@@ -154,6 +154,7 @@ namespace Etk.BindingTemplates.Context
                 Footer.Dispose();
                 Footer = null;
             }
+            DataSource = null;
         }
         #endregion
     }

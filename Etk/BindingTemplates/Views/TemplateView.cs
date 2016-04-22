@@ -87,7 +87,10 @@ namespace Etk.BindingTemplates.Views
             try
             {
                 if (BindingContext != null)
+                {
                     BindingContext.Dispose();
+                    BindingContext = null;
+                }
                 if (dataSource != null)
                 {
                     List<IFilterDefinition> templatedFilters = RootBindingFilter.CreateInstances(this, dataSource);
