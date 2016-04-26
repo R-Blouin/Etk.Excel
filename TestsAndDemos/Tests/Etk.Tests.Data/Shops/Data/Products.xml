@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Products>
+  <Product Id="1" Name="Product 1" Description="Very Good Product" UnitPrice="11"/>
+  <Product Id="2" Name="Product 2" Description="The best in the world" UnitPrice="22"/>
+  <Product Id="3" Name="Product 3" Description="So good and so cheap" UnitPrice="33"/>
+  <Product Id="4" Name="Product 4" Description="Don't make a mistake! Buy me" UnitPrice="44"/>
+  <Product Id="5" Name="Product 5" Description="Better here than elsewhere" UnitPrice="55"/>
+  <Product Id="6" Name="Product 6" Description="So good, so expansive: make the others be jealous" UnitPrice="66"/>
+  <Product Id="7" Name="Product 7" Description="I am here to bring luck" UnitPrice="77"/>
+  <Product Id="8" Name="Product 8" Description="Still a beta ! But still good..." UnitPrice="88"/>
+  <Product Id="9" Name="Product 9" Description="With all the killing features" UnitPrice="99"/>
+  <Product Id="10" Name="Product 10" Description="The Product" UnitPrice="100"/>
+</Products>

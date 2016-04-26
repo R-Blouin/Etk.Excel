@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Excel", "Etk.Excel\Etk.Excel.csproj", "{14413CBB-3028-462C-958D-16E96575A06F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk", "Etk\Etk.csproj", "{10188A0E-231D-42DA-952E-A260402B3EA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Log4NetWrapper", "Etk.Log4NetWrapper\Etk.Log4NetWrapper.csproj", "{3E0A9685-1208-46B4-B824-A94E7CB25FCF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B50F7E32-39AE-4050-9334-9C299CBD4FC2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Etk-Framework", "Etk-Framework", "{84EAE8AF-5805-4A27-824B-604491162B9C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14413CBB-3028-462C-958D-16E96575A06F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14413CBB-3028-462C-958D-16E96575A06F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14413CBB-3028-462C-958D-16E96575A06F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14413CBB-3028-462C-958D-16E96575A06F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10188A0E-231D-42DA-952E-A260402B3EA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10188A0E-231D-42DA-952E-A260402B3EA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10188A0E-231D-42DA-952E-A260402B3EA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10188A0E-231D-42DA-952E-A260402B3EA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E0A9685-1208-46B4-B824-A94E7CB25FCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E0A9685-1208-46B4-B824-A94E7CB25FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E0A9685-1208-46B4-B824-A94E7CB25FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E0A9685-1208-46B4-B824-A94E7CB25FCF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{10188A0E-231D-42DA-952E-A260402B3EA4} = {84EAE8AF-5805-4A27-824B-604491162B9C}
+		{3E0A9685-1208-46B4-B824-A94E7CB25FCF} = {84EAE8AF-5805-4A27-824B-604491162B9C}
+		{14413CBB-3028-462C-958D-16E96575A06F} = {84EAE8AF-5805-4A27-824B-604491162B9C}
+	EndGlobalSection
+EndGlobal

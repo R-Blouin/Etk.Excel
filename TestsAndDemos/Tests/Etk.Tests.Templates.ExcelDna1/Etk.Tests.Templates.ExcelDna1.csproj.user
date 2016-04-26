@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectView>ProjectFiles</ProjectView>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartAction>Program</StartAction>
+    <StartProgram>D:\Tools\Microsoft Office 2013\Office15\EXCEL.EXE</StartProgram>
+    <StartArguments>..\..\Etk.Tests.Templates.ExcelDna1.xlsx Etk.Tests.Templates.ExcelDna1-AddIn.xll</StartArguments>
+  </PropertyGroup>
+</Project>

@@ -19,13 +19,13 @@ namespace Etk.Excel.BindingTemplates
         IExcelTemplateView AddView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range destinationRange, string clearingCell = "A1");
 
         /// <summary> Create a View.</summary>
-        /// <param name="sheetContainerName">The name of the sheet that contains the description of the template to use.</param>
+        /// <param name="sheetTemplateName">The name of the sheet that contains the description of the template to use.</param>
         /// <param name="templateName">The name of the template to use.</param>
-        /// <param name="sheetDestination">The sheet where to render the View.</param>
-        /// <param name="destinationRange">The first concernedRange where to render the View.</param>
+        /// <param name="sheetDestinationName">The name of the sheet where to render the View.</param>
+        /// <param name="destinationRange">The first concerned Range where to render the View.</param>
         /// <param name="clearingRange">Optional: the cell uses to clear the View</param>
         /// <returns>The newly created View.</returns>
-        IExcelTemplateView AddView(string sheetContainerName, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range destinationRange, string clearingCell = "A1");
+        IExcelTemplateView AddView(string sheetTemplateName, string templateName, string sheetDestinationName, string destinationRange, string clearingCell = "A1");
 
         /// <summary> Remove and dispose a list of View.</summary>
         /// <param name="templates">The views to remove and dispose.</param>

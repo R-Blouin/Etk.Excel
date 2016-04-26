@@ -17,6 +17,7 @@ using Etk.Excel.ContextualMenus;
 using Etk.Excel.TemplateManagement;
 using Etk.Tools.Extensions;
 using Etk.Tools.Log;
+using Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates
 {
@@ -84,7 +85,7 @@ namespace Etk.Excel.BindingTemplates
         #endregion
 
         #region private methods
-        private ExcelTemplateView CreateView(Microsoft.Office.Interop.Excel.Worksheet sheetContainer, string templateName, Microsoft.Office.Interop.Excel.Worksheet sheetDestination, Microsoft.Office.Interop.Excel.Range firstOutputCell, string clearingCellAddress)
+        private ExcelTemplateView CreateView(Worksheet sheetContainer, string templateName, Worksheet sheetDestination, Range firstOutputCell, string clearingCellAddress)
         {
             if (sheetContainer == null)
                 throw new ArgumentNullException("Template container sheet is mandatory");
@@ -100,7 +101,7 @@ namespace Etk.Excel.BindingTemplates
             {
                 try
                 {
-                    Microsoft.Office.Interop.Excel.Range workingCell = sheetDestination.Range[clearingCellAddress];
+                    Range workingCell = sheetDestination.Range[clearingCellAddress];
                     clearingCell = workingCell.Cells[1, 1];
                     workingCell = null;
                 }
@@ -250,7 +251,7 @@ namespace Etk.Excel.BindingTemplates
 
         private void OnActivateSheetViewsManagement(object sheet)
         {
-            Microsoft.Office.Interop.Excel.Worksheet worksheet = sheet as Microsoft.Office.Interop.Excel.Worksheet;
+            Worksheet worksheet = sheet as Worksheet;
             try
             {
                 lock (syncRoot)
@@ -281,7 +282,7 @@ namespace Etk.Excel.BindingTemplates
         }
 
         /// <summary>Manege the change done on the sheet</summary>
-        private void OnSheetChange(Microsoft.Office.Interop.Excel.Range target)
+        private void OnSheetChange(Range target)
         {
             List<ExcelTemplateView> views;
             bool inError = false;
@@ -422,7 +423,7 @@ namespace Etk.Excel.BindingTemplates
 
         #region IExcelTemplateManager Members
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
-        public IExcelTemplateView AddView(Microsoft.Office.Interop.Excel.Worksheet sheetContainer, string templateName, Microsoft.Office.Interop.Excel.Worksheet sheetDestination, Microsoft.Office.Interop.Excel.Range destinationRange, string clearingCell)
+        public IExcelTemplateView AddView(Worksheet sheetContainer, string templateName, Worksheet sheetDestination, Range destinationRange, string clearingCell)
         {
             try
             {
@@ -445,32 +446,36 @@ namespace Etk.Excel.BindingTemplates
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
-        public IExcelTemplateView AddView(string sheetContainerName, string templateName, Microsoft.Office.Interop.Excel.Worksheet sheetDestination, Microsoft.Office.Interop.Excel.Range destinationRange, string clearingCell)
+        public IExcelTemplateView AddView(string sheetTemplateName, string templateName, string sheetDestinationName, string destinationRange, string clearingCell)
         {
-            Microsoft.Office.Interop.Excel.Workbook workbook = null;
-            Microsoft.Office.Interop.Excel.Worksheet sheetContainer = null;
+            Workbook workbook = null;
+            Worksheet sheetContainer = null;
+            Worksheet sheetDestination = null;
             try
             {
-                if (string.IsNullOrEmpty(sheetContainerName))
-                    throw new ArgumentNullException("the sheet container rangeName is mandatory");
+                if (string.IsNullOrEmpty(sheetTemplateName))
+                    throw new ArgumentNullException("the sheet container name is mandatory");
 
+                if (sheetDestinationName == null)
+                    throw new ArgumentNullException("Destination sheet name is mandatory");
+
+                workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
+
+                sheetContainer = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetTemplateName);
+                if (sheetContainer == null)
+                    throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetTemplateName);
+                sheetDestination = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetDestinationName);
                 if (sheetDestination == null)
-                    throw new ArgumentNullException("Destination sheet is mandatory");
+                    throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetDestinationName);
 
-                workbook = sheetDestination.Parent as Microsoft.Office.Interop.Excel.Workbook;
-                if (workbook == null)
-                    throw new ApplicationException("Cannot retrieve the workbook that owned the View destination sheet");
-
-                List<Microsoft.Office.Interop.Excel.Worksheet> sheets = new List<Microsoft.Office.Interop.Excel.Worksheet>(workbook.Worksheets.Cast<Microsoft.Office.Interop.Excel.Worksheet>());
-                sheetContainer = sheets.FirstOrDefault(s => !string.IsNullOrEmpty(s.Name) && s.Name.Equals(sheetContainerName));
-
-                IExcelTemplateView view = AddView(sheetContainer, templateName, sheetDestination, destinationRange, clearingCell);
+                Range destinationRangeRange = sheetDestination.Range[destinationRange];
+                IExcelTemplateView view = AddView(sheetContainer, templateName, sheetDestination, destinationRangeRange, clearingCell);
                 return view;
             }
             catch (Exception ex)
             {
                 string message = string.Format("Sheet '{0}', cannot add the View from template '{1}.{2}'", sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty
-                                                                                                         , sheetContainerName.EmptyIfNull()
+                                                                                                         , sheetTemplateName.EmptyIfNull()
                                                                                                          , templateName.EmptyIfNull());
                 Logger.Instance.LogException(LogType.Error, ex, message);
                 ExcelApplication.DisplayException(null, message, ex);

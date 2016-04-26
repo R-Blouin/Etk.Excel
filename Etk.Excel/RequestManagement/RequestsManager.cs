@@ -106,7 +106,8 @@ namespace Etk.Excel.RequestManagement
 
             if(test == null)
             {
-                IExcelTemplateView view = ETKExcel.TemplateManager.AddView("Templates Customer", "AllCustomers", caller.Worksheet, caller);
+
+                IExcelTemplateView view = ETKExcel.TemplateManager.AddView("Templates Customer", "AllCustomers", caller.Worksheet.Name, caller.Address);
                 test = new ExcelRequestDefinition("Test", "Ceci est un test", view as ExcelTemplateView);
                 Microsoft.Office.Interop.Excel.Comment comment = caller.Comment;
                 if (comment != null)
