@@ -5,7 +5,7 @@ using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.ContextualMenus;
 using Etk.Tools.Extensions;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -29,10 +29,10 @@ namespace Etk.Excel.BindingTemplates.Definitions
         public int Height
         { get; private set; }
 
-        public Range DefinitionFirstCell
+        public ExcelInterop.Range DefinitionFirstCell
         { get; private set; }
 
-        public Range DefinitionLastCell
+        public ExcelInterop.Range DefinitionLastCell
         { get; private set; }
 
         public IContextualMenu ContextualMenu
@@ -49,7 +49,8 @@ namespace Etk.Excel.BindingTemplates.Definitions
         #endregion
 
         #region .ctors and factories
-        internal ExcelTemplateDefinition(Range firstRange, Range lastRange, TemplateOption templateOption) : base(templateOption)
+        internal ExcelTemplateDefinition(ExcelInterop.Range firstRange, ExcelInterop.Range lastRange, TemplateOption templateOption)
+            : base(templateOption)
         {
             DefinitionFirstCell = firstRange;
             DefinitionLastCell = lastRange;

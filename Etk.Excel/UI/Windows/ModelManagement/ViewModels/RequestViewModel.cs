@@ -6,6 +6,7 @@ using Etk.Excel.UI.MvvmBase;
 using Etk.Excel.UI.Windows.Wizard;
 using Etk.ModelManagement;
 using Etk.ModelManagement.Views;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
 {
@@ -26,7 +27,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
 
                                 if (FirstOutputRange != null)
                                     FirstOutputRange.Select();
-                                Microsoft.Office.Interop.Excel.Range range = ETKExcel.ExcelApplication.RangeSelectionDialog("Select First output range");
+                                ExcelInterop.Range range = ETKExcel.ExcelApplication.RangeSelectionDialog("Select First output range");
                                 if (range != null)
                                     FirstOutputRange = range;
 
@@ -81,9 +82,9 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
             }
         }
 
-        private Microsoft.Office.Interop.Excel.Range caller;
-        private Microsoft.Office.Interop.Excel.Range firstOutputRange;
-        public Microsoft.Office.Interop.Excel.Range FirstOutputRange
+        private ExcelInterop.Range caller;
+        private ExcelInterop.Range firstOutputRange;
+        public ExcelInterop.Range FirstOutputRange
         {
             get { return firstOutputRange; }
             set
@@ -184,7 +185,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
         #endregion
 
         #region .ctors
-        public RequestViewModel(WizardViewModel parent, Microsoft.Office.Interop.Excel.Range caller, Microsoft.Office.Interop.Excel.Range firstOutputRange)
+        public RequestViewModel(WizardViewModel parent, ExcelInterop.Range caller, ExcelInterop.Range firstOutputRange)
         {
             this.parent = parent;
             this.caller = caller;

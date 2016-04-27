@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Etk.BindingTemplates.Context;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls
 {
@@ -10,7 +10,7 @@ namespace Etk.Excel.BindingTemplates.Controls
     {
         private Dictionary<Type, string> enumByType = new Dictionary<Type, string>();
 
-        public void CreateControl(IBindingContextItem item, ref Range range)
+        public void CreateControl(IBindingContextItem item, ref ExcelInterop.Range range)
         {
             string values;
             if (!enumByType.TryGetValue(item.BindingDefinition.BindingType, out values))
@@ -28,9 +28,9 @@ namespace Etk.Excel.BindingTemplates.Controls
                 enumByType[item.BindingDefinition.BindingType] = values;
             }
 
-            range.Validation.Add(XlDVType.xlValidateList,
-                                 XlDVAlertStyle.xlValidAlertInformation,
-                                 XlFormatConditionOperator.xlBetween,
+            range.Validation.Add(ExcelInterop.XlDVType.xlValidateList,
+                                 ExcelInterop.XlDVAlertStyle.xlValidAlertInformation,
+                                 ExcelInterop.XlFormatConditionOperator.xlBetween,
                                  values,
                                  Type.Missing);
             range.Validation.IgnoreBlank = false;

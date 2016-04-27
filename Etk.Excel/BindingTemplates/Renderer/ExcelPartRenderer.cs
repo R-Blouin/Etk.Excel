@@ -6,7 +6,7 @@ using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Controls;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Views;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -22,11 +22,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected ExcelTemplateDefinitionPart partToRenderDefinition;
         protected IBindingContextPart bindingContextPart;
 
-        protected Range firstRangeTo;
-        protected Range elementFirstRangeTo;
+        protected ExcelInterop.Range firstRangeTo;
+        protected ExcelInterop.Range elementFirstRangeTo;
 
-        protected Range currentRenderingFrom;
-        protected Range currentRenderingTo;
+        protected ExcelInterop.Range currentRenderingFrom;
+        protected ExcelInterop.Range currentRenderingTo;
 
         public int Height
         { get; protected set; }
@@ -44,7 +44,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #endregion
 
         #region .ctors and factories
-        protected ExcelPartRenderer(ExcelRenderer parent, ExcelTemplateDefinitionPart part, IBindingContextPart bindingContextPart, Range firstOutputCell, bool useDecorator)
+        protected ExcelPartRenderer(ExcelRenderer parent, ExcelTemplateDefinitionPart part, IBindingContextPart bindingContextPart, ExcelInterop.Range firstOutputCell, bool useDecorator)
         {
             this.Parent = parent;
             this.partToRenderDefinition = part;
@@ -57,7 +57,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             Height = Width = 0;
         }
 
-        public static ExcelPartRenderer CreateInstance(ExcelRenderer parent, ExcelTemplateDefinitionPart part, IBindingContextPart bindingContextPart, Range firstOutputCell, bool useDecorator)
+        public static ExcelPartRenderer CreateInstance(ExcelRenderer parent, ExcelTemplateDefinitionPart part, IBindingContextPart bindingContextPart, ExcelInterop.Range firstOutputCell, bool useDecorator)
         {
             if (part.Parent.Orientation == Orientation.Vertical)
                 return new ExcelPartVerticalRenderer(parent, part, bindingContextPart, firstOutputCell, useDecorator);
@@ -69,7 +69,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #region public methods
         public void Render()
         {
-            Worksheet worksheetTo = currentRenderingTo.Worksheet;
+            ExcelInterop.Worksheet worksheetTo = currentRenderingTo.Worksheet;
             if (bindingContextPart != null )
 //                && ((bindingContextPart is LinkedTemplateDefinition && ((LinkedTemplateDefinition) bindingContextPart).MinOccurencesMethod != null || bindingContextPart.ElementsToRender.ElementsToRender != null && bindingContextPart.ElementsToRender.ElementsToRender.Any())
             {
@@ -100,7 +100,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected abstract void ManageTemplateWithoutLinkedTemplates();
         protected abstract void ManageTemplateWithLinkedTemplates();
 
-        protected void ManageControls(IBindingContextItem item, ref Range range)
+        protected void ManageControls(IBindingContextItem item, ref ExcelInterop.Range range)
         {
             if (item is IExcelControl)
                 ((IExcelControl)item).CreateControl(range);

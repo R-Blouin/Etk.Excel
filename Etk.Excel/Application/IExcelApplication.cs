@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.Application
 {
@@ -7,7 +8,7 @@ namespace Etk.Excel.Application
     public interface IExcelApplication
     {
         /// <summary> Get the Excel application interop wrapper</summary>
-        Microsoft.Office.Interop.Excel.Application Application { get; }
+        ExcelInterop.Application Application { get; }
 
         /// <summary> Determinate if Excel is in 'edit mode'</summary>
         /// <returns>True if Excel is in 'edit mode'</returns>
@@ -32,12 +33,12 @@ namespace Etk.Excel.Application
         // <summary>Display a dialog box for selecting an Excel Range</summary>
         /// <param name="title">Title of the message box. If none supplied then the title is 'Select a Range'</param>
         /// <returns>The selection concernedRange or null if no ranges selected</returns>
-        Microsoft.Office.Interop.Excel.Range RangeSelectionDialog(string title);
+        ExcelInterop.Range RangeSelectionDialog(string title);
 
         /// <summary> Return the Excel application active sheet</summary>
-        Microsoft.Office.Interop.Excel.Worksheet GetActiveSheet();
+        ExcelInterop.Worksheet GetActiveSheet();
 
         /// <summary> Return the sheet having 'name' as name owned by the given workbook</summary>
-        Microsoft.Office.Interop.Excel.Worksheet GetWorkSheetFromName(Microsoft.Office.Interop.Excel.Workbook workbook, string name);
+        ExcelInterop.Worksheet GetWorkSheetFromName(ExcelInterop.Workbook workbook, string name);
     }
 }

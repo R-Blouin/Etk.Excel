@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.Picture
 {
@@ -25,7 +25,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
         public ExcelTemplateView View
         { get; private set; }
 
-        public Range OwnerRange
+        public ExcelInterop.Range OwnerRange
         { get; private set; }
 
         public bool IsChecked
@@ -36,15 +36,15 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
         #endregion
 
         #region .ctors
-        public ExcelPicture(Range range, ExcelBindingDefinitionPicture definition)
+        public ExcelPicture(ExcelInterop.Range range, ExcelBindingDefinitionPicture definition)
         {
             OwnerRange = range;
             OwnerRange.Value2 = null;
-            Worksheet worksheet = OwnerRange.Worksheet;
+            ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
             Name = string.Format("ExcelCB{0}", Interlocked.Increment(ref cpt));
 
-            OLEObjects oleObjects = worksheet.OLEObjects();
-            OLEObject oleObject = oleObjects.Add("Forms.CheckBox.1",
+            ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
+            ExcelInterop.OLEObject oleObject = oleObjects.Add("Forms.CheckBox.1",
                                         Type.Missing,
                                         true,
                                         false,
@@ -56,7 +56,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
                                         12,
                                         12);
             oleObject.Name = Name;
-            oleObject.Placement = XlPlacement.xlMove;
+            oleObject.Placement = ExcelInterop.XlPlacement.xlMove;
             CheckBox  = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null) as ExcelForms.CheckBox;
 
             CheckBox.SpecialEffect = ExcelForms.fmButtonEffect.fmButtonEffectSunken;
@@ -95,7 +95,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
                 if (CurrentOnClick != null)
                     CheckBox.Click -= CurrentOnClick;
 
-                Worksheet worksheet = OwnerRange.Worksheet;
+                ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
                 worksheet.OLEObjects(Name).Delete();
                 Marshal.ReleaseComObject(worksheet);
 

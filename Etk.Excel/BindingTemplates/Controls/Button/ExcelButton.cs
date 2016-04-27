@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.Button
 {
@@ -27,24 +27,24 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         public ExcelTemplateView View
         { get; protected set; }
 
-        public Range OwnerRange
+        public ExcelInterop.Range OwnerRange
         { get; protected set; }
 
         public ExcelForms.Font Font
         { get { return commandButton == null ? null : commandButton.Font; } }
 
-        public XlPlacement Placement
+        public ExcelInterop.XlPlacement Placement
         {
             get
             {
                 if (! IsDisposed)
-                    return (commandButton as Shape).Placement;
-                return XlPlacement.xlFreeFloating;
+                    return (commandButton as ExcelInterop.Shape).Placement;
+                return ExcelInterop.XlPlacement.xlFreeFloating;
             }
             set 
             {
                 if (! IsDisposed)
-                    (commandButton as Shape).Placement = value;
+                    (commandButton as ExcelInterop.Shape).Placement = value;
             }
         }
 
@@ -70,16 +70,16 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         #endregion
 
         #region .ctors
-        public ExcelButton(Range range, ExcelButtonDefinition definition)
+        public ExcelButton(ExcelInterop.Range range, ExcelButtonDefinition definition)
         {
             OwnerRange = range;
             OwnerRange.Value2 = null;
-            Worksheet worksheet = OwnerRange.Worksheet;
+            ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
             Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
 
-            OLEObjects oleObjects = worksheet.OLEObjects();
+            ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
 
-            OLEObject obj = oleObjects.Add("Forms.CommandButton.1", 
+            ExcelInterop.OLEObject obj = oleObjects.Add("Forms.CommandButton.1", 
                                            Type.Missing,
                                            false,
                                            false,
@@ -99,7 +99,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
             commandButton.Caption = definition.Label;
             //if (excelTemplateDefinition.W == 0 && excelTemplateDefinition.H == 0)
             //    commandButton.AutoSize = true;
-            obj.Placement = XlPlacement.xlMove;
+            obj.Placement = ExcelInterop.XlPlacement.xlMove;
 
             Marshal.ReleaseComObject(worksheet);
             worksheet = null;
@@ -116,7 +116,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 if (CurrentCommand != null)
                     commandButton.Click -= CurrentCommand;
 
-                Worksheet worksheet = OwnerRange.Worksheet;
+                ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
                 worksheet.OLEObjects(Name).Delete();
                 Marshal.ReleaseComObject(worksheet);
                 worksheet = null;

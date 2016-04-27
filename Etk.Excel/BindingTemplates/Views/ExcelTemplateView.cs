@@ -10,7 +10,7 @@ using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Renderer;
 using Etk.Tools.Log;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
@@ -21,7 +21,7 @@ namespace Etk.Excel.BindingTemplates.Views
         public object Color;
         public double Position;
 
-        public SelectionPatternColor(ColorStop cs)
+        public SelectionPatternColor(ExcelInterop.ColorStop cs)
         {
             ThemeColor = cs.ThemeColor;
             TintAndShade = cs.TintAndShade;
@@ -32,7 +32,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
     class SelectionPattern
     {
-        public XlPattern Pattern;
+        public ExcelInterop.XlPattern Pattern;
         public int PatternColor;
         public int PatternColorIndex;
         public int PatternThemeColor;
@@ -41,11 +41,11 @@ namespace Etk.Excel.BindingTemplates.Views
         public object GradientDegree;
         public SelectionPatternColor[] SelectionPatternColors;
 
-        public SelectionPattern(ref Interior interior)
+        public SelectionPattern(ref ExcelInterop.Interior interior)
         {
             try
             {
-                Pattern = (XlPattern)interior.Pattern;
+                Pattern = (ExcelInterop.XlPattern)interior.Pattern;
                 PatternColor = interior.PatternColor;
                 PatternColorIndex = interior.PatternColorIndex;
                 PatternThemeColor = interior.PatternThemeColor;
@@ -57,7 +57,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     SelectionPatternColors = new SelectionPatternColor[interior.Gradient.ColorStops.Count];
                     for (int cpt = 0; cpt < interior.Gradient.ColorStops.Count; cpt++)
                     {
-                        ColorStop cs = interior.Gradient.ColorStops[cpt + 1];
+                        ExcelInterop.ColorStop cs = interior.Gradient.ColorStops[cpt + 1];
                         SelectionPatternColors[cpt] = new SelectionPatternColor(cs);
                     }
                 }
@@ -71,10 +71,10 @@ namespace Etk.Excel.BindingTemplates.Views
     {
         #region attributes and properties
         private ILogger log = Logger.Instance;
-        private Range currentSelectedRange;
+        private ExcelInterop.Range currentSelectedRange;
         private List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
 
-        internal Range CurrentSelectedCell
+        internal ExcelInterop.Range CurrentSelectedCell
         { get; private set; }
 
         public event Action<object, object> DataChanged;
@@ -85,13 +85,13 @@ namespace Etk.Excel.BindingTemplates.Views
         public bool AutoFit
         { get; set; }
 
-        public Worksheet SheetDestination
+        public ExcelInterop.Worksheet SheetDestination
         { get; private set; }
 
-        public Range FirstOutputCell
+        public ExcelInterop.Range FirstOutputCell
         { get; set; }
 
-        public Range ClearingCell
+        public ExcelInterop.Range ClearingCell
         { get; set; }
 
         public ExcelRootRenderer Renderer
@@ -100,7 +100,7 @@ namespace Etk.Excel.BindingTemplates.Views
         public bool IsRendered
         { get { return Renderer != null && Renderer.RenderedRange != null; } }
 
-        public Range RenderedRange
+        public ExcelInterop.Range RenderedRange
         { get { return Renderer != null ? Renderer.RenderedRange : null; } }
 
         public RenderedArea RenderedArea
@@ -133,12 +133,12 @@ namespace Etk.Excel.BindingTemplates.Views
             }
         }
 
-        public List<Range> CellsThatContainSearchValue
+        public List<ExcelInterop.Range> CellsThatContainSearchValue
         { get; set; }
         #endregion
 
         #region .ctors
-        public ExcelTemplateView(ITemplateDefinition templateDefinition, Worksheet sheetDestination, Range firstOutputCell, Range clearingCell)
+        public ExcelTemplateView(ITemplateDefinition templateDefinition, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range firstOutputCell, ExcelInterop.Range clearingCell)
             : base(templateDefinition)
         {
             SheetDestination = sheetDestination;
@@ -386,11 +386,11 @@ namespace Etk.Excel.BindingTemplates.Views
             }
         }
 
-        internal bool OnSheetChange(ExcelApplication excelApplication, Range target)
+        internal bool OnSheetChange(ExcelApplication excelApplication, ExcelInterop.Range target)
         {
             if (!IsDisposed && Renderer != null && Renderer.RenderedRange != null)
             {
-                Range intersect = excelApplication.Application.Intersect(Renderer.RenderedRange, target);
+                ExcelInterop.Range intersect = excelApplication.Application.Intersect(Renderer.RenderedRange, target);
                 if (intersect != null)
                 {
                     using (FreezeExcel freeze = new FreezeExcel())
@@ -405,7 +405,7 @@ namespace Etk.Excel.BindingTemplates.Views
             return false;
         }
 
-        internal IBindingContextItem GetConcernedContextItem(Range target)
+        internal IBindingContextItem GetConcernedContextItem(ExcelInterop.Range target)
         {
             IBindingContextItem ret = null;
             if (IsRendered)
@@ -413,7 +413,7 @@ namespace Etk.Excel.BindingTemplates.Views
             return ret;
         }
 
-        internal bool OnSelectionChange(ExcelApplication excelApplication, Range realTarget)
+        internal bool OnSelectionChange(ExcelApplication excelApplication, ExcelInterop.Range realTarget)
         {
             try
             {
@@ -422,7 +422,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
                 if (IsRendered)
                 {
-                    Range intersect = excelApplication.Application.Intersect(RenderedRange, realTarget);
+                    ExcelInterop.Range intersect = excelApplication.Application.Intersect(RenderedRange, realTarget);
                     if (intersect != null)
                     {
                         CurrentSelectedCell = realTarget.Cells[1, 1];
@@ -469,10 +469,10 @@ namespace Etk.Excel.BindingTemplates.Views
             return CurrentSelectedCell != null;
         }
 
-        internal bool OnBeforeBoubleClick(Range target, ref bool cancel)
+        internal bool OnBeforeBoubleClick(ExcelInterop.Range target, ref bool cancel)
         {
             bool ret = false; ;
-            Range intersect = ETKExcel.ExcelApplication.Application.Intersect(RenderedRange, target);
+            ExcelInterop.Range intersect = ETKExcel.ExcelApplication.Application.Intersect(RenderedRange, target);
             if (intersect != null)
             {
                 IBindingContextItem contextItem = GetConcernedContextItem(target);
@@ -526,10 +526,10 @@ namespace Etk.Excel.BindingTemplates.Views
         #endregion
 
         #region private methods
-        private void HighlightSelection(Range selectedCell)
+        private void HighlightSelection(ExcelInterop.Range selectedCell)
         {
-            Range viewSelectedRange = null;
-            Worksheet sheet = RenderedRange.Parent as Worksheet;
+            ExcelInterop.Range viewSelectedRange = null;
+            ExcelInterop.Worksheet sheet = RenderedRange.Parent as ExcelInterop.Worksheet;
 
             if (this.TemplateDefinition.Orientation == Orientation.Vertical)
             {
@@ -548,10 +548,10 @@ namespace Etk.Excel.BindingTemplates.Views
 
             for (int i = 1; i <= currentSelectedRange.Cells.Count; i++)
             {
-                Range cell = currentSelectedRange.Cells[1, i];
+                ExcelInterop.Range cell = currentSelectedRange.Cells[1, i];
                 if (CurrentSelectedCell.Column != cell.Column || CurrentSelectedCell.Row != cell.Row)
                 {
-                    Interior interior = cell.Interior;
+                    ExcelInterop.Interior interior = cell.Interior;
                     try
                     {
                         currentSelectedRangePattern.Add(new SelectionPattern(ref interior));
@@ -560,7 +560,7 @@ namespace Etk.Excel.BindingTemplates.Views
                         if (interior.Gradient != null)
                             selectionPattern = new SelectionPattern(ref interior);
 
-                        interior.Pattern = XlPattern.xlPatternGray8;
+                        interior.Pattern = ExcelInterop.XlPattern.xlPatternGray8;
                         if (selectionPattern == null)
                             interior.PatternColor = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DimGray);
                         else
@@ -584,7 +584,7 @@ namespace Etk.Excel.BindingTemplates.Views
             // Redraw the borders of the current selection
 
             if (((TemplateDefinition) TemplateDefinition).AddBorder)
-                Renderer.BorderAround(currentSelectedRange, XlLineStyle.xlContinuous, XlBorderWeight.xlThin, 3);
+                Renderer.BorderAround(currentSelectedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlThin, 3);
             Marshal.ReleaseComObject(sheet);
         }
 
@@ -594,14 +594,14 @@ namespace Etk.Excel.BindingTemplates.Views
             if (currentSelectedRange != null)
             {
                 int cpt = 0;
-                foreach (Range cell in currentSelectedRange.Cells)
+                foreach (ExcelInterop.Range cell in currentSelectedRange.Cells)
                 {
                     try
                     {
                         SelectionPattern selectionPattern = currentSelectedRangePattern[cpt++];
                         if (selectionPattern != null)
                         {
-                            Interior interior = cell.Interior;
+                            ExcelInterop.Interior interior = cell.Interior;
 
                             cell.Interior.Pattern = selectionPattern.Pattern;
                             if (selectionPattern.PatternColor != 0)
@@ -623,7 +623,7 @@ namespace Etk.Excel.BindingTemplates.Views
                                     int i = 0;
                                     foreach (SelectionPatternColor selectionPatternColor in selectionPattern.SelectionPatternColors)
                                     {
-                                        ColorStop cs = cell.Interior.Gradient.ColorStops.Add(i++);
+                                        ExcelInterop.ColorStop cs = cell.Interior.Gradient.ColorStops.Add(i++);
                                         if (selectionPatternColor.ThemeColor != 0)
                                             cs.ThemeColor = selectionPatternColor.ThemeColor;
                                         cs.TintAndShade = selectionPatternColor.TintAndShade;

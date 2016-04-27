@@ -7,6 +7,7 @@ using Etk.Excel.BindingTemplates;
 using Etk.Excel.ContextualMenus;
 using Etk.Excel.RequestManagement;
 using Etk.ModelManagement;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel
 {
@@ -21,7 +22,7 @@ namespace Etk.Excel
         private bool isDisposed = false;
         private static readonly object syncObj = new object();
 
-        private List<Microsoft.Office.Interop.Excel.Workbook> managedWorkbooks = new List<Microsoft.Office.Interop.Excel.Workbook>();
+        private List<ExcelInterop.Workbook> managedWorkbooks = new List<ExcelInterop.Workbook>();
 
         [Import(AllowDefault = false)]
         private ExcelApplication excelApplication = null;
@@ -85,7 +86,7 @@ namespace Etk.Excel
         #endregion
 
         #region .ctors
-        private ETKExcel(Microsoft.Office.Interop.Excel.Application application)
+        private ETKExcel(ExcelInterop.Application application)
         {
             if (application == null)
                 throw new EtkException("ETKExcel initialization: the 'application' parameter is mandatory");
@@ -108,7 +109,7 @@ namespace Etk.Excel
         #region public methods
         /// <summary>Init the framework. Must be called before any other uses of the framework</summary>
         /// <param name="application">A reference to the current Excel application instance</param>
-        public static void Init(Microsoft.Office.Interop.Excel.Application application)
+        public static void Init(ExcelInterop.Application application)
         {
             try
             {
@@ -128,7 +129,7 @@ namespace Etk.Excel
                         // Compose the current instance
                         CompositionManager.Instance.ComposeParts(Instance);
 
-                        Microsoft.Office.Interop.Excel.Workbook workbook = application.ActiveWorkbook;
+                        ExcelInterop.Workbook workbook = application.ActiveWorkbook;
                         Instance.AddManagedWorkbook(application.ActiveWorkbook);
 
                         application.WorkbookOpen += Instance.AddManagedWorkbook;
@@ -176,9 +177,9 @@ namespace Etk.Excel
         #endregion
 
         #region private methods
-        private void AddManagedWorkbook(Microsoft.Office.Interop.Excel.Workbook workbook)
+        private void AddManagedWorkbook(ExcelInterop.Workbook workbook)
         {
-            Microsoft.Office.Interop.Excel.Workbook managedWorkbook = Instance.managedWorkbooks.FirstOrDefault(w => w == workbook);
+            ExcelInterop.Workbook managedWorkbook = Instance.managedWorkbooks.FirstOrDefault(w => w == workbook);
             if (managedWorkbook == null)
             {
                 managedWorkbooks.Add(workbook);
@@ -188,7 +189,7 @@ namespace Etk.Excel
             managedWorkbook = null;
         }
 
-        private void OnWorkbookBeforeClose(Microsoft.Office.Interop.Excel.Workbook workbook, ref bool cancel)
+        private void OnWorkbookBeforeClose(ExcelInterop.Workbook workbook, ref bool cancel)
         {
             if (!cancel && workbook.Application.Workbooks.Count >= 1)
                 Instance.managedWorkbooks.Remove(workbook);

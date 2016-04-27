@@ -7,6 +7,7 @@ using Etk.Excel.ContextualMenus;
 using Etk.Excel.Extensions;
 using Etk.Excel.UI.Windows.ViewsAndtemplates;
 using Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.TemplateManagement
 {
@@ -45,7 +46,7 @@ namespace Etk.Excel.TemplateManagement
         /// <summary>
         /// Manage the templates contextual menus
         /// </summary>
-        public IEnumerable<IContextualMenu> ManageTemplateManagerContextualMenu(Microsoft.Office.Interop.Excel.Worksheet sheet, Microsoft.Office.Interop.Excel.Range range)
+        public IEnumerable<IContextualMenu> ManageTemplateManagerContextualMenu(ExcelInterop.Worksheet sheet, ExcelInterop.Range range)
         {
             List<IContextualMenu> menus = new List<IContextualMenu>();
             menus.Add(addTemplateMenu);
@@ -68,11 +69,11 @@ namespace Etk.Excel.TemplateManagement
         #region Contextual menu method handlers   
         /// <summary> Template creation</summary>
         /// <param name="caller">Range where to create the menu</param>
-        public static void AddTemplate(Microsoft.Office.Interop.Excel.Range caller)
+        public static void AddTemplate(ExcelInterop.Range caller)
         {
             using (ExcelMainWindow excelWindow = new ExcelMainWindow(caller.Application.Hwnd))
             {
-                Microsoft.Office.Interop.Excel.Range firstOutputRange = caller.Offset[0, 1];
+                ExcelInterop.Range firstOutputRange = caller.Offset[0, 1];
 
                 TemplateManagementViewModel viewModel = new TemplateManagementViewModel(null);
                 TemplateManagementWindow window = new TemplateManagementWindow(viewModel);
@@ -87,12 +88,12 @@ namespace Etk.Excel.TemplateManagement
         }
 
         /// <summary> Template modification</summary>
-        public static void ModifyTemplate(Microsoft.Office.Interop.Excel.Range caller)
+        public static void ModifyTemplate(ExcelInterop.Range caller)
         { 
         }
 
         /// <summary> Template suppression</summary>
-        public static void DeleteTemplate(Microsoft.Office.Interop.Excel.Range caller)
+        public static void DeleteTemplate(ExcelInterop.Range caller)
         {
         }
         #endregion

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Views;
 using Etk.Tools.Reflection;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates
 {
     class AccessorParametersManager : IDisposable
     {
-        private List<Range> rangesToListen = new List<Range>();
+        private List<ExcelInterop.Range> rangesToListen = new List<ExcelInterop.Range>();
 
         public ExcelTemplateView View
         { get; private set; }
@@ -30,31 +30,31 @@ namespace Etk.Excel.BindingTemplates
             {
                 foreach (object param in Parameters)
                 {
-                    if (param is Range)
-                        rangesToListen.Add(param as Range);
+                    if (param is ExcelInterop.Range)
+                        rangesToListen.Add(param as ExcelInterop.Range);
                     else if (param.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
                     {
                         Type genericType = param.GetType().GetGenericArguments()[0];
                         MethodInfo convertCollection = typeof(TypeConvertor).GetMethod("ConvertCollection").MakeGenericMethod(genericType);
-                        IEnumerable<Range> ranges = convertCollection.Invoke(null, new object[] { genericType, param }) as IEnumerable<Range>;
+                        IEnumerable<ExcelInterop.Range> ranges = convertCollection.Invoke(null, new object[] { genericType, param }) as IEnumerable<ExcelInterop.Range>;
                         rangesToListen.AddRange(ranges);
                     }
                 }
 
                 if (rangesToListen.Count > 0)
                 {
-                    Worksheet sheet = View.SheetDestination;
+                    ExcelInterop.Worksheet sheet = View.SheetDestination;
                     sheet.Change += OnParametersChanged;
                     Marshal.ReleaseComObject(sheet);
                 }
             }
         }
 
-        void OnParametersChanged(Range target)
+        void OnParametersChanged(ExcelInterop.Range target)
         {
             bool parametersChanged = false;
 
-            foreach (Range range in rangesToListen)
+            foreach (ExcelInterop.Range range in rangesToListen)
             {
                 if (ETKExcel.ExcelApplication.Application.Intersect(range, target) != null)
                 {
@@ -70,8 +70,8 @@ namespace Etk.Excel.BindingTemplates
                 {
                     if (param == null)
                         parameters.Add(null);
-                    else if (param is Range)
-                        parameters.Add((param as Range).Value);
+                    else if (param is ExcelInterop.Range)
+                        parameters.Add((param as ExcelInterop.Range).Value);
                     else
                         parameters.Add(param);
                 }
@@ -99,12 +99,12 @@ namespace Etk.Excel.BindingTemplates
         {
             if (rangesToListen != null)
             {
-                foreach (Range range in rangesToListen)
+                foreach (ExcelInterop.Range range in rangesToListen)
                     Marshal.ReleaseComObject(range);
                 rangesToListen.Clear();
                 rangesToListen = null;
             }
-            Worksheet sheet = View.SheetDestination;
+            ExcelInterop.Worksheet sheet = View.SheetDestination;
             sheet.Change -= OnParametersChanged;
             Marshal.ReleaseComObject(sheet);
         }

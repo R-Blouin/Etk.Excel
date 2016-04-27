@@ -1,12 +1,25 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Etk.BindingTemplates.Context;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls
 {
+    class BorderStyle
+    {
+        public dynamic Index;
+        public dynamic LineStyle;
+        public dynamic Weight;
+        public dynamic Color;
+        public dynamic ColorIndex;
+        public int ThemeColor;
+        public dynamic TintAndShade;
+    }
+
     class MultiLineManager
     {
-        public void CreateControl(IBindingContextItem item, ref Range range, ref int vOffset)
+        public void CreateControl(IBindingContextItem item, ref ExcelInterop.Range range, ref int vOffset)
         {
             int hOffset = 1;
             if (item.BindingDefinition.MultiLineFactorResolver != null)
@@ -32,9 +45,53 @@ namespace Etk.Excel.BindingTemplates.Controls
                     }
                 }
             }
-        
-            Range toMerge = range.Resize[vOffset, hOffset];
+
+            //IEnumerable<BorderStyle> bordersStyle = RetrieveBorders(range);
+
+            ExcelInterop.Range toMerge = range.Resize[vOffset, hOffset];
             toMerge.Merge();
+
+            //foreach (BorderStyle borderStyle in bordersStyle)
+            //{
+            //    toMerge.Borders[borderStyle.Index].LineStyle = borderStyle.LineStyle;
+            //    toMerge.Borders[borderStyle.Index].Weight = borderStyle.Weight;
+            //    toMerge.Borders[borderStyle.Index].Color = borderStyle.Color;
+            //    toMerge.Borders[borderStyle.Index].ColorIndex = borderStyle.ColorIndex;
+            //    //if (borderStyle.ThemeColor != 0)
+            //    //    range.Borders[borderStyle.Index].ThemeColor = borderStyle.ThemeColor;
+            //    toMerge.Borders[borderStyle.Index].TintAndShade = borderStyle.TintAndShade;
+            //}
+        }
+
+        private IEnumerable<BorderStyle> RetrieveBorders(ExcelInterop.Range range)
+        {
+            List<BorderStyle> ret = new List<BorderStyle>();
+
+            foreach (ExcelInterop.XlBordersIndex styleIndex in Enum.GetValues(typeof(ExcelInterop.XlBordersIndex)))
+            {
+                BorderStyle style = RetrieveBorderStyle(range, styleIndex);
+                if(style != null)
+                    ret.Add(style);
+            }
+            return ret;
+        }
+
+        private BorderStyle RetrieveBorderStyle(ExcelInterop.Range range, ExcelInterop.XlBordersIndex bordersIndex)
+        {
+            BorderStyle ret = null;
+            if (range.Borders[bordersIndex].LineStyle != (int) ExcelInterop.XlLineStyle.xlLineStyleNone)
+            {
+                ret = new BorderStyle();
+                ret.Index = bordersIndex;
+                ret.LineStyle = range.Borders[bordersIndex].LineStyle;
+                ret.Weight =  range.Borders[bordersIndex].Weight;
+                ret.Color = range.Borders[bordersIndex].Color;
+                ret.ColorIndex = range.Borders[bordersIndex].Weight;
+                //if (range.Borders[bordersIndex].ThemeColor != 0)
+                //    ret.ThemeColor = (int) range.Borders[bordersIndex].ThemeColor;
+                ret.TintAndShade = range.Borders[bordersIndex].TintAndShade;
+            }
+            return ret;
         }
     }
 }

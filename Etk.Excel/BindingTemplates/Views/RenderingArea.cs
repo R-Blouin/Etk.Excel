@@ -1,4 +1,4 @@
-﻿using Microsoft.Office.Interop.Excel;
+﻿using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
@@ -24,7 +24,7 @@ namespace Etk.Excel.BindingTemplates.Views
             Height = height;
         }
 
-        public static RenderingArea CreateInstance(Range range)
+        public static RenderingArea CreateInstance(ExcelInterop.Range range)
         {
             RenderingArea ret = null;
             if (range != null)

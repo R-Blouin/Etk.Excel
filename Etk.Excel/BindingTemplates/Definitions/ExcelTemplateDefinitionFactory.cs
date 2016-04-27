@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Definitions.Xml;
 using Etk.Tools.Extensions;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -28,7 +28,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         #endregion
 
         #region public method
-        public static ExcelTemplateDefinition CreateInstance(string templateName, Range templateDeclarationFirstCell)
+        public static ExcelTemplateDefinition CreateInstance(string templateName, ExcelInterop.Range templateDeclarationFirstCell)
         {
             ExcelTemplateDefinitionFactory factory = new ExcelTemplateDefinitionFactory();
             return factory.Execute(templateName, templateDeclarationFirstCell);
@@ -36,9 +36,9 @@ namespace Etk.Excel.BindingTemplates.Definitions
         #endregion
 
         #region private method
-        private ExcelTemplateDefinition Execute(string templateName, Range templateDeclarationFirstCell)
+        private ExcelTemplateDefinition Execute(string templateName, ExcelInterop.Range templateDeclarationFirstCell)
         {
-            Worksheet worksheet = null;
+            ExcelInterop.Worksheet worksheet = null;
             try
             {
                 if (string.IsNullOrEmpty(templateName))
@@ -53,7 +53,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
 
                 // Get the template end.
                 worksheet = templateDeclarationFirstCell.Worksheet;
-                Range templateDeclarationLastRange = worksheet.Cells.Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, XlFindLookIn.xlValues, XlLookAt.xlPart, XlSearchOrder.xlByRows, XlSearchDirection.xlNext, false);
+                ExcelInterop.Range templateDeclarationLastRange = worksheet.Cells.Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                 if (templateDeclarationLastRange == null)
                     throw new EtkException(string.Format("Cannot find the end of template '{0}' in sheet '{1}'", templateName.EmptyIfNull(), worksheet.Name.EmptyIfNull()));
 
@@ -76,7 +76,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         }
 
         /// <summary> Parse the template. Retrieve its components. </summary>
-        private void ParseTemplate(ExcelTemplateDefinition excelTemplateDefinition, ref Worksheet worksheet, out ExcelTemplateDefinitionPart header, out ExcelTemplateDefinitionPart body, out ExcelTemplateDefinitionPart footer)
+        private void ParseTemplate(ExcelTemplateDefinition excelTemplateDefinition, ref ExcelInterop.Worksheet worksheet, out ExcelTemplateDefinitionPart header, out ExcelTemplateDefinitionPart body, out ExcelTemplateDefinitionPart footer)
         {
             try
             {
@@ -86,8 +86,8 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 int footerSize;
                 RetrieveHeaderAndFooterSize(excelTemplateDefinition.DefinitionFirstCell, excelTemplateDefinition.DefinitionLastCell, excelTemplateDefinition.Orientation, out headerSize, out footerSize);
 
-                Range firstRange = worksheet.Cells[excelTemplateDefinition.DefinitionFirstCell.Row + 1, excelTemplateDefinition.DefinitionFirstCell.Column + 1];
-                Range lastRange = worksheet.Cells[excelTemplateDefinition.DefinitionLastCell.Row, excelTemplateDefinition.DefinitionLastCell.Column - 1];
+                ExcelInterop.Range firstRange = worksheet.Cells[excelTemplateDefinition.DefinitionFirstCell.Row + 1, excelTemplateDefinition.DefinitionFirstCell.Column + 1];
+                ExcelInterop.Range lastRange = worksheet.Cells[excelTemplateDefinition.DefinitionLastCell.Row, excelTemplateDefinition.DefinitionLastCell.Column - 1];
 
                 int width = lastRange.Column - firstRange.Column + 1;
                 int height = lastRange.Row - firstRange.Row + 1;
@@ -96,7 +96,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 /////////
                 if (headerSize != 0)
                 {
-                    Range headerLastRange;
+                    ExcelInterop.Range headerLastRange;
                     if (excelTemplateDefinition.Orientation == Etk.BindingTemplates.Definitions.Templates.Orientation.Horizontal)
                         headerLastRange = worksheet.Cells[firstRange.Row + height - 1, firstRange.Column + headerSize - 1];
                     else
@@ -110,7 +110,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 /////////
                 if (footerSize != 0)
                 {
-                    Range footerFirstRange;
+                    ExcelInterop.Range footerFirstRange;
                     if (excelTemplateDefinition.Orientation == Etk.BindingTemplates.Definitions.Templates.Orientation.Horizontal)
                         footerFirstRange = worksheet.Cells[lastRange.Row - height + 1, lastRange.Column - footerSize + 1];
                     else
@@ -122,8 +122,8 @@ namespace Etk.Excel.BindingTemplates.Definitions
 
                 // Body
                 ///////
-                Range bodyFirstRange;
-                Range bodyLastRange;
+                ExcelInterop.Range bodyFirstRange;
+                ExcelInterop.Range bodyLastRange;
                 if (excelTemplateDefinition.Orientation == Orientation.Horizontal)
                 {
                     bodyFirstRange = worksheet.Cells[firstRange.Row, firstRange.Column + headerSize];
@@ -145,11 +145,11 @@ namespace Etk.Excel.BindingTemplates.Definitions
         }
 
         /// <summary>Retrieve the size of the Header and footer</summary>
-        private void RetrieveHeaderAndFooterSize(Range firstCell, Range lastCell, Orientation orientation, out int headerSize, out int footerSize)
+        private void RetrieveHeaderAndFooterSize(ExcelInterop.Range firstCell, ExcelInterop.Range lastCell, Orientation orientation, out int headerSize, out int footerSize)
         {
             headerSize = footerSize = 0;
 
-            Range searchRange = null;
+            ExcelInterop.Range searchRange = null;
             int width = lastCell.Column - firstCell.Column - 1;
             int height = lastCell.Row - firstCell.Row;
 
@@ -161,27 +161,27 @@ namespace Etk.Excel.BindingTemplates.Definitions
 
             if (searchRange != null)
             {
-                Range endHeader = null;
-                Range startHeader = searchRange.Cells.Find(TEMPLATE_START_HEADER_ONELINE, Type.Missing, XlFindLookIn.xlValues, XlLookAt.xlPart, XlSearchOrder.xlByRows, XlSearchDirection.xlNext, false);
+                ExcelInterop.Range endHeader = null;
+                ExcelInterop.Range startHeader = searchRange.Cells.Find(TEMPLATE_START_HEADER_ONELINE, Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                 if (startHeader == null)
                 {
-                    startHeader = searchRange.Cells.Find(TEMPLATE_START_HEADER, Type.Missing, XlFindLookIn.xlValues, XlLookAt.xlPart, XlSearchOrder.xlByRows, XlSearchDirection.xlNext, false);
+                    startHeader = searchRange.Cells.Find(TEMPLATE_START_HEADER, Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                     if (startHeader != null)
                     {
-                        endHeader = searchRange.Cells.Find(TEMPLATE_END_HEADER, Type.Missing, XlFindLookIn.xlValues, XlLookAt.xlPart, XlSearchOrder.xlByRows, XlSearchDirection.xlNext, false);
+                        endHeader = searchRange.Cells.Find(TEMPLATE_END_HEADER, Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                         if (endHeader == null)
                             throw new EtkException("Cannot find the 'Header' end tag");
                     }
                 }
 
-                Range endFooter = null;
-                Range startFooter = searchRange.Cells.Find(TEMPLATE_START_FOOTER_ONELINE, Type.Missing, XlFindLookIn.xlValues, XlLookAt.xlPart, XlSearchOrder.xlByRows, XlSearchDirection.xlNext, false);
+                ExcelInterop.Range endFooter = null;
+                ExcelInterop.Range startFooter = searchRange.Cells.Find(TEMPLATE_START_FOOTER_ONELINE, Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                 if (startFooter == null)
                 {
-                    startFooter = searchRange.Cells.Find(TEMPLATE_START_FOOTER, Type.Missing, XlFindLookIn.xlValues, XlLookAt.xlPart, XlSearchOrder.xlByRows, XlSearchDirection.xlNext, false);
+                    startFooter = searchRange.Cells.Find(TEMPLATE_START_FOOTER, Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                     if (startFooter != null)
                     {
-                        endFooter = searchRange.Cells.Find(TEMPLATE_END_FOOTER, Type.Missing, XlFindLookIn.xlValues, XlLookAt.xlPart, XlSearchOrder.xlByRows, XlSearchDirection.xlNext, false);
+                        endFooter = searchRange.Cells.Find(TEMPLATE_END_FOOTER, Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                         if (endFooter == null)
                             throw new EtkException("Cannot find the 'Footer' end tag");
                     }

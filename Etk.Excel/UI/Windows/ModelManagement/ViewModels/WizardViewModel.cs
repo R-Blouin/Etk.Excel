@@ -1,5 +1,5 @@
 ﻿using Etk.Excel.UI.MvvmBase;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
 {
@@ -16,12 +16,12 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
         
 
         #region .ctors and factories
-        private WizardViewModel(Range caller, Range firstOutputRangeAddress)
+        private WizardViewModel(ExcelInterop.Range caller, ExcelInterop.Range firstOutputRangeAddress)
         {
             Request = new RequestViewModel(this, caller, firstOutputRangeAddress);
         }
 
-        public static WizardViewModel CreateInstance(Range caller, Range firstOutputRangeAddress)
+        public static WizardViewModel CreateInstance(ExcelInterop.Range caller, ExcelInterop.Range firstOutputRangeAddress)
         {
             return new WizardViewModel(caller, firstOutputRangeAddress);
         }

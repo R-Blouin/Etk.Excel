@@ -2,7 +2,6 @@
 //{
 //    using System.Reflection;
 //    using Etk.BindingTemplates.Definitions.Decorators;
-//    using Microsoft.Office.Interop.Excel;
 //    using Etk.BindingTemplates.Context;
 
 //    class ExcelDecorator : Decorator

@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 {
@@ -10,11 +10,11 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
     {
         #region properties and attributes
         private ExcelBindingDefinitionNamedRange excelBindingDefinitionNamedRange;
-        private Worksheet workSheet;
+        private ExcelInterop.Worksheet workSheet;
         private string name;
-        private Name rangeName;
+        private ExcelInterop.Name rangeName;
 
-        public Range Range
+        public ExcelInterop.Range Range
         { get; private set; }
 
         public IBindingContextItem NestedContextItem
@@ -63,13 +63,13 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         #endregion
 
         #region public methods
-        public void CreateControl(Range range)
+        public void CreateControl(ExcelInterop.Range range)
         {
             this.Range = range;
             workSheet = this.Range.Worksheet;
             if (!string.IsNullOrEmpty(name))
             {
-                Names names = null;
+                ExcelInterop.Names names = null;
                 try
                 {
                     names = workSheet.Names;

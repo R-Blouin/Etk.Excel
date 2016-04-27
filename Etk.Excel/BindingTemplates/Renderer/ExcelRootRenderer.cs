@@ -10,7 +10,7 @@ using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Controls.FormulaResult;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Views;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -89,14 +89,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
             // Decorators managements
             foreach (KeyValuePair<IBindingContextItem, System.Drawing.Point> kvp in decorators)
             {
-                Range range = RenderedRange[kvp.Value.Y, kvp.Value.X];
+                ExcelInterop.Range range = RenderedRange[kvp.Value.Y, kvp.Value.X];
                 kvp.Key.BindingDefinition.DecoratorDefinition.Resolve(range, kvp.Key);
                 range = null;
             }
 
             // Redraw the borders of the current selection
             if (((TemplateDefinition) this.View.TemplateDefinition).AddBorder)
-                BorderAround(RenderedRange, XlLineStyle.xlContinuous, XlBorderWeight.xlMedium, 1);
+                BorderAround(RenderedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlMedium, 1);
         }
 
         public void Clear()
@@ -139,10 +139,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
             }
         }
 
-        public bool OnDataChanged(Range target)
+        public bool OnDataChanged(ExcelInterop.Range target)
         {
             bool ret = false;
-            foreach (Range cell in target.Cells)
+            foreach (ExcelInterop.Range cell in target.Cells)
             {
                 IBindingContextItem contextItem = null;
                 // Because of the merge cells ...
@@ -167,7 +167,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             return ret;
         }
 
-        public IBindingContextItem GetConcernedContextItem(Range target)
+        public IBindingContextItem GetConcernedContextItem(ExcelInterop.Range target)
         {
             IBindingContextItem ret = null;
             if (!IsDisposed && !IsClearing)
@@ -208,24 +208,24 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 ((ExcelTemplateManager)ETKExcel.TemplateManager).ExcelNotifyPropertyManager.NotifyPropertyChanged(new ExcelNotityPropertyContext(contextItem, View, (KeyValuePair<int, int>)param));
         }
 
-        internal void BorderAround(Range range, XlLineStyle lineStyle, XlBorderWeight Weight, int colorIndex)
+        internal void BorderAround(ExcelInterop.Range range, ExcelInterop.XlLineStyle lineStyle, ExcelInterop.XlBorderWeight Weight, int colorIndex)
         {
-            Borders borders = range.Borders;
-            borders[XlBordersIndex.xlEdgeLeft].ColorIndex = colorIndex;
-            borders[XlBordersIndex.xlEdgeLeft].LineStyle = lineStyle;
-            borders[XlBordersIndex.xlEdgeLeft].Weight = Weight;
+            ExcelInterop.Borders borders = range.Borders;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeLeft].ColorIndex = colorIndex;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeLeft].LineStyle = lineStyle;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeLeft].Weight = Weight;
 
-            borders[XlBordersIndex.xlEdgeTop].ColorIndex = colorIndex;
-            borders[XlBordersIndex.xlEdgeTop].LineStyle = lineStyle;
-            borders[XlBordersIndex.xlEdgeTop].Weight = Weight;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeTop].ColorIndex = colorIndex;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeTop].LineStyle = lineStyle;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeTop].Weight = Weight;
 
-            borders[XlBordersIndex.xlEdgeBottom].ColorIndex = colorIndex;
-            borders[XlBordersIndex.xlEdgeBottom].LineStyle = lineStyle;
-            borders[XlBordersIndex.xlEdgeBottom].Weight = Weight;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeBottom].ColorIndex = colorIndex;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeBottom].LineStyle = lineStyle;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeBottom].Weight = Weight;
 
-            borders[XlBordersIndex.xlEdgeRight].ColorIndex = colorIndex;
-            borders[XlBordersIndex.xlEdgeRight].LineStyle = lineStyle;
-            borders[XlBordersIndex.xlEdgeRight].Weight = Weight;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeRight].ColorIndex = colorIndex;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeRight].LineStyle = lineStyle;
+            borders[ExcelInterop.XlBordersIndex.xlEdgeRight].Weight = Weight;
 
             ////borders.Color = color;
             Marshal.ReleaseComObject(borders);

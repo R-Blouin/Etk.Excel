@@ -17,7 +17,7 @@ using Etk.Excel.ContextualMenus;
 using Etk.Excel.TemplateManagement;
 using Etk.Tools.Extensions;
 using Etk.Tools.Log;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates
 {
@@ -39,7 +39,7 @@ namespace Etk.Excel.BindingTemplates
         { get; private set; }
 
         private ILogger log = Logger.Instance;
-        private Dictionary<Microsoft.Office.Interop.Excel.Worksheet, List<ExcelTemplateView>> viewsBySheet = new Dictionary<Microsoft.Office.Interop.Excel.Worksheet, List<ExcelTemplateView>>();
+        private Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>> viewsBySheet = new Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>>();
 
 
         private ContextualMenuManager contextualMenuManager;
@@ -85,7 +85,7 @@ namespace Etk.Excel.BindingTemplates
         #endregion
 
         #region private methods
-        private ExcelTemplateView CreateView(Worksheet sheetContainer, string templateName, Worksheet sheetDestination, Range firstOutputCell, string clearingCellAddress)
+        private ExcelTemplateView CreateView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range firstOutputCell, string clearingCellAddress)
         {
             if (sheetContainer == null)
                 throw new ArgumentNullException("Template container sheet is mandatory");
@@ -96,12 +96,12 @@ namespace Etk.Excel.BindingTemplates
             if (firstOutputCell == null)
                 throw new ArgumentNullException("Template first output cell is mandatory");
 
-            Microsoft.Office.Interop.Excel.Range clearingCell = null;
+            ExcelInterop.Range clearingCell = null;
             if (!string.IsNullOrEmpty(clearingCellAddress))
             {
                 try
                 {
-                    Range workingCell = sheetDestination.Range[clearingCellAddress];
+                    ExcelInterop.Range workingCell = sheetDestination.Range[clearingCellAddress];
                     clearingCell = workingCell.Cells[1, 1];
                     workingCell = null;
                 }
@@ -111,7 +111,7 @@ namespace Etk.Excel.BindingTemplates
                 }
             }
 
-            Microsoft.Office.Interop.Excel.Range range = sheetContainer.Cells.Find(string.Format(TEMPLATE_START_FORMAT, templateName), Type.Missing, Microsoft.Office.Interop.Excel.XlFindLookIn.xlValues, Microsoft.Office.Interop.Excel.XlLookAt.xlPart, Microsoft.Office.Interop.Excel.XlSearchOrder.xlByRows, Microsoft.Office.Interop.Excel.XlSearchDirection.xlNext, false);
+            ExcelInterop.Range range = sheetContainer.Cells.Find(string.Format(TEMPLATE_START_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
             if (range == null)
                 throw new EtkException(string.Format("Cannot find the template '{0}' in sheet '{1}'", templateName.EmptyIfNull(), sheetContainer.Name.EmptyIfNull()));
 
@@ -146,7 +146,7 @@ namespace Etk.Excel.BindingTemplates
                     view.SheetDestination.SelectionChange += OnSelectionChange;
                     view.SheetDestination.BeforeDoubleClick += OnBeforeBoubleClick;
 
-                    Microsoft.Office.Interop.Excel.Workbook book = view.SheetDestination.Parent as Microsoft.Office.Interop.Excel.Workbook;
+                    ExcelInterop.Workbook book = view.SheetDestination.Parent as ExcelInterop.Workbook;
                     if (book != null)
                     {
                         book.SheetCalculate += OnSheetCalculate;
@@ -161,10 +161,10 @@ namespace Etk.Excel.BindingTemplates
             }
         }
 
-        private void OnSelectionChange(Microsoft.Office.Interop.Excel.Range target)
+        private void OnSelectionChange(ExcelInterop.Range target)
         {
             //Excel.Range realTarget = target.Cells.Count > 1 ? target.Resize[1, 1] : target;
-            Microsoft.Office.Interop.Excel.Range realTarget = target.Cells[1, 1];
+            ExcelInterop.Range realTarget = target.Cells[1, 1];
             List<ExcelTemplateView> views;
             if (viewsBySheet.TryGetValue(realTarget.Worksheet, out views))
             {
@@ -182,7 +182,7 @@ namespace Etk.Excel.BindingTemplates
         private void OnSheetCalculate(object sheet)
         {
             List<ExcelTemplateView> views = null;
-            viewsBySheet.TryGetValue(sheet as Microsoft.Office.Interop.Excel.Worksheet, out views);
+            viewsBySheet.TryGetValue(sheet as ExcelInterop.Worksheet, out views);
             if (views != null)
             {
                 foreach (ExcelTemplateView view in views)
@@ -193,12 +193,12 @@ namespace Etk.Excel.BindingTemplates
         /// <summary>
         /// Manage the views contextual menus (those that are defined in the templates)
         /// </summary>
-        private IEnumerable<IContextualMenu> ManageViewsContextualMenu(Microsoft.Office.Interop.Excel.Worksheet sheet, Microsoft.Office.Interop.Excel.Range range)
+        private IEnumerable<IContextualMenu> ManageViewsContextualMenu(ExcelInterop.Worksheet sheet, ExcelInterop.Range range)
         {
             List<IContextualMenu> menus = new List<IContextualMenu>();
             if (sheet != null && range != null)
             {
-                Microsoft.Office.Interop.Excel.Range targetRange = range.Cells[1, 1];
+                ExcelInterop.Range targetRange = range.Cells[1, 1];
 
                 lock (syncRoot)
                 {
@@ -209,7 +209,7 @@ namespace Etk.Excel.BindingTemplates
                         {
                             foreach (ExcelTemplateView view in views.Where(v => v.IsRendered).Select(v => v))
                             {
-                                Microsoft.Office.Interop.Excel.Range intersect = ExcelApplication.Application.Intersect(view.RenderedRange, targetRange);
+                                ExcelInterop.Range intersect = ExcelApplication.Application.Intersect(view.RenderedRange, targetRange);
                                 if (intersect != null)
                                 {
                                     IBindingContextItem contextItem = view.GetConcernedContextItem(targetRange);
@@ -251,7 +251,7 @@ namespace Etk.Excel.BindingTemplates
 
         private void OnActivateSheetViewsManagement(object sheet)
         {
-            Worksheet worksheet = sheet as Worksheet;
+            ExcelInterop.Worksheet worksheet = sheet as ExcelInterop.Worksheet;
             try
             {
                 lock (syncRoot)
@@ -282,7 +282,7 @@ namespace Etk.Excel.BindingTemplates
         }
 
         /// <summary>Manege the change done on the sheet</summary>
-        private void OnSheetChange(Range target)
+        private void OnSheetChange(ExcelInterop.Range target)
         {
             List<ExcelTemplateView> views;
             bool inError = false;
@@ -313,17 +313,17 @@ namespace Etk.Excel.BindingTemplates
 
             if (inError)
             {
-                Microsoft.Office.Interop.Excel.Worksheet worksheet = target.Worksheet;
+                ExcelInterop.Worksheet worksheet = target.Worksheet;
                 string message = string.Format("Sheet '{0}', At least one sheet change failed. Please, checked the log", worksheet.Name);
                 throw new EtkException(message);
             }
         }
 
         /// <summary> MAnage the double click on a cell</summary>
-        private void OnBeforeBoubleClick(Microsoft.Office.Interop.Excel.Range target, ref bool cancel)
+        private void OnBeforeBoubleClick(ExcelInterop.Range target, ref bool cancel)
         {
-            Microsoft.Office.Interop.Excel.Range realTarget = target.Cells[1, 1];
-            Microsoft.Office.Interop.Excel.Worksheet worksheet = target.Worksheet;
+            ExcelInterop.Range realTarget = target.Cells[1, 1];
+            ExcelInterop.Worksheet worksheet = target.Worksheet;
             try
             {
                 List<ExcelTemplateView> views;
@@ -370,7 +370,7 @@ namespace Etk.Excel.BindingTemplates
             try
             {
                 string[] tos = templateLink.To.Split('.');
-                Microsoft.Office.Interop.Excel.Worksheet sheetContainer = null;
+                ExcelInterop.Worksheet sheetContainer = null;
                 string templateName;
                 if (tos.Count() == 1)
                 {
@@ -382,12 +382,12 @@ namespace Etk.Excel.BindingTemplates
                     string worksheetContainerName = tos[0].EmptyIfNull().Trim();
                     templateName = tos[1].EmptyIfNull().Trim();
 
-                    Microsoft.Office.Interop.Excel.Worksheet parentWorkSheet = parent.DefinitionCells.Worksheet;
-                    Microsoft.Office.Interop.Excel.Workbook workbook = parentWorkSheet.Parent as Microsoft.Office.Interop.Excel.Workbook;
+                    ExcelInterop.Worksheet parentWorkSheet = parent.DefinitionCells.Worksheet;
+                    ExcelInterop.Workbook workbook = parentWorkSheet.Parent as ExcelInterop.Workbook;
                     if (workbook == null)
                         throw new EtkException("Cannot retrieve the workbook that owned the template destination sheet");
 
-                    List<Microsoft.Office.Interop.Excel.Worksheet> sheets = new List<Microsoft.Office.Interop.Excel.Worksheet>(workbook.Worksheets.Cast<Microsoft.Office.Interop.Excel.Worksheet>());
+                    List<ExcelInterop.Worksheet> sheets = new List<ExcelInterop.Worksheet>(workbook.Worksheets.Cast<ExcelInterop.Worksheet>());
                     sheetContainer = sheets.FirstOrDefault(s => !string.IsNullOrEmpty(s.Name) && s.Name.Equals(worksheetContainerName));
                     if (sheetContainer == null)
                         throw new EtkException(string.Format("Cannot find the sheet '{0}' in the current workbook", worksheetContainerName), false);
@@ -400,7 +400,7 @@ namespace Etk.Excel.BindingTemplates
                 ExcelTemplateDefinition templateDefinition = bindingTemplateManager.GetTemplateDefinition(templateDescriptionKey) as ExcelTemplateDefinition;
                 if (templateDefinition == null)
                 {
-                    Microsoft.Office.Interop.Excel.Range range = sheetContainer.Cells.Find(string.Format(TEMPLATE_START_FORMAT, templateName), Type.Missing, Microsoft.Office.Interop.Excel.XlFindLookIn.xlValues, Microsoft.Office.Interop.Excel.XlLookAt.xlPart, Microsoft.Office.Interop.Excel.XlSearchOrder.xlByRows, Microsoft.Office.Interop.Excel.XlSearchDirection.xlNext, false);
+                    ExcelInterop.Range range = sheetContainer.Cells.Find(string.Format(TEMPLATE_START_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                     if (range == null)
                         throw new EtkException(string.Format("Cannot find the template '{0}' in sheet '{1}'", templateName.EmptyIfNull(), sheetContainer.Name.EmptyIfNull()));
                     templateDefinition = ExcelTemplateDefinitionFactory.CreateInstance(templateName, range);
@@ -423,7 +423,7 @@ namespace Etk.Excel.BindingTemplates
 
         #region IExcelTemplateManager Members
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
-        public IExcelTemplateView AddView(Worksheet sheetContainer, string templateName, Worksheet sheetDestination, Range destinationRange, string clearingCell)
+        public IExcelTemplateView AddView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range destinationRange, string clearingCell)
         {
             try
             {
@@ -448,9 +448,9 @@ namespace Etk.Excel.BindingTemplates
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
         public IExcelTemplateView AddView(string sheetTemplateName, string templateName, string sheetDestinationName, string destinationRange, string clearingCell)
         {
-            Workbook workbook = null;
-            Worksheet sheetContainer = null;
-            Worksheet sheetDestination = null;
+            ExcelInterop.Workbook workbook = null;
+            ExcelInterop.Worksheet sheetContainer = null;
+            ExcelInterop.Worksheet sheetDestination = null;
             try
             {
                 if (string.IsNullOrEmpty(sheetTemplateName))
@@ -468,7 +468,7 @@ namespace Etk.Excel.BindingTemplates
                 if (sheetDestination == null)
                     throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetDestinationName);
 
-                Range destinationRangeRange = sheetDestination.Range[destinationRange];
+                ExcelInterop.Range destinationRangeRange = sheetDestination.Range[destinationRange];
                 IExcelTemplateView view = AddView(sheetContainer, templateName, sheetDestination, destinationRangeRange, clearingCell);
                 return view;
             }
@@ -510,7 +510,7 @@ namespace Etk.Excel.BindingTemplates
             {
                 lock (syncRoot)
                 {
-                    Microsoft.Office.Interop.Excel.Workbook book = excelView.SheetDestination.Parent as Microsoft.Office.Interop.Excel.Workbook;
+                    ExcelInterop.Workbook book = excelView.SheetDestination.Parent as ExcelInterop.Workbook;
                     if (book != null)
                     {
                         book.SheetCalculate -= OnSheetCalculate;
@@ -519,7 +519,7 @@ namespace Etk.Excel.BindingTemplates
 
                     ClearView(excelView);
 
-                    KeyValuePair<Microsoft.Office.Interop.Excel.Worksheet, List<ExcelTemplateView>> kvp = viewsBySheet.FirstOrDefault(s => s.Value.FirstOrDefault(v => v.Equals(view)) != null);
+                    KeyValuePair<ExcelInterop.Worksheet, List<ExcelTemplateView>> kvp = viewsBySheet.FirstOrDefault(s => s.Value.FirstOrDefault(v => v.Equals(view)) != null);
                     if (kvp.Key != null && kvp.Value != null && kvp.Value.Count > 0)
                         viewsBySheet[kvp.Key].Remove(excelView);
 
@@ -565,7 +565,7 @@ namespace Etk.Excel.BindingTemplates
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.GetSheetViews"/> </summary> 
-        public List<IExcelTemplateView> GetSheetViews(Microsoft.Office.Interop.Excel.Worksheet sheet)
+        public List<IExcelTemplateView> GetSheetViews(ExcelInterop.Worksheet sheet)
         {
             List<IExcelTemplateView> iViews = new List<IExcelTemplateView>();
             try
@@ -596,7 +596,7 @@ namespace Etk.Excel.BindingTemplates
         public List<IExcelTemplateView> GetActiveSheetViews()
         {
             List<IExcelTemplateView> iViews = new List<IExcelTemplateView>();
-            Microsoft.Office.Interop.Excel.Worksheet activeSheet = null;
+            ExcelInterop.Worksheet activeSheet = null;
             try
             {
                 activeSheet = ExcelApplication.GetActiveSheet();
@@ -630,7 +630,7 @@ namespace Etk.Excel.BindingTemplates
                         ExcelApplication.DisplayMessageBox(null, "'Render' is not allowed: Excel is in Edit mode", System.Windows.Forms.MessageBoxIcon.Warning);
                     else
                     {
-                        Microsoft.Office.Interop.Excel.Range selectedRange = ExcelApplication.Application.Selection as Microsoft.Office.Interop.Excel.Range;
+                        ExcelInterop.Range selectedRange = ExcelApplication.Application.Selection as ExcelInterop.Range;
                         using (FreezeExcel freezeExcel = new FreezeExcel())
                         {
                             foreach (IExcelTemplateView view in views)
@@ -690,7 +690,7 @@ namespace Etk.Excel.BindingTemplates
                         ExcelApplication.DisplayMessageBox(null, "'Render data only' is not allowed: Excel is in Edit mode", System.Windows.Forms.MessageBoxIcon.Warning);
                     else
                     {
-                        Microsoft.Office.Interop.Excel.Range selectedRange = ExcelApplication.Application.Selection as Microsoft.Office.Interop.Excel.Range;
+                        ExcelInterop.Range selectedRange = ExcelApplication.Application.Selection as ExcelInterop.Range;
                         using (FreezeExcel freezeExcel = new FreezeExcel())
                         {
                             foreach (IExcelTemplateView view in views)

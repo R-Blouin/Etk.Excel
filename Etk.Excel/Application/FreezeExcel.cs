@@ -1,4 +1,5 @@
 ﻿using System;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.Application
 {
@@ -15,7 +16,7 @@ namespace Etk.Excel.Application
         private bool screenUpdating;
         private bool enableEvents;
         private bool displayStatusBar;
-        private Microsoft.Office.Interop.Excel.XlCalculation calculationMode;
+        private ExcelInterop.XlCalculation calculationMode;
 
         public FreezeExcel()
         {
@@ -34,7 +35,7 @@ namespace Etk.Excel.Application
                         ETKExcel.ExcelApplication.Application.ScreenUpdating = false;
                         ETKExcel.ExcelApplication.Application.EnableEvents = false;
                         ETKExcel.ExcelApplication.Application.DisplayStatusBar = false;
-                        ETKExcel.ExcelApplication.Application.Calculation = Microsoft.Office.Interop.Excel.XlCalculation.xlCalculationManual;
+                        ETKExcel.ExcelApplication.Application.Calculation = ExcelInterop.XlCalculation.xlCalculationManual;
                     }
                 }
             }

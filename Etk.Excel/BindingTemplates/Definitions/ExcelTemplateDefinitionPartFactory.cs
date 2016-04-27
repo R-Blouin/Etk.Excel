@@ -10,7 +10,7 @@ using Etk.Excel.BindingTemplates.Controls.FormulaResult;
 using Etk.Excel.BindingTemplates.Controls.NamedRange;
 using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using Etk.Tools.Extensions;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -27,24 +27,24 @@ namespace Etk.Excel.BindingTemplates.Definitions
         #endregion
 
         #region public method
-        public static ExcelTemplateDefinitionPart CreateInstance(ExcelTemplateDefinition excelTemplateDefinition, Range firstRange, Range lastRange)
+        public static ExcelTemplateDefinitionPart CreateInstance(ExcelTemplateDefinition excelTemplateDefinition, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
         {
             ExcelTemplateDefinitionPartFactory factory = new ExcelTemplateDefinitionPartFactory();
             return factory.Execute(excelTemplateDefinition, firstRange, lastRange);
         }
         #endregion
 
-        private ExcelTemplateDefinitionPart Execute(ExcelTemplateDefinition excelTemplateDefinition, Range firstRange, Range lastRange)
+        private ExcelTemplateDefinitionPart Execute(ExcelTemplateDefinition excelTemplateDefinition, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
         {
             ExcelTemplateDefinitionPart part = new ExcelTemplateDefinitionPart(excelTemplateDefinition, firstRange, lastRange);
             for (int rowId = 0; rowId < part.DefinitionCells.Rows.Count; rowId++)
             {
                 List<int> posLinks = null;
-                Range row = part.DefinitionCells.Rows[rowId + 1];
+                ExcelInterop.Range row = part.DefinitionCells.Rows[rowId + 1];
 
                 for (int cellId = 0; cellId < row.Cells.Count; cellId++)
                 {
-                    Range cell = row.Cells[cellId + 1];
+                    ExcelInterop.Range cell = row.Cells[cellId + 1];
                     IDefinitionPart definitionPart = AnalyzeCell(part, cell);
                     part.DefinitionParts[rowId, cellId] = definitionPart;
 
@@ -65,7 +65,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         }
 
         /// <summary>Analyze a cell of the template part</summary>
-        private IDefinitionPart AnalyzeCell(ExcelTemplateDefinitionPart templateDefinitionPart, Range cell)
+        private IDefinitionPart AnalyzeCell(ExcelTemplateDefinitionPart templateDefinitionPart, ExcelInterop.Range cell)
         {
             IDefinitionPart part = null;
             if (cell.Value2 != null)

@@ -1,7 +1,9 @@
 ﻿namespace Etk.Excel.RequestManagement
 {
+    using ExcelInterop = Microsoft.Office.Interop.Excel;
+
     public interface IRequestManager
     {
-        object GDA(Microsoft.Office.Interop.Excel.Range caller, string dataAccessor, object[] parameters);
+        object GDA(ExcelInterop.Range caller, string dataAccessor, object[] parameters);
     }
 }

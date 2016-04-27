@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Etk.BindingTemplates.Views;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
     public interface IExcelTemplateView : ITemplateView
     {
         /// <summary>Contains the range rendered by the View</summary>
-        Range RenderedRange { get; }
+        ExcelInterop.Range RenderedRange { get; }
         /// <summary>Contains the size of the rendered aread</summary>
         RenderedArea RenderedArea { get; }
 
@@ -25,7 +25,7 @@ namespace Etk.Excel.BindingTemplates.Views
         bool AutoFit {get; set;}
 
         /// <summary>Set the cell uses to clear the rendered area of the view</summary>
-        Range ClearingCell { get; set; }
+        ExcelInterop.Range ClearingCell { get; set; }
 
         void SetAccessorParameters(IEnumerable<object> parameters);
     }

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using Etk.Excel.ContextualMenus.Definition;
 using Etk.Tools.Extensions;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.ContextualMenus
 {
-    public delegate void MenuAction(Range range);
+    public delegate void MenuAction(ExcelInterop.Range range);
 
     static class ContextualMenuFactory
     {

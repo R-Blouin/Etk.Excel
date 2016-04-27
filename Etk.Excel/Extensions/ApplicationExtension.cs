@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.Extensions
 {
-    using ExcelInterop = Microsoft.Office.Interop.Excel; 
-
     /// <summary> 
     /// Excel main window wrapper.
     /// </summary>

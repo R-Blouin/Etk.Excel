@@ -5,7 +5,7 @@ using System.ComponentModel.Composition;
 using Etk.Tools.Extensions;
 using Etk.Tools.Log;
 using Microsoft.Office.Core;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.ContextualMenus
 {
@@ -20,7 +20,7 @@ namespace Etk.Excel.ContextualMenus
         private bool isDisposed = false;
 
         private List<ContextualMenusRequestedHandler> contextualMenusManagers = new List<ContextualMenusRequestedHandler>();
-        private List<Workbook> manageWorkbooks = new List<Workbook>();
+        private List<ExcelInterop.Workbook> manageWorkbooks = new List<ExcelInterop.Workbook>();
 
         private Dictionary<string, IContextualMenu> contextualMenuByIdent = new Dictionary<string, IContextualMenu>();
 
@@ -57,7 +57,7 @@ namespace Etk.Excel.ContextualMenus
         #endregion
 
         #region public methods
-        public void RegisterWorkbook(Workbook workbook)
+        public void RegisterWorkbook(ExcelInterop.Workbook workbook)
         {
             if(workbook == null || isDisposed)
                 return;
@@ -69,7 +69,7 @@ namespace Etk.Excel.ContextualMenus
             }
         }
 
-        public void UnRegisterWorkbook(Workbook workbook)
+        public void UnRegisterWorkbook(ExcelInterop.Workbook workbook)
         {
             if (workbook == null)
                 return;
@@ -131,7 +131,7 @@ namespace Etk.Excel.ContextualMenus
                 {
                     isDisposed = true;
 
-                    foreach (Workbook workbook in manageWorkbooks)
+                    foreach (ExcelInterop.Workbook workbook in manageWorkbooks)
                         UnRegisterWorkbook(workbook);
 
                     contextualMenusManagers.Clear();
@@ -146,18 +146,18 @@ namespace Etk.Excel.ContextualMenus
         /// <param name="sheet">The sheet where the right click is done</param>
         /// <param name="concernedRange">Concerned Range</param>
         /// <param name="cancel"></param>
-        private void OnSheetBeforeRightClickViewsManagement(object sheet, Range range, ref bool cancel)
+        private void OnSheetBeforeRightClickViewsManagement(object sheet, ExcelInterop.Range range, ref bool cancel)
         {
-            Microsoft.Office.Interop.Excel.Application application = range.Application;
+            ExcelInterop.Application application = range.Application;
             CommandBar commandBar = application.CommandBars["Cell"];
             commandBar.Reset();
 
-            Range realRange = range.Cells[1, 1];
+            ExcelInterop.Range realRange = range.Cells[1, 1];
             foreach (ContextualMenusRequestedHandler manager in contextualMenusManagers)
             {
                 try
                 {
-                    IEnumerable<IContextualMenu> menus = manager(sheet as Worksheet, realRange);
+                    IEnumerable<IContextualMenu> menus = manager(sheet as ExcelInterop.Worksheet, realRange);
                     if (menus != null)
                     {
                         foreach (IContextualMenu menu in menus)

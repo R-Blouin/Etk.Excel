@@ -2,7 +2,7 @@
 using Etk.BindingTemplates.Definitions;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Templates;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -15,13 +15,13 @@ namespace Etk.Excel.BindingTemplates.Definitions
         public int Height
         { get; private set; }
 
-        public Range DefinitionFirstCell
+        public ExcelInterop.Range DefinitionFirstCell
         { get; private set; }
 
-        public Range DefinitionLastCell
+        public ExcelInterop.Range DefinitionLastCell
         { get; private set; }
 
-        public Range DefinitionCells
+        public ExcelInterop.Range DefinitionCells
         { get; private set; }
 
         public IDefinitionPart[,] DefinitionParts
@@ -45,7 +45,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         #endregion
         
         #region .ctors
-        public ExcelTemplateDefinitionPart(ExcelTemplateDefinition parent, Range firstRange, Range lastRange)
+        public ExcelTemplateDefinitionPart(ExcelTemplateDefinition parent, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
         {
             Parent = parent;
             DefinitionFirstCell = firstRange;
@@ -56,7 +56,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
             if (Width == 0 || Height == 0)
                 throw new System.Exception("A template part ('Header','Body' or 'Footer' must have a 'Height' and a 'Width' >= 1");
 
-            Range templateRange = DefinitionFirstCell;
+            ExcelInterop.Range templateRange = DefinitionFirstCell;
             DefinitionCells = DefinitionFirstCell = templateRange.Cells[1, 1];
 
             DefinitionCells = templateRange.Resize[Height, Width];

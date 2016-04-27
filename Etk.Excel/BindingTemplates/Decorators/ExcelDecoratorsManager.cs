@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Decorators
 {
@@ -10,11 +11,11 @@ namespace Etk.Excel.BindingTemplates.Decorators
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class ExcelDecoratorsManager 
     {
-        private Microsoft.Office.Interop.Excel.Application excelApplication;
+        private ExcelInterop.Application excelApplication;
         private DecoratorsManager decoratorsManager;
 
         [ImportingConstructor]
-        public ExcelDecoratorsManager([Import] Microsoft.Office.Interop.Excel.Application application, [Import] DecoratorsManager decoratorsManager)
+        public ExcelDecoratorsManager([Import] ExcelInterop.Application application, [Import] DecoratorsManager decoratorsManager)
         {
             this.excelApplication = application;
             this.decoratorsManager = decoratorsManager;

@@ -6,7 +6,7 @@ using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Views;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -14,7 +14,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
     {
         protected ITemplateDefinition templateDefinition;
         protected IBindingContext bindingContext;
-        protected Range firstOutputCell;
+        protected ExcelInterop.Range firstOutputCell;
         protected IBindingContextItem[,] contextItems;
         protected object[,] cells;
 
@@ -36,7 +36,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public List<List<IBindingContextItem>> DataRows
         { get; private set; }
 
-        public Range RenderedRange
+        public ExcelInterop.Range RenderedRange
         { get; protected set; }
 
         public RenderedArea RenderedArea
@@ -49,7 +49,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         { get; private set; }
 
         #region .ctors
-        public ExcelRenderer(ExcelRootRenderer rootRenderer, ITemplateDefinition templateDefinition, IBindingContext bindingContext, Range firstOutputCell, MethodInfo minOccurencesMethod)
+        public ExcelRenderer(ExcelRootRenderer rootRenderer, ITemplateDefinition templateDefinition, IBindingContext bindingContext, ExcelInterop.Range firstOutputCell, MethodInfo minOccurencesMethod)
         {
             RootRenderer = rootRenderer ?? this as ExcelRootRenderer;
             this.templateDefinition = templateDefinition;
@@ -66,7 +66,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             int[] xs = new int[3];
             int[] ys = new int[3];
 
-            Range nextFirstOutputCell = null;
+            ExcelInterop.Range nextFirstOutputCell = null;
             if (templateDefinition.Header != null)
             {
                 HeaderPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Header, bindingContext.Header, firstOutputCell, false);

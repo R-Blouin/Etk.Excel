@@ -4,7 +4,7 @@ using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
 using Etk.Excel.Extensions;
 using Etk.Excel.UI.Windows.SortAndFilter;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
 {
@@ -28,7 +28,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
         public ExcelTemplateView View
         { get; protected set; }
 
-        public Range OwnerRange
+        public ExcelInterop.Range OwnerRange
         { get; protected set; }
 
         public ExcelForms.Font Font
@@ -39,11 +39,11 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
         public ExcelSortAndFilterButton(ExcelTemplateView templateView)
         {
             this.View = templateView;
-            Worksheet worksheet = View.SheetDestination;
+            ExcelInterop.Worksheet worksheet = View.SheetDestination;
             OwnerRange = View.FirstOutputCell;
             Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
 
-            Shape shape = (Shape)worksheet.Shapes.AddOLEObject("Forms.CommandButton.1",
+            ExcelInterop.Shape shape = (ExcelInterop.Shape)worksheet.Shapes.AddOLEObject("Forms.CommandButton.1",
                                                                 Type.Missing,
                                                                 false,
                                                                 false,

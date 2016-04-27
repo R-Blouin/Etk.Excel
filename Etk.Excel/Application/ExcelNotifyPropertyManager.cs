@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Tools.Log;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.Application
 {
@@ -122,9 +122,9 @@ namespace Etk.Excel.Application
             if (context.ContextItem.IsDisposed || ! context.View.IsRendered)
                 return;
 
-            Worksheet worksheet = context.View.FirstOutputCell.Worksheet;
-            Worksheet activeWorksheet = ExcelApplication.GetActiveSheet();
-            Range range = null;
+            ExcelInterop.Worksheet worksheet = context.View.FirstOutputCell.Worksheet;
+            ExcelInterop.Worksheet activeWorksheet = ExcelApplication.GetActiveSheet();
+            ExcelInterop.Range range = null;
             bool enableEvent = ExcelApplication.Application.EnableEvents;
             bool enableEventChanged = false;
             try
@@ -149,7 +149,7 @@ namespace Etk.Excel.Application
 
                             if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
                             {
-                                Range currentSelectedRange = context.View.CurrentSelectedCell;
+                                ExcelInterop.Range currentSelectedRange = context.View.CurrentSelectedCell;
                                 context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
                                 if (currentSelectedRange != null)
                                     currentSelectedRange.Select();

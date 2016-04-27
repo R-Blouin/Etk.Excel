@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.CheckBox
 {
@@ -80,8 +80,8 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
             }
 
         }
-    
-        public void  CreateControl(Range range)
+
+        public void CreateControl(ExcelInterop.Range range)
         {
             ExcelBindingDefinitionCheckBox definition = (ExcelBindingDefinitionCheckBox)BindingDefinition;
             checkBox = new ExcelCheckBox(range, definition.Definition);

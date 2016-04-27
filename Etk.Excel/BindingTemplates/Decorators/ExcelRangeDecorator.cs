@@ -7,7 +7,7 @@ using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
 using Etk.Tools.Log;
 using Etk.Tools.Reflection;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Decorators
 {
@@ -33,15 +33,15 @@ namespace Etk.Excel.BindingTemplates.Decorators
         private ILogger log = Logger.Instance;
         //private bool isRangedName;
         private string rangeId ;
-        private Range decoratorRange;
-        private Microsoft.Office.Interop.Excel.Application excelApplication;
+        private ExcelInterop.Range decoratorRange;
+        private ExcelInterop.Application excelApplication;
         private bool addConcernedRangeParameter;
         private bool notOnlyColor;
         private List<DecoratorProperty> decoratorProperties = null;
 
         #region .ctors and factories
         /// <summary> Constructor</summary>
-        private ExcelRangeDecorator(Microsoft.Office.Interop.Excel.Application excelApplication, string ident, string description, MethodInfo toInvoke, string rangeId, bool notOnlyColor)//, bool useOnlyColors)
+        private ExcelRangeDecorator(ExcelInterop.Application excelApplication, string ident, string description, MethodInfo toInvoke, string rangeId, bool notOnlyColor)//, bool useOnlyColors)
                                   : base(ident, description, toInvoke)    
         {
             this.notOnlyColor = notOnlyColor;
@@ -61,7 +61,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
         }
 
         /// <summary> Factory</summary>
-        public static ExcelRangeDecorator CreateInstance(Microsoft.Office.Interop.Excel.Application excelApplication, XmlExcelRangeDecorator xmlDecorator)
+        public static ExcelRangeDecorator CreateInstance(ExcelInterop.Application excelApplication, XmlExcelRangeDecorator xmlDecorator)
         {
             if (xmlDecorator == null)
                 return null;
@@ -91,7 +91,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
         #region public methods
         public bool Resolve(object sender, IBindingContextElement element)
         {
-            Range concernedRange = sender as Range;
+            ExcelInterop.Range concernedRange = sender as ExcelInterop.Range;
             if (concernedRange == null)
                 return false;
 
@@ -100,10 +100,10 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 if (decoratorRange == null)
                     RevolveDecoratorRange();
 
-                Range concernedRangeFirstCell = concernedRange.Cells[1, 1];
+                ExcelInterop.Range concernedRangeFirstCell = concernedRange.Cells[1, 1];
 
                 // We delete the previous concernedRange comment 
-                Comment comment = concernedRangeFirstCell.Comment;
+                ExcelInterop.Comment comment = concernedRangeFirstCell.Comment;
                 if (comment != null)
                     comment.Delete();
 
@@ -124,24 +124,24 @@ namespace Etk.Excel.BindingTemplates.Decorators
                         if (!string.IsNullOrEmpty(decoratorResult.Comment))
                         {
                             concernedRangeFirstCell.AddComment(decoratorResult.Comment);
-                            Comment addedComment = concernedRangeFirstCell.Comment;
+                            ExcelInterop.Comment addedComment = concernedRangeFirstCell.Comment;
                             addedComment.Visible = decoratorResult.CommentAlwaysVisible;
-                            Shape shape = addedComment.Shape;
-                            TextFrame textFrame = shape.TextFrame;
+                            ExcelInterop.Shape shape = addedComment.Shape;
+                            ExcelInterop.TextFrame textFrame = shape.TextFrame;
                             textFrame.AutoSize = true;
                         }
 
                         if (notOnlyColor)
                         {
                             decoratorRange[decoratorResult.Item.Value + 1].Copy();
-                            concernedRange.PasteSpecial(XlPasteType.xlPasteFormats);
+                            concernedRange.PasteSpecial(ExcelInterop.XlPasteType.xlPasteFormats);
                         }
                         else
                         {
                             if (decoratorResult.Item.Value <= decoratorProperties.Count)
                             {
-                                Interior interior = concernedRange.Interior;
-                                Font font = concernedRange.Font;
+                                ExcelInterop.Interior interior = concernedRange.Interior;
+                                ExcelInterop.Font font = concernedRange.Font;
 
                                 font.Color = decoratorProperties[decoratorResult.Item.Value].FrontColor;
                                 interior.Color = decoratorProperties[decoratorResult.Item.Value].BackColor;
@@ -165,14 +165,14 @@ namespace Etk.Excel.BindingTemplates.Decorators
         /// <returns>True if decorator is resolved</returns>
         public override bool Resolve(object sender, IBindingContextItem contextItem)
         {
-            Range concernedRange = sender as Range;
+            ExcelInterop.Range concernedRange = sender as ExcelInterop.Range;
             if (concernedRange == null)
                 return false;
 
             try
             {
                 // We delete the previous concernedRange comment 
-                Comment comment = concernedRange.Comment;
+                ExcelInterop.Comment comment = concernedRange.Comment;
                 if (comment != null)
                     comment.Delete();
 
@@ -201,10 +201,10 @@ namespace Etk.Excel.BindingTemplates.Decorators
                     if (!string.IsNullOrEmpty(decoratorResult.Comment))
                     {
                         concernedRange.AddComment(decoratorResult.Comment);
-                        Comment addedComment = concernedRange.Comment;
+                        ExcelInterop.Comment addedComment = concernedRange.Comment;
                         addedComment.Visible = decoratorResult.CommentAlwaysVisible;
-                        Shape shape = addedComment.Shape;
-                        TextFrame textFrame = shape.TextFrame;
+                        ExcelInterop.Shape shape = addedComment.Shape;
+                        ExcelInterop.TextFrame textFrame = shape.TextFrame;
                         textFrame.AutoSize = true;
                     }
                     if (decoratorResult.Item.HasValue)
@@ -212,14 +212,14 @@ namespace Etk.Excel.BindingTemplates.Decorators
                         if (notOnlyColor)
                         {
                             decoratorRange[decoratorResult.Item.Value + 1].Copy();
-                            concernedRange.PasteSpecial(XlPasteType.xlPasteFormats);
+                            concernedRange.PasteSpecial(ExcelInterop.XlPasteType.xlPasteFormats);
                         }
                         else
                         {
                             if (decoratorResult.Item.Value <= decoratorProperties.Count)
                             {
-                                Interior interior = concernedRange.Interior;
-                                Font font = concernedRange.Font;
+                                ExcelInterop.Interior interior = concernedRange.Interior;
+                                ExcelInterop.Font font = concernedRange.Font;
 
                                 font.Color = decoratorProperties[decoratorResult.Item.Value].FrontColor;
                                 interior.Color = decoratorProperties[decoratorResult.Item.Value].BackColor;
@@ -288,10 +288,10 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 if (decoratorRange != null)
                 {
                     decoratorProperties = new List<DecoratorProperty>();
-                    foreach (Range cell in decoratorRange.Cells)
+                    foreach (ExcelInterop.Range cell in decoratorRange.Cells)
                     {
-                        Interior interior = cell.Interior;
-                        Font font = cell.Font;
+                        ExcelInterop.Interior interior = cell.Interior;
+                        ExcelInterop.Font font = cell.Font;
                         decoratorProperties.Add(new DecoratorProperty((double)font.Color, (double)interior.Color));
                     }
                 }

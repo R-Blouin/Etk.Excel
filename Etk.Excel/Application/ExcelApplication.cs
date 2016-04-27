@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Windows.Threading;
 using Etk.Excel.Extensions;
 using Microsoft.Office.Core;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.Application
 {
@@ -21,7 +22,7 @@ namespace Etk.Excel.Application
         private ExcelPostAsynchronousManager postAsynchronousManager;
 
         /// <summary> Implements <see cref="IExcelApplication.Application"/> </summary> 
-        public Microsoft.Office.Interop.Excel.Application Application
+        public ExcelInterop.Application Application
         { get; private set; }
 
         public Dispatcher ExcelDispatcher
@@ -30,7 +31,7 @@ namespace Etk.Excel.Application
 
         #region .ctors
         [ImportingConstructor]
-        public ExcelApplication([Import] Microsoft.Office.Interop.Excel.Application application)
+        public ExcelApplication([Import] ExcelInterop.Application application)
         {
             try
             {
@@ -117,33 +118,33 @@ namespace Etk.Excel.Application
         }
 
         /// <summary> Implements <see cref="IExcelApplication.RangeSelectionDialog"/> </summary> 
-        public Microsoft.Office.Interop.Excel.Range RangeSelectionDialog(string title)
+        public ExcelInterop.Range RangeSelectionDialog(string title)
         {
-            Microsoft.Office.Interop.Excel.Range selectedRange = null;
+            ExcelInterop.Range selectedRange = null;
             if (string.IsNullOrEmpty(title))
                 title = "Select a Range";
 
             object obj = Application.InputBox(title, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, 8);
-            if (obj is Microsoft.Office.Interop.Excel.Range)
-                selectedRange = obj as Microsoft.Office.Interop.Excel.Range;
+            if (obj is ExcelInterop.Range)
+                selectedRange = obj as ExcelInterop.Range;
             return selectedRange;
         }
 
         /// <summary> Implements <see cref="IExcelApplication.GetActiveSheet"/> </summary> 
-        public Microsoft.Office.Interop.Excel.Worksheet GetActiveSheet()
+        public ExcelInterop.Worksheet GetActiveSheet()
         {
-            Microsoft.Office.Interop.Excel.Worksheet ret = null;
+            ExcelInterop.Worksheet ret = null;
             if (Application != null)
                 ret = Application.ActiveSheet; 
             return ret;
         }
 
         /// <summary> Implements <see cref="IExcelApplication.GetWorkSheetFromName"/> </summary> 
-        public Microsoft.Office.Interop.Excel.Worksheet GetWorkSheetFromName(Microsoft.Office.Interop.Excel.Workbook workbook, string name)
+        public ExcelInterop.Worksheet GetWorkSheetFromName(ExcelInterop.Workbook workbook, string name)
         {
             if(workbook != null && ! string.IsNullOrEmpty(name))
             {
-                foreach (Microsoft.Office.Interop.Excel.Worksheet sheet in workbook.Worksheets)
+                foreach (ExcelInterop.Worksheet sheet in workbook.Worksheets)
                 {
                     if (string.Equals(sheet.Name, name))
                         return sheet;

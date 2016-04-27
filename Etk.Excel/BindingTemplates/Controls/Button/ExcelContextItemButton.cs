@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.Button
 {
@@ -100,8 +100,8 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     button.Enable = (bool) EnablePropertyGet.Invoke(source, null);
             }
         }
-    
-        public void  CreateControl(Range range)
+
+        public void CreateControl(ExcelInterop.Range range)
         {
             ExcelBindingDefinitionButton definition = (ExcelBindingDefinitionButton)BindingDefinition;
             button = new ExcelButton(range, definition.Definition);

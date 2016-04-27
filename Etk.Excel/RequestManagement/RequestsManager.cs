@@ -14,6 +14,7 @@ using Etk.Excel.Extensions;
 using Etk.Excel.RequestManagement.Definitions;
 using Etk.Excel.UI.Windows.ModelManagement;
 using Etk.Excel.UI.Windows.ModelManagement.ViewModels;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.RequestManagement
 {
@@ -60,7 +61,7 @@ namespace Etk.Excel.RequestManagement
         #endregion
 
         #region private methods
-        private IEnumerable<IContextualMenu> ManageRequestsContexualMenu(Microsoft.Office.Interop.Excel.Worksheet sheet, Microsoft.Office.Interop.Excel.Range range)
+        private IEnumerable<IContextualMenu> ManageRequestsContexualMenu(ExcelInterop.Worksheet sheet, ExcelInterop.Range range)
         {
             if (!ETKExcel.ModelDefinitionManager.HasModels)
                 return null;
@@ -74,11 +75,11 @@ namespace Etk.Excel.RequestManagement
         #endregion
 
         #region Excel Functions
-        public static void AddRequest(Microsoft.Office.Interop.Excel.Range caller)
+        public static void AddRequest(ExcelInterop.Range caller)
         {
             using (ExcelMainWindow excelWindow = new ExcelMainWindow(caller.Application.Hwnd))
             {
-                Microsoft.Office.Interop.Excel.Range firstOutputRange = caller.Offset[0, 1];
+                ExcelInterop.Range firstOutputRange = caller.Offset[0, 1];
                 WizardViewModel viewModel = WizardViewModel.CreateInstance(caller, firstOutputRange);
                 DynamicRequestManagementWindow window = new DynamicRequestManagementWindow(viewModel);
 
@@ -96,7 +97,7 @@ namespace Etk.Excel.RequestManagement
         public static void DeleteRequest()
         { }
 
-        public object GDA(Microsoft.Office.Interop.Excel.Range caller, string dataType, object[] parameters)
+        public object GDA(ExcelInterop.Range caller, string dataType, object[] parameters)
         {
             if (caller == null)
                 return null;
@@ -109,13 +110,13 @@ namespace Etk.Excel.RequestManagement
 
                 IExcelTemplateView view = ETKExcel.TemplateManager.AddView("Templates Customer", "AllCustomers", caller.Worksheet.Name, caller.Address);
                 test = new ExcelRequestDefinition("Test", "Ceci est un test", view as ExcelTemplateView);
-                Microsoft.Office.Interop.Excel.Comment comment = caller.Comment;
+                ExcelInterop.Comment comment = caller.Comment;
                 if (comment != null)
                     comment.Delete();
                 caller.Application.Application.Caller.AddComment(test.Description);
             }
 
-            Microsoft.Office.Interop.Excel.Range firstOutputCell = (caller as Microsoft.Office.Interop.Excel.Range).Offset[++yOffset, ++xOffset];
+            ExcelInterop.Range firstOutputCell = (caller as ExcelInterop.Range).Offset[++yOffset, ++xOffset];
             (test.View as ExcelTemplateView).FirstOutputCell = firstOutputCell;
 
             try

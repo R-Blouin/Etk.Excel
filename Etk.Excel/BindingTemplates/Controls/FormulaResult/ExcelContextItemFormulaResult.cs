@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
 {
@@ -13,11 +13,11 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
         #region properties and attributes
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
         private ExcelBindingDefinitionFormulaResult excelBindingDefinitionFormulaResult;
-        private Worksheet workSheet;
-        private Microsoft.Office.Interop.Excel.Application application;
+        private ExcelInterop.Worksheet workSheet;
+        private ExcelInterop.Application application;
         private object currentValue;
 
-        public Range Range
+        public ExcelInterop.Range Range
         { get; private set; }
 
         public Action<IBindingContextItem, object> OnPropertyChangedAction
@@ -47,7 +47,7 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
         }
         #endregion
 
-        public void CreateControl(Range range)
+        public void CreateControl(ExcelInterop.Range range)
         {
             this.Range = range;
             application = this.Range.Application;

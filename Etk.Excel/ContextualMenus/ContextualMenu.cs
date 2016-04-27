@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Etk.BindingTemplates.Context;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.ContextualMenus
 {
@@ -34,7 +34,7 @@ namespace Etk.Excel.ContextualMenus
         #endregion
 
         #region public methods
-        public void SetAction(Range range, IBindingContextElement currentContextElement, IBindingContextElement targetedContextElement)
+        public void SetAction(ExcelInterop.Range range, IBindingContextElement currentContextElement, IBindingContextElement targetedContextElement)
         {
             if (Items != null)
             {
@@ -48,7 +48,7 @@ namespace Etk.Excel.ContextualMenus
             }
         }
 
-        public void SetAction(Range range)
+        public void SetAction(ExcelInterop.Range range)
         {
             if (Items != null)
             {

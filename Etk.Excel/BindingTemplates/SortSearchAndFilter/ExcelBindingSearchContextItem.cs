@@ -5,7 +5,7 @@ using Etk.BindingTemplates.Definitions.Templates;
 using Etk.BindingTemplates.Views;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Views;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
 {
@@ -26,25 +26,25 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
                     return;
 
                 ExcelTemplateView excelView = (ExcelTemplateView) view;
-                
-                List<KeyValuePair<Range, bool>> toShowOrHide = new  List<KeyValuePair<Range, bool>>();
 
-                Range firstRange = excelView.SheetDestination.Cells[excelView.Renderer.BodyPartRenderer.RenderedArea.YPos, excelView.Renderer.BodyPartRenderer.RenderedArea.XPos];
-                Range lastRange = excelView.SheetDestination.Cells[excelView.Renderer.BodyPartRenderer.RenderedArea.YPos + excelView.Renderer.BodyPartRenderer.RenderedArea.Height - 1, excelView.Renderer.BodyPartRenderer.RenderedArea.XPos + excelView.Renderer.BodyPartRenderer.RenderedArea.Width - 1];
-                Range renderedRange = excelView.SheetDestination.Range[firstRange, lastRange];
-                Range rowsOrColumns = view.TemplateDefinition.Orientation == Orientation.Horizontal ? renderedRange.Columns : renderedRange.Cells.Rows;
+                List<KeyValuePair<ExcelInterop.Range, bool>> toShowOrHide = new List<KeyValuePair<ExcelInterop.Range, bool>>();
+
+                ExcelInterop.Range firstRange = excelView.SheetDestination.Cells[excelView.Renderer.BodyPartRenderer.RenderedArea.YPos, excelView.Renderer.BodyPartRenderer.RenderedArea.XPos];
+                ExcelInterop.Range lastRange = excelView.SheetDestination.Cells[excelView.Renderer.BodyPartRenderer.RenderedArea.YPos + excelView.Renderer.BodyPartRenderer.RenderedArea.Height - 1, excelView.Renderer.BodyPartRenderer.RenderedArea.XPos + excelView.Renderer.BodyPartRenderer.RenderedArea.Width - 1];
+                ExcelInterop.Range renderedRange = excelView.SheetDestination.Range[firstRange, lastRange];
+                ExcelInterop.Range rowsOrColumns = view.TemplateDefinition.Orientation == Orientation.Horizontal ? renderedRange.Columns : renderedRange.Cells.Rows;
                 if (string.IsNullOrEmpty(excelView.SearchValue))
                 {
-                    foreach (Range rowOrColumn in rowsOrColumns)
-                        toShowOrHide.Add(new KeyValuePair<Range, bool>(rowOrColumn, false));
+                    foreach (ExcelInterop.Range rowOrColumn in rowsOrColumns)
+                        toShowOrHide.Add(new KeyValuePair<ExcelInterop.Range, bool>(rowOrColumn, false));
                 }
                 else
                 {
                     string searchValueUpper = excelView.SearchValue.ToUpper();
-                    foreach (Range rowOrColumn in rowsOrColumns)
+                    foreach (ExcelInterop.Range rowOrColumn in rowsOrColumns)
                     {
                         bool toHide = true;
-                        foreach(Range cell in rowOrColumn.Cells)
+                        foreach (ExcelInterop.Range cell in rowOrColumn.Cells)
                         {
                             string cellText = cell.Text;
                             if (!string.IsNullOrEmpty(cellText) && cellText.ToUpper().Contains(searchValueUpper))
@@ -53,18 +53,18 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
                                 break;
                             }
                         }
-                        toShowOrHide.Add(new KeyValuePair<Range, bool>(rowOrColumn, toHide));
+                        toShowOrHide.Add(new KeyValuePair<ExcelInterop.Range, bool>(rowOrColumn, toHide));
                     }
                 }
                 HideShowRanges(excelView, toShowOrHide, false);
             }
         }
 
-        private void HideShowRanges(ExcelTemplateView view, List<KeyValuePair<Range, bool>> toShowOrHide, bool hide)
+        private void HideShowRanges(ExcelTemplateView view, List<KeyValuePair<ExcelInterop.Range, bool>> toShowOrHide, bool hide)
         {
-            foreach (KeyValuePair<Range, bool> showOrHide in toShowOrHide)
+            foreach (KeyValuePair<ExcelInterop.Range, bool> showOrHide in toShowOrHide)
             {
-                Range cells;
+                ExcelInterop.Range cells;
                 if (view.TemplateDefinition.Orientation == Orientation.Horizontal)
                     cells = view.SheetDestination.Columns[showOrHide.Key.Column];
                 else

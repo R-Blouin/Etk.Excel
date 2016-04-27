@@ -6,7 +6,7 @@ using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Controls;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Definitions;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -37,16 +37,16 @@ namespace Etk.Excel.BindingTemplates.Renderer
     class ExcelPartVerticalRenderer : ExcelPartRenderer
     {
         #region .ctors and factories
-        public ExcelPartVerticalRenderer(ExcelRenderer parent, ExcelTemplateDefinitionPart part, IBindingContextPart bindingContextPart, Range firstOutputCell, bool useDecorator)
+        public ExcelPartVerticalRenderer(ExcelRenderer parent, ExcelTemplateDefinitionPart part, IBindingContextPart bindingContextPart, ExcelInterop.Range firstOutputCell, bool useDecorator)
                                         : base(parent, part, bindingContextPart, firstOutputCell, useDecorator)
         {}
         #endregion
 
         #region private methods
         protected override void ManageTemplateWithoutLinkedTemplates()
-        { 
-            Range firstCell = currentRenderingTo;
-            Worksheet worksheetTo = currentRenderingTo.Worksheet;
+        {
+            ExcelInterop.Range firstCell = currentRenderingTo;
+            ExcelInterop.Worksheet worksheetTo = currentRenderingTo.Worksheet;
             int cptElements = 0;
 
             int nbrOfElement = bindingContextPart.ElementsToRender.Count();
@@ -54,42 +54,42 @@ namespace Etk.Excel.BindingTemplates.Renderer
             int localHeight = partToRenderDefinition.Height * nbrOfElement;
             if (localHeight > 0)
             {
-            Range workingRange = currentRenderingTo.Resize[localHeight, localWidth];
+                ExcelInterop.Range workingRange = currentRenderingTo.Resize[localHeight, localWidth];
 
-            partToRenderDefinition.DefinitionCells.Copy(workingRange);
-            currentRenderingTo = worksheetTo.Cells[currentRenderingTo.Row + localHeight, currentRenderingTo.Column + localWidth];
+                partToRenderDefinition.DefinitionCells.Copy(workingRange);
+                currentRenderingTo = worksheetTo.Cells[currentRenderingTo.Row + localHeight, currentRenderingTo.Column + localWidth];
 
-            foreach (IBindingContextElement contextElement in bindingContextPart.ElementsToRender)
-            {
-                int cptItems = 0;
-                for (int rowId = 0; rowId < partToRenderDefinition.Height; rowId++)
+                foreach (IBindingContextElement contextElement in bindingContextPart.ElementsToRender)
                 {
-                    List<IBindingContextItem> row = new List<IBindingContextItem>();
-                    Parent.DataRows.Add(row);
-                    for (int colId = 0; colId < partToRenderDefinition.Width; colId++)
+                    int cptItems = 0;
+                    for (int rowId = 0; rowId < partToRenderDefinition.Height; rowId++)
                     {
-                        IBindingContextItem item = partToRenderDefinition.DefinitionParts[rowId, colId] == null ? null : contextElement.BindingContextItems[cptItems++];
-                        if (item != null && ((item.BindingDefinition != null && item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly) || item is IExcelControl))
+                        List<IBindingContextItem> row = new List<IBindingContextItem>();
+                        Parent.DataRows.Add(row);
+                        for (int colId = 0; colId < partToRenderDefinition.Width; colId++)
                         {
-                            Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
-                            if (item.BindingDefinition != null && item.BindingDefinition.IsEnum)
-                                enumManager.CreateControl(item, ref range);
-                            else
-                                ManageControls(item, ref range);
-                            range = null;
+                            IBindingContextItem item = partToRenderDefinition.DefinitionParts[rowId, colId] == null ? null : contextElement.BindingContextItems[cptItems++];
+                            if (item != null && ((item.BindingDefinition != null && item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly) || item is IExcelControl))
+                            {
+                                ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
+                                if (item.BindingDefinition != null && item.BindingDefinition.IsEnum)
+                                    enumManager.CreateControl(item, ref range);
+                                else
+                                    ManageControls(item, ref range);
+                                range = null;
+                            }
+                            row.Add(item);
                         }
-                        row.Add(item);
                     }
-                }
-                if (useDecorator && ((ExcelTemplateDefinition) partToRenderDefinition.Parent).Decorator != null)
-                {
-                    Range elementRange = firstCell.Offset[cptElements, 0];
-                    elementRange = elementRange.Resize[1, localWidth];
+                    if (useDecorator && ((ExcelTemplateDefinition) partToRenderDefinition.Parent).Decorator != null)
+                    {
+                        ExcelInterop.Range elementRange = firstCell.Offset[cptElements, 0];
+                        elementRange = elementRange.Resize[1, localWidth];
 
-                    Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
+                        Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
+                    }
+                    cptElements++;
                 }
-                cptElements++;
-            }
                 Marshal.ReleaseComObject(workingRange);
             }
 
@@ -115,11 +115,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         protected override void ManageTemplateWithLinkedTemplates()
         {
-            Worksheet worksheetTo = currentRenderingTo.Worksheet;
+            ExcelInterop.Worksheet worksheetTo = currentRenderingTo.Worksheet;
             Width = partToRenderDefinition.Width;
             foreach (IBindingContextElement contextElement in bindingContextPart.ElementsToRender)
             {
-                Range firstElementCell = currentRenderingTo;
+                ExcelInterop.Range firstElementCell = currentRenderingTo;
                 int bindingContextItemsCpt = 0;
                 int cptLinkedDefinition = 0;
                 int elementHeight = 0;
@@ -178,7 +178,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                 if (useDecorator && ((ExcelTemplateDefinition) partToRenderDefinition.Parent).Decorator != null)
                 {
-                    Range elementRange = firstElementCell.Resize[elementHeight, elementWidth];
+                    ExcelInterop.Range elementRange = firstElementCell.Resize[elementHeight, elementWidth];
                     Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
                 }
             }
@@ -186,7 +186,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             worksheetTo = null;
         }
 
-        private int RenderBeforeLink(RenderingContext renderingContext, int linkCpt, Worksheet worksheetTo, int bindingContextItemsCpt)
+        private int RenderBeforeLink(RenderingContext renderingContext, int linkCpt, ExcelInterop.Worksheet worksheetTo, int bindingContextItemsCpt)
         {
             int firstCol, gap;
             if (linkCpt == 0)
@@ -228,7 +228,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             return bindingContextItemsCpt;
         }
 
-        private void RenderLink(RenderingContext renderingContext, IBindingContext linkedBindingContext, Worksheet worksheetTo)
+        private void RenderLink(RenderingContext renderingContext, IBindingContext linkedBindingContext, ExcelInterop.Worksheet worksheetTo)
         {
             using (ExcelRenderer linkedRenderer = new ExcelRenderer(Parent.RootRenderer, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo, renderingContext.LinkedTemplateDefinition.MinOccurencesMethod))
             {
@@ -339,13 +339,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         private void ManageTemplatePart(RenderingContext renderingContext, ref int currentBindingContextItemId, ref int vOffset, int startPos, int endPos)
         {
-            Worksheet worksheetFrom = partToRenderDefinition.DefinitionFirstCell.Worksheet;
-            Worksheet worksheetTo = currentRenderingTo.Worksheet;
+            ExcelInterop.Worksheet worksheetFrom = partToRenderDefinition.DefinitionFirstCell.Worksheet;
+            ExcelInterop.Worksheet worksheetTo = currentRenderingTo.Worksheet;
 
             int gap = endPos - startPos;
-            Range source = worksheetFrom.Cells[partToRenderDefinition.DefinitionFirstCell.Row + renderingContext.RowId, partToRenderDefinition.DefinitionFirstCell.Column + startPos];
+            ExcelInterop.Range source = worksheetFrom.Cells[partToRenderDefinition.DefinitionFirstCell.Row + renderingContext.RowId, partToRenderDefinition.DefinitionFirstCell.Column + startPos];
             source = source.Resize[1, gap];
-            Range workingRange = currentRenderingTo.Resize[1, gap];
+            ExcelInterop.Range workingRange = currentRenderingTo.Resize[1, gap];
             source.Copy(workingRange);
 
             for (int colId = startPos; colId < endPos; colId++)
@@ -353,7 +353,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 IBindingContextItem item = partToRenderDefinition.DefinitionParts[renderingContext.RowId, colId] == null ? null : renderingContext.ContextElement.BindingContextItems[currentBindingContextItemId++];
                 if (item != null && ((item.BindingDefinition != null && (item.BindingDefinition.IsEnum || item.BindingDefinition.IsMultiLine)) || item is IExcelControl))
                 {
-                    Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId];
+                    ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId];
                     if(item.BindingDefinition != null)
                     {
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
