@@ -4,6 +4,8 @@
     using Etk.Tests.Templates.ExcelDna1.Tests;
     using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMonoHeaderAndFooter;
     using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalNoHeaderAndFooter;
+    using Etk.Excel;
+    using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
     class ExcelTestsManager
     {
@@ -24,8 +26,15 @@
 
         public void Execute()
         {
-            foreach (IExcelTests test in tests)
-                test.Execute();
+            ETKExcel.ExcelApplication.PostAsynchronousAction(() => 
+                    {
+                        foreach (IExcelTests test in tests)
+                            test.Execute();
+                    });
+
+            ExcelInterop.Worksheet dashBoardSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, "Dashboard");
+            if (dashBoardSheet != null)
+                dashBoardSheet.Activate();
         }
     }
 }

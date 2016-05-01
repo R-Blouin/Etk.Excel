@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates;
 using Etk.Excel.ContextualMenus;
 using Etk.Excel.RequestManagement;
 using Etk.ModelManagement;
-using ExcelInterop = Microsoft.Office.Interop.Excel; 
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
+[assembly: InternalsVisibleTo("Etk.Tests.Templates.ExcelDna1")]
 namespace Etk.Excel
 {
     /// <summary> 

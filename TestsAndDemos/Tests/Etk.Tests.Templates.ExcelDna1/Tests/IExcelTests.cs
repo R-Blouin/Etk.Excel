@@ -8,7 +8,7 @@
         string Description { get; }
         bool InitSuccessful { get; }
         string Exception { get; }
-        IEnumerable<IExcelTest> Tests { get; }
+        List<IExcelTest> Tests { get; }
 
         void Init();
         void Execute();

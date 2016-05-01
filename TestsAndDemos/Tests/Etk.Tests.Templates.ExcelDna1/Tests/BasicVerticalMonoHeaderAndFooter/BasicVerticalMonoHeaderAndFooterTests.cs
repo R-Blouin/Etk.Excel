@@ -11,16 +11,14 @@
 
     class BasicVerticalMonoHeaderAndFooterTests : ExcelTests
     {
-        public BasicVerticalMonoHeaderAndFooterTests() : base("Render a basic template (without linked templates) with a one line header and a one line footer")
+        public BasicVerticalMonoHeaderAndFooterTests() : base("Tests on a basic template (without linked templates) with a one line header and a one line footer")
         {}
 
         override protected void RealInit()
         {
             CreateView("VerticalMonoHeaderAndFooter", "BasicTemplates1", "BasicVerticalMonoHeaderAndFooter");
-            TestsList.Add(new TestHeader(View));
-            TestsList.Add(new TestBody(View));
-            TestsList.Add(new TestFooter(View));
-            TestsList.Add(new TestCompleteView(View));
+            Tests.Add(new TestCompleteView(View));
+            Tests.Add(new TestViewParts(View));
         }
 
         override protected void RenderViews()

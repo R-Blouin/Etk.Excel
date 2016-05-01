@@ -1,6 +1,8 @@
 ﻿namespace Etk.Tests.Templates.ExcelDna1.Tests
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Etk.Excel.BindingTemplates.Views;
     using Etk.Excel.UI.MvvmBase;
     using Etk.Tests.Templates.ExcelDna1.Extensions;
@@ -36,16 +38,19 @@
             }
         }
 
-        private string exception;
-        public string Exception
+        private string errors;
+        public string Errors
         {
-            get { return exception; }
+            get { return errors; }
             protected set
             {
-                exception = value;
-                OnPropertyChanged("Exception");
+                errors = value;
+                OnPropertyChanged("Errors");
             }
         }
+
+        protected List<string> ErrorMessages
+        { get; private set; }
         #endregion
 
         #region .ctors
@@ -53,7 +58,7 @@
         {
             View = view;
             Description = description;
-
+            ErrorMessages = new List<string>();
             Init();
         }
         #endregion
@@ -65,15 +70,25 @@
             {
                 Init();
                 RealExecute();
+
             }
             catch (Exception ex)
             {
-                Success = false;
-                Exception = ex.ToString(null);
+                ErrorMessages.Add(ex.ToString(null));
             }
             finally
             {
                 Done = true;
+                if (! ErrorMessages.Any())
+                {
+                    Success = true;
+                    Errors = null;                
+                }
+                else
+                {
+                    Success = false;
+                    Errors = string.Join("\r\n", ErrorMessages.ToArray());
+                }
             }
         }
         #endregion
@@ -84,7 +99,7 @@
         private void Init()
         {
             Success = Done = false;
-            Exception = null;
+            Errors = null;
         }
         #endregion
     }

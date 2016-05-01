@@ -5,7 +5,7 @@
         string Description{ get; }
         bool Success{ get; }
         bool Done{ get; }
-        string Exception { get; }
+        string Errors { get; }
 
         void Execute();
     }

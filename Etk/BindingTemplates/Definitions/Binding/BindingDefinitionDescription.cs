@@ -178,7 +178,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         if (optionsEnd != -1)
                         {
                             string optionsString = bindingExpression.Substring(0, optionsEnd);
-                            string[] optionsArray = optionsString.Split(',');
+                            string[] optionsArray = optionsString.Split(';');
                             options = optionsArray.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim()).ToList();
                             bindingExpression = bindingExpression.Substring(optionsEnd + 1);
                         }

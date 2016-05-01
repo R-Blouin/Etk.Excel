@@ -11,9 +11,8 @@ namespace Etk.Excel.BindingTemplates.Controls
         public dynamic Index;
         public dynamic LineStyle;
         public dynamic Weight;
-        public dynamic Color;
         public dynamic ColorIndex;
-        public int ThemeColor;
+        public dynamic Color;
         public dynamic TintAndShade;
     }
 
@@ -46,21 +45,19 @@ namespace Etk.Excel.BindingTemplates.Controls
                 }
             }
 
-            //IEnumerable<BorderStyle> bordersStyle = RetrieveBorders(range);
+            IEnumerable<BorderStyle> bordersStyle = RetrieveBorders(range);
 
             ExcelInterop.Range toMerge = range.Resize[vOffset, hOffset];
             toMerge.Merge();
 
-            //foreach (BorderStyle borderStyle in bordersStyle)
-            //{
-            //    toMerge.Borders[borderStyle.Index].LineStyle = borderStyle.LineStyle;
-            //    toMerge.Borders[borderStyle.Index].Weight = borderStyle.Weight;
-            //    toMerge.Borders[borderStyle.Index].Color = borderStyle.Color;
-            //    toMerge.Borders[borderStyle.Index].ColorIndex = borderStyle.ColorIndex;
-            //    //if (borderStyle.ThemeColor != 0)
-            //    //    range.Borders[borderStyle.Index].ThemeColor = borderStyle.ThemeColor;
-            //    toMerge.Borders[borderStyle.Index].TintAndShade = borderStyle.TintAndShade;
-            //}
+            foreach (BorderStyle borderStyle in bordersStyle)
+            {
+                toMerge.Borders[borderStyle.Index].ColorIndex = borderStyle.ColorIndex;
+                toMerge.Borders[borderStyle.Index].Weight = borderStyle.Weight;
+                toMerge.Borders[borderStyle.Index].LineStyle = borderStyle.LineStyle;
+                toMerge.Borders[borderStyle.Index].Color = borderStyle.Color;
+                toMerge.Borders[borderStyle.Index].TintAndShade = borderStyle.TintAndShade;
+            }
         }
 
         private IEnumerable<BorderStyle> RetrieveBorders(ExcelInterop.Range range)
@@ -85,10 +82,8 @@ namespace Etk.Excel.BindingTemplates.Controls
                 ret.Index = bordersIndex;
                 ret.LineStyle = range.Borders[bordersIndex].LineStyle;
                 ret.Weight =  range.Borders[bordersIndex].Weight;
+                ret.ColorIndex = range.Borders[bordersIndex].ColorIndex;
                 ret.Color = range.Borders[bordersIndex].Color;
-                ret.ColorIndex = range.Borders[bordersIndex].Weight;
-                //if (range.Borders[bordersIndex].ThemeColor != 0)
-                //    ret.ThemeColor = (int) range.Borders[bordersIndex].ThemeColor;
                 ret.TintAndShade = range.Borders[bordersIndex].TintAndShade;
             }
             return ret;

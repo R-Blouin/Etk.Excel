@@ -17,14 +17,11 @@
         public IExcelTemplateView View
         { get; private set; }
 
-        protected List<IExcelTest> TestsList
-        { get; private set; }
-
         public string Description
         { get; private set; }
 
-        public IEnumerable<IExcelTest> Tests
-        { get { return TestsList; } }
+        public List<IExcelTest> Tests
+        { get; private set; } 
 
         public bool InitSuccessful
         { get; private set; }
@@ -37,7 +34,7 @@
         protected ExcelTests(string description)
         {
             Description = description;
-            TestsList = new List<IExcelTest>();
+            Tests = new List<IExcelTest>();
         }
         #endregion
 
@@ -71,12 +68,17 @@
                 {
                     throw new Exception("Render views failed", ex);
                 }
-                TestsList.ForEach(t => t.Execute());
+                Tests.ForEach(t => t.Execute());
             }
             catch (Exception ex)
             {
                 Exception = ex.ToString("Execution failed");
             }
+        }
+
+        public int GetNumberOfTests()
+        {
+            return Tests.Count;
         }
         #endregion
 

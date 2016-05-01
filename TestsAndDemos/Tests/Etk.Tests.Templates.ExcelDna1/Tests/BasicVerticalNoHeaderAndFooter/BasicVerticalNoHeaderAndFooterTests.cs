@@ -11,13 +11,13 @@
     
     class BasicVerticalNoHeaderAndFooterTests : ExcelTests
     {
-        public BasicVerticalNoHeaderAndFooterTests() : base("Render a basic template (without linked templates) without header and footer")
+        public BasicVerticalNoHeaderAndFooterTests() : base("Tests on a basic template without linked templates and without header or footer")
         {}
 
         override protected void RealInit()
         {
             CreateView("VerticalNoHeaderAndFooter", "BasicTemplates1", "BasicVerticalNoHeaderAndFooter");
-            TestsList.Add(new TestRendering(View));
+            Tests.Add(new TestRendering(View));
         }
 
         override protected void RenderViews()

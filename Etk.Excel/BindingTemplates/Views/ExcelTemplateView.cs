@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
@@ -14,22 +13,6 @@ using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
-    struct SelectionPatternColor
-    {
-        public int ThemeColor;
-        public object TintAndShade;
-        public object Color;
-        public double Position;
-
-        public SelectionPatternColor(ExcelInterop.ColorStop cs)
-        {
-            ThemeColor = cs.ThemeColor;
-            TintAndShade = cs.TintAndShade;
-            Color = cs.Color;
-            Position = cs.Position;
-        }
-    }
-
     class SelectionPattern
     {
         public ExcelInterop.XlPattern Pattern;
@@ -37,9 +20,6 @@ namespace Etk.Excel.BindingTemplates.Views
         public int PatternColorIndex;
         public int PatternThemeColor;
         public double PatternTintAndShade;
-
-        public object GradientDegree;
-        public SelectionPatternColor[] SelectionPatternColors;
 
         public SelectionPattern(ref ExcelInterop.Interior interior)
         {
@@ -50,17 +30,6 @@ namespace Etk.Excel.BindingTemplates.Views
                 PatternColorIndex = interior.PatternColorIndex;
                 PatternThemeColor = interior.PatternThemeColor;
                 PatternTintAndShade = interior.PatternTintAndShade;
-
-                if (interior.Gradient != null)
-                {
-                    GradientDegree = interior.Gradient.Degree;
-                    SelectionPatternColors = new SelectionPatternColor[interior.Gradient.ColorStops.Count];
-                    for (int cpt = 0; cpt < interior.Gradient.ColorStops.Count; cpt++)
-                    {
-                        ExcelInterop.ColorStop cs = interior.Gradient.ColorStops[cpt + 1];
-                        SelectionPatternColors[cpt] = new SelectionPatternColor(cs);
-                    }
-                }
             }
             catch
             { }
@@ -554,23 +523,13 @@ namespace Etk.Excel.BindingTemplates.Views
                     ExcelInterop.Interior interior = cell.Interior;
                     try
                     {
-                        currentSelectedRangePattern.Add(new SelectionPattern(ref interior));
-
-                        SelectionPattern selectionPattern = null;
                         if (interior.Gradient != null)
-                            selectionPattern = new SelectionPattern(ref interior);
-
-                        interior.Pattern = ExcelInterop.XlPattern.xlPatternGray8;
-                        if (selectionPattern == null)
-                            interior.PatternColor = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DimGray);
+                            currentSelectedRangePattern.Add(null);
                         else
                         {
-                            if (selectionPattern.SelectionPatternColors != null)
-                            {
-                                interior.Color = selectionPattern.SelectionPatternColors[0].Color;
-                                if (selectionPattern.SelectionPatternColors.Count() > 1)
-                                    interior.PatternColor = selectionPattern.SelectionPatternColors[1].Color;
-                            }
+                            currentSelectedRangePattern.Add(new SelectionPattern(ref interior));
+                            interior.Pattern = ExcelInterop.XlPattern.xlPatternGray8;
+                            interior.PatternColor = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DimGray);
                         }
                     }
                     catch
@@ -582,9 +541,8 @@ namespace Etk.Excel.BindingTemplates.Views
             }
 
             // Redraw the borders of the current selection
-
             if (((TemplateDefinition) TemplateDefinition).AddBorder)
-                Renderer.BorderAround(currentSelectedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlThin, 3);
+                Renderer.BorderAround(currentSelectedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlThin, 1);
             Marshal.ReleaseComObject(sheet);
         }
 
@@ -604,34 +562,13 @@ namespace Etk.Excel.BindingTemplates.Views
                             ExcelInterop.Interior interior = cell.Interior;
 
                             cell.Interior.Pattern = selectionPattern.Pattern;
-                            if (selectionPattern.PatternColor != 0)
-                                cell.Interior.PatternColor = selectionPattern.PatternColor;
                             if (selectionPattern.PatternColorIndex >= 0)
                                 cell.Interior.PatternColorIndex = selectionPattern.PatternColorIndex;
+                            if (selectionPattern.PatternColor != 0)
+                                cell.Interior.PatternColor = selectionPattern.PatternColor;
                             if (selectionPattern.PatternThemeColor != 0)
                                 cell.Interior.PatternThemeColor = selectionPattern.PatternThemeColor;
                             cell.Interior.PatternTintAndShade = selectionPattern.PatternTintAndShade;
-
-                            if (cell.Interior.Gradient != null)
-                            {
-                                if (selectionPattern.GradientDegree != null)
-                                 cell.Interior.Gradient.Degree = selectionPattern.GradientDegree;
-                                cell.Interior.Gradient.ColorStops.Clear();
-
-                                if (selectionPattern.SelectionPatternColors != null)
-                                {
-                                    int i = 0;
-                                    foreach (SelectionPatternColor selectionPatternColor in selectionPattern.SelectionPatternColors)
-                                    {
-                                        ExcelInterop.ColorStop cs = cell.Interior.Gradient.ColorStops.Add(i++);
-                                        if (selectionPatternColor.ThemeColor != 0)
-                                            cs.ThemeColor = selectionPatternColor.ThemeColor;
-                                        cs.TintAndShade = selectionPatternColor.TintAndShade;
-                                        cs.Color = selectionPatternColor.Color;
-                                        cs.Position = selectionPatternColor.Position;
-                                    }
-                                }
-                            }
                             Marshal.ReleaseComObject(interior);
                         }
                     }

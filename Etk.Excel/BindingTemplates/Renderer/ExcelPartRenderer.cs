@@ -34,8 +34,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public int Width
         { get; protected set; }
 
-        //public Range RenderedRange
-        //{ get; private set; }
+        public ExcelInterop.Range RenderedRange
+        { get; private set; }
 
         public RenderedArea RenderedArea
         { get; protected set; }
@@ -79,8 +79,15 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     ManageTemplateWithoutLinkedTemplates();
             }
             if (Width > 0 && Height > 0)
+            {
                 RenderedArea = new RenderedArea(firstRangeTo.Column, firstRangeTo.Row, Width, Height);
+                RenderedRange = firstRangeTo.Resize[Height, Width];
+            }
             Marshal.ReleaseComObject(worksheetTo);
+
+            elementFirstRangeTo = null;
+            currentRenderingFrom = null;
+            currentRenderingTo = null;
         }
 
         public void Dispose()
@@ -91,9 +98,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             //Marshal.ReleaseComObject(currentRenderingTo);
 
             firstRangeTo = null;
-            elementFirstRangeTo = null;
-            currentRenderingFrom = null;
-            currentRenderingTo = null;
+            RenderedRange = null;
         }
         #endregion
 

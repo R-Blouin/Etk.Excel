@@ -13,15 +13,19 @@
 
         override protected void RealExecute()
         {
-            Success = true;
-            if (View.RenderedArea == null || View.RenderedArea.Width != 4 || View.RenderedArea.Height != 4)
-                Success = false;
+            if (View.RenderedArea == null)
+                ErrorMessages.Add("Rendered area must not be null");
+            else
+            {
+                if (View.RenderedArea.Width != 4 || View.RenderedArea.Height != 4)
+                    ErrorMessages.Add("Rendered area must be 4*4");
 
-            if (Success && View.RenderedRange[1, 1].Value != 1)
-                Success = false;
+                if (View.RenderedRange[1, 1].Value != 1)
+                    ErrorMessages.Add("First cell must contains '1'");
 
-            if (Success && View.RenderedRange[4, 4].Value != "Founth Shop Reception Phone number")
-                Success = false;
+                if (View.RenderedRange[4, 4].Value != "Fourth Shop Reception Phone number")
+                    ErrorMessages.Add("Last cell must contains 'Fourth Shop Reception Phone number'");
+            }
         }
     }
 }
