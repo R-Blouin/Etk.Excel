@@ -46,7 +46,11 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
                         bool toHide = true;
                         foreach (ExcelInterop.Range cell in rowOrColumn.Cells)
                         {
-                            string cellText = cell.Text;
+                            string cellText;
+                            if (cell.MergeCells)
+                                cellText = cell.MergeArea[1.1].Text;
+                            else
+                                cellText = cell.Text;
                             if (!string.IsNullOrEmpty(cellText) && cellText.ToUpper().Contains(searchValueUpper))
                             {
                                 toHide = false;
