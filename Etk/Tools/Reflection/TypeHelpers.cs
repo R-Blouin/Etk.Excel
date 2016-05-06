@@ -41,14 +41,23 @@ namespace Etk.Tools.Reflection
 
             if (string.IsNullOrEmpty(typeName))
                 throw new EtkException("'typeName' cannot be null or empty");
-                    
-            Assembly assembly;
-            if (string.IsNullOrEmpty(assemblyName))
-                assembly = Assembly.GetCallingAssembly();
-            else
-                assembly = Assembly.Load(assemblyName.Trim());
 
-            Type ret =  GetTypeInternal(assembly, typeName);
+            Type ret = null;
+            if (string.IsNullOrEmpty(assemblyName))
+            {
+                foreach (Assembly currentAssembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    ret = GetTypeInternal(currentAssembly, typeName);
+                    if (ret != null)
+                        break;
+                }
+            }
+            else
+            {
+                Assembly assembly = Assembly.Load(assemblyName.Trim());
+                ret = GetTypeInternal(assembly, typeName);
+            }
+
             if (ret == null)
                 throw new EtkException("Cannot find the requested Type");
             return ret;

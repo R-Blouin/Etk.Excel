@@ -41,7 +41,6 @@ namespace Etk.Excel.BindingTemplates
         private ILogger log = Logger.Instance;
         private Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>> viewsBySheet = new Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>>();
 
-
         private ContextualMenuManager contextualMenuManager;
         private ExcelDecoratorsManager excelDecoratorsManager;
         private EventCallbacksManager eventCallbacksManager;
@@ -149,6 +148,7 @@ namespace Etk.Excel.BindingTemplates
                     ExcelInterop.Workbook book = view.SheetDestination.Parent as ExcelInterop.Workbook;
                     if (book != null)
                     {
+                        book.SheetCalculate -= OnSheetCalculate;
                         book.SheetCalculate += OnSheetCalculate;
                         Marshal.ReleaseComObject(book);
                     }
@@ -510,12 +510,12 @@ namespace Etk.Excel.BindingTemplates
             {
                 lock (syncRoot)
                 {
-                    ExcelInterop.Workbook book = excelView.SheetDestination.Parent as ExcelInterop.Workbook;
-                    if (book != null)
-                    {
-                        book.SheetCalculate -= OnSheetCalculate;
-                        Marshal.ReleaseComObject(book);
-                    }
+                    //ExcelInterop.Workbook book = excelView.SheetDestination.Parent as ExcelInterop.Workbook;
+                    //if (book != null)
+                    //{
+                    //    book.SheetCalculate -= OnSheetCalculate;
+                    //    Marshal.ReleaseComObject(book);
+                    //}
 
                     ClearView(excelView);
 
