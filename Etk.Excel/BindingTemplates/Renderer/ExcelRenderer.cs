@@ -128,7 +128,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 BodyPartRenderer.Dispose();
             if (FooterPartRenderer != null)
                 FooterPartRenderer.Dispose();
-
+            
+            DataRows.Clear();
+      
             firstOutputCell = null;
             RenderedRange = null;
 

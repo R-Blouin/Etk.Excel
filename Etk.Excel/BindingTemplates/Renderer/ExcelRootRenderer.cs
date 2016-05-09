@@ -109,6 +109,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     {
                         IsClearing = true;
                         RowDecorators.Clear();
+                        DataRows.Clear();
+
                         if (View.ClearingCell != null)
                             View.ClearingCell.Copy(RenderedRange);
                         else
