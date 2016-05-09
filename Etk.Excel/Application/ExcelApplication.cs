@@ -167,6 +167,16 @@ namespace Etk.Excel.Application
                 }
             }
         }
+
+        public void HideUnhideRightCells(ExcelInterop.Range targetedRange, int numberOfCells)
+        {
+            if (targetedRange != null)
+            {
+                ExcelInterop.Range workkingRange = targetedRange.Offset[Type.Missing, 1];
+                workkingRange = workkingRange.Resize[Type.Missing, numberOfCells];
+                workkingRange.EntireColumn.Hidden = ! (bool) workkingRange.EntireColumn.Hidden;
+            }
+        }
         #endregion
     }
 }

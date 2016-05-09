@@ -18,6 +18,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected IBindingContextItem[,] contextItems;
         protected object[,] cells;
 
+        public bool IsDisposed
+        { get; protected set; }
+
         public ExcelRootRenderer RootRenderer
         { get; private set; }
 
@@ -122,18 +125,37 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         public void Dispose()
         {
+            if (!IsDisposed)
+            {
+                ClearPreviousRendering();
+                IsDisposed = true;
+            }
+        }
+        #endregion
+
+        #region protected methods
+        protected virtual void ClearPreviousRendering()
+        {
             if (HeaderPartRenderer != null)
+            {
                 HeaderPartRenderer.Dispose();
+                HeaderPartRenderer = null;
+            }
             if (BodyPartRenderer != null)
+            {
                 BodyPartRenderer.Dispose();
+                BodyPartRenderer = null;
+            }
             if (FooterPartRenderer != null)
+            {
                 FooterPartRenderer.Dispose();
-            
+                FooterPartRenderer = null;
+            }
+
             DataRows.Clear();
-      
             firstOutputCell = null;
             RenderedRange = null;
-
+            RenderedArea = null;
             contextItems = null;
             cells = null;
         }

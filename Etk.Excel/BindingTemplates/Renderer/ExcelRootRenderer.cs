@@ -25,9 +25,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public  ExcelTemplateView View
         { get; private set; }
 
-        public bool IsDisposed
-        { get; private set; }
-
         public List<ExcelElementDecorator> RowDecorators
         { get; private set; }
         #endregion
@@ -44,13 +41,16 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #region public methods
         public override void Render()
         {
+            if (IsDisposed)
+                return;
+
             base.Render();
             RenderDataOnly();
         }
 
         public void RenderDataOnly()
         {
-            if (RenderedArea == null)
+            if (IsDisposed || RenderedRange == null)
                 return;
 
             contextItems = new IBindingContextItem[RenderedArea.Height, RenderedArea.Width];
@@ -108,30 +108,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     try
                     {
                         IsClearing = true;
-                        RowDecorators.Clear();
-                        DataRows.Clear();
-
-                        if (View.ClearingCell != null)
-                            View.ClearingCell.Copy(RenderedRange);
-                        else
-                            RenderedRange.Clear();
-                        RenderedRange = null;
-
-                        if (HeaderPartRenderer != null)
-                        {
-                            HeaderPartRenderer.Dispose();
-                            HeaderPartRenderer = null;
-                        }
-                        if (BodyPartRenderer != null)
-                        {
-                            BodyPartRenderer.Dispose();
-                            BodyPartRenderer = null;
-                        }
-                        if (FooterPartRenderer != null)
-                        {
-                            FooterPartRenderer.Dispose();
-                            FooterPartRenderer = null;
-                        }
+                        ClearPreviousRendering();
                     }
                     finally
                     {
@@ -144,25 +121,28 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public bool OnDataChanged(ExcelInterop.Range target)
         {
             bool ret = false;
-            foreach (ExcelInterop.Range cell in target.Cells)
+            if (!IsDisposed && !IsClearing && contextItems != null)
             {
-                IBindingContextItem contextItem = null;
-                // Because of the merge cells ...
-                try
-                { contextItem = contextItems[cell.Row - View.FirstOutputCell.Row, cell.Column - View.FirstOutputCell.Column]; }
-                catch
-                { }
-                
-                if (contextItem != null)
+                foreach (ExcelInterop.Range cell in target.Cells)
                 {
-                    object retValue;
-                    bool update = contextItem.UpdateDataSource(cell.Value2, out retValue);
-                    if (update)
+                    IBindingContextItem contextItem = null;
+                    // Because of the merge cells ...
+                    try
+                    { contextItem = contextItems[cell.Row - View.FirstOutputCell.Row, cell.Column - View.FirstOutputCell.Column]; }
+                    catch
+                    { }
+
+                    if (contextItem != null)
                     {
-                        if (!object.Equals(cell.Value2, retValue))
-                            cell.Value2 = retValue;
-                        if (! (contextItem is BindingFilterContextItem))
-                            ret = true;
+                        object retValue;
+                        bool update = contextItem.UpdateDataSource(cell.Value2, out retValue);
+                        if (update)
+                        {
+                            if (!object.Equals(cell.Value2, retValue))
+                                cell.Value2 = retValue;
+                            if (!(contextItem is BindingFilterContextItem))
+                                ret = true;
+                        }
                     }
                 }
             }
@@ -195,7 +175,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (!IsDisposed)
             {
                 Clear();
-                base.Dispose();
                 //@@if (sortAndFilterButton != null)
                 //@@    sortAndFilterButton.Dispose();
                 IsDisposed = true;
@@ -203,11 +182,22 @@ namespace Etk.Excel.BindingTemplates.Renderer
         }
         #endregion
 
-        #region private methods
+        #region internal, private and protected methods
+        protected override void ClearPreviousRendering()
+        {
+            if (View.ClearingCell != null)
+                View.ClearingCell.Copy(RenderedRange);
+            else
+                RenderedRange.Clear();
+            RowDecorators.Clear();
+
+            base.ClearPreviousRendering();
+        }
+
         private void OnNotifyPropertyChanged(IBindingContextItem contextItem, object param)
         {
-            if (! IsDisposed && ! IsClearing)
-                ((ExcelTemplateManager)ETKExcel.TemplateManager).ExcelNotifyPropertyManager.NotifyPropertyChanged(new ExcelNotityPropertyContext(contextItem, View, (KeyValuePair<int, int>)param));
+            if (!IsDisposed && !IsClearing)
+                ((ExcelTemplateManager) ETKExcel.TemplateManager).ExcelNotifyPropertyManager.NotifyPropertyChanged(new ExcelNotityPropertyContext(contextItem, View, (KeyValuePair<int, int>)param));
         }
 
         internal void BorderAround(ExcelInterop.Range range, ExcelInterop.XlLineStyle lineStyle, ExcelInterop.XlBorderWeight Weight, int colorIndex)

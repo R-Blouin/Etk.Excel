@@ -61,7 +61,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
         {
             if (part.Parent.Orientation == Orientation.Vertical)
                 return new ExcelPartVerticalRenderer(parent, part, bindingContextPart, firstOutputCell, useDecorator);
-
             return new ExcelPartHorozontalRenderer(parent, part, bindingContextPart, firstOutputCell, useDecorator);
         }
         #endregion
