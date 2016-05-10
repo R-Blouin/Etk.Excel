@@ -128,6 +128,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (!IsDisposed)
             {
                 ClearPreviousRendering();
+                firstOutputCell = null;
                 IsDisposed = true;
             }
         }
@@ -153,7 +154,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
             }
 
             DataRows.Clear();
-            firstOutputCell = null;
             RenderedRange = null;
             RenderedArea = null;
             contextItems = null;

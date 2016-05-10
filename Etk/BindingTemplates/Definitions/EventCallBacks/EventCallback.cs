@@ -66,30 +66,5 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             }
         }
         #endregion
-
-        #region public methods
-        public bool Invoke(object sender, IBindingContextElement selectedContextElement, IBindingContextElement catchingContextElement)
-        {
-            object invokeTarget = Callback.IsStatic ? null : catchingContextElement.DataSource;
-            int nbrParameters = Callback.GetParameters().Count();
-            object[] parameters;
-
-            switch (nbrParameters)
-            {
-                case 3:
-                    parameters = new object[] { sender, selectedContextElement.DataSource, catchingContextElement.DataSource};
-                break;
-                case 2:
-                    parameters = new object[] { selectedContextElement.DataSource, catchingContextElement.DataSource };
-                break;
-                default:
-                    parameters = new object[] { selectedContextElement.DataSource };
-                break;
-            }
-
-            Callback.Invoke(invokeTarget, parameters);
-            return true; 
-        }
-        #endregion
     }
 }

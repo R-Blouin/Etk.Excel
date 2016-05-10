@@ -69,9 +69,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
         Decorator DecoratorDefinition { get; }
 
         /// <summary> Contains the callback to invoke when the bound object is selected</summary>
-        EventCallback OnSelection {get ;}
+        MethodInfo OnSelection { get; }
 
         /// <summary> Contains the callback to invoke when the bound object is clicked (left double click in Excel)</summary>
-        EventCallback OnClick { get; }
+        MethodInfo OnClick { get; }
     }
 }

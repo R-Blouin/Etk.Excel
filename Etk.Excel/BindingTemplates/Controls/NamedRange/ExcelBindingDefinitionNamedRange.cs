@@ -105,12 +105,12 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.DecoratorDefinition; }
         }
 
-        public EventCallback OnSelection
+        public MethodInfo OnSelection
         {
             get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.OnSelection; }
         }
 
-        public EventCallback OnClick
+        public MethodInfo OnClick
         {
             get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.OnClick; }
         }

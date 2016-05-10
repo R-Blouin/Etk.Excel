@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions;
 using Etk.Tools.Log;
+using Etk.BindingTemplates.Context;
+using System.Reflection;
 
 namespace Etk.BindingTemplates.Definitions.EventCallBacks
 {
@@ -72,6 +74,37 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
                 }
             }
         }
+
+        #region public methods
+        public bool Invoke(MethodInfo callback, object sender, IBindingContextElement selectedContextElement, IBindingContextElement catchingContextElement)
+        {
+            object invokeTarget = callback.IsStatic ? null : catchingContextElement.DataSource;
+            int nbrParameters = callback.GetParameters().Length;
+
+            if(nbrParameters > 4)
+                throw new Exception(string.Format("Method info '{0}' signature is not correct", callback.Name));
+
+            object[] parameters;
+            switch (nbrParameters)
+            {
+                case 3:
+                    parameters = new object[] { sender, selectedContextElement.DataSource, catchingContextElement.DataSource };
+                break;
+                case 2:
+                    parameters = new object[] { selectedContextElement.DataSource, catchingContextElement.DataSource };
+                break;
+                case 1:
+                    parameters = new object[] { selectedContextElement.DataSource };
+                break;
+                default:
+                    parameters = null;
+                break;
+            }
+
+            callback.Invoke(invokeTarget, parameters);
+            return true;
+        }
+        #endregion
 
         public void Dispose()
         {

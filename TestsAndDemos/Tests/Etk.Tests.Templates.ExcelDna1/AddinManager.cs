@@ -24,14 +24,12 @@
             // Init the ETK Framework : mandatory before any uses of the framework
             ETKExcel.Init(ExcelApplication);
 
-            // Create main tests view
             ExcelTestsManager testsManager = new ExcelTestsManager();
 
             IExcelTemplateView view = ETKExcel.TemplateManager.AddView("Dashboard Templates", "Main", "Dashboard", "B2");
             view.SetDataSource(testsManager);
             ETKExcel.TemplateManager.Render(view);
-
-            testsManager.Execute();
+            //ExcelTestsManager.Instance.Execute();
         }
 
         public void AutoClose()

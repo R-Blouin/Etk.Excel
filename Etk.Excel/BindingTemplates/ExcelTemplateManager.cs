@@ -38,12 +38,14 @@ namespace Etk.Excel.BindingTemplates
         internal ExcelApplication ExcelApplication
         { get; private set; }
 
+        internal EventCallbacksManager CallbacksManager
+        { get; private set; }
+
         private ILogger log = Logger.Instance;
         private Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>> viewsBySheet = new Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>>();
 
         private ContextualMenuManager contextualMenuManager;
         private ExcelDecoratorsManager excelDecoratorsManager;
-        private EventCallbacksManager eventCallbacksManager;
         private BindingTemplateManager bindingTemplateManager;
 
         private TemplateContextualMenuManager templateContextualMenuManager;
@@ -63,7 +65,7 @@ namespace Etk.Excel.BindingTemplates
 
             this.ExcelApplication = excelApplication;
             this.excelDecoratorsManager = excelDecoratorsManager;
-            this.eventCallbacksManager = eventCallbacksManager;
+            this.CallbacksManager = eventCallbacksManager;
             this.contextualMenuManager = contextualMenuManager;
             this.bindingTemplateManager = bindingTemplateManager;
 
@@ -440,8 +442,9 @@ namespace Etk.Excel.BindingTemplates
                                                                                                                     , sheetContainer != null ? sheetContainer.Name.EmptyIfNull() : string.Empty
                                                                                                                     , templateName.EmptyIfNull());
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
-                return null;
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
+                //return null;
             }
         }
 
@@ -478,8 +481,11 @@ namespace Etk.Excel.BindingTemplates
                                                                                                          , sheetTemplateName.EmptyIfNull()
                                                                                                          , templateName.EmptyIfNull());
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
-                return null;
+                Logger.Instance.LogException(LogType.Error, ex, message);
+
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
+                //return null;
             }
             finally
             {
@@ -532,7 +538,8 @@ namespace Etk.Excel.BindingTemplates
             {
                 string message = "Remove View failed.";
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
             }
         }
 
@@ -560,7 +567,8 @@ namespace Etk.Excel.BindingTemplates
             {
                 string message = "'Remove views' failed.";
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
             }
         }
 
@@ -587,7 +595,8 @@ namespace Etk.Excel.BindingTemplates
             {
                 string message = "'GetSheetTemplates' failed";
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
             }
             return iViews;
         }
@@ -607,7 +616,8 @@ namespace Etk.Excel.BindingTemplates
             {
                 string message = "'GetActiveSheetViews' failed";
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
             }
             finally
             {
@@ -659,7 +669,8 @@ namespace Etk.Excel.BindingTemplates
             {
                 string message = "'Render' failed.";
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
             }
         }
 
@@ -719,7 +730,8 @@ namespace Etk.Excel.BindingTemplates
             {
                 string message = "'RenderDataOnly' failed.";
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
             }
         }
 
@@ -774,7 +786,8 @@ namespace Etk.Excel.BindingTemplates
             {
                 string message = "'Clear views' failed.";
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                ExcelApplication.DisplayException(null, message, ex);
+                throw new EtkException(message, ex);
+                //ExcelApplication.DisplayException(null, message, ex);
             }
         }
 
@@ -793,14 +806,14 @@ namespace Etk.Excel.BindingTemplates
         /// <summary> Implements <see cref="IExcelTemplateManager.RegisterEventCallbacksFromXml"/> </summary> 
         public void RegisterEventCallbacksFromXml(string xmLDefinition)
         {
-            eventCallbacksManager.RegisterEventCallbacksFromXml(xmLDefinition);
+            CallbacksManager.RegisterEventCallbacksFromXml(xmLDefinition);
         }
 
         /// <summary> Register Event callback definitions 
         /// <param name="callback">The callback to register</param>
         public void RegisterEventCallback(EventCallback callback)
         {
-            eventCallbacksManager.RegisterCallback(callback);
+            CallbacksManager.RegisterCallback(callback);
         }
         #endregion
 

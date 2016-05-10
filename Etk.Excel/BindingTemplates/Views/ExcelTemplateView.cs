@@ -10,6 +10,7 @@ using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Renderer;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using System.Reflection;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
@@ -401,7 +402,10 @@ namespace Etk.Excel.BindingTemplates.Views
                         {
                             // If the binding excelTemplateDefinition contains a selection callback: invoke it !
                             if (contextItem.BindingDefinition.OnSelection != null)
-                                contextItem.BindingDefinition.OnSelection.Invoke(realTarget, contextItem.ParentElement, contextItem.ParentElement);
+                            {
+                                ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(contextItem.BindingDefinition.OnSelection, 
+                                                                                                         realTarget, contextItem.ParentElement, contextItem.ParentElement);
+                            }
                             else
                             {
                                 // Ask the containing template (and its owner and the owner of its owner etc.... => bubble up the event)) if they contain a selection callback
@@ -412,10 +416,10 @@ namespace Etk.Excel.BindingTemplates.Views
                                 do
                                 {
                                     ExcelTemplateDefinitionPart currentTemplateDefinition = respondingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                                    EventCallback callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
+                                    MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
                                     if (callback != null)
                                     {
-                                        callback.Invoke(realTarget, respondingContextElement, selectedContextElement);
+                                        ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, realTarget, respondingContextElement, selectedContextElement);
                                         isResolved = true;
                                     }
                                     if (!isResolved)
@@ -452,7 +456,10 @@ namespace Etk.Excel.BindingTemplates.Views
 
                     // If the binding excelTemplateDefinition contains a left double click callback: invoke it !
                     if (contextItem.BindingDefinition.OnClick != null)
-                        contextItem.BindingDefinition.OnClick.Invoke(target, contextItem.ParentElement, contextItem.ParentElement);
+                    {
+                        ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(contextItem.BindingDefinition.OnClick, 
+                                                                                                 target, contextItem.ParentElement, contextItem.ParentElement);
+                    }
                     else
                     {
                         // If not, ask the containing template (and its owner and the owner of its owner etc.... => bubble up the event)) if they contain a left double click callback
@@ -462,10 +469,10 @@ namespace Etk.Excel.BindingTemplates.Views
                         do
                         {
                             ExcelTemplateDefinitionPart currentTemplateDefinition = respondingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                            EventCallback callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).OnLeftDoubleClick;
+                            MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).OnLeftDoubleClick;
                             if (callback != null)
                             {
-                                callback.Invoke(target, respondingContextElement, selectedContextElement);
+                                ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, respondingContextElement, selectedContextElement);
                                 ret = true;
                             }
                             if (!ret)

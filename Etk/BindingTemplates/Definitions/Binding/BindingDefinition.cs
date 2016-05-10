@@ -104,13 +104,13 @@ namespace Etk.BindingTemplates.Definitions.Binding
         { get; protected set;}
 
         /// <summary> Implements <see cref="IBindingDefinition.OnSelection"/> </summary>
-        public EventCallback OnSelection
+        public MethodInfo OnSelection
         {
             get { return DefinitionDescription.OnSelection; }
         }
 
         /// <summary> Implements <see cref="IBindingDefinition.OnClick"/> </summary>
-        public EventCallback OnClick
+        public MethodInfo OnClick
         {
             get { return DefinitionDescription.OnLeftDoubleClick; }
         }

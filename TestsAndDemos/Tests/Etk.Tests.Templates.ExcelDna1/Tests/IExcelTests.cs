@@ -10,7 +10,6 @@
         string Exception { get; }
         List<IExcelTest> Tests { get; }
 
-        void Init();
         void Execute();
     }
 }

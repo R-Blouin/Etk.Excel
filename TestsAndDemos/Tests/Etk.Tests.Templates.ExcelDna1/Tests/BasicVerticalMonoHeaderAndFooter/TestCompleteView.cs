@@ -4,22 +4,22 @@
 
     class TestCompleteView : ExcelTest
     {
-        public TestCompleteView(IExcelTemplateView view) : base(view, "Check complete rendering")
+        public TestCompleteView() : base("Check complete rendering")
         { }
 
-        override protected void RealExecute()
+        override protected void RealExecute(IExcelTemplateView view)
         {
-            if (View.RenderedArea == null)
+            if (view.RenderedArea == null)
                 ErrorMessages.Add("Rendered area must not be null");
             else
             {
-                if (View.RenderedArea == null || View.RenderedArea.Width != 4 || View.RenderedArea.Height != 6)
+                if (view.RenderedArea == null || view.RenderedArea.Width != 4 || view.RenderedArea.Height != 6)
                     ErrorMessages.Add("Rendered area must be 4*6");
 
-                if (View.RenderedRange[1, 1].Value != "ID")
+                if (view.RenderedRange[1, 1].Value != "ID")
                     ErrorMessages.Add("First cell must contains 'ID'");
 
-                if (View.RenderedRange[6, 1].Value != "Shops")
+                if (view.RenderedRange[6, 1].Value != "Shops")
                     ErrorMessages.Add("First cell of last row must contains 'Shops'");
             }
         }

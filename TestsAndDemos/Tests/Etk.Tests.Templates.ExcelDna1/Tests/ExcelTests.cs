@@ -7,12 +7,14 @@
     using Etk.Excel.BindingTemplates.Views;
     using Etk.Tests.Templates.ExcelDna1.Extensions;
     using Microsoft.Office.Interop.Excel;
+    using ExcelInterop = Microsoft.Office.Interop.Excel;
 
     abstract class ExcelTests : IExcelTests
     {
         #region properties and attributes
         private Worksheet templatesSheet = null;
         private Worksheet viewSheet = null;
+        private bool initDone;
 
         public IExcelTemplateView View
         { get; private set; }
@@ -39,36 +41,28 @@
         #endregion
 
         #region pubic methods
-        public void Init()
+        public void ExecuteAsync()
         {
-            try
+            ETKExcel.ExcelApplication.PostAsynchronousAction(() =>
             {
-                RealInit();
-                InitSuccessful = true;
-            }
-            catch (Exception ex)
-            {
-                InitSuccessful = false;
-                Exception = ex.ToString("Initialization failed");
-            }
+                Execute();
+                ExcelInterop.Worksheet dashBoardSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, "Dashboard");
+                if (dashBoardSheet != null)
+                    dashBoardSheet.Activate();
+            });
         }
 
         public void Execute()
         {
+            if (!initDone)
+                Init();
+
             if (! InitSuccessful)
                 return;
 
             try
             {
-                try
-                {
-                    RenderViews();
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Render views failed", ex);
-                }
-                Tests.ForEach(t => t.Execute());
+                Tests.ForEach(t => t.Execute(View));
             }
             catch (Exception ex)
             {
@@ -83,7 +77,6 @@
         #endregion
 
         #region protected methods
-        abstract protected void RenderViews();
         abstract protected void RealInit();
 
         protected void CreateView(string destinationSheetName, string templateSheetName, string templateName)
@@ -121,6 +114,23 @@
         #endregion
 
         #region private methods
+        private void Init()
+        {
+            try
+            {
+                RealInit();
+                InitSuccessful = true;
+            }
+            catch (Exception ex)
+            {
+                InitSuccessful = false;
+                Exception = ex.ToString("Initialization failed");
+            }
+            finally
+            {
+                initDone = true;
+            }
+        }
         #endregion
     }
 }

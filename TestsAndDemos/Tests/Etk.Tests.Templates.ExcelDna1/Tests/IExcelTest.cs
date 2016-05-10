@@ -1,4 +1,6 @@
-﻿namespace Etk.Tests.Templates.ExcelDna1.Tests
+﻿using Etk.Excel.BindingTemplates.Views;
+
+namespace Etk.Tests.Templates.ExcelDna1.Tests
 {
     interface IExcelTest
     {
@@ -7,6 +9,6 @@
         bool Done{ get; }
         string Errors { get; }
 
-        void Execute();
+        void Execute(IExcelTemplateView view);
     }
 }

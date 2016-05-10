@@ -50,10 +50,10 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public Decorator Decorator
         { get; private set; }
 
-        public EventCallback OnSelection
+        public MethodInfo OnSelection
         { get; private set; }
 
-        public EventCallback OnLeftDoubleClick
+        public MethodInfo OnLeftDoubleClick
         { get; private set; }
 
         public bool IsMultiLine
@@ -105,14 +105,14 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         if (option.StartsWith("S="))
                         {
                             string methodInfoIdent = option.Substring(2);
-                            OnSelection = EventCallbacksManager.GetCallback(methodInfoIdent);
+                            OnSelection = RetrieveMethodInfo(option, methodInfoIdent);
                             continue;
                         }
                         // On double left click
                         if (option.StartsWith("LDC="))
                         {
                             string methodInfoIdent = option.Substring(4);
-                            OnLeftDoubleClick = EventCallbacksManager.GetCallback(methodInfoIdent);
+                            OnLeftDoubleClick = RetrieveMethodInfo(option, methodInfoIdent);
                             continue;
                         }
                         // MultiLine based on the number of line in the bound property
@@ -154,6 +154,32 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         }
                     }
                 }
+            }
+        }
+
+        private MethodInfo RetrieveMethodInfo(string option, string methodInfoIdent)
+        {
+            MethodInfo methodInfo = null;
+            try
+            {
+                string[] parts = methodInfoIdent.Split(',');
+                if (parts.Count() == 1)
+                {
+                    EventCallback callBack = EventCallbacksManager.GetCallback(methodInfoIdent);
+                    if (callBack != null)
+                        methodInfo = callBack.Callback;
+                }
+                if (parts.Count() == 3)
+                    methodInfo = TypeHelpers.GetMethod(null, methodInfoIdent);
+
+                if (methodInfo == null)
+                    throw new Exception(string.Format("Cannot find the callback '{0}'", methodInfoIdent));
+
+                return methodInfo;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Property option '{0}'. {1}", option, ex.Message));
             }
         }
 

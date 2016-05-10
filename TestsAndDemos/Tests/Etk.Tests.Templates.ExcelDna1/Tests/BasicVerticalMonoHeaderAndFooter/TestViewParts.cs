@@ -6,13 +6,13 @@
 
     class TestViewParts : ExcelTest
     {
-        public TestViewParts(IExcelTemplateView view) : base(view, "Check the rendering of the template parts")
+        public TestViewParts() : base("Check the rendering of the template parts")
         { }
 
-        override protected void RealExecute()
+        override protected void RealExecute(IExcelTemplateView view)
         {
 
-            ExcelTemplateView excelView = View as ExcelTemplateView;
+            ExcelTemplateView excelView = view as ExcelTemplateView;
 
             if (excelView.RenderedArea == null || excelView.Renderer == null)
             {

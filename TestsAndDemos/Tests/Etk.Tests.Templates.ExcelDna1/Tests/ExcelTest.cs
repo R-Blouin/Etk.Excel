@@ -10,9 +10,6 @@
     abstract class ExcelTest : ViewModelBase, IExcelTest
     {
         #region p^ropertis and attributes
-        protected IExcelTemplateView View
-        { get; private set; }
-
         public string Description
         { get; private set; }
 
@@ -54,22 +51,21 @@
         #endregion
 
         #region .ctors
-        protected ExcelTest(IExcelTemplateView view, string description)
+        protected ExcelTest(string description)
         {
-            View = view;
             Description = description;
             ErrorMessages = new List<string>();
-            Init();
         }
         #endregion
 
         #region public methods
-        public void Execute()
+        public void Execute(IExcelTemplateView view)
         {
             try
             {
-                Init();
-                RealExecute();
+                Success = Done = false;
+                Errors = null;
+                RealExecute(view);
 
             }
             catch (Exception ex)
@@ -94,13 +90,7 @@
         #endregion
 
         #region protected and private methods
-        abstract protected void RealExecute();
-
-        private void Init()
-        {
-            Success = Done = false;
-            Errors = null;
-        }
+        abstract protected void RealExecute(IExcelTemplateView view);
         #endregion
     }
 }

@@ -12,16 +12,13 @@
     class BasicVerticalNoHeaderAndFooterTests : ExcelTests
     {
         public BasicVerticalNoHeaderAndFooterTests() : base("Tests on a basic template without linked templates and without header or footer")
-        {}
+        {
+            Tests.Add(new TestRendering());
+        }
 
         override protected void RealInit()
         {
             CreateView("VerticalNoHeaderAndFooter", "BasicTemplates1", "BasicVerticalNoHeaderAndFooter");
-            Tests.Add(new TestRendering(View));
-        }
-
-        override protected void RenderViews()
-        {
             View.SetDataSource(ShopManager.GetShops());
             ETKExcel.TemplateManager.Render(View);
         }
