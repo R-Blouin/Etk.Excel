@@ -135,7 +135,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             {
                                 try
                                 {
-                                    MultiLineFactorResolver = TypeHelpers.GetMethod(null, multiLineFactorResolver);
+                                    MultiLineFactorResolver = RetrieveMethodInfo(null, multiLineFactorResolver);
                                     if (MultiLineFactorResolver != null)
                                     {
                                         int parametersCpt = MultiLineFactorResolver.GetParameters().Length;

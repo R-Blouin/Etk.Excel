@@ -307,13 +307,19 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         bindingContextItemsCpt++;
                 }
                 startPosition = afterWrittenPosition;
+                //if (partToRenderDefinition.Width > startPosition + partToRenderDefinition.DefinitionFirstCell.Column)
+                //{
+                //    ManageTemplatePart(renderingContext, ref bindingContextItemsCpt, ref vOffset, startPosition, realEnd);
+                //    renderingContext.CurrentRowWidth += realEnd - startPosition;
+                //}
             }
             if (startPosition < partToRenderDefinition.Width)
             {
                 int realEnd = partToRenderDefinition.Width;
                 for (int i = partToRenderDefinition.Width - 1; i >= startPosition; i--)
                 {
-                    if (partToRenderDefinition.DefinitionParts[renderingContext.RowId, i] != null)
+                    ExcelInterop.Range current = partToRenderDefinition.DefinitionFirstCell[0, i];
+                    if (current.MergeCells || partToRenderDefinition.DefinitionParts[renderingContext.RowId, i] != null)
                         break;
                     realEnd--;
                 }
@@ -353,7 +359,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 IBindingContextItem item = partToRenderDefinition.DefinitionParts[renderingContext.RowId, colId] == null ? null : renderingContext.ContextElement.BindingContextItems[currentBindingContextItemId++];
                 if (item != null && ((item.BindingDefinition != null && (item.BindingDefinition.IsEnum || item.BindingDefinition.IsMultiLine)) || item is IExcelControl))
                 {
-                    ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId];
+                    ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                     if(item.BindingDefinition != null)
                     {
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)

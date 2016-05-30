@@ -51,7 +51,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         {
             try
             {
-                EventCallback ret = EventCallbacksManager.GetCallback(methodName);
+                EventCallback ret = EventCallbacksManager.GetCallback(ident);
                 if (ret == null)
                 {
                     MethodInfo toInvoke = TypeHelpers.GetMethod(type, methodName);
