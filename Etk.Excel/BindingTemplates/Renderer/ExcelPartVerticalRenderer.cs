@@ -318,7 +318,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 int realEnd = partToRenderDefinition.Width;
                 for (int i = partToRenderDefinition.Width - 1; i >= startPosition; i--)
                 {
-                    ExcelInterop.Range current = partToRenderDefinition.DefinitionFirstCell[0, i];
+                    ExcelInterop.Range current = partToRenderDefinition.DefinitionFirstCell[1, i];
                     if (current.MergeCells || partToRenderDefinition.DefinitionParts[renderingContext.RowId, i] != null)
                         break;
                     realEnd--;
@@ -365,7 +365,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                             enumManager.CreateControl(item, ref range);
                         if (item.BindingDefinition.IsMultiLine)
-                            multiLineManager.CreateControl(item, ref range, ref vOffset);
+                        {
+                            ExcelInterop.Range localSource = source[1, +colId - startPos];
+                            multiLineManager.CreateControl(item, ref range, ref localSource, ref vOffset);
+                        }
                     }
                     if (item is IExcelControl)
                         ManageControls(item, ref range);

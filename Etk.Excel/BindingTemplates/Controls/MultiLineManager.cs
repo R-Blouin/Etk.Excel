@@ -18,7 +18,7 @@ namespace Etk.Excel.BindingTemplates.Controls
 
     class MultiLineManager
     {
-        public void CreateControl(IBindingContextItem item, ref ExcelInterop.Range range, ref int vOffset)
+        public void CreateControl(IBindingContextItem item, ref ExcelInterop.Range range, ref ExcelInterop.Range source, ref int vOffset)
         {
             int hOffset = 1;
             if (item.BindingDefinition.MultiLineFactorResolver != null)
@@ -37,16 +37,14 @@ namespace Etk.Excel.BindingTemplates.Controls
                     string value = objValue as string;
                     int nbrLine = value.Count(c => c.Equals('\n'));
                     if (nbrLine > 0)
-                    {
                         vOffset = (int)((nbrLine + 1) * item.BindingDefinition.MultiLineFactor);
-                        if (range.MergeCells)
-                            hOffset = range.Columns.Count;
-                    }
                 }
             }
 
-            IEnumerable<BorderStyle> bordersStyle = RetrieveBorders(range);
+            if (range.MergeCells)
+                hOffset = range.MergeArea.Columns.Count;
 
+            IEnumerable<BorderStyle> bordersStyle = RetrieveBorders(source.MergeCells ? source.MergeArea : source);
             ExcelInterop.Range toMerge = range.Resize[vOffset, hOffset];
             toMerge.Merge();
 
@@ -63,7 +61,6 @@ namespace Etk.Excel.BindingTemplates.Controls
         private IEnumerable<BorderStyle> RetrieveBorders(ExcelInterop.Range range)
         {
             List<BorderStyle> ret = new List<BorderStyle>();
-
             foreach (ExcelInterop.XlBordersIndex styleIndex in Enum.GetValues(typeof(ExcelInterop.XlBordersIndex)))
             {
                 BorderStyle style = RetrieveBorderStyle(range, styleIndex);
@@ -76,7 +73,7 @@ namespace Etk.Excel.BindingTemplates.Controls
         private BorderStyle RetrieveBorderStyle(ExcelInterop.Range range, ExcelInterop.XlBordersIndex bordersIndex)
         {
             BorderStyle ret = null;
-            if (range.Borders[bordersIndex].LineStyle != (int) ExcelInterop.XlLineStyle.xlLineStyleNone)
+            if (range.Borders[bordersIndex].LineStyle != (int)ExcelInterop.XlLineStyle.xlLineStyleNone)
             {
                 ret = new BorderStyle();
                 ret.Index = bordersIndex;
