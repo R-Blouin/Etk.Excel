@@ -1,4 +1,4 @@
-﻿namespace Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMonoHeaderAndFooter
+﻿namespace Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMultiHeaderAndFooter
 {
     using Etk.Excel.BindingTemplates.Views;
 
@@ -13,13 +13,13 @@
                 StepsErrorMessages.Add("Rendered area must not be null");
             else
             {
-                if (view.RenderedArea == null || view.RenderedArea.Width != 4 || view.RenderedArea.Height != 6)
-                    StepsErrorMessages.Add("Rendered area must be 4*6");
+                if (view.RenderedArea == null || view.RenderedArea.Width != 4 || view.RenderedArea.Height != 8)
+                    StepsErrorMessages.Add("Rendered area must be 4*8");
 
-                if (view.RenderedRange[1, 1].Value != "ID")
-                    StepsErrorMessages.Add("First cell must contains 'ID'");
+                if (view.RenderedRange[2, 1].Value != "ID")
+                    StepsErrorMessages.Add("Cell[2,1] must contains 'ID'");
 
-                if (view.RenderedRange[6, 1].Value != "Shops")
+                if (view.RenderedRange[8, 1].Value != "Shops")
                     StepsErrorMessages.Add("First cell of last row must contains 'Shops'");
             }
         }

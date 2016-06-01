@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using Etk.Excel.BindingTemplates.Views;
 
-    interface IExcelTests
+    interface IExcelTestTopic
     {
         string Description { get; }
         bool InitSuccessful { get; }
@@ -11,5 +11,7 @@
         List<IExcelTest> Tests { get; }
 
         void Execute();
+        void InitTestsStatus();
+        void ExecuteTests();
     }
 }

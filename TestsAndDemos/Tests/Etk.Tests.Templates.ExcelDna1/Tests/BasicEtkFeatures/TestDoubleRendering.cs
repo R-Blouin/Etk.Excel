@@ -1,9 +1,7 @@
-﻿namespace Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMonoHeaderAndFooter
+﻿namespace Etk.Tests.Templates.ExcelDna1.Tests.BasicEtkFeatures
 {
-    using System;
-    using System.Collections.Generic;
-    using Etk.Excel.BindingTemplates.Views;
     using Etk.Excel;
+    using Etk.Excel.BindingTemplates.Views;
 
     class TestDoubleRendering : ExcelTest
     {

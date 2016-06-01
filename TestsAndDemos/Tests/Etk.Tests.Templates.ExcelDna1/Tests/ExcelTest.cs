@@ -9,7 +9,7 @@
 
     abstract class ExcelTest : ViewModelBase, IExcelTest
     {
-        #region p^ropertis and attributes
+        #region propertis and attributes
         public string Description
         { get; private set; }
 
@@ -46,7 +46,7 @@
             }
         }
 
-        protected List<string> ErrorMessages
+        protected List<string> StepsErrorMessages
         { get; private set; }
         #endregion
 
@@ -54,36 +54,39 @@
         protected ExcelTest(string description)
         {
             Description = description;
-            ErrorMessages = new List<string>();
+            StepsErrorMessages = new List<string>();
         }
         #endregion
 
         #region public methods
+        public void InitTestStatus()
+        {
+            Success = Done = false;
+            Errors = null;
+        }
+
         public void Execute(IExcelTemplateView view)
         {
             try
             {
-                Success = Done = false;
-                Errors = null;
                 RealExecute(view);
-
             }
             catch (Exception ex)
             {
-                ErrorMessages.Add(ex.ToString(null));
+                StepsErrorMessages.Add(ex.ToString(null));
             }
             finally
             {
                 Done = true;
-                if (! ErrorMessages.Any())
+                if (! StepsErrorMessages.Any())
                 {
                     Success = true;
-                    Errors = null;                
+                    Errors = null;
                 }
                 else
                 {
                     Success = false;
-                    Errors = string.Join("\r\n", ErrorMessages.ToArray());
+                    Errors = string.Join("\r\n", StepsErrorMessages.ToArray());
                 }
             }
         }

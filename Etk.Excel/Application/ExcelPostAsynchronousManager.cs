@@ -50,7 +50,6 @@ namespace Etk.Excel.Application
                     {
                         isDisposed = true;
                         cancellationTokenSource.Cancel();
-                        //thread.Abort();
                     }
                 }
             }

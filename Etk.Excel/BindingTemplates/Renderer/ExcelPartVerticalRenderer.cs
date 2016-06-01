@@ -366,7 +366,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             enumManager.CreateControl(item, ref range);
                         if (item.BindingDefinition.IsMultiLine)
                         {
-                            ExcelInterop.Range localSource = source[1, +colId - startPos];
+                            ExcelInterop.Range localSource = source[1, 1 + colId - startPos];
                             multiLineManager.CreateControl(item, ref range, ref localSource, ref vOffset);
                         }
                     }

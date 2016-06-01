@@ -9,6 +9,7 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         bool Done{ get; }
         string Errors { get; }
 
+        void InitTestStatus();
         void Execute(IExcelTemplateView view);
     }
 }

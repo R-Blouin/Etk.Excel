@@ -9,9 +9,9 @@
     using Etk.Excel;
     using Etk.Tests.Data.Shops;
     
-    class BasicVerticalNoHeaderAndFooterTests : ExcelTests
+    class BasicVerticalNoHeaderAndFooterTests : ExcelTestTopic
     {
-        public BasicVerticalNoHeaderAndFooterTests() : base("Tests on a basic template without linked templates and without header or footer")
+        public BasicVerticalNoHeaderAndFooterTests(IExcelTestsManager testManager) : base(testManager, "Tests on a basic template without linked templates and without header or footer")
         {
             Tests.Add(new TestRendering());
         }

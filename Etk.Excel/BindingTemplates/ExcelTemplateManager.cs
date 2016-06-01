@@ -63,9 +63,9 @@ namespace Etk.Excel.BindingTemplates
             if (excelApplication == null)
                 throw new EtkException("'ExcelBindingTemplateManager' initialization: the 'application' parameter is mandatory");
 
-            this.ExcelApplication = excelApplication;
+            ExcelApplication = excelApplication;
+            CallbacksManager = eventCallbacksManager;
             this.excelDecoratorsManager = excelDecoratorsManager;
-            this.CallbacksManager = eventCallbacksManager;
             this.contextualMenuManager = contextualMenuManager;
             this.bindingTemplateManager = bindingTemplateManager;
 

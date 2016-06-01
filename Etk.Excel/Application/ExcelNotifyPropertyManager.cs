@@ -65,40 +65,26 @@ namespace Etk.Excel.Application
         #endregion
 
         #region private methods
-        //private void NotifyChangeColor(ExcelNotityPropertyContext bindingContextPart)
-        //{
-        //    if (isDisposed)
-        //        return;
-
-        //    if (contextItems.FirstOrDefault(i => i.ContextItem == bindingContextPart.ContextItem && bindingContextPart.ChangeColor) != null)
-        //        return;
-        //    else
-        //        contextItems.Add(bindingContextPart);
-        //}
-
         private void Execute()
         {
             try
             {
-                //long gap = 0;
                 while (!isDisposed)
                 {
                     if (waitExcelBusy)
                     {
                         Thread.Sleep(50);
                         waitExcelBusy = false;
-                        try
-                        {
-                            ExcelApplication.Application.EnableEvents = true;
-                        }
-                        catch { }
+                        //try
+                        //{
+                        //    ExcelApplication.Application.EnableEvents = true;
+                        //}
+                        //catch { }
                     }
 
                     ExcelNotityPropertyContext context = contextItems.Take(cancellationTokenSource.Token);
                     if (context != null)
                         (ETKExcel.ExcelApplication as ExcelApplication).ExcelDispatcher.BeginInvoke(new System.Action(() => ExecuteNotity(context)));
-                    else
-                        Logger.Instance.Log(LogType.Info, "PostAsynchronousManager properly ended");
                 }
             }
             catch (Exception ex)
@@ -123,49 +109,26 @@ namespace Etk.Excel.Application
                 return;
 
             ExcelInterop.Worksheet worksheet = context.View.FirstOutputCell.Worksheet;
-            ExcelInterop.Worksheet activeWorksheet = ExcelApplication.GetActiveSheet();
             ExcelInterop.Range range = null;
             bool enableEvent = ExcelApplication.Application.EnableEvents;
-            bool enableEventChanged = false;
             try
             {
                 KeyValuePair<int, int> kvp = context.Param;
                 range = worksheet.Cells[context.View.FirstOutputCell.Row + kvp.Key, context.View.FirstOutputCell.Column + kvp.Value];
                 if (range != null)
                 {
-                    //if (bindingContextPart.ChangeColor)
-                    //{
-                    //    ExcelApplication.Application.EnableEvents = false;
-                    //    concernedRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.OldLace);
-                    //}
-                    //else
+                    object value = context.ContextItem.ResolveBinding();
+                    if (!object.Equals(range.Value2, value))
                     {
-                        object value = context.ContextItem.ResolveBinding();
-                        if (!object.Equals(range.Value2, value))
+                        ExcelApplication.Application.EnableEvents = false;
+                        range.Value2 = value;
+
+                        if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
                         {
-                            ExcelApplication.Application.EnableEvents = false;
-                            enableEventChanged = true;
-                            range.Value2 = value;
-
-                            if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
-                            {
-                                ExcelInterop.Range currentSelectedRange = context.View.CurrentSelectedCell;
-                                context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
-                                if (currentSelectedRange != null)
-                                    currentSelectedRange.Select();
-                            }
-
-                            //if (activeWorksheet == worksheet)
-                            //{
-                            //    object color = concernedRange.Interior.Color;
-                            //    concernedRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.OrangeRed);
-                            //    Task task = new Task(() =>
-                            //    {
-                            //        Thread.Sleep(333);
-                            //        NotifyChangeColor(new NotityPropertContext(bindingContextPart.ContextItem, bindingContextPart.View, bindingContextPart.Param, true));
-                            //    });
-                            //    task.Start();
-                            //}
+                            ExcelInterop.Range currentSelectedRange = context.View.CurrentSelectedCell;
+                            context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
+                            if (currentSelectedRange != null)
+                                currentSelectedRange.Select();
                         }
                     }
                 }
@@ -184,17 +147,15 @@ namespace Etk.Excel.Application
             {
                 try
                 {
-                    if (enableEventChanged && enableEvent)
+                    if (ExcelApplication.Application.EnableEvents != enableEvent)
                         ExcelApplication.Application.EnableEvents = enableEvent;
                 }
                 catch
                 { }
             }
             Marshal.ReleaseComObject(worksheet);
-            Marshal.ReleaseComObject(activeWorksheet);
             range = null;
             worksheet = null;
-            activeWorksheet = null;
         }
         #endregion
     }

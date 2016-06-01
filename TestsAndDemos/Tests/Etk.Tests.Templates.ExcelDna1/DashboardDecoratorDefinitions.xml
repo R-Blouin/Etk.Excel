@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Describe the decorators used in the dashboard -->
+<ExcelDecorators>
+  <!-- Decorator on the property 'Status' of the template 'Main' of the sheet 'Dashboard Templates' 
+  As shown, the range can be a named range -->
+  <RangeDecorator Ident="DEC_STATUS" Description="" Method="DashboardDecoratorsManager, Etk.Tests.Templates.ExcelDna1, DecorateStatus" Range="DEC_STATUS"/>
+  <!-- Decorator on the property 'InitSuccessful' of the template 'TestTopics' of the sheet 'Dashboard Templates' 
+  As shown, the range can be a address of a range -->
+  <RangeDecorator Ident="DEC_INIT" Description="" Method="DashboardDecoratorsManager, Etk.Tests.Templates.ExcelDna1, DecorateInitSuccessful" Range="'Dashboard Templates'!B18:B19"/>
+  <!-- Decorator on the property 'Done' of the template 'Tests' of the sheet 'Dashboard Templates' -->
+  <RangeDecorator Ident="DEC_DONE" Description="" Method="DashboardDecoratorsManager, Etk.Tests.Templates.ExcelDna1, DecorateDone" Range="DEC_DONE"/>
+  <!-- Decorator on the property 'Success' of the template 'Tests' of the sheet 'Dashboard Templates' -->
+  <RangeDecorator Ident="DEC_EXEC" Description="" Method="DashboardDecoratorsManager, Etk.Tests.Templates.ExcelDna1, DecorateSuccess" Range="DEC_EXEC"/>
+</ExcelDecorators>

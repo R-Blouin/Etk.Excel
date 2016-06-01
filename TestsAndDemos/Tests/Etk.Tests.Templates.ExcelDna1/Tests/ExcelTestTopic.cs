@@ -5,13 +5,15 @@
     using System.Runtime.InteropServices;
     using Etk.Excel;
     using Etk.Excel.BindingTemplates.Views;
+    using Etk.Excel.UI.MvvmBase;
     using Etk.Tests.Templates.ExcelDna1.Extensions;
     using Microsoft.Office.Interop.Excel;
     using ExcelInterop = Microsoft.Office.Interop.Excel;
 
-    abstract class ExcelTests : IExcelTests
+    abstract class ExcelTestTopic : ViewModelBase, IExcelTestTopic
     {
         #region properties and attributes
+        private IExcelTestsManager testManager;
         private Worksheet templatesSheet = null;
         private Worksheet viewSheet = null;
         private bool initDone;
@@ -25,39 +27,59 @@
         public List<IExcelTest> Tests
         { get; private set; } 
 
+        private bool initSuccessful;
         public bool InitSuccessful
-        { get; private set; }
+        {
+            get { return initSuccessful; }
+            private set
+            {
+                initSuccessful = value;
+                OnPropertyChanged("InitSuccessful");
+            }
+        }
 
+        private string exception;
         public string Exception
-        { get; private set; }
+        {
+            get { return exception; }
+            private set
+            {
+                exception = value;
+                OnPropertyChanged("Exception");
+            }
+        }
         #endregion
 
         #region .ctors
-        protected ExcelTests(string description)
+        protected ExcelTestTopic(IExcelTestsManager testManager, string description)
         {
+            this.testManager = testManager;
             Description = description;
             Tests = new List<IExcelTest>();
         }
         #endregion
 
         #region pubic methods
-        public void ExecuteAsync()
+        public void InitTestsStatus()
         {
-            ETKExcel.ExcelApplication.PostAsynchronousAction(() =>
-            {
-                Execute();
-                ExcelInterop.Worksheet dashBoardSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, "Dashboard");
-                if (dashBoardSheet != null)
-                    dashBoardSheet.Activate();
-            });
+            Tests.ForEach(t => t.InitTestStatus());
         }
 
+        /// <summary>
+        /// ExecuteTopic all th tests declared on this topic (property 'Tests').
+        /// Invoke by double-clicking on the template button 'ExecuteTopic' on the template 'TestTopics' declared on the sheet 'Dashboard Templates'
+        /// </summary>
         public void Execute()
+        {
+            testManager.ExecuteTopic(this);
+        }
+
+        public void ExecuteTests()
         {
             if (!initDone)
                 Init();
 
-            if (! InitSuccessful)
+            if (!InitSuccessful)
                 return;
 
             try

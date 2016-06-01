@@ -49,23 +49,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddinManager.cs" />
+    <Compile Include="DashboardDecoratorsManager.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\BasicVerticalMonoHeaderAndFooter\BasicVerticalMonoHeaderAndFooterTests.cs" />
-    <Compile Include="Tests\BasicVerticalMonoHeaderAndFooter\TestDoubleRendering.cs" />
+    <Compile Include="Tests\BasicEtkFeatures\TestDoubleRendering.cs" />
     <Compile Include="Tests\BasicVerticalMonoHeaderAndFooter\TestViewParts.cs" />
     <Compile Include="Tests\BasicVerticalMonoHeaderAndFooter\TestCompleteView.cs" />
+    <Compile Include="Tests\BasicVerticalMultiHeaderAndFooter\BasicVerticalMultiHeaderAndFooterTests.cs" />
+    <Compile Include="Tests\BasicVerticalMultiHeaderAndFooter\TestCompleteView.cs" />
+    <Compile Include="Tests\BasicVerticalMultiHeaderAndFooter\TestViewParts.cs" />
     <Compile Include="Tests\BasicVerticalNoHeaderAndFooter\BasicVerticalNoHeaderAndFooterTests.cs" />
     <Compile Include="Tests\BasicVerticalNoHeaderAndFooter\TestRendering.cs" />
-    <Compile Include="Tests\BasicViewsTestsManager.cs" />
-    <Compile Include="Tests\ExcelTests.cs" />
+    <Compile Include="Tests\BasicEtkFeatures\BasicEtkFeaturesTests.cs" />
+    <Compile Include="Tests\ExcelTestTopic.cs" />
     <Compile Include="Tests\ExcelTest.cs" />
     <Compile Include="ExcelTestsManager.cs" />
     <Compile Include="Tests\IExcelTest.cs" />
-    <Compile Include="Tests\IExcelTests.cs" />
+    <Compile Include="Tests\IExcelTestTopic.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="DashboardDecoratorDefinitions.xml" />
     <Content Include="Etk.Tests.Templates.ExcelDna1-AddIn.dna">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
