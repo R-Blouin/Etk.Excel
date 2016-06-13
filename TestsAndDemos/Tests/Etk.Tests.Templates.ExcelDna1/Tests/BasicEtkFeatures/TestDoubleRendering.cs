@@ -5,7 +5,7 @@
 
     class TestDoubleRendering : ExcelTest
     {
-        public TestDoubleRendering(): base("Check to render after a first rendering with no clear or SetDataSource between")
+        public TestDoubleRendering(IExcelTestTopic parent): base(parent, "Try to render after a first rendering with no clear or SetDataSource between")
         {}
 
         override protected void RealExecute(IExcelTemplateView view)

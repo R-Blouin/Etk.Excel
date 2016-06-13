@@ -13,7 +13,7 @@
     {
         public BasicVerticalNoHeaderAndFooterTests(IExcelTestsManager testManager) : base(testManager, "Tests on a basic template without linked templates and without header or footer")
         {
-            Tests.Add(new TestRendering());
+            Tests.Add(new TestRendering(this));
         }
 
         override protected void RealInit()

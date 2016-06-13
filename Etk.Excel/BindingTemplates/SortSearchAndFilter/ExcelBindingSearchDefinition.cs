@@ -1,4 +1,5 @@
 ﻿using System;
+using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
 using Etk.BindingTemplates.Views;
@@ -23,14 +24,14 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
             if (!trimmedDefinition.EndsWith(Search_POSTFIX))
                 throw new Exception(string.Format(ExceptionTextFormat, trimmedDefinition, Search_PREFIX, Search_POSTFIX));
 
-            trimmedDefinition = trimmedDefinition.Replace(Search_PREFIX, string.Empty);
-            trimmedDefinition = trimmedDefinition.Replace(Search_POSTFIX, string.Empty);
-            return new ExcelBindingSearchDefinition(trimmedDefinition);
+            string watermark = trimmedDefinition.Replace(Search_PREFIX, string.Empty);
+            watermark = watermark.Replace(Search_POSTFIX, string.Empty);
+            return new ExcelBindingSearchDefinition(watermark);
         }
 
-        public override BindingSearchContextItem CreateContextItem(ITemplateView view)
+        public override BindingSearchContextItem CreateContextItem(ITemplateView view, IBindingContextElement parent)
         {
-            return new ExcelBindingSearchContextItem(view, this);
+            return new ExcelBindingSearchContextItem(view, this, parent);
         }
         #endregion
     }

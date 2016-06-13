@@ -1,10 +1,12 @@
-﻿using Etk.BindingTemplates.Context.SortSearchAndFilter;
+﻿using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Views;
 
 namespace Etk.BindingTemplates.Definitions.SortSearchAndFilter
 {
     public abstract class BindingSearchDefinition : IDefinitionPart
+
     {
         #region attribuets and properties
         public BindingPartType PartType
@@ -25,7 +27,7 @@ namespace Etk.BindingTemplates.Definitions.SortSearchAndFilter
         #endregion
 
         #region public methods
-        public abstract BindingSearchContextItem CreateContextItem(ITemplateView view);
+        public abstract BindingSearchContextItem CreateContextItem(ITemplateView view, IBindingContextElement parent);
         #endregion
     }
 }

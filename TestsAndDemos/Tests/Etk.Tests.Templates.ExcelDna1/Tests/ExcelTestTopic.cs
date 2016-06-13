@@ -7,15 +7,14 @@
     using Etk.Excel.BindingTemplates.Views;
     using Etk.Excel.UI.MvvmBase;
     using Etk.Tests.Templates.ExcelDna1.Extensions;
-    using Microsoft.Office.Interop.Excel;
     using ExcelInterop = Microsoft.Office.Interop.Excel;
 
     abstract class ExcelTestTopic : ViewModelBase, IExcelTestTopic
     {
         #region properties and attributes
         private IExcelTestsManager testManager;
-        private Worksheet templatesSheet = null;
-        private Worksheet viewSheet = null;
+        private ExcelInterop.Worksheet templatesSheet = null;
+        private ExcelInterop.Worksheet viewSheet = null;
         private bool initDone;
 
         public IExcelTemplateView View
@@ -25,7 +24,10 @@
         { get; private set; }
 
         public List<IExcelTest> Tests
-        { get; private set; } 
+        { get; private set; }
+
+        public string DestinationSheetName
+        { get; private set; }
 
         private bool initSuccessful;
         public bool InitSuccessful
@@ -103,6 +105,7 @@
 
         protected void CreateView(string destinationSheetName, string templateSheetName, string templateName)
         {
+            DestinationSheetName = destinationSheetName;
             if (View != null)
                 ETKExcel.TemplateManager.RemoveView(View);
 
@@ -110,9 +113,9 @@
             viewSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, destinationSheetName);
             if(viewSheet == null)
             {
-                Workbook workbook = templatesSheet.Parent;
-                Sheets sheets = workbook.Sheets;
-                Worksheet lastSheets = workbook.Sheets[sheets.Count];
+                ExcelInterop.Workbook workbook = templatesSheet.Parent;
+                ExcelInterop.Sheets sheets = workbook.Sheets;
+                ExcelInterop.Worksheet lastSheets = workbook.Sheets[sheets.Count];
 
                 viewSheet = workbook.Worksheets.Add(Type.Missing, lastSheets); 
                 viewSheet.Name = destinationSheetName;
@@ -123,13 +126,13 @@
             }
             else
             {
-                Range usedRange = viewSheet.UsedRange;
+                ExcelInterop.Range usedRange = viewSheet.UsedRange;
                 if(usedRange != null)
                     usedRange .Clear();
                 usedRange  = null;
             }
 
-            Range firstRange = viewSheet.Range["B2"];
+            ExcelInterop.Range firstRange = viewSheet.Range["B2"];
             View = ETKExcel.TemplateManager.AddView(templatesSheet, templateName, viewSheet, firstRange);
             firstRange = null;
         }

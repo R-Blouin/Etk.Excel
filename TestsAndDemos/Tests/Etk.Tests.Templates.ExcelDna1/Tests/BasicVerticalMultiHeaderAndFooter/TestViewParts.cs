@@ -6,7 +6,7 @@
 
     class TestViewParts : ExcelTest
     {
-        public TestViewParts() : base("Check the rendering of the template parts")
+        public TestViewParts(IExcelTestTopic parent) : base(parent, "Control the size of the rendered area of the template parts and the value of some cells of these template parts")
         { }
 
         override protected void RealExecute(IExcelTemplateView view)

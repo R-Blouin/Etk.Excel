@@ -1,14 +1,16 @@
 ﻿namespace Etk.Tests.Templates.ExcelDna1
 {
     using System.Collections.Generic;
+    using Etk.BindingTemplates.Views;
     using Etk.Excel;
     using Etk.Excel.UI.MvvmBase;
     using Etk.Tests.Templates.ExcelDna1.Tests;
+    using Etk.Tests.Templates.ExcelDna1.Tests.BasicEtkFeatures;
     using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMonoHeaderAndFooter;
     using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMultiHeaderAndFooter;
     using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalNoHeaderAndFooter;
     using ExcelInterop = Microsoft.Office.Interop.Excel;
-    using Etk.Tests.Templates.ExcelDna1.Tests.BasicEtkFeatures;
+    using Etk.Excel.BindingTemplates.Views;
 
     interface IExcelTestsManager
     {
@@ -48,6 +50,11 @@
         #endregion
 
         #region public methods
+        public static void SetSearchValue(ITemplateView concernedView, IExcelTestTopic topic)
+        {
+            concernedView.SearchValue = concernedView.SearchValue == topic.Description ? null : topic.Description;
+        }
+
         /// <summary>
         /// Execution of all the tests declared on the test topics declared on this class (property 'TestTopics').
         ///<br/>Invoke by double-clicking on the template button 'ExecuteTopic All TestTopics' on the template 'Main' declared on the sheet 'Dashboard Templates'.

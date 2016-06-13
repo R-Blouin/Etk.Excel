@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
-using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.BindingTemplates.Views;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Renderer;
+using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
-using System.Reflection;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
@@ -43,6 +43,7 @@ namespace Etk.Excel.BindingTemplates.Views
         private ILogger log = Logger.Instance;
         private ExcelInterop.Range currentSelectedRange;
         private List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
+        private List<ExcelBindingSearchContextItem> cellsThatContainSearchValue = new List<ExcelBindingSearchContextItem>();
 
         internal ExcelInterop.Range CurrentSelectedCell
         { get; private set; }
@@ -76,14 +77,24 @@ namespace Etk.Excel.BindingTemplates.Views
         public RenderedArea RenderedArea
         { get { return Renderer != null ? Renderer.RenderedArea : null; } }
 
-        ////public RenderingArea RenderedArea
-        ////{ get { return renderer == null ? null : RenderingArea.CreateInstances(renderer.RenderedRange); } }
-
         public AccessorParametersManager AccessorParametersManager
         { get; private set; }
 
         public ExcelPartRenderer Expander
         { get; set; }
+
+        protected string searchValue;
+        public override string SearchValue
+        {
+            get { return searchValue; } 
+            set 
+            {
+                searchValue = value;
+                foreach (ExcelBindingSearchContextItem ctrl in cellsThatContainSearchValue)
+                    ctrl.DestinationRange.Value = SearchValue;
+                ExecuteSearch();
+            }
+        }
 
         private bool isExpanded = true;
         public bool IsExpanded
@@ -102,9 +113,6 @@ namespace Etk.Excel.BindingTemplates.Views
                     isExpanded = !isExpanded;
             }
         }
-
-        public List<ExcelInterop.Range> CellsThatContainSearchValue
-        { get; set; }
         #endregion
 
         #region .ctors
@@ -128,8 +136,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 currentSelectedRange = null;
                 CurrentSelectedCell = null;
 
-                if (CellsThatContainSearchValue != null)
-                    CellsThatContainSearchValue.Clear();
+                cellsThatContainSearchValue.Clear();
 
                 base.Clear();
                 if (!IsDisposed && Renderer != null)
@@ -213,6 +220,65 @@ namespace Etk.Excel.BindingTemplates.Views
             if (IsRendered)
                 Renderer.OnCalculate();
         }
+
+        public void RegisterSearchControl(ExcelBindingSearchContextItem searchControl)
+        {
+            cellsThatContainSearchValue.Add(searchControl);
+        }
+
+        public override void ExecuteSearch()
+        {
+            using (FreezeExcel freezeExcel = new FreezeExcel())
+            {
+                if (Renderer == null || Renderer.BodyPartRenderer == null || Renderer.BodyPartRenderer.RenderedArea == null)
+                    return;
+
+                List<KeyValuePair<ExcelInterop.Range, bool>> toShowOrHide = new List<KeyValuePair<ExcelInterop.Range, bool>>();
+
+                ExcelInterop.Range firstRange = SheetDestination.Cells[Renderer.BodyPartRenderer.RenderedArea.YPos, Renderer.BodyPartRenderer.RenderedArea.XPos];
+                ExcelInterop.Range lastRange = SheetDestination.Cells[Renderer.BodyPartRenderer.RenderedArea.YPos + Renderer.BodyPartRenderer.RenderedArea.Height - 1, Renderer.BodyPartRenderer.RenderedArea.XPos + Renderer.BodyPartRenderer.RenderedArea.Width - 1];
+                ExcelInterop.Range renderedRange = SheetDestination.Range[firstRange, lastRange];
+                ExcelInterop.Range rowsOrColumns = TemplateDefinition.Orientation == Orientation.Horizontal ? renderedRange.Columns : renderedRange.Cells.Rows;
+                if (string.IsNullOrEmpty(SearchValue))
+                {
+                    foreach (ExcelInterop.Range rowOrColumn in rowsOrColumns)
+                        toShowOrHide.Add(new KeyValuePair<ExcelInterop.Range, bool>(rowOrColumn, false));
+                }
+                else
+                {
+                    string searchValueUpper = SearchValue.ToUpper();
+                    foreach (ExcelInterop.Range rowOrColumn in rowsOrColumns)
+                    {
+                        bool toHide = true;
+                        foreach (ExcelInterop.Range cell in rowOrColumn.Cells)
+                        {
+                            string cellText;
+                            if (cell.MergeCells)
+                                cellText = cell.MergeArea[1.1].Text;
+                            else
+                                cellText = cell.Text;
+                            if (!string.IsNullOrEmpty(cellText) && cellText.ToUpper().Contains(searchValueUpper))
+                            {
+                                toHide = false;
+                                break;
+                            }
+                        }
+                        toShowOrHide.Add(new KeyValuePair<ExcelInterop.Range, bool>(rowOrColumn, toHide));
+                    }
+                }
+
+                foreach (KeyValuePair<ExcelInterop.Range, bool> showOrHide in toShowOrHide)
+                {
+                    ExcelInterop.Range cells;
+                    if (TemplateDefinition.Orientation == Orientation.Horizontal)
+                        cells = SheetDestination.Columns[showOrHide.Key.Column];
+                    else
+                        cells = SheetDestination.Rows[showOrHide.Key.Row];
+                    cells.Hidden = showOrHide.Value;
+                    cells = null;
+                }
+            }
+        }
         #endregion
 
         #region internal methods
@@ -287,7 +353,7 @@ namespace Etk.Excel.BindingTemplates.Views
                                 BeforeRendering(false);
 
                             // Clear the previous rendering.
-                            ////////////////////////////////                            
+                            ////////////////////////////////
                             Renderer.Clear();
 
                             Renderer.Render();

@@ -6,7 +6,9 @@ using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Controls;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Definitions;
+using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.BindingTemplates.Context.SortSearchAndFilter;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -69,9 +71,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         for (int colId = 0; colId < partToRenderDefinition.Width; colId++)
                         {
                             IBindingContextItem item = partToRenderDefinition.DefinitionParts[rowId, colId] == null ? null : contextElement.BindingContextItems[cptItems++];
-                            if (item != null && ((item.BindingDefinition != null && item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly) || item is IExcelControl))
+                            if (item != null && ((item.BindingDefinition != null && (item.BindingDefinition.IsEnum)) || item is IExcelControl || item is ExcelBindingSearchContextItem))
                             {
                                 ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
+
+                                if (item is ExcelBindingSearchContextItem)
+                                    ((ExcelBindingSearchContextItem)item).SetRange(ref range);
+
                                 if (item.BindingDefinition != null && item.BindingDefinition.IsEnum)
                                     enumManager.CreateControl(item, ref range);
                                 else
@@ -357,9 +363,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
             for (int colId = startPos; colId < endPos; colId++)
             {
                 IBindingContextItem item = partToRenderDefinition.DefinitionParts[renderingContext.RowId, colId] == null ? null : renderingContext.ContextElement.BindingContextItems[currentBindingContextItemId++];
-                if (item != null && ((item.BindingDefinition != null && (item.BindingDefinition.IsEnum || item.BindingDefinition.IsMultiLine)) || item is IExcelControl))
-                {
+                if (item != null && ((item.BindingDefinition != null && (item.BindingDefinition.IsEnum || item.BindingDefinition.IsMultiLine)) || item is IExcelControl || item is ExcelBindingSearchContextItem))
+                {                  
                     ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
+
+                    if (item is ExcelBindingSearchContextItem)
+                        ((ExcelBindingSearchContextItem)item).SetRange(ref range);
+
                     if(item.BindingDefinition != null)
                     {
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)

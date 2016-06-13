@@ -4,6 +4,7 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
 {
     interface IExcelTest
     {
+        IExcelTestTopic Parent { get; }
         string Description{ get; }
         bool Success{ get; }
         bool Done{ get; }

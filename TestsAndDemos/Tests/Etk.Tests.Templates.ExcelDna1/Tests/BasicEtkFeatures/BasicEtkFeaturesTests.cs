@@ -14,7 +14,7 @@
         public BasicEtkFeaturesTests(IExcelTestsManager testManager)
             : base(testManager, "Test basic ETK features")
         {
-            Tests.Add(new TestDoubleRendering());
+            Tests.Add(new TestDoubleRendering(this));
         }
 
         override protected void RealInit()

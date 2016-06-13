@@ -8,6 +8,7 @@
         string Description { get; }
         bool InitSuccessful { get; }
         string Exception { get; }
+        string DestinationSheetName { get; }
         List<IExcelTest> Tests { get; }
 
         void Execute();

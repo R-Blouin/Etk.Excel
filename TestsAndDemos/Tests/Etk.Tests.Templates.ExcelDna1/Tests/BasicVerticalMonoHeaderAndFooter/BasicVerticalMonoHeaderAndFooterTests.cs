@@ -14,8 +14,8 @@
         public BasicVerticalMonoHeaderAndFooterTests(IExcelTestsManager testManager)
                : base(testManager, "Tests on a basic template (without linked templates) with a one line header and a one line footer")
         {
-            Tests.Add(new TestCompleteView());
-            Tests.Add(new TestViewParts());
+            Tests.Add(new TestCompleteView(this));
+            Tests.Add(new TestViewParts(this));
         }
 
         override protected void RealInit()

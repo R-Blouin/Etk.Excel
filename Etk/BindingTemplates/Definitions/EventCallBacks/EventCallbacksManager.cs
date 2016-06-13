@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions;
-using Etk.Tools.Log;
-using Etk.BindingTemplates.Context;
 using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions;
+using Etk.BindingTemplates.Views;
+using Etk.Tools.Log;
 
 namespace Etk.BindingTemplates.Definitions.EventCallBacks
 {
@@ -91,7 +92,10 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
                     parameters = new object[] { sender, selectedContextElement.DataSource, catchingContextElement.DataSource };
                 break;
                 case 2:
-                    parameters = new object[] { selectedContextElement.DataSource, catchingContextElement.DataSource };
+                    if(callback.GetParameters()[0].ParameterType == typeof(ITemplateView))
+                        parameters = new object[] { selectedContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
+                    else
+                        parameters = new object[] { selectedContextElement.DataSource, catchingContextElement.DataSource };
                 break;
                 case 1:
                     parameters = new object[] { selectedContextElement.DataSource };

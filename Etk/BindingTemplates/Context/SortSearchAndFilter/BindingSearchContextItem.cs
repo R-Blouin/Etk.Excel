@@ -6,13 +6,13 @@ namespace Etk.BindingTemplates.Context.SortSearchAndFilter
     public abstract class BindingSearchContextItem : BindingContextItem
     {
         #region attributes and properties
-        private readonly TemplateView view;
-        private readonly BindingSearchDefinition definition;
+        protected readonly TemplateView view;
+        protected readonly BindingSearchDefinition definition;
         #endregion
 
         #region .ctors
-        protected BindingSearchContextItem(ITemplateView view, BindingSearchDefinition definition)
-                                          : base(null, null)                
+        protected BindingSearchContextItem(ITemplateView view, BindingSearchDefinition definition, IBindingContextElement parent)
+                                          : base(parent, null)                
         {
             this.view = (TemplateView)view;
             this.definition = definition;
@@ -37,13 +37,13 @@ namespace Etk.BindingTemplates.Context.SortSearchAndFilter
                 view.SearchValue = null;
                 retValue = definition.Watermark;
             }
-            ExecuteSearch(view);
             return true;
         }
-        #endregion
 
-        #region protected methods
-        protected abstract void ExecuteSearch(ITemplateView view);
+        protected void ExecuteSearch()
+        {
+            ((TemplateView)view).ExecuteSearch();
+        }
         #endregion
     }
 }

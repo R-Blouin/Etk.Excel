@@ -6,10 +6,15 @@
     using Etk.Excel.BindingTemplates.Views;
     using Etk.Excel.UI.MvvmBase;
     using Etk.Tests.Templates.ExcelDna1.Extensions;
+    using Etk.Excel;
+    using ExcelInterop = Microsoft.Office.Interop.Excel;
 
     abstract class ExcelTest : ViewModelBase, IExcelTest
     {
         #region propertis and attributes
+        public IExcelTestTopic Parent
+        { get; private set; }
+
         public string Description
         { get; private set; }
 
@@ -51,8 +56,9 @@
         #endregion
 
         #region .ctors
-        protected ExcelTest(string description)
+        protected ExcelTest(IExcelTestTopic parent, string description)
         {
+            Parent = parent;
             Description = description;
             StepsErrorMessages = new List<string>();
         }
@@ -89,6 +95,13 @@
                     Errors = string.Join("\r\n", StepsErrorMessages.ToArray());
                 }
             }
+        }
+
+        public static void DisplayResultSheet(IExcelTest concernedTest)
+        {
+            ExcelInterop.Worksheet destinationSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, concernedTest.Parent.DestinationSheetName);
+            if (destinationSheet != null)
+                ((ExcelInterop._Worksheet)destinationSheet).Activate();
         }
         #endregion
 

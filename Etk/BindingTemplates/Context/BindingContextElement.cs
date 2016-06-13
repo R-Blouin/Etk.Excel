@@ -81,7 +81,7 @@ namespace Etk.BindingTemplates.Context
                                     newTemplatesFilters.Add(filter);
                             break;
                             case BindingPartType.SearchDefinition:
-                                BindingSearchContextItem search = ((BindingSearchDefinition) definitionPart).CreateContextItem(ParentPart.ParentContext.Owner);
+                                BindingSearchContextItem search = ((BindingSearchDefinition) definitionPart).CreateContextItem(ParentPart.ParentContext.Owner, this);
                                 BindingContextItems.Add(search);
                             break;
                         }

@@ -8,7 +8,7 @@ using Etk.SortAndFilter;
 
 namespace Etk.BindingTemplates.Views
 {
-    public class TemplateView : ITemplateView
+    public abstract class TemplateView : ITemplateView
     {
         #region attributes and properties
         protected object syncRoot = new object();
@@ -40,7 +40,7 @@ namespace Etk.BindingTemplates.Views
         { get; protected set; }
 
         /// <summary>Contains the template search value </summary>
-        public string SearchValue
+        public abstract string SearchValue
         { get; set; }
 
         /// <summary>Contains the 'ISorterDefinition' attached to the view</summary>
@@ -120,6 +120,8 @@ namespace Etk.BindingTemplates.Views
                 }
             }
         }
+
+        public abstract void ExecuteSearch();
         #endregion
     }
 }

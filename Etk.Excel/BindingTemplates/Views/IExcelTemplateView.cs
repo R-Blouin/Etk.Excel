@@ -21,7 +21,6 @@ namespace Etk.Excel.BindingTemplates.Views
         /// <summary>Event calls when the sheet that owned the View is activate. The Parameter contains the concerned View</summary>
         event Action<IExcelTemplateView> SheetActivation;
 
-        //RenderingArea RenderedArea { get;  }
         bool AutoFit {get; set;}
 
         /// <summary>Set the cell uses to clear the rendered area of the view</summary>
