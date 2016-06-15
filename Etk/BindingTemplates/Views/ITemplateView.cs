@@ -20,5 +20,6 @@ namespace Etk.BindingTemplates.Views
         Dictionary<ITemplateDefinition, ISortersAndFilters> ExternalSortersAndFilters { get; set; }
 
         string SearchValue { get; set; }
+        void ExecuteSearch();
     }
 }

@@ -39,6 +39,8 @@ namespace Etk.BindingTemplates.Views
         public Dictionary<object, Dictionary<BindingFilterDefinition, string>> FilterValueByFilterDefinitionByElement
         { get; protected set; }
 
+
+        protected string searchValue;
         /// <summary>Contains the template search value </summary>
         public abstract string SearchValue
         { get; set; }

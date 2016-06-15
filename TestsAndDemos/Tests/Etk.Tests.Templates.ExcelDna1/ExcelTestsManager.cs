@@ -10,7 +10,6 @@
     using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMultiHeaderAndFooter;
     using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalNoHeaderAndFooter;
     using ExcelInterop = Microsoft.Office.Interop.Excel;
-    using Etk.Excel.BindingTemplates.Views;
 
     interface IExcelTestsManager
     {
@@ -53,6 +52,7 @@
         public static void SetSearchValue(ITemplateView concernedView, IExcelTestTopic topic)
         {
             concernedView.SearchValue = concernedView.SearchValue == topic.Description ? null : topic.Description;
+            concernedView.ExecuteSearch();
         }
 
         /// <summary>

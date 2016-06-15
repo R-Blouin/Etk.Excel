@@ -42,11 +42,14 @@ namespace Etk.Excel.BindingTemplates.Views
         #region attributes and properties
         private ILogger log = Logger.Instance;
         private ExcelInterop.Range currentSelectedRange;
-        private List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
-        private List<ExcelBindingSearchContextItem> cellsThatContainSearchValue = new List<ExcelBindingSearchContextItem>();
+        private readonly List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
 
         internal ExcelInterop.Range CurrentSelectedCell
         { get; private set; }
+
+        internal List<ExcelBindingSearchContextItem> CellsThatContainSearchValue
+        { get; private set; }
+
 
         public event Action<object, object> DataChanged;
         public event Action<bool> BeforeRendering;
@@ -83,16 +86,24 @@ namespace Etk.Excel.BindingTemplates.Views
         public ExcelPartRenderer Expander
         { get; set; }
 
-        protected string searchValue;
         public override string SearchValue
         {
             get { return searchValue; } 
             set 
             {
                 searchValue = value;
-                foreach (ExcelBindingSearchContextItem ctrl in cellsThatContainSearchValue)
-                    ctrl.DestinationRange.Value = SearchValue;
-                ExecuteSearch();
+                foreach (ExcelBindingSearchContextItem ctrl in CellsThatContainSearchValue)
+                {
+                    try
+                    {
+                        ctrl.ExecuteSearch = false;
+                        ctrl.DestinationRange.Value = searchValue;
+                    }
+                    finally
+                    {
+                        ctrl.ExecuteSearch = true;
+                    }
+                }
             }
         }
 
@@ -123,6 +134,7 @@ namespace Etk.Excel.BindingTemplates.Views
             FirstOutputCell = firstOutputCell;
             ClearingCell = clearingCell;
             AutoFit = true;
+            CellsThatContainSearchValue = new List<ExcelBindingSearchContextItem>();
         }
         #endregion
 
@@ -136,7 +148,8 @@ namespace Etk.Excel.BindingTemplates.Views
                 currentSelectedRange = null;
                 CurrentSelectedCell = null;
 
-                cellsThatContainSearchValue.Clear();
+                CellsThatContainSearchValue.Clear();
+                searchValue = null;
 
                 base.Clear();
                 if (!IsDisposed && Renderer != null)
@@ -207,6 +220,7 @@ namespace Etk.Excel.BindingTemplates.Views
                         Renderer = null;
                     }
 
+                    CellsThatContainSearchValue.Clear();
                     SheetDestination = null;
                     FirstOutputCell = null;
                     ClearingCell = null;
@@ -223,7 +237,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
         public void RegisterSearchControl(ExcelBindingSearchContextItem searchControl)
         {
-            cellsThatContainSearchValue.Add(searchControl);
+            CellsThatContainSearchValue.Add(searchControl);
         }
 
         public override void ExecuteSearch()
@@ -278,6 +292,13 @@ namespace Etk.Excel.BindingTemplates.Views
                     cells = null;
                 }
             }
+        }
+
+        public override void SetDataSource(object dataSource)
+        {
+            searchValue = null;
+            CellsThatContainSearchValue.Clear();
+            base.SetDataSource(dataSource);
         }
         #endregion
 

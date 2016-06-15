@@ -8,6 +8,9 @@ namespace Etk.BindingTemplates.Context.SortSearchAndFilter
         #region attributes and properties
         protected readonly TemplateView view;
         protected readonly BindingSearchDefinition definition;
+
+        public bool ExecuteSearch 
+        { get; set; }
         #endregion
 
         #region .ctors
@@ -37,12 +40,10 @@ namespace Etk.BindingTemplates.Context.SortSearchAndFilter
                 view.SearchValue = null;
                 retValue = definition.Watermark;
             }
+    
+            if (ExecuteSearch)
+                ((TemplateView)view).ExecuteSearch();
             return true;
-        }
-
-        protected void ExecuteSearch()
-        {
-            ((TemplateView)view).ExecuteSearch();
         }
         #endregion
     }
