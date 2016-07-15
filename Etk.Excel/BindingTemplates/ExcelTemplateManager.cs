@@ -139,23 +139,27 @@ namespace Etk.Excel.BindingTemplates
 
             try
             {
-                if (!viewsBySheet.ContainsKey(view.SheetDestination))
+                if (!viewsBySheet.ContainsKey(view.ViewSheet))
                 {
-                    viewsBySheet[view.SheetDestination] = new List<ExcelTemplateView>();
+                    viewsBySheet[view.ViewSheet] = new List<ExcelTemplateView>();
 
-                    view.SheetDestination.Change += OnSheetChange;
-                    view.SheetDestination.SelectionChange += OnSelectionChange;
-                    view.SheetDestination.BeforeDoubleClick += OnBeforeBoubleClick;
+                    view.ViewSheet.Change += OnSheetChange;
+                    view.ViewSheet.SelectionChange += OnSelectionChange;
+                    view.ViewSheet.BeforeDoubleClick += OnBeforeBoubleClick;
 
-                    ExcelInterop.Workbook book = view.SheetDestination.Parent as ExcelInterop.Workbook;
+                    ExcelInterop.Workbook book = view.ViewSheet.Parent as ExcelInterop.Workbook;
                     if (book != null)
                     {
                         book.SheetCalculate -= OnSheetCalculate;
                         book.SheetCalculate += OnSheetCalculate;
+
+                        book.SheetActivate += OnSheetActivation;
+                        book.SheetDeactivate += OnSheetDeactivation;
+
                         Marshal.ReleaseComObject(book);
                     }
                 }
-                viewsBySheet[view.SheetDestination].Add(view);
+                viewsBySheet[view.ViewSheet].Add(view);
             }
             catch (Exception ex)
             {
@@ -173,7 +177,7 @@ namespace Etk.Excel.BindingTemplates
                 IEnumerable<ExcelTemplateView> viewToWorkWith = views.Select(v => v).ToList();
                 foreach (ExcelTemplateView view in viewToWorkWith)
                 {
-                    if (view.OnSelectionChange(ExcelApplication, realTarget))
+                    if (view.OnSelectionChange(realTarget))
                         break;
                 }
             }
@@ -251,7 +255,7 @@ namespace Etk.Excel.BindingTemplates
             return menus;
         }
 
-        private void OnActivateSheetViewsManagement(object sheet)
+        private void OnSheetActivation(object sheet)
         {
             ExcelInterop.Worksheet worksheet = sheet as ExcelInterop.Worksheet;
             try
@@ -263,19 +267,35 @@ namespace Etk.Excel.BindingTemplates
                     {
                         if (views != null)
                         {
-                            //@@using (FreezeExcel freeze = new FreezeExcel())
-                            {
-                                foreach (ExcelTemplateView view in views)
-                                    view.OnSheetActivation();
-                            }
+                            foreach (ExcelTemplateView view in views)
+                                view.OnViewSheetIsActivated();
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            finally
             {
-                string message = string.Format("Sheet '{0}': failed to render its views. {1}", worksheet == null ? string.Empty : worksheet.Name, ex.Message);
-                throw new EtkException(message, ex);
+                worksheet = null;
+            }
+        }
+
+        private void OnSheetDeactivation(object sheet)
+        {
+            ExcelInterop.Worksheet worksheet = sheet as ExcelInterop.Worksheet;
+            try
+            {
+                lock (syncRoot)
+                {
+                    List<ExcelTemplateView> views;
+                    if (viewsBySheet.TryGetValue(worksheet, out views))
+                    {
+                        if (views != null)
+                        {
+                            foreach (ExcelTemplateView view in views)
+                                view.OnViewSheetIsDeactivated();
+                        }
+                    }
+                }
             }
             finally
             {
@@ -356,8 +376,8 @@ namespace Etk.Excel.BindingTemplates
             if (view == null)
                 return;
 
-            view.SheetDestination.Cells.Locked = false;
-            view.SheetDestination.Protect(System.Type.Missing, true, true, System.Type.Missing, false, true,
+            view.ViewSheet.Cells.Locked = false;
+            view.ViewSheet.Protect(System.Type.Missing, true, true, System.Type.Missing, false, true,
                                           true, true,
                                           false, false,
                                           false,
@@ -516,13 +536,6 @@ namespace Etk.Excel.BindingTemplates
             {
                 lock (syncRoot)
                 {
-                    //ExcelInterop.Workbook book = excelView.SheetDestination.Parent as ExcelInterop.Workbook;
-                    //if (book != null)
-                    //{
-                    //    book.SheetCalculate -= OnSheetCalculate;
-                    //    Marshal.ReleaseComObject(book);
-                    //}
-
                     ClearView(excelView);
 
                     KeyValuePair<ExcelInterop.Worksheet, List<ExcelTemplateView>> kvp = viewsBySheet.FirstOrDefault(s => s.Value.FirstOrDefault(v => v.Equals(view)) != null);
@@ -573,7 +586,7 @@ namespace Etk.Excel.BindingTemplates
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.GetSheetViews"/> </summary> 
-        public List<IExcelTemplateView> GetSheetViews(ExcelInterop.Worksheet sheet)
+        public IEnumerable<IExcelTemplateView> GetSheetViews(ExcelInterop.Worksheet sheet)
         {
             List<IExcelTemplateView> iViews = new List<IExcelTemplateView>();
             try
@@ -602,9 +615,9 @@ namespace Etk.Excel.BindingTemplates
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.GetSheetViews"/> </summary> 
-        public List<IExcelTemplateView> GetActiveSheetViews()
+        public IEnumerable<IExcelTemplateView> GetActiveSheetViews()
         {
-            List<IExcelTemplateView> iViews = new List<IExcelTemplateView>();
+            IEnumerable<IExcelTemplateView> iViews = new List<IExcelTemplateView>();
             ExcelInterop.Worksheet activeSheet = null;
             try
             {
@@ -650,7 +663,7 @@ namespace Etk.Excel.BindingTemplates
                                     ExcelTemplateView excelTemplateView = view as ExcelTemplateView;
                                     try
                                     {
-                                        excelTemplateView.SheetDestination.Unprotect(System.Type.Missing);
+                                        excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
                                         excelTemplateView.Render();
                                     }
                                     finally
@@ -711,7 +724,7 @@ namespace Etk.Excel.BindingTemplates
                                     ExcelTemplateView excelTemplateView = view as ExcelTemplateView;
                                     try
                                     {
-                                        excelTemplateView.SheetDestination.Unprotect(System.Type.Missing);
+                                        excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
                                         excelTemplateView.RenderDataOnly();
                                     }
                                     finally
@@ -769,7 +782,7 @@ namespace Etk.Excel.BindingTemplates
                                 {
                                     try
                                     {
-                                        excelView.SheetDestination.Unprotect(System.Type.Missing);
+                                        excelView.ViewSheet.Unprotect(System.Type.Missing);
                                         excelView.Clear();
                                     }
                                     finally

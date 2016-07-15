@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Excel", "Etk.Excel\Etk.Excel.csproj", "{14413CBB-3028-462C-958D-16E96575A06F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk", "Etk\Etk.csproj", "{10188A0E-231D-42DA-952E-A260402B3EA4}"
@@ -46,8 +48,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{14413CBB-3028-462C-958D-16E96575A06F} = {84EAE8AF-5805-4A27-824B-604491162B9C}
 		{10188A0E-231D-42DA-952E-A260402B3EA4} = {84EAE8AF-5805-4A27-824B-604491162B9C}
 		{3E0A9685-1208-46B4-B824-A94E7CB25FCF} = {84EAE8AF-5805-4A27-824B-604491162B9C}
-		{14413CBB-3028-462C-958D-16E96575A06F} = {84EAE8AF-5805-4A27-824B-604491162B9C}
 	EndGlobalSection
 EndGlobal

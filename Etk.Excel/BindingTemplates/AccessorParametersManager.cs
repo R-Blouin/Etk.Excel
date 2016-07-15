@@ -43,7 +43,7 @@ namespace Etk.Excel.BindingTemplates
 
                 if (rangesToListen.Count > 0)
                 {
-                    ExcelInterop.Worksheet sheet = View.SheetDestination;
+                    ExcelInterop.Worksheet sheet = View.ViewSheet;
                     sheet.Change += OnParametersChanged;
                     Marshal.ReleaseComObject(sheet);
                 }
@@ -104,7 +104,7 @@ namespace Etk.Excel.BindingTemplates
                 rangesToListen.Clear();
                 rangesToListen = null;
             }
-            ExcelInterop.Worksheet sheet = View.SheetDestination;
+            ExcelInterop.Worksheet sheet = View.ViewSheet;
             sheet.Change -= OnParametersChanged;
             Marshal.ReleaseComObject(sheet);
         }

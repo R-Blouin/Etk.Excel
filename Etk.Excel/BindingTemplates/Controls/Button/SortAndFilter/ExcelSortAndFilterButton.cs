@@ -39,7 +39,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
         public ExcelSortAndFilterButton(ExcelTemplateView templateView)
         {
             this.View = templateView;
-            ExcelInterop.Worksheet worksheet = View.SheetDestination;
+            ExcelInterop.Worksheet worksheet = View.ViewSheet;
             OwnerRange = View.FirstOutputCell;
             Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
 
@@ -66,7 +66,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
             commandButton.ForeColor = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
 
             commandButton.Click += () => {  
-                                            using(ExcelMainWindow excelWindow = new ExcelMainWindow(View.SheetDestination.Application.Hwnd))
+                                            using(ExcelMainWindow excelWindow = new ExcelMainWindow(View.ViewSheet.Application.Hwnd))
                                             {
                                                 SortAndFilterManagement.DisplaySortAndFilterWindow(excelWindow, View);
                                             }
@@ -82,7 +82,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
             {
                 IsDisposed = true;
  
-                View.SheetDestination.OLEObjects(Name).Delete();
+                View.ViewSheet.OLEObjects(Name).Delete();
                 commandButton = null;
                 OwnerRange = null;
             }

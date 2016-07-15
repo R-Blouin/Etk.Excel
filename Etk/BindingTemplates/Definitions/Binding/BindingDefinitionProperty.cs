@@ -82,7 +82,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
- throw new BindingTemplateException(string.Format("Cannot Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
+                throw new BindingTemplateException(string.Format("Cannot Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
             }
         }
 

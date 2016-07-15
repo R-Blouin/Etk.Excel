@@ -7,14 +7,29 @@
     using System.Xml.Serialization;
     using Etk.Tests.Data.Shops.DataType;
     
-    public static class ProductsManager
+    public class ProductsManager
     {
         #region attributes and properties
-        static private ProductList productList;
+        private static readonly object syncObj = new object();
+        private ProductList productList;
+
+        private static ProductsManager instance;
+        public static ProductsManager Instance
+        {
+            get
+            {
+                lock(syncObj)
+                {
+                    if (instance == null)
+                        instance = new ProductsManager();
+                    return instance;
+                }
+            }
+        }
         #endregion
 
         #region .ctors
-        static ProductsManager()
+        public ProductsManager()
         {
             CreateDefaultData();
         }
@@ -22,7 +37,7 @@
 
         #region public methods
         /// <summary>Return aall managed orders</summary>
-        public static IEnumerable<Product> GetAllProducts()
+        public IEnumerable<Product> GetAllProducts()
         {
             if (productList == null || productList.Products == null)
                 return null;
@@ -31,7 +46,7 @@
 
         /// <summary>Return an product given its id</summary>
         /// <param name="id">Product id to retrieve</param>
-        public static Product GetProduct(int id)
+        public Product GetProduct(int id)
         {
             if (productList == null && productList.Products != null)
                 return null;
@@ -40,7 +55,7 @@
 
         /// <summary>Return a list of specific products</summary>
         /// <param name="ids">the product ids to retrieve</param>
-        public static IEnumerable<Product> GetProducts(IEnumerable<int> ids)
+        public IEnumerable<Product> GetProducts(IEnumerable<int> ids)
         {
             if (productList == null && productList.Products != null)
                 return null;
@@ -51,7 +66,7 @@
         #endregion
 
         #region private methods
-        static private void CreateDefaultData()
+        private void CreateDefaultData()
         {
             XmlSerializer xs = new XmlSerializer(typeof(ProductList));
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Etk.Tests.Data.Shops.Data.Products.xml"))

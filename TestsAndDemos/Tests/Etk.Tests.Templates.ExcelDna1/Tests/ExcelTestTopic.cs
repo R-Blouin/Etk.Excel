@@ -21,7 +21,7 @@
         { get; private set; }
 
         public string Description
-        { get; private set; }
+        { get;  set; }
 
         public List<IExcelTest> Tests
         { get; private set; }
@@ -132,7 +132,7 @@
                 usedRange  = null;
             }
 
-            ExcelInterop.Range firstRange = viewSheet.Range["B2"];
+            ExcelInterop.Range firstRange = viewSheet.Range["B3"];
             View = ETKExcel.TemplateManager.AddView(templatesSheet, templateName, viewSheet, firstRange);
             firstRange = null;
         }
@@ -144,6 +144,7 @@
             try
             {
                 RealInit();
+
                 InitSuccessful = true;
             }
             catch (Exception ex)

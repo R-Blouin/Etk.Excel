@@ -38,11 +38,11 @@ namespace Etk.Excel.BindingTemplates
         /// <summary> Get all the views owned by a given sheet.</summary>
         /// <param name="sheet">The source sheet.</param>
         /// <returns>A collection containing the views owned by the sheet or an empty collection if no views found in the sheet.</returns>
-        List<IExcelTemplateView> GetSheetViews(ExcelInterop.Worksheet sheet);
+        IEnumerable<IExcelTemplateView> GetSheetViews(ExcelInterop.Worksheet sheet);
 
         /// <summary> Get all the views owned by a the current active sheet.</summary>
         /// <returns>A collection containing the views owned by the sheet or an empty collection if no views found in the sheet.</returns>
-        List<IExcelTemplateView> GetActiveSheetViews();
+        IEnumerable<IExcelTemplateView> GetActiveSheetViews();
 
         /// <summary> Rerender (description, style and data) the View given as parameter.</summary>
         /// <param name="View">The views to refresh.</param>

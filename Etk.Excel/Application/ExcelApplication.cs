@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using Etk.Excel.Extensions;
 using Microsoft.Office.Core;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using System.Collections.Generic;
 
 namespace Etk.Excel.Application
 {
@@ -115,6 +116,18 @@ namespace Etk.Excel.Application
         public void PostAsynchronousAction(Action action)
         {
             postAsynchronousManager.PostAction(action);
+        }
+
+        /// <summary> Implements <see cref="IExcelApplication.PostAsynchronousActions"/> </summary> 
+        public void PostAsynchronousActions(IEnumerable<Action> actions, Action postExecutionAction)
+        {
+            if(postExecutionAction == null)
+                postAsynchronousManager.PostActions(actions);
+            else
+            {
+                ExcelPostListAsynchronousManager asynchronousManager = new ExcelPostListAsynchronousManager(ExcelDispatcher, actions, postExecutionAction);
+                asynchronousManager.Execute();
+            }
         }
 
         /// <summary> Implements <see cref="IExcelApplication.RangeSelectionDialog"/> </summary> 

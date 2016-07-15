@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
@@ -29,6 +30,11 @@ namespace Etk.Excel.Application
         /// <summary>Execute a 'System.Action' asynchronously in Excel</summary>
         /// <param name="action">System.Action to execute</param>
         void PostAsynchronousAction(System.Action action);
+
+        /// <summary>Execute a collection of 'System.Action' synchronously (one after the other) asynchronously in Excel</summary>
+        /// <param name="actions">The actions to execute</param>
+        /// <param name="postExecutionAction">An action executed at the end of the execution of the 'actions'</param>
+        void PostAsynchronousActions(IEnumerable<Action> actions, Action postExecutionAction);
 
         // <summary>Display a dialog box for selecting an Excel Range</summary>
         /// <param name="title">Title of the message box. If none supplied then the title is 'Select a Range'</param>

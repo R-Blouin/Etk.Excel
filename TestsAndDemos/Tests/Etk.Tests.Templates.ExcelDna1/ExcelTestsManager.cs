@@ -1,14 +1,13 @@
 ﻿namespace Etk.Tests.Templates.ExcelDna1
 {
-    using System.Collections.Generic;
     using Etk.BindingTemplates.Views;
     using Etk.Excel;
     using Etk.Excel.UI.MvvmBase;
     using Etk.Tests.Templates.ExcelDna1.Tests;
-    using Etk.Tests.Templates.ExcelDna1.Tests.BasicEtkFeatures;
-    using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMonoHeaderAndFooter;
-    using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalMultiHeaderAndFooter;
-    using Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalNoHeaderAndFooter;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
     using ExcelInterop = Microsoft.Office.Interop.Excel;
 
     interface IExcelTestsManager
@@ -39,12 +38,9 @@
         #region .Ctors
         public ExcelTestsManager()
         {
-            testTopics = new List<IExcelTestTopic>();
-         
-            testTopics.Add(new BasicEtkFeaturesTests(this));
-            testTopics.Add(new BasicVerticalNoHeaderAndFooterTests(this));
-            testTopics.Add(new BasicVerticalMonoHeaderAndFooterTests(this));
-            testTopics.Add(new BasicVerticalMultiHeaderAndFooterTests(this));
+            IEnumerable<Type> types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(ExcelTestTopic)))
+                                                                                .OrderBy(t => t.Name);
+            testTopics = types.Select(t => Activator.CreateInstance(t, new[] { this }) as IExcelTestTopic).ToList();
         }
         #endregion
 
@@ -56,37 +52,44 @@
         }
 
         /// <summary>
-        /// Execution of all the tests declared on the test topics declared on this class (property 'TestTopics').
+        /// Execution of all the tests of the test topics.
         ///<br/>Invoke by double-clicking on the template button 'ExecuteTopic All TestTopics' on the template 'Main' declared on the sheet 'Dashboard Templates'.
         /// </summary>
         public void Execute()
         {
-            foreach (IExcelTestTopic topic in TestTopics)
-                ExecuteTopic(topic);
+            ExecuteTopics(TestTopics);
         }
 
         /// <summary>
-        /// Execution of all the tests declared on the test topics declared on this class (property 'TestTopics').
+        /// Execution of all the tests of the current test topic declared on this class (property 'TestTopics').
         ///<br/>Invoke by double-clicking on the template button 'ExecuteTopic All TestTopics' on the template 'Main' declared on the sheet 'Dashboard Templates'.
         /// </summary>
         public void ExecuteTopic(IExcelTestTopic topic)
         {
+            ExecuteTopics(new[] { topic });
+        }
+        #endregion
+
+        #region private methods
+        private void ExecuteTopics(IEnumerable<IExcelTestTopic> topics)
+        {
             Status = "Executing ...";
-            topic.InitTestsStatus();
-            ETKExcel.ExcelApplication.PostAsynchronousAction(() =>
-                    {
-                        try
+            IEnumerable<Action> actions = topics.Select(topic => new Action(() =>
                         {
-                            topic.ExecuteTests();
-                        }
-                        finally
-                        {
-                            Status = string.Empty;
-                            ExcelInterop.Worksheet dashBoardSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, "Dashboard");
-                            if (dashBoardSheet != null)
-                                ((ExcelInterop._Worksheet) dashBoardSheet).Activate();
-                       }
-                    });
+                            topic.InitTestsStatus();
+                            try
+                            {
+                                topic.ExecuteTests();
+                            }
+                            finally
+                            {
+                                ExcelInterop.Worksheet dashBoardSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, "Dashboard");
+                                if (dashBoardSheet != null)
+                                    ((ExcelInterop._Worksheet)dashBoardSheet).Activate();
+                            }
+                        }));
+
+            ETKExcel.ExcelApplication.PostAsynchronousActions(actions, () => Status = string.Empty);
         }
         #endregion
     }

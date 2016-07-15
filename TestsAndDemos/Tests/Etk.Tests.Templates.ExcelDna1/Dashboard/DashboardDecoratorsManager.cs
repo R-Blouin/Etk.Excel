@@ -2,7 +2,7 @@
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.Tests.Templates.ExcelDna1.Tests;
 
-namespace Etk.Tests.Templates.ExcelDna1
+namespace Etk.Tests.Templates.ExcelDna1.Dashboard
 {
     /// <summary>Manage the decorators declared in the templates used by the Dashboard </summary>
     static class DashboardDecoratorsManager

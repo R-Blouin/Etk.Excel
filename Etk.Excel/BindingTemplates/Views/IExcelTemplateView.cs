@@ -7,10 +7,17 @@ namespace Etk.Excel.BindingTemplates.Views
 {
     public interface IExcelTemplateView : ITemplateView
     {
+        /// <summary>Get the the sheet that contains the view</summary>
+        ExcelInterop.Worksheet ViewSheet { get; }
         /// <summary>Contains the range rendered by the View</summary>
         ExcelInterop.Range RenderedRange { get; }
         /// <summary>Contains the size of the rendered aread</summary>
         RenderedArea RenderedArea { get; }
+        /// <summary>Set/get if view must autofit after a complete rendering (default is true</summary>
+        bool AutoFit { get; set; }
+        /// <summary>Set the cell uses to clear the rendered area of the view</summary>
+        ExcelInterop.Range ClearingCell { get; set; }
+
 
         /// <summary>Event calls when a data bound this the View is changed</summary>
         event Action<object, object> DataChanged;
@@ -18,13 +25,10 @@ namespace Etk.Excel.BindingTemplates.Views
         event Action<bool> BeforeRendering;
         /// <summary>Event calls after the rendering of the View (When the rendering is done with 'Render' function, the parameter is set to false. When the rendering is done with 'RenderDataOnly' function, the parameter is set to true</summary>
         event Action<bool> AfterRendering;
-        /// <summary>Event calls when the sheet that owned the View is activate. The Parameter contains the concerned View</summary>
-        event Action<IExcelTemplateView> SheetActivation;
-
-        bool AutoFit {get; set;}
-
-        /// <summary>Set the cell uses to clear the rendered area of the view</summary>
-        ExcelInterop.Range ClearingCell { get; set; }
+        /// <summary>Event calls when the sheet that contains the view is activated. The Parameter is the concerned View</summary>
+        event Action<IExcelTemplateView> ViewSheetIsActivated;
+        /// <summary>Event calls when the sheet that contains the view is desactivated. The Parameter is the concerned View</summary>
+        event Action<IExcelTemplateView> ViewSheetIsDeactivated;
 
         void SetAccessorParameters(IEnumerable<object> parameters);
     }

@@ -102,10 +102,7 @@ namespace Etk.Excel.Application
 
         private void ExecuteNotity(ExcelNotityPropertyContext context)
         {
-            if (isDisposed)
-                return;
-
-            if (context.ContextItem.IsDisposed || ! context.View.IsRendered)
+            if (isDisposed || context.ContextItem.IsDisposed || !context.View.IsRendered)
                 return;
 
             ExcelInterop.Worksheet worksheet = context.View.FirstOutputCell.Worksheet;

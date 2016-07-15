@@ -5,7 +5,7 @@
 
     interface IExcelTestTopic
     {
-        string Description { get; }
+        string Description { get; set; }
         bool InitSuccessful { get; }
         string Exception { get; }
         string DestinationSheetName { get; }

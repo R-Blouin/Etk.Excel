@@ -63,7 +63,7 @@
             get 
             { 
                 if(product == null)
-                    product = ProductsManager.GetProduct(ProductId);
+                    product = ProductsManager.Instance.GetProduct(ProductId);
                 return product;
             }
         }

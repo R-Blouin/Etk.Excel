@@ -1,9 +1,5 @@
 ﻿namespace Etk.Tests.Templates.ExcelDna1.Tests.BasicVerticalNoHeaderAndFooter
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using Etk.Excel.BindingTemplates.Views;
 
     class TestRendering : ExcelTest
