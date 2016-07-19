@@ -218,30 +218,26 @@ namespace Etk.Excel.BindingTemplates
                                 ExcelInterop.Range intersect = ExcelApplication.Application.Intersect(view.RenderedRange, targetRange);
                                 if (intersect != null)
                                 {
-                                    IBindingContextItem contextItem = view.GetConcernedContextItem(targetRange);
-                                    if (contextItem != null)
+                                    IBindingContextItem currentContextItem = view.GetConcernedContextItem(targetRange);
+                                    if (currentContextItem != null)
                                     {
                                         // User contextual menu
-                                        IBindingContextElement currentContextElement = contextItem.ParentElement;
-                                        if (currentContextElement != null)
+                                        IBindingContextElement catchingContextElement = currentContextItem.ParentElement;
+                                        do
                                         {
-                                            IBindingContextElement targetedContextElement = currentContextElement;
-                                            do
+                                            ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
+                                            if ((currentTemplateDefinition.Parent as ExcelTemplateDefinition).ContextualMenu != null)
                                             {
-                                                ExcelTemplateDefinitionPart currentTemplateDefinition = currentContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                                                if ((currentTemplateDefinition.Parent as ExcelTemplateDefinition).ContextualMenu != null)
-                                                {
-                                                    ContextualMenu contextualMenu = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).ContextualMenu as ContextualMenu;
-                                                    contextualMenu.SetAction(targetRange, currentContextElement, targetedContextElement);
-                                                    menus.Insert(0, contextualMenu);
-                                                }
-                                                currentContextElement = currentContextElement.ParentPart.ParentContext == null ? null : currentContextElement.ParentPart.ParentContext.Parent;
+                                                ContextualMenu contextualMenu = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).ContextualMenu as ContextualMenu;
+                                                contextualMenu.SetAction(targetRange, catchingContextElement, currentContextItem.ParentElement);
+                                                menus.Insert(0, contextualMenu);
                                             }
-                                            while (currentContextElement != null);
+                                            catchingContextElement = catchingContextElement.ParentPart.ParentContext == null ? null : catchingContextElement.ParentPart.ParentContext.Parent;
                                         }
+                                        while (catchingContextElement != null);
                                     
                                         // Etk sort, search and filter
-                                        IContextualMenu searchSortAndFilterMenu = sortSearchAndFilterMenuManager.GetMenus(view, targetRange, contextItem);
+                                        IContextualMenu searchSortAndFilterMenu = sortSearchAndFilterMenuManager.GetMenus(view, targetRange, currentContextItem);
                                         if (searchSortAndFilterMenu != null)
                                             menus.Insert(0, searchSortAndFilterMenu);
                                     }

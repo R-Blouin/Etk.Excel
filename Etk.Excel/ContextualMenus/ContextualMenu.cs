@@ -34,16 +34,16 @@ namespace Etk.Excel.ContextualMenus
         #endregion
 
         #region public methods
-        public void SetAction(ExcelInterop.Range range, IBindingContextElement currentContextElement, IBindingContextElement targetedContextElement)
+        public void SetAction(ExcelInterop.Range range, IBindingContextElement catchingContextElement, IBindingContextElement currentContextItem)
         {
             if (Items != null)
             {
                 foreach(IContextualPart part in Items)
                 {
                     if (part is ContextualMenu)
-                        (part as ContextualMenu).SetAction(range, targetedContextElement, currentContextElement);
+                        (part as ContextualMenu).SetAction(range, catchingContextElement, currentContextItem);
                     else
-                        (part as ContextualMenuItem).SetAction(range, targetedContextElement, currentContextElement);
+                        (part as ContextualMenuItem).SetAction(range, catchingContextElement, currentContextItem);
                 }
             }
         }

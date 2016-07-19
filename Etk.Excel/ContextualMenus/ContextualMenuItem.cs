@@ -47,19 +47,19 @@ namespace Etk.Excel.ContextualMenus
         }
         #endregion
 
-        public void SetAction(ExcelInterop.Range range, IBindingContextElement currentContextElement, IBindingContextElement targetedContextElement)
+        public void SetAction(ExcelInterop.Range range, IBindingContextElement catchingContextElement, IBindingContextElement currentContextItem)
         {
-            ExcelTemplateDefinitionPart currentTemplateDefinition = currentContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
+            //ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
             if (MethodInfo != null)
             {
-                object concernedObject = MethodInfo.IsStatic ? null : currentContextElement.DataSource;
+                object concernedObject = MethodInfo.IsStatic ? null : catchingContextElement.DataSource;
                 int nbrParameters = MethodInfo.GetParameters().Count();
                 if (nbrParameters == 3)
-                    Action = () => MethodInfo.Invoke(concernedObject, new object[] { range, currentContextElement.DataSource, targetedContextElement.DataSource });
+                    Action = () => MethodInfo.Invoke(concernedObject, new object[] { range, catchingContextElement.DataSource, currentContextItem.DataSource });
                 else if (nbrParameters == 2)
-                    Action = () => MethodInfo.Invoke(concernedObject, new object[] { currentContextElement.DataSource, targetedContextElement.DataSource });
+                    Action = () => MethodInfo.Invoke(concernedObject, new object[] { catchingContextElement.DataSource, currentContextItem.DataSource });
                 else if (nbrParameters == 1)
-                    Action = () => MethodInfo.Invoke(concernedObject, new object[] { currentContextElement.DataSource });
+                    Action = () => MethodInfo.Invoke(concernedObject, new object[] { catchingContextElement.DataSource });
                 else
                     Action = () => MethodInfo.Invoke(concernedObject, null);
             }

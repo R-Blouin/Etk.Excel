@@ -19,7 +19,7 @@ namespace Etk
         #endregion
 
         #region attributes and properties
-        public CompositionContainer container;   
+        private CompositionContainer container;   
         #endregion
 
         #region .ctors

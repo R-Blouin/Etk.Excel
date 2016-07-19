@@ -77,7 +77,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         }
 
         #region public methods
-        public bool Invoke(MethodInfo callback, object sender, IBindingContextElement catchingContextElement, IBindingContextElement selectedContextElement)
+        public bool Invoke(MethodInfo callback, object sender, IBindingContextElement catchingContextElement, IBindingContextElement currentContextItem)
         {
             object invokeTarget = callback.IsStatic ? null : catchingContextElement.DataSource;
             int nbrParameters = callback.GetParameters().Length;
@@ -89,13 +89,13 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             switch (nbrParameters)
             {
                 case 3:
-                    parameters = new object[] { sender, catchingContextElement.DataSource, selectedContextElement.DataSource };
+                    parameters = new object[] { sender, catchingContextElement.DataSource, currentContextItem.DataSource };
                 break;
                 case 2:
                     if(callback.GetParameters()[0].ParameterType == typeof(ITemplateView))
                         parameters = new object[] { catchingContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
                     else
-                        parameters = new object[] { catchingContextElement.DataSource, selectedContextElement.DataSource };
+                        parameters = new object[] { catchingContextElement.DataSource, currentContextItem.DataSource };
                 break;
                 case 1:
                     parameters = new object[] { catchingContextElement.DataSource };

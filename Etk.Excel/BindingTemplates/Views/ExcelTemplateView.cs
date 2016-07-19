@@ -527,20 +527,20 @@ namespace Etk.Excel.BindingTemplates.Views
                     {
                         CurrentSelectedCell = target.Cells[1, 1];
 
-                        IBindingContextItem contextItem = GetConcernedContextItem(target);
-                        if (contextItem != null && contextItem.BindingDefinition != null)
+                        IBindingContextItem currentContextItem = GetConcernedContextItem(target);
+                        if (currentContextItem != null && currentContextItem.BindingDefinition != null)
                         {
                             // If the binding excelBindingDefinition contains a selection callback: invoke it !
-                            if (contextItem.BindingDefinition.OnSelection != null)
+                            if (currentContextItem.BindingDefinition.OnSelection != null)
                             {
-                                ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(contextItem.BindingDefinition.OnSelection, 
-                                                                                                         target, contextItem.ParentElement, contextItem.ParentElement);
+                                ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(currentContextItem.BindingDefinition.OnSelection, 
+                                                                                                         target, currentContextItem.ParentElement, currentContextItem.ParentElement);
                             }
                             else
                             {
                                 // Ask the containing template (and its owner and the owner of its owner etc.... => bubble up the event)) if they contain a selection callback
                                 // Invoke the first found 
-                                IBindingContextElement catchingContextElement = contextItem.ParentElement;
+                                IBindingContextElement catchingContextElement = currentContextItem.ParentElement;
                                 bool isResolved = false;
                                 do
                                 {
@@ -548,7 +548,7 @@ namespace Etk.Excel.BindingTemplates.Views
                                     MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
                                     if (callback != null)
                                     {
-                                        ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, contextItem.ParentElement);
+                                        ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem.ParentElement);
                                         isResolved = true;
                                     }
                                     if (!isResolved)
@@ -577,31 +577,31 @@ namespace Etk.Excel.BindingTemplates.Views
             if (intersect == null)
                 return false;
 
-            IBindingContextItem contextItem = GetConcernedContextItem(target);
-            if (contextItem != null && contextItem.BindingDefinition != null)
+            IBindingContextItem currentContextItem = GetConcernedContextItem(target);
+            if (currentContextItem != null && currentContextItem.BindingDefinition != null)
             {
-                if (contextItem.BindingDefinition.IsReadOnly)
+                if (currentContextItem.BindingDefinition.IsReadOnly)
                     cancel = true;
 
                 // If the bound excelBindingDefinition contains a left double click callback: invoke it !
-                if (contextItem.BindingDefinition.OnClick != null)
+                if (currentContextItem.BindingDefinition.OnClick != null)
                 {
-                    ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(contextItem.BindingDefinition.OnClick, 
-                                                                                                target, contextItem.ParentElement, contextItem.ParentElement);
+                    ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(currentContextItem.BindingDefinition.OnClick, 
+                                                                                                target, currentContextItem.ParentElement, currentContextItem.ParentElement);
                     cancel = true;
                 }
                 else
                 {
                     // If not, ask the containing template (and its owner and the owner of its owner etc.... => bubble up the event)) if they contain a left double click callback
                     // Invoke the first found 
-                    IBindingContextElement catchingContextElement = contextItem.ParentElement;
+                    IBindingContextElement catchingContextElement = currentContextItem.ParentElement;
                     do
                     {
                         ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
                         MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).OnLeftDoubleClick;
                         if (callback != null)
                         {
-                            ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, contextItem.ParentElement);
+                            ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem.ParentElement);
                             cancel = true;
                         }
                         if (!cancel)
