@@ -65,6 +65,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public MethodInfo MultiLineFactorResolver
         { get; private set; }
 
+        public bool? ShowHideStartShown
+        { get; private set; }
+
         #region .ctors and factories
         public BindingDefinitionDescription()
         {}
@@ -142,7 +145,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                                         if (MultiLineFactorResolver.ReturnType != typeof(int) || 
                                             parametersCpt > 1 ||
                                             (parametersCpt == 1 && !(MultiLineFactorResolver.GetParameters()[0].ParameterType.IsAssignableFrom(typeof(object)))))
-                                            throw new Exception("The function prototype must be  be defined as 'int <Function Name>([param]) with 'param' inheriting from 'system.object'");
+                                            throw new Exception("The function prototype must be defined as 'int <Function Name>([param]) with 'param' inheriting from 'system.object'");
                                         IsMultiLine = true;
                                     }
                                 }
@@ -151,6 +154,32 @@ namespace Etk.BindingTemplates.Definitions.Binding
                                     throw new Exception(string.Format("Cannot resolve the 'ME' attribute for the binding definition '{0}'", bindingExpression), ex);
                                 }
                             }
+                        }
+                        // On double left click, Show/Hide the x following/preceding colums. Start hidden  
+                        if (option.StartsWith("SHC="))
+                        {
+                            string numberOfConcernedColumns = option.Substring(4);
+                            int wrk; 
+                            if (string.IsNullOrEmpty(numberOfConcernedColumns) && int.TryParse(numberOfConcernedColumns, out wrk))
+                            {
+                                //OnLeftDoubleClick = todo
+                                ShowHideStartShown = false;
+                                continue;
+                            }
+                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SHC=<int>' whre '<int>' is a integer");
+                        }
+                        // On double left click, Show/Hide the x following/preceding colums. Start shown
+                        if (option.StartsWith("HSC="))
+                        {
+                            string numberOfConcernedColumns = option.Substring(4);
+                            int wrk;
+                            if (string.IsNullOrEmpty(numberOfConcernedColumns) && int.TryParse(numberOfConcernedColumns, out wrk))
+                            {
+                                //OnLeftDoubleClick = todo
+                                ShowHideStartShown = true;
+                                continue;
+                            }
+                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'HSC=<int>' whre '<int>' is a integer");
                         }
                     }
                 }

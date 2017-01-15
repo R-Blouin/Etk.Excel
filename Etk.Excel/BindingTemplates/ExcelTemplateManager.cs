@@ -86,7 +86,7 @@ namespace Etk.Excel.BindingTemplates
         #endregion
 
         #region private methods
-        private ExcelTemplateView CreateView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range firstOutputCell, string clearingCellAddress)
+        private ExcelTemplateView CreateView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range firstOutputCell, ExcelInterop.Range clearingCell)
         {
             if (sheetContainer == null)
                 throw new ArgumentNullException("Template container sheet is mandatory");
@@ -97,18 +97,15 @@ namespace Etk.Excel.BindingTemplates
             if (firstOutputCell == null)
                 throw new ArgumentNullException("Template first output cell is mandatory");
 
-            ExcelInterop.Range clearingCell = null;
-            if (!string.IsNullOrEmpty(clearingCellAddress))
+            if (clearingCell == null)
             {
                 try
                 {
-                    ExcelInterop.Range workingCell = sheetDestination.Range[clearingCellAddress];
-                    clearingCell = workingCell.Cells[1, 1];
-                    workingCell = null;
+                    clearingCell = sheetContainer.Cells[1, 1];
                 }
                 catch
                 {
-                    throw new ArgumentException(string.Format("The clearing cell value '{0}' is not valid", clearingCellAddress));
+                    throw new ArgumentException("The clearing cell value");
                 }
             }
 
@@ -441,7 +438,7 @@ namespace Etk.Excel.BindingTemplates
 
         #region IExcelTemplateManager Members
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
-        public IExcelTemplateView AddView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range destinationRange, string clearingCell)
+        public IExcelTemplateView AddView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range destinationRange, ExcelInterop.Range clearingCell)
         {
             try
             {
@@ -465,7 +462,7 @@ namespace Etk.Excel.BindingTemplates
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
-        public IExcelTemplateView AddView(string sheetTemplateName, string templateName, string sheetDestinationName, string destinationRange, string clearingCell)
+        public IExcelTemplateView AddView(string sheetTemplateName, string templateName, string sheetDestinationName, string destinationRange, string clearingCellName)
         {
             ExcelInterop.Workbook workbook = null;
             ExcelInterop.Worksheet sheetContainer = null;
@@ -486,6 +483,14 @@ namespace Etk.Excel.BindingTemplates
                 sheetDestination = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetDestinationName);
                 if (sheetDestination == null)
                     throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetDestinationName);
+
+                ExcelInterop.Range clearingCell = null;
+                if (! string.IsNullOrEmpty(clearingCellName))
+                {
+                    clearingCell =  ETKExcel.ExcelApplication.Application.Range[clearingCellName];
+                    if (clearingCell == null)
+                        throw new ArgumentException(string.Format("Cannot find the clearing cell '{0}'. Please use the 'sheetname!rangeaddress' format"), clearingCellName);
+                }
 
                 ExcelInterop.Range destinationRangeRange = sheetDestination.Range[destinationRange];
                 IExcelTemplateView view = AddView(sheetContainer, templateName, sheetDestination, destinationRangeRange, clearingCell);
@@ -636,7 +641,7 @@ namespace Etk.Excel.BindingTemplates
             return iViews;
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.Render"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.RenderView"/> </summary> 
         public void Render(IEnumerable<IExcelTemplateView> views)
         {
             if (views == null)
@@ -660,7 +665,7 @@ namespace Etk.Excel.BindingTemplates
                                     try
                                     {
                                         excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
-                                        excelTemplateView.Render();
+                                        excelTemplateView.RenderView();
                                     }
                                     finally
                                     {
@@ -683,21 +688,21 @@ namespace Etk.Excel.BindingTemplates
             }
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.Render"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.RenderView"/> </summary> 
         public void Render(IExcelTemplateView view)
         {
             if (view != null)
                 Render(new IExcelTemplateView[] { view });
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.RenderDataOnly"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.RenderViewDataOnly"/> </summary> 
         public void RenderDataOnly(IExcelTemplateView view)
         {
             if (view != null)
                 RenderDataOnly(new IExcelTemplateView[] { view });
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.RenderDataOnly"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.RenderViewDataOnly"/> </summary> 
         public void RenderDataOnly(IEnumerable<IExcelTemplateView> views)
         {
             if (views == null)
@@ -721,7 +726,7 @@ namespace Etk.Excel.BindingTemplates
                                     try
                                     {
                                         excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
-                                        excelTemplateView.RenderDataOnly();
+                                        excelTemplateView.RenderViewDataOnly();
                                     }
                                     finally
                                     {
@@ -744,7 +749,7 @@ namespace Etk.Excel.BindingTemplates
             }
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.ClearView"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.Clear"/> </summary> 
         public void ClearView(IExcelTemplateView view)
         {
             if (view != null)

@@ -68,7 +68,7 @@
             // Inject the data source
             ExcelTestsManager testsManager = new ExcelTestsManager();
             view.SetDataSource(testsManager);
-            // Render the dashboard
+            // RenderView the dashboard
             ETKExcel.TemplateManager.Render(view);
         }
         #endregion

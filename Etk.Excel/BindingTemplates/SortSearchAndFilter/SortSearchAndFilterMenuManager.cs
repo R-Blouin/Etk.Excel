@@ -77,7 +77,7 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
             ETKExcel.TemplateManager.ClearView(view as ExcelTemplateView);
             // We reinject the datasource to force the filtering
             view.CreateBindingContext(currentDataSource);
-            // Render the view to see the filering application
+            // RenderView the view to see the filering application
             ETKExcel.TemplateManager.Render(view as ExcelTemplateView);
         }
 

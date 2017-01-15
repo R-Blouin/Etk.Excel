@@ -315,6 +315,32 @@ namespace Etk.Excel.BindingTemplates.Views
             CellsThatContainSearchValue.Clear();
             base.SetDataSource(dataSource);
         }
+
+        public void Render()
+        {
+            ETKExcel.TemplateManager.Render(this);
+        }
+
+        public void RenderDataOnly()
+        {
+            ETKExcel.TemplateManager.RenderDataOnly(this);
+        }
+
+        public void ClearView()
+        {
+            ETKExcel.TemplateManager.ClearView(this);
+        }
+
+        public void ExecuteAutoFit()
+        {
+            if (Renderer != null && Renderer.RenderedRange != null)
+            {
+                if (TemplateDefinition.Orientation == Orientation.Horizontal)
+                    Renderer.RenderedRange.Rows.AutoFit();
+                else
+                    Renderer.RenderedRange.Columns.AutoFit();
+            }
+        }
         #endregion
 
         #region internal methods
@@ -359,7 +385,7 @@ namespace Etk.Excel.BindingTemplates.Views
             //    {
             //        viewToRender = viewToRender.ParentElement;
             //    }
-            //    ETKExcel.TemplateManager.Render((IExcelTemplateView)viewToRender);
+            //    ETKExcel.TemplateManager.RenderView((IExcelTemplateView)viewToRender);
             //}
         }
 
@@ -400,7 +426,7 @@ namespace Etk.Excel.BindingTemplates.Views
         /// <summary>
         /// Bind the template to Excel => Refresh Excel cells from the datasource currently injected. 
         /// </summary>
-        internal void Render()
+        internal void RenderView()
         {
             lock (syncRoot)
             {
@@ -421,7 +447,8 @@ namespace Etk.Excel.BindingTemplates.Views
                             Renderer.Clear();
 
                             Renderer.Render();
-                            ExecuteAutoFit();
+                            if(AutoFit)
+                                ExecuteAutoFit();
 
                             if (log.GetLogLevel() == LogType.Debug)
                                 log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
@@ -440,9 +467,9 @@ namespace Etk.Excel.BindingTemplates.Views
         }
 
         /// <summary>
-        /// Bind the template to Excel => Render Excel cells based on the datasource currently injected. 
+        /// Bind the template to Excel => RenderView Excel cells based on the datasource currently injected. 
         /// </summary>
-        internal void RenderDataOnly()
+        internal void RenderViewDataOnly()
         {
             lock (syncRoot)
             {
@@ -454,7 +481,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     try
                     {
                         if (Renderer.RenderedRange == null)
-                            Render();
+                            RenderView();
                         else
                         {
                             using (FreezeExcel freezeExcel = new FreezeExcel())
@@ -709,17 +736,6 @@ namespace Etk.Excel.BindingTemplates.Views
                 }
                 currentSelectedRangePattern.Clear();
                 currentSelectedRange = null;
-            }
-        }
-
-        private void ExecuteAutoFit()
-        {
-            if (AutoFit && Renderer.RenderedRange != null)
-            {
-                if (TemplateDefinition.Orientation == Orientation.Horizontal)
-                    Renderer.RenderedRange.Rows.AutoFit();
-                else
-                    Renderer.RenderedRange.Columns.AutoFit();
             }
         }
         #endregion

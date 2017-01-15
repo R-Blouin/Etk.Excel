@@ -153,11 +153,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             renderingContext.LinkedViewRenderedWidth = 0;
                             renderingContext.PosCurrentLink = posLinks[linkCpt];
                             renderingContext.LinkedTemplateDefinition = partToRenderDefinition.DefinitionParts[rowId, renderingContext.PosCurrentLink] as LinkedTemplateDefinition;
-                            // Render before link
+                            // RenderView before link
                             if (renderingContext.PosCurrentLink > 0)
                                 bindingContextItemsCpt = RenderBeforeLink(renderingContext, linkCpt, worksheetTo, bindingContextItemsCpt);
 
-                            // Render link
+                            // RenderView link
                             IBindingContext linkedBindingContext = contextElement.LinkedBindingContexts[cptLinkedDefinition++];
                             if (linkedBindingContext.Body != null && (renderingContext.LinkedTemplateDefinition.MinOccurencesMethod != null || linkedBindingContext.Body.ElementsToRender != null && linkedBindingContext.Body.ElementsToRender.Any()))
                             {
@@ -165,7 +165,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                                 renderingContext.CurrentRowWidth += renderingContext.LinkedViewRenderedWidth;
                             }
 
-                            // Render after link
+                            // RenderView after link
                             if (linkCpt == lastPosLink && renderingContext.PosCurrentLink != partToRenderDefinition.Width)
                                 bindingContextItemsCpt = RenderAfterLink(renderingContext, bindingContextItemsCpt);
 

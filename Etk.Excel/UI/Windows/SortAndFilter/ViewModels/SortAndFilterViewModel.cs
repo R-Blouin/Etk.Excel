@@ -171,7 +171,7 @@ namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
 
             rootTemplateView.SetDataSource(rootTemplateView.GetDataSource());
             ETKExcel.TemplateManager.Render(rootTemplateView as IExcelTemplateView);
-            //@à((RootTemplateView) rootTemplateView).Render();
+            //@à((RootTemplateView) rootTemplateView).RenderView();
             //MetroFormWpfContainer.CloseWindowCommandRouted.Execute(null, null);
         }
 
