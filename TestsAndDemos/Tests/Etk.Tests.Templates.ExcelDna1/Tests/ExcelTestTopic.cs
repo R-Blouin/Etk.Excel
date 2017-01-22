@@ -14,29 +14,28 @@
         #region properties and attributes
         private IExcelTestsManager testManager;
         private ExcelInterop.Worksheet templatesSheet = null;
-        private ExcelInterop.Worksheet viewSheet = null;
-        private bool initDone;
+        private ExcelInterop.Worksheet viewsOwnerSheet = null;
+        private bool renderDone;
 
-        public IExcelTemplateView View
-        { get; private set; }
+        public IExcelTemplateView TopicView { get; private set; }
+        public IExcelTemplateView GoBackView { get; private set; }
 
-        public string Description
-        { get;  set; }
+        public int Id { get; private set; }
 
-        public List<IExcelTest> Tests
-        { get; private set; }
+        public string Description { get; private set; }
 
-        public string DestinationSheetName
-        { get; private set; }
+        public List<IExcelTest> Tests { get; private set; }
 
-        private bool initSuccessful;
-        public bool InitSuccessful
+        public string DestinationSheetName { get; private set; }
+
+        private bool renderSuccessful;
+        public bool RenderSuccessful
         {
-            get { return initSuccessful; }
+            get { return renderSuccessful; }
             private set
             {
-                initSuccessful = value;
-                OnPropertyChanged("InitSuccessful");
+                renderSuccessful = value;
+                OnPropertyChanged("RenderSuccessful");
             }
         }
 
@@ -53,15 +52,53 @@
         #endregion
 
         #region .ctors
-        protected ExcelTestTopic(IExcelTestsManager testManager, string description)
+        protected ExcelTestTopic(IExcelTestsManager testManager, int id, string description, string destinationSheetName)
         {
             this.testManager = testManager;
+            Id = id;
             Description = description;
+            DestinationSheetName = destinationSheetName;
             Tests = new List<IExcelTest>();
         }
         #endregion
 
         #region pubic methods
+        public void Init()
+        {
+            try
+            {
+                viewsOwnerSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, DestinationSheetName);
+
+                // Create the destination sheet
+                ExcelInterop.Workbook workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
+                ExcelInterop.Sheets sheets = workbook.Sheets;
+                ExcelInterop.Worksheet lastSheet = workbook.Sheets[sheets.Count];
+                ExcelInterop.Worksheet firstSheet = workbook.Sheets[1];
+
+                viewsOwnerSheet = workbook.Worksheets.Add(Type.Missing, lastSheet);
+                viewsOwnerSheet.Name = DestinationSheetName;
+                viewsOwnerSheet.Visible = ExcelInterop.XlSheetVisibility.xlSheetHidden;
+
+                firstSheet.Activate();
+
+                Marshal.ReleaseComObject(firstSheet);
+                Marshal.ReleaseComObject(lastSheet);
+                Marshal.ReleaseComObject(sheets);
+                Marshal.ReleaseComObject(workbook);
+                // End create the destination sheet
+
+                // Create the 'GoBackToDashboard' view
+                GoBackView = ETKExcel.TemplateManager.AddView("Dashboard Templates", "GoBackToDashboard", DestinationSheetName, "A1");
+                GoBackView.SetDataSource(new GoBackToDashBoardManager());
+                GoBackView.Render();
+                // End create the 'GoBackToDashboard' view
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Init Topics failed:{0}", ex.Message), ex);
+            }
+        }
+
         public void InitTestsStatus()
         {
             Tests.ForEach(t => t.InitTestStatus());
@@ -78,15 +115,15 @@
 
         public void ExecuteTests()
         {
-            if (!initDone)
-                Init();
+            if (!renderDone)
+                Render();
 
-            if (!InitSuccessful)
+            if (!RenderSuccessful)
                 return;
 
             try
             {
-                Tests.ForEach(t => t.Execute(View));
+                Tests.ForEach(t => t.Execute(TopicView));
             }
             catch (Exception ex)
             {
@@ -101,60 +138,52 @@
         #endregion
 
         #region protected methods
-        abstract protected void RealInit();
+        abstract protected void RenderViews();
 
-        protected void CreateView(string destinationSheetName, string templateSheetName, string templateName)
+        protected void CreateViews(string templateSheetName, string templateName)
         {
-            DestinationSheetName = destinationSheetName;
-            if (View != null)
-                ETKExcel.TemplateManager.RemoveView(View);
-
-            templatesSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, templateSheetName);
-            viewSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, destinationSheetName);
-            if(viewSheet == null)
-            {
-                ExcelInterop.Workbook workbook = templatesSheet.Parent;
-                ExcelInterop.Sheets sheets = workbook.Sheets;
-                ExcelInterop.Worksheet lastSheets = workbook.Sheets[sheets.Count];
-
-                viewSheet = workbook.Worksheets.Add(Type.Missing, lastSheets); 
-                viewSheet.Name = destinationSheetName;
-
-                Marshal.ReleaseComObject(lastSheets);
-                Marshal.ReleaseComObject(sheets);
-                Marshal.ReleaseComObject(workbook);
-            }
-            else
-            {
-                ExcelInterop.Range usedRange = viewSheet.UsedRange;
-                if(usedRange != null)
-                    usedRange .Clear();
-                usedRange  = null;
-            }
-
-            ExcelInterop.Range firstRange = viewSheet.Range["B3"];
-            View = ETKExcel.TemplateManager.AddView(templatesSheet, templateName, viewSheet, firstRange);
-            firstRange = null;
+            CreateTopicView(templateSheetName, templateName);
         }
         #endregion
 
         #region private methods
-        private void Init()
+        private void Render()
         {
             try
             {
-                RealInit();
-
-                InitSuccessful = true;
+                RenderViews();
+                RenderSuccessful = true;
             }
             catch (Exception ex)
             {
-                InitSuccessful = false;
-                Exception = ex.ToString("Initialization failed");
+                RenderSuccessful = false;
+                Exception = ex.ToString("Render failed");
             }
             finally
             {
-                initDone = true;
+                renderDone = true;
+            }
+        }
+ 
+        private void CreateTopicView(string templateSheetName, string templateName)
+        {
+            try
+            {
+                if (TopicView == null)
+                {
+                    templatesSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, templateSheetName);
+                    viewsOwnerSheet.Visible = ExcelInterop.XlSheetVisibility.xlSheetVisible;
+                }
+                else
+                    ETKExcel.TemplateManager.RemoveView(TopicView);
+
+                ExcelInterop.Range firstRange = viewsOwnerSheet.Range["B3"];
+                TopicView = ETKExcel.TemplateManager.AddView(templatesSheet, templateName, viewsOwnerSheet, firstRange);
+                firstRange = null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("Cannot create topic view:{0}", ex.Message), ex);
             }
         }
         #endregion

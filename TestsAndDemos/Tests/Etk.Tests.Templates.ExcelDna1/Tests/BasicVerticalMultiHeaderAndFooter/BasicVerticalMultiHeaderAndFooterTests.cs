@@ -6,18 +6,18 @@
     class BasicVerticalMultiHeaderAndFooterTests : ExcelTestTopic
     {
         public BasicVerticalMultiHeaderAndFooterTests(IExcelTestsManager testManager)
-               : base(testManager, "Tests on a basic template (without linked templates) with a 2 lines header and 2 lines footer")
+               : base(testManager, 2, "Tests on a basic template (without linked templates) with a 2 lines header and 2 lines footer", "VerticalMultiHeaderAndFooter")
         {
             Tests.Add(new TestCompleteView(this));
             Tests.Add(new TestViewParts(this));
         }
 
-        override protected void RealInit()
+        override protected void RenderViews()
         {
-            CreateView("VerticalMultiHeaderAndFooter", "BasicTemplates1", "BasicVerticalMultiHeaderAndFooter");
+            CreateViews("BasicTemplates1", "BasicVerticalMultiHeaderAndFooter");
 
-            View.SetDataSource(ShopManager.GetShops());
-            ETKExcel.TemplateManager.Render(View);
+            TopicView.SetDataSource(ShopManager.GetShops());
+            ETKExcel.TemplateManager.Render(TopicView);
         }
     }
 }

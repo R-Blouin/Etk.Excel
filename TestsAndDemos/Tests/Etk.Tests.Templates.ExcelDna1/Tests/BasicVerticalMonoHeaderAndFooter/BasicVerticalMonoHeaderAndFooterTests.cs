@@ -6,18 +6,18 @@
     class BasicVerticalMonoHeaderAndFooterTests : ExcelTestTopic
     {
         public BasicVerticalMonoHeaderAndFooterTests(IExcelTestsManager testManager)
-               : base(testManager, "Tests on a basic template (without linked templates) with a one line header and a one line footer")
+               : base(testManager, 1, "Tests on a basic template (without linked templates) with a one line header and a one line footer", "VerticalMonoHeaderAndFooter")
         {
             Tests.Add(new TestCompleteView(this));
             Tests.Add(new TestViewParts(this));
         }
 
-        override protected void RealInit()
+        override protected void RenderViews()
         {
-            CreateView("VerticalMonoHeaderAndFooter", "BasicTemplates1", "BasicVerticalMonoHeaderAndFooter");
+            CreateViews("BasicTemplates1", "BasicVerticalMonoHeaderAndFooter");
 
-            View.SetDataSource(ShopManager.GetShops());
-            ETKExcel.TemplateManager.Render(View);
+            TopicView.SetDataSource(ShopManager.GetShops());
+            ETKExcel.TemplateManager.Render(TopicView);
         }
     }
 }

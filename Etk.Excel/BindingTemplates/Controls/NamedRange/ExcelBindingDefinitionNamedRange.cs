@@ -160,7 +160,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
                 {
                     rootName = trimmedName.Remove(pos);
                     string expression = trimmedName.Substring(pos);
-                    BindingDefinitionDescription bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(expression, expression);
+                    BindingDefinitionDescription bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinition.Parent, expression, expression);
                     if(bindingDefinitionDescription != null && ! string.IsNullOrEmpty(bindingDefinitionDescription.BindingExpression))
                     {
                         if(bindingDefinitionDescription.BindingExpression.Contains(ALL_POS_KEYWORD) || bindingDefinitionDescription.BindingExpression.Contains(POS_KEYWORD))

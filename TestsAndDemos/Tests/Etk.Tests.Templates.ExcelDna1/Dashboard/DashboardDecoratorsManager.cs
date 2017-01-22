@@ -26,7 +26,7 @@ namespace Etk.Tests.Templates.ExcelDna1.Dashboard
         /// <returns>The decorator result</returns>
         static public DecoratorResult DecorateInitSuccessful(IExcelTestTopic concernedTestTopic, string bindingName)
         {
-            if (concernedTestTopic.InitSuccessful)
+            if (concernedTestTopic.RenderSuccessful)
                 return new DecoratorResult(0, null);
             return new DecoratorResult(1, null);
         }

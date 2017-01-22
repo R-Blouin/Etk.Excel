@@ -149,7 +149,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
             }
             else
             {
-                BindingDefinitionDescription bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(value, trimmedValue);
+                BindingDefinitionDescription bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinitionPart.Parent, value, trimmedValue);
                 ret = BindingDefinitionFactory.CreateInstances(templateDefinitionPart.Parent as ExcelTemplateDefinition, bindingDefinitionDescription);
             }
             return ret;

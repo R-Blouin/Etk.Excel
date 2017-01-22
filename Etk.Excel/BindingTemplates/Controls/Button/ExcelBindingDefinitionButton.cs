@@ -58,7 +58,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 try
                 {
                     ExcelButtonDefinition excelButtonDefinition = definition.Deserialize<ExcelButtonDefinition>();
-                    BindingDefinitionDescription definitionDescription = BindingDefinitionDescription.CreateBindingDescription(excelButtonDefinition.Label, excelButtonDefinition.Label);
+                    BindingDefinitionDescription definitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinition, excelButtonDefinition.Label, excelButtonDefinition.Label);
                     ret = new ExcelBindingDefinitionButton(definitionDescription, templateDefinition, excelButtonDefinition);
                 }
                 catch (Exception ex)

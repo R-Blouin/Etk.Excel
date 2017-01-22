@@ -5,17 +5,18 @@
 
     class BasicVerticalWithNothingElseThanALinkedTemplateTests : ExcelTestTopic
     {
-        public BasicVerticalWithNothingElseThanALinkedTemplateTests(IExcelTestsManager testManager) : base(testManager, "Tests on a basic template with nothing else than one linked template")
+        public BasicVerticalWithNothingElseThanALinkedTemplateTests(IExcelTestsManager testManager) 
+               : base(testManager, 3,"Tests on a basic template with nothing else than one linked template", "VerticalWithOnlyOneLink")
         {
             Tests.Add(new TestRendering(this));
         }
 
-        override protected void RealInit()
+        override protected void RenderViews()
         {
-            CreateView("VerticalWithOnlyOneLink", "BasicTemplates1", "BasicVerticalWithNothingElseThanALinkedTemplate");
+            CreateViews("BasicTemplates1", "BasicVerticalWithNothingElseThanALinkedTemplate");
             
-            View.SetDataSource(ProductsManager.Instance);
-            ETKExcel.TemplateManager.Render(View);
+            TopicView.SetDataSource(ProductsManager.Instance);
+            ETKExcel.TemplateManager.Render(TopicView);
         }
     }
 }

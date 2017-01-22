@@ -2,6 +2,7 @@
 {
     using EEtk.Tests.Templates.ExcelDna1.Dashboard;
     using Etk.Excel;
+    using Excel.Application;
     using Etk.Excel.BindingTemplates.Views;
     using ExcelDna.Integration.CustomUI;
     using System.IO;
@@ -36,12 +37,18 @@
         #region 
         private void OnSheetIsActivated(IExcelTemplateView notUsedParameter)
         {
-            taskPane.Visible = true;
+            using (FreezeExcel freeExcel = new FreezeExcel())
+            {
+                taskPane.Visible = true;
+            }
         }
 
         private void OnSheetIsDeactivated(IExcelTemplateView notUsedParameter)
         {
-            taskPane.Visible = false;
+            using (FreezeExcel freeExcel = new FreezeExcel())
+            {
+                taskPane.Visible = false;
+            }
         }
 
         /// <summary> Declare the decorator used in the dashboard</summary>
@@ -64,7 +71,7 @@
         /// <summary> Create and render the dashboard view</summary>
         private void CreateAndRender()
         {
-            view = ETKExcel.TemplateManager.AddView("Dashboard Templates", "Main", "Dashboard", "B2");
+            view = ETKExcel.TemplateManager.AddView("Dashboard Templates", "Main", "Dashboard", "B1");
             // Inject the data source
             ExcelTestsManager testsManager = new ExcelTestsManager();
             view.SetDataSource(testsManager);

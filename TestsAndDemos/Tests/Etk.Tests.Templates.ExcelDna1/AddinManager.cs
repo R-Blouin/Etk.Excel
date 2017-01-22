@@ -21,7 +21,7 @@
             // Init the ETK Framework : mandatory before any uses of the framework
             ETKExcel.Init(ExcelApplication);
 
-            // Create, renderand actuvate the dashboard view
+            // Create, render and activate the dashboard view
             DashboardSheet.CreateAndActivateDashBoard();
         }
 

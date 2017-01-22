@@ -2,6 +2,7 @@
 {
     using Etk.BindingTemplates.Views;
     using Etk.Excel;
+    using Excel.Application;
     using Etk.Excel.UI.MvvmBase;
     using Etk.Tests.Templates.ExcelDna1.Tests;
     using System;
@@ -18,10 +19,7 @@
     class ExcelTestsManager : ViewModelBase, IExcelTestsManager 
     {
         #region attributes and properties 
-        private List<IExcelTestTopic> testTopics;
-
-        public IEnumerable<IExcelTestTopic> TestTopics
-        { get { return testTopics; } }
+        public IEnumerable<IExcelTestTopic> TestTopics { get; private set; }
 
         private string status;
         public string Status
@@ -38,9 +36,17 @@
         #region .Ctors
         public ExcelTestsManager()
         {
-            IEnumerable<Type> types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(ExcelTestTopic)))
-                                                                                .OrderBy(t => t.Name);
-            testTopics = types.Select(t => Activator.CreateInstance(t, new[] { this }) as IExcelTestTopic).ToList();
+            IEnumerable<Type> types = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsSubclassOf(typeof(ExcelTestTopic)));
+            TestTopics = types.Select(t => Activator.CreateInstance(t, new[] { this }) as IExcelTestTopic)
+                              .OrderBy(t => t.Id)
+                              .ThenBy(t => t.Description)               
+                              .ToArray();
+
+            using (FreezeExcel freeExcel = new FreezeExcel())
+            {
+                foreach (IExcelTestTopic topic in TestTopics)
+                    topic.Init();
+           }
         }
         #endregion
 
@@ -66,7 +72,7 @@
         /// </summary>
         public void ExecuteTopic(IExcelTestTopic topic)
         {
-            ExecuteTopics(new[] { topic });
+               ExecuteTopics(new[] { topic });
         }
         #endregion
 
@@ -74,22 +80,18 @@
         private void ExecuteTopics(IEnumerable<IExcelTestTopic> topics)
         {
             Status = "Executing ...";
-            IEnumerable<Action> actions = topics.Select(topic => new Action(() =>
-                        {
-                            topic.InitTestsStatus();
-                            try
+            Action action = new Action(() => 
                             {
-                                topic.ExecuteTests();
-                            }
-                            finally
-                            {
-                                ExcelInterop.Worksheet dashBoardSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, "Dashboard");
-                                if (dashBoardSheet != null)
-                                    ((ExcelInterop._Worksheet)dashBoardSheet).Activate();
-                            }
-                        }));
-
-            ETKExcel.ExcelApplication.PostAsynchronousActions(actions, () => Status = string.Empty);
+                                using (FreezeExcel freeExcel_ = new FreezeExcel())
+                                {
+                                    foreach(IExcelTestTopic topic in topics)
+                                    {
+                                        topic.InitTestsStatus();
+                                        topic.ExecuteTests();
+                                    }
+                                }
+                            });
+            ETKExcel.ExcelApplication.PostAsynchronousActions(new[] { action }, () => Status = string.Empty);
         }
         #endregion
     }

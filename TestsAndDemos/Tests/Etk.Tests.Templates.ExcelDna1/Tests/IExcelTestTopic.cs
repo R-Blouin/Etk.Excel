@@ -5,12 +5,14 @@
 
     interface IExcelTestTopic
     {
-        string Description { get; set; }
-        bool InitSuccessful { get; }
+        int Id { get; }
+        string Description { get; }
+        bool RenderSuccessful { get; }
         string Exception { get; }
         string DestinationSheetName { get; }
         List<IExcelTest> Tests { get; }
 
+        void Init();
         void Execute();
         void InitTestsStatus();
         void ExecuteTests();

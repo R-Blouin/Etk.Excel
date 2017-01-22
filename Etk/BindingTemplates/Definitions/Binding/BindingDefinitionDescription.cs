@@ -5,6 +5,7 @@ using System.Reflection;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.Tools.Reflection;
+using Etk.BindingTemplates.Definitions.Templates;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
@@ -72,7 +73,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public BindingDefinitionDescription()
         {}
 
-        private BindingDefinitionDescription(string bindingExpression, bool isConst, List<string> options)
+        private BindingDefinitionDescription(ITemplateDefinition templateDefinition, string bindingExpression, bool isConst, List<string> options)
         {
             BindingExpression = bindingExpression;
             IsConst = isConst;
@@ -108,14 +109,14 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         if (option.StartsWith("S="))
                         {
                             string methodInfoIdent = option.Substring(2);
-                            OnSelection = RetrieveMethodInfo(option, methodInfoIdent);
+                            OnSelection = RetrieveMethodInfo(templateDefinition, option, methodInfoIdent);
                             continue;
                         }
                         // On double left click
                         if (option.StartsWith("LDC="))
                         {
                             string methodInfoIdent = option.Substring(4);
-                            OnLeftDoubleClick = RetrieveMethodInfo(option, methodInfoIdent);
+                            OnLeftDoubleClick = RetrieveMethodInfo(templateDefinition, option, methodInfoIdent);
                             continue;
                         }
                         // MultiLine based on the number of line in the bound property
@@ -138,7 +139,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             {
                                 try
                                 {
-                                    MultiLineFactorResolver = RetrieveMethodInfo(null, multiLineFactorResolver);
+                                    MultiLineFactorResolver = RetrieveMethodInfo(templateDefinition, null, multiLineFactorResolver);
                                     if (MultiLineFactorResolver != null)
                                     {
                                         int parametersCpt = MultiLineFactorResolver.GetParameters().Length;
@@ -186,7 +187,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
         }
 
-        private MethodInfo RetrieveMethodInfo(string option, string methodInfoIdent)
+        private MethodInfo RetrieveMethodInfo(ITemplateDefinition templateDefinition, string option, string methodInfoIdent)
         {
             MethodInfo methodInfo = null;
             try
@@ -199,7 +200,19 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         methodInfo = callBack.Callback;
                 }
                 if (parts.Count() == 3)
-                    methodInfo = TypeHelpers.GetMethod(null, methodInfoIdent);
+                {
+                    Type inType = null;
+                    string methodInfoName = methodInfoIdent;
+                    if (string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
+                    {
+                        if(templateDefinition != null && templateDefinition.MainBindingDefinition != null && templateDefinition.MainBindingDefinition.BindingType != null)
+                        {
+                            inType = templateDefinition.MainBindingDefinition.BindingType;
+                            methodInfoName = parts[2];
+                        }
+                    }
+                    methodInfo = TypeHelpers.GetMethod(inType, methodInfoName);
+                }
 
                 if (methodInfo == null)
                     throw new Exception(string.Format("Cannot find the callback '{0}'", methodInfoIdent));
@@ -212,7 +225,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
         }
 
-        public static BindingDefinitionDescription CreateBindingDescription(string toAnalyze, string trimmedToAnalyze)
+        public static BindingDefinitionDescription CreateBindingDescription(ITemplateDefinition templateDefinition, string toAnalyze, string trimmedToAnalyze)
         {
             BindingDefinitionDescription ret = null;
             string bindingExpression;
@@ -265,7 +278,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     }
                 }
 
-                ret = new BindingDefinitionDescription(bindingExpression, isConstante, options);
+                ret = new BindingDefinitionDescription(templateDefinition, bindingExpression, isConstante, options);
             }
             return ret;
         }

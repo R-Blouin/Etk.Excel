@@ -60,13 +60,13 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
                     underlyingDefinition = string.Format("{{{0}}}", parts[1].Trim());
                 }
 
-                BindingDefinitionDescription bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(underlyingDefinition, underlyingDefinition);
+                BindingDefinitionDescription bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinition, underlyingDefinition, underlyingDefinition);
                 IBindingDefinition underlyingBindingDefinition = BindingDefinitionFactory.CreateInstances(templateDefinition, bindingDefinitionDescription);
 
                 IBindingDefinition useFormulaBindingDefinition = null;
                 if (!string.IsNullOrEmpty(useFormulaDefinition))
                 {
-                    bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(useFormulaDefinition, useFormulaDefinition);
+                    bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinition, useFormulaDefinition, useFormulaDefinition);
                     useFormulaBindingDefinition = BindingDefinitionFactory.CreateInstances(templateDefinition, bindingDefinitionDescription);
                 }
                 ExcelBindingDefinitionFormulaResult ret = new ExcelBindingDefinitionFormulaResult(bindingDefinitionDescription, underlyingBindingDefinition, useFormulaBindingDefinition);

@@ -150,7 +150,10 @@ namespace Etk.Excel.BindingTemplates
                         book.SheetCalculate -= OnSheetCalculate;
                         book.SheetCalculate += OnSheetCalculate;
 
+                        book.SheetActivate -= OnSheetActivation;
                         book.SheetActivate += OnSheetActivation;
+
+                        book.SheetDeactivate -= OnSheetDeactivation;
                         book.SheetDeactivate += OnSheetDeactivation;
 
                         Marshal.ReleaseComObject(book);

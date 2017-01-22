@@ -47,7 +47,7 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
                 try
                 {
                     ExcelCheckBoxDefinition excelButtonDefinition = definition.Deserialize<ExcelCheckBoxDefinition>();
-                    BindingDefinitionDescription definitionDescription = BindingDefinitionDescription.CreateBindingDescription(excelButtonDefinition.Value, excelButtonDefinition.Value);
+                    BindingDefinitionDescription definitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinition, excelButtonDefinition.Value, excelButtonDefinition.Value);
                     ret = new ExcelBindingDefinitionCheckBox(definitionDescription, templateDefinition, excelButtonDefinition);
                 }
                 catch (Exception ex)
