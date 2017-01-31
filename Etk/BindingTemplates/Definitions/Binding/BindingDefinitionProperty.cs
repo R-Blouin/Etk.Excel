@@ -73,10 +73,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 if (dataSource != null && GetMethod != null)
                 {
                     object ret = GetMethod.Invoke(GetMethod.IsStatic ? null : dataSource, null);
-                    if (ret != null && ret is Enum)
-                        return (ret as Enum).ToString();
-                    else
-                        return ret;
+                    //if (ret != null && ret is Enum)
+                    //    return (ret as Enum).ToString();
+                    return ret;
                 }
                 return null;
             }
@@ -113,7 +112,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         SetMethod.Invoke(SetMethod.IsStatic ? null : datasource, new object[] { data });
                     }
                 }
-                return ResolveBinding(datasource);
+                object value = ResolveBinding(datasource);
+                return value != null && value is Enum ? ((Enum) value).ToString() : value;
             }
             catch (Exception ex)
             {

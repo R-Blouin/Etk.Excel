@@ -311,9 +311,19 @@ namespace Etk.Excel.BindingTemplates.Views
 
         public override void SetDataSource(object dataSource)
         {
-            searchValue = null;
-            CellsThatContainSearchValue.Clear();
-            base.SetDataSource(dataSource);
+            try
+            {
+                if(ViewSheet.ProtectContents)
+                    ViewSheet.Unprotect(System.Type.Missing);
+
+                searchValue = null;
+                CellsThatContainSearchValue.Clear();
+                base.SetDataSource(dataSource);
+            }
+            finally
+            {
+                ProtectSheet();
+            }
         }
 
         public void Render()
@@ -339,6 +349,20 @@ namespace Etk.Excel.BindingTemplates.Views
                     Renderer.RenderedRange.Rows.AutoFit();
                 else
                     Renderer.RenderedRange.Columns.AutoFit();
+            }
+        }
+
+        public void ProtectSheet()
+        {
+            if (!ViewSheet.ProtectContents)
+            {
+                ViewSheet.Cells.Locked = false;
+                ViewSheet.Protect(System.Type.Missing, true, true, System.Type.Missing, false, true,
+                                  true, true,
+                                  false, false,
+                                  false,
+                                  false, false, false, true,
+                                  true);
             }
         }
         #endregion

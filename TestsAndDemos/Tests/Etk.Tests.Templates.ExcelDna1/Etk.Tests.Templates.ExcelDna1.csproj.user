@@ -8,4 +8,7 @@
     <StartProgram>C:\Program Files %28x86%29\Microsoft Office\Office12\EXCEL.EXE</StartProgram>
     <StartArguments>..\..\Etk.Tests.Templates.ExcelDna1.xlsx Etk.Tests.Templates.ExcelDna1-AddIn.xll</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
 </Project>

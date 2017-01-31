@@ -16,8 +16,8 @@ namespace Etk.BindingTemplates.Context
         public IBindingContextElement ParentElement
         { get; private set; }
 
-        public long Id
-        { get; private set; }
+        //public long Id
+        //{ get; private set; }
 
         public string Name
         { get; private set; }
@@ -48,12 +48,12 @@ namespace Etk.BindingTemplates.Context
         #region internal methods
         internal void Init()
         {
-            if (BindingDefinition != null  && BindingDefinition.IsBoundWithData)
-                Id = Interlocked.Increment(ref CurrentId);
-            else
-                Id = -1;
+            //if (BindingDefinition != null  && BindingDefinition.IsBoundWithData)
+            //    Id = Interlocked.Increment(ref CurrentId);
+            //else
+            //    Id = -1;
 
-             if (ParentElement.Element != null && BindingDefinition != null && BindingDefinition.IsBoundWithData)
+            if (ParentElement.Element != null && BindingDefinition != null && BindingDefinition.IsBoundWithData)
             {
                 BindingTypeProperty property = ParentElement.ParentPart.ParentContext.TemplateDefinition.BindingType.PropertyByName[BindingDefinition.Name];
                 property.SetMethod.Invoke(ParentElement.Element, new object[] { ResolveBinding() });

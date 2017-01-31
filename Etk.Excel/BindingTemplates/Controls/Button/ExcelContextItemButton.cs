@@ -105,7 +105,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         {
             ExcelBindingDefinitionButton definition = (ExcelBindingDefinitionButton)BindingDefinition;
             button = new ExcelButton(range, definition.Definition);
-            bool isStatic = definition.Command == null ? false : definition.Command.IsStatic;
+            //bool isStatic = definition.Command == null ? false : definition.Command.IsStatic;
             button.SetCommand(definition.Command, base.ParentElement.DataSource, definition.OnClickWithRange);
 
             ResolveBinding();

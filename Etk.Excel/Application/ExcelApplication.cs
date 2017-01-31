@@ -181,11 +181,19 @@ namespace Etk.Excel.Application
             }
         }
 
-        public void HideUnhideRightCells(ExcelInterop.Range targetedRange, int numberOfCells)
+        public void HideUnhideColumns(ExcelInterop.Range targetedRange, int numberOfCells)
         {
+            if (numberOfCells == 0)
+                return;
+
             if (targetedRange != null)
             {
-                ExcelInterop.Range workkingRange = targetedRange.Offset[Type.Missing, 1];
+                ExcelInterop.Range workkingRange = null;
+                if (numberOfCells < 0)
+                    workkingRange = targetedRange.Offset[Type.Missing, numberOfCells];
+                else
+                    workkingRange = targetedRange.Offset[Type.Missing, 1];
+
                 workkingRange = workkingRange.Resize[Type.Missing, numberOfCells];
                 workkingRange.EntireColumn.Hidden = ! (bool) workkingRange.EntireColumn.Hidden;
             }

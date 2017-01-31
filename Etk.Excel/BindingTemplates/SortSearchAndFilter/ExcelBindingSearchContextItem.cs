@@ -22,6 +22,5 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
         {
             DestinationRange = range;    
         }
-
     }
 }

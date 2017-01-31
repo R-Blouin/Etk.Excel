@@ -20,8 +20,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 if (dataSource != null)
                 {
                     object ret = FieldInfo.GetValue(FieldInfo.IsStatic ? null : dataSource);
-                    if (ret != null && ret is Enum)
-                        return (ret as Enum).ToString();
+                    //if (ret != null && ret is Enum)
+                    //    return (ret as Enum).ToString();
                     return ret;
                 }
                 return null;

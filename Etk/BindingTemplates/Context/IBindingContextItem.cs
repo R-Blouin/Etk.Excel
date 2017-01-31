@@ -5,7 +5,7 @@ namespace Etk.BindingTemplates.Context
 {
     public interface IBindingContextItem : IDisposable
     {
-        long Id { get; }
+        //long Id { get; }
         string Name { get; }
         IBindingContextElement ParentElement { get; }
         IBindingDefinition BindingDefinition { get; }

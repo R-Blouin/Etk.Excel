@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -74,7 +75,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             ((IBindingContextItemCanNotify)item).OnPropertyChangedAction = OnNotifyPropertyChanged;
                             ((IBindingContextItemCanNotify)item).OnPropertyChangedActionArgs = new KeyValuePair<int, int>(i, colId);
                         }
-                        cells[i, colId++] = item.ResolveBinding();
+                        object value = item.ResolveBinding();
+                        cells[i, colId++] = value != null && value is Enum ? ((Enum) value).ToString() : value;
                     }
                     else
                         cells[i, colId++] = null;
@@ -185,10 +187,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #region internal, private and protected methods
         protected override void ClearPreviousRendering()
         {
+            RenderedRange.Clear();
+            //RenderedRange.Hidden = false;
             if (View.ClearingCell != null)
                 View.ClearingCell.Copy(RenderedRange);
-            else
-                RenderedRange.Clear();
             RowDecorators.Clear();
 
             base.ClearPreviousRendering();

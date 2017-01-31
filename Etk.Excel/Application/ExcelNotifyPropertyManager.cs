@@ -115,6 +115,9 @@ namespace Etk.Excel.Application
                 if (range != null)
                 {
                     object value = context.ContextItem.ResolveBinding();
+                    if (value != null && value is Enum)
+                        value = ((Enum)value).ToString();
+
                     if (!object.Equals(range.Value2, value))
                     {
                         ExcelApplication.Application.EnableEvents = false;

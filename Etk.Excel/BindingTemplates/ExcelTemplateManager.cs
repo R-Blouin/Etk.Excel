@@ -366,20 +366,6 @@ namespace Etk.Excel.BindingTemplates
                 worksheet = null;
             }
         }
-
-        private void ProtectSheet(ExcelTemplateView view)
-        {
-            if (view == null)
-                return;
-
-            view.ViewSheet.Cells.Locked = false;
-            view.ViewSheet.Protect(System.Type.Missing, true, true, System.Type.Missing, false, true,
-                                          true, true,
-                                          false, false,
-                                          false,
-                                          false, false, false, true,
-                                          true);
-        }
         #endregion
 
         #region internal methods
@@ -669,10 +655,12 @@ namespace Etk.Excel.BindingTemplates
                                     {
                                         excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
                                         excelTemplateView.RenderView();
+                                        //@@if(! string.IsNullOrEmpty(view.SearchValue))
+                                        //    excelTemplateView.ExecuteSearch();
                                     }
                                     finally
                                     {
-                                        ProtectSheet(excelTemplateView as ExcelTemplateView);
+                                        excelTemplateView.ProtectSheet();
                                     }
                                 }
                             }
@@ -733,7 +721,7 @@ namespace Etk.Excel.BindingTemplates
                                     }
                                     finally
                                     {
-                                        ProtectSheet(excelTemplateView as ExcelTemplateView);
+                                        excelTemplateView.ProtectSheet();
                                     }
                                 }
                             }
@@ -791,7 +779,7 @@ namespace Etk.Excel.BindingTemplates
                                     }
                                     finally
                                     {
-                                        ProtectSheet(excelView as ExcelTemplateView);
+                                        excelView.ProtectSheet();
                                     }
                                 }
                             }

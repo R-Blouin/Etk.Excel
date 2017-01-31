@@ -72,11 +72,14 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
         private static void ExecuteSort(ExcelTemplateView view, ISorterDefinition sortDefinition)
         {
             view.SorterDefinition = sortDefinition;
-
             object currentDataSource = view.GetDataSource();
+
             ETKExcel.TemplateManager.ClearView(view as ExcelTemplateView);
+
             // We reinject the datasource to force the filtering
             view.CreateBindingContext(currentDataSource);
+            //view.SetDataSource(currentDataSource);
+
             // RenderView the view to see the filering application
             ETKExcel.TemplateManager.Render(view as ExcelTemplateView);
         }
