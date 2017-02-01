@@ -164,7 +164,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 CurrentSelectedCell = null;
 
                 CellsThatContainSearchValue.Clear();
-                searchValue = null;
+                //@@ searchValue = null;
 
                 base.Clear();
                 if (!IsDisposed && Renderer != null)
@@ -316,7 +316,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 if(ViewSheet.ProtectContents)
                     ViewSheet.Unprotect(System.Type.Missing);
 
-                searchValue = null;
+                //searchValue = null;
                 CellsThatContainSearchValue.Clear();
                 base.SetDataSource(dataSource);
             }

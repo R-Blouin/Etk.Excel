@@ -188,7 +188,12 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected override void ClearPreviousRendering()
         {
             RenderedRange.Clear();
-            //RenderedRange.Hidden = false;
+
+            if (this.View.TemplateDefinition.Orientation == Orientation.Horizontal)
+                RenderedRange.EntireColumn.Hidden = false;
+            else
+                RenderedRange.EntireRow.Hidden = false;
+
             if (View.ClearingCell != null)
                 View.ClearingCell.Copy(RenderedRange);
             RowDecorators.Clear();
