@@ -78,8 +78,8 @@ namespace Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels
             }
         }
 
-        /// <summary> True if you use thetemplate header as an expander </summary>
-        public bool HeaderAsExpander
+        /// <summary> Determine if a header is an expander</summary>
+        public HeaderAsExpander HeaderAsExpander
         {
             get { return templateDefinition.TemplateOption.HeaderAsExpander; }
             set
@@ -90,12 +90,12 @@ namespace Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels
         }
 
         /// <summary>Template Header Expadner mode</summary>
-        public ExpanderMode ExpanderMode
+        public ExpanderType ExpanderMode
         {
-            get { return templateDefinition.TemplateOption.ExpanderMode; }
+            get { return templateDefinition.TemplateOption.ExpanderType; }
             set
             {
-                templateDefinition.TemplateOption.ExpanderMode = value;
+                templateDefinition.TemplateOption.ExpanderType = value;
                 OnPropertyChanged("ExpanderMode");
             }
         }

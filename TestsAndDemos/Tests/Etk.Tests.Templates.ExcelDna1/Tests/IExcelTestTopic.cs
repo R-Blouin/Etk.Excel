@@ -14,7 +14,6 @@
 
         void Init();
         void Execute();
-        void InitTestsStatus();
         void ExecuteTests();
     }
 }

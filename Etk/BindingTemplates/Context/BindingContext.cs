@@ -104,9 +104,9 @@ namespace Etk.BindingTemplates.Context
                     }
 
                     if (TemplateDefinition.Header != null)
-                        Header = BindingContextPart.CreateHeaderOrFooterBindingContextPart(this, TemplateDefinition.Header, DataSource);
+                        Header = BindingContextPart.CreateHeaderOrFooterBindingContextPart(this, TemplateDefinition.Header, BindingContextPartType.Header, DataSource);
                     if (TemplateDefinition.Footer != null)
-                        Footer = BindingContextPart.CreateHeaderOrFooterBindingContextPart(this, TemplateDefinition.Footer, DataSource);
+                        Footer = BindingContextPart.CreateHeaderOrFooterBindingContextPart(this, TemplateDefinition.Footer, BindingContextPartType.Header, DataSource);
                 }
             }
             catch (Exception ex)

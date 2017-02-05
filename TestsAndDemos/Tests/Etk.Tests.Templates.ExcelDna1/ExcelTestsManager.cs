@@ -13,7 +13,7 @@
 
     interface IExcelTestsManager
     {
-        void ExecuteTopic(IExcelTestTopic topic);
+        void ExecuteTopics(IEnumerable<IExcelTestTopic> topicq);
     }
 
     class ExcelTestsManager : ViewModelBase, IExcelTestsManager 
@@ -66,33 +66,20 @@
             ExecuteTopics(TestTopics);
         }
 
-        /// <summary>
-        /// Execution of all the tests of the current test topic declared on this class (property 'TestTopics').
-        ///<br/>Invoke by double-clicking on the template button 'ExecuteTopic All TestTopics' on the template 'Main' declared on the sheet 'Dashboard Templates'.
-        /// </summary>
-        public void ExecuteTopic(IExcelTestTopic topic)
-        {
-               ExecuteTopics(new[] { topic });
-        }
-        #endregion
-
-        #region private methods
-        private void ExecuteTopics(IEnumerable<IExcelTestTopic> topics)
+        public void ExecuteTopics(IEnumerable<IExcelTestTopic> topics)
         {
             Status = "Executing ...";
-            Action action = new Action(() => 
-                            {
-                                using (FreezeExcel freeExcel_ = new FreezeExcel())
-                                {
-                                    foreach(IExcelTestTopic topic in topics)
-                                    {
-                                        topic.InitTestsStatus();
-                                        topic.ExecuteTests();
-                                    }
-                                }
-                            });
+            Action action = new Action(() =>
+            {
+                using (FreezeExcel freeExcel_ = new FreezeExcel())
+                {
+                    foreach (IExcelTestTopic topic in topics)
+                        topic.ExecuteTests();
+                }
+            });
             ETKExcel.ExcelApplication.PostAsynchronousActions(new[] { action }, () => Status = string.Empty);
         }
+
         #endregion
     }
 }

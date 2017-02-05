@@ -18,10 +18,16 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected IBindingContextItem[,] contextItems;
         protected object[,] cells;
 
+        public List<ExcelRenderer> NestedRenderer
+        { get; private set; }
+
         public bool IsDisposed
         { get; protected set; }
 
         public ExcelRootRenderer RootRenderer
+        { get; private set; }
+
+        public ExcelRenderer Parent
         { get; private set; }
 
         public ExcelPartRenderer HeaderPartRenderer
@@ -52,9 +58,18 @@ namespace Etk.Excel.BindingTemplates.Renderer
         { get; private set; }
 
         #region .ctors
-        public ExcelRenderer(ExcelRootRenderer rootRenderer, ITemplateDefinition templateDefinition, IBindingContext bindingContext, ExcelInterop.Range firstOutputCell, MethodInfo minOccurencesMethod)
+        public ExcelRenderer(ExcelRenderer parent, ITemplateDefinition templateDefinition, IBindingContext bindingContext, ExcelInterop.Range firstOutputCell, MethodInfo minOccurencesMethod)
         {
-            RootRenderer = rootRenderer ?? this as ExcelRootRenderer;
+            NestedRenderer = new List<ExcelRenderer>();
+            if (parent == null)
+                RootRenderer = this as ExcelRootRenderer;
+            else
+            {
+                RootRenderer = parent.RootRenderer;
+                Parent = parent;
+                Parent.RegisterNestedRenderer(this);
+            }
+
             this.templateDefinition = templateDefinition;
             this.bindingContext = bindingContext;
             this.firstOutputCell = firstOutputCell;
@@ -113,7 +128,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             int width = templateDefinition.Orientation == Orientation.Vertical ? xs.Max() : xs.Sum();
             int height = templateDefinition.Orientation == Orientation.Vertical ? ys.Sum() : ys.Max();
-
             if (width > 0 && height > 0)
             {
                 RenderedArea = new RenderedArea(firstOutputCell.Column, firstOutputCell.Row, width, height);
@@ -121,6 +135,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 Width = width;
                 Height = height;
             }
+        }
+
+        public void RegisterNestedRenderer(ExcelRenderer nestedRenderer)
+        {
+            NestedRenderer.Add(nestedRenderer);
         }
 
         public void Dispose()

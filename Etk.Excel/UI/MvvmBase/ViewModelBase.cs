@@ -13,24 +13,40 @@ namespace Etk.Excel.UI.MvvmBase
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
-        #region Constructor
-        protected ViewModelBase()
-        { }
-        #endregion // Constructor
-
-        #region DisplayName
+        /// <summary>
+        /// Returns whether an exception is thrown, or if a Debug.Fail() is used
+        /// when an invalid property name is passed to the VerifyPropertyName method.
+        /// The default value is false, but subclasses used by unit tests might 
+        /// override this property's getter to return true.
+        /// </summary>
+        protected virtual bool ThrowOnInvalidPropertyName
+        { get; private set; }
 
         /// <summary>
         /// Returns the user-friendly name of this object.
         /// Child classes can set this property to a new value,
         /// or override it to determine the value on-demand.
         /// </summary>
-        public virtual string DisplayName { get; protected set; }
+        public virtual string DisplayName
+        { get; protected set; }
 
-        #endregion // DisplayName
+        #region .ctors
+        protected ViewModelBase()
+        {}
+
+#if DEBUG
+        /// <summary>
+        /// Useful for ensuring that ViewModel objects are properly garbage collected.
+        /// </summary>
+        ~ViewModelBase()
+        {
+            string msg = string.Format("{0} ({1}) ({2}) Finalized", this.GetType().Name, this.DisplayName, this.GetHashCode());
+            Debug.WriteLine(msg);
+        }
+#endif
+        #endregion
 
         #region Debugging Aides
-
         /// <summary>
         /// Warns the developer if this object does not have
         /// a public property with the specified name. This 
@@ -52,19 +68,9 @@ namespace Etk.Excel.UI.MvvmBase
                 //    Debug.Fail(msg);
             }
         }
-
-        /// <summary>
-        /// Returns whether an exception is thrown, or if a Debug.Fail() is used
-        /// when an invalid property name is passed to the VerifyPropertyName method.
-        /// The default value is false, but subclasses used by unit tests might 
-        /// override this property's getter to return true.
-        /// </summary>
-        protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
-
         #endregion // Debugging Aides
 
         #region INotifyPropertyChanged Members
-
         /// <summary>
         /// Raised when a property on this object has a new value.
         /// </summary>
@@ -76,27 +82,16 @@ namespace Etk.Excel.UI.MvvmBase
         /// <param name="propertyName">The property that has a new value.</param>
         protected virtual void OnPropertyChanged(string propertyName)
         {
-            this.VerifyPropertyName(propertyName);
+            VerifyPropertyName(propertyName);
 
             PropertyChangedEventHandler handler = this.PropertyChanged;
             if (handler != null)
             {
-                var e = new PropertyChangedEventArgs(propertyName);
+                PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
                 handler(this, e);
             }
         }
 
         #endregion // INotifyPropertyChanged Members
-
-#if DEBUG
-        /// <summary>
-        /// Useful for ensuring that ViewModel objects are properly garbage collected.
-        /// </summary>
-        ~ViewModelBase()
-        {
-            string msg = string.Format("{0} ({1}) ({2}) Finalized", this.GetType().Name, this.DisplayName, this.GetHashCode());
-            System.Diagnostics.Debug.WriteLine(msg);
-        }
-#endif
     }
 }

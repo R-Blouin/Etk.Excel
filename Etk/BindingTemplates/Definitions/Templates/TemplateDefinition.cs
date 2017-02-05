@@ -62,8 +62,6 @@ namespace Etk.BindingTemplates.Definitions.Templates
         {
             if(templateOption == null)
                 throw new ArgumentException("The template option cannot be null");
-            //@@if (string.IsNullOrEmpty(templateOption.Name))
-            //    throw new ArgumentException("The template 'Name' cannot be null or empty");
 
             TemplateOption = templateOption;
             //&&HasLinkedTemplates = false;

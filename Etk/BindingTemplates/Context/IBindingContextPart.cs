@@ -14,5 +14,7 @@ namespace Etk.BindingTemplates.Context
 
         IEnumerable<IBindingContextElement> Elements { get;}
         IEnumerable<IBindingContextElement> ElementsToRender{ get;}
+
+        BindingContextPartType PartType { get; }
     }
 }

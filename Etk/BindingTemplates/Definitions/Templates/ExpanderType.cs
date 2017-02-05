@@ -1,6 +1,6 @@
 ﻿namespace Etk.BindingTemplates.Definitions.Templates
 {
-    public enum ExpanderMode
+    public enum ExpanderType
     {
         Hide,
         DontRender

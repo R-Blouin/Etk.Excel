@@ -40,7 +40,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public RenderedArea RenderedArea
         { get; protected set; }
 
-        public bool isExpander = false;
+        //public bool isExpander = false;
         #endregion
 
         #region .ctors and factories

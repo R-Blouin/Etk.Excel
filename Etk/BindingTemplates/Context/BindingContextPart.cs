@@ -22,16 +22,20 @@ namespace Etk.BindingTemplates.Context
         public IEnumerable<IBindingContextElement> ElementsToRender
         { get; private set; }
 
+        public BindingContextPartType PartType 
+        { get; private set; }
+
         #region .ctors and factories
-        private BindingContextPart(IBindingContext parent, ITemplateDefinitionPart templateDefinitionPart)
+        private BindingContextPart(IBindingContext parent, ITemplateDefinitionPart templateDefinitionPart, BindingContextPartType partType)
         {
             ParentContext = parent;
             TemplateDefinitionPart = templateDefinitionPart;
+            PartType = partType; 
         }
 
         public static BindingContextPart CreateBodyBindingContextPart(BindingContext parent, ITemplateDefinitionPart templateDefinitionPart, List<object> dataSourceAsList, ISortersAndFilters externalSorterAndFilter, ISortersAndFilters templatedSorterAndFilter)
         {
-            BindingContextPart ret = new BindingContextPart(parent, templateDefinitionPart);
+            BindingContextPart ret = new BindingContextPart(parent, templateDefinitionPart, BindingContextPartType.Body);
             ret.ExternalSorterAndFilter = parent.ExternalSortsAndFilters;
 
             int elementIndex = 0;
@@ -68,9 +72,9 @@ namespace Etk.BindingTemplates.Context
         #endregion
 
         /// <summary>For the header/footer</summary>
-        public static BindingContextPart CreateHeaderOrFooterBindingContextPart(IBindingContext parent, ITemplateDefinitionPart templateDefinitionPart, object dataSource)
+        public static BindingContextPart CreateHeaderOrFooterBindingContextPart(IBindingContext parent, ITemplateDefinitionPart templateDefinitionPart, BindingContextPartType partType, object dataSource)
         {
-            BindingContextPart ret = new BindingContextPart(parent, templateDefinitionPart);
+            BindingContextPart ret = new BindingContextPart(parent, templateDefinitionPart, partType);
 
             ret.Elements = new BindingContextElement[] { new BindingContextElement(ret, dataSource, 0) };
             ret.ElementsToRender = ret.Elements.ToList();

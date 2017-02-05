@@ -98,8 +98,8 @@ namespace Etk.Excel.BindingTemplates.Views
         public AccessorParametersManager AccessorParametersManager
         { get; private set; }
 
-        public ExcelPartRenderer Expander
-        { get; set; }
+        //public ExcelPartRenderer Expander
+        //{ get; set; }
 
         public override string SearchValue
         {
@@ -222,7 +222,7 @@ namespace Etk.Excel.BindingTemplates.Views
             {
                 if (!IsDisposed)
                 {
-                    Expander = null;
+                    //Expander = null;
                     if (AccessorParametersManager != null)
                     {
                         AccessorParametersManager.Dispose();
@@ -643,23 +643,33 @@ namespace Etk.Excel.BindingTemplates.Views
                 }
                 else
                 {
-                    // If not, ask the containing template (and its owner and the owner of its owner etc.... => bubble up the event)) if they contain a left double click callback
-                    // Invoke the first found 
-                    IBindingContextElement catchingContextElement = currentContextItem.ParentElement;
-                    do
+                    IBindingContextElement currentContextElement = currentContextItem.ParentElement;
+                    if (currentContextElement != null && currentContextElement.ParentPart != null && currentContextElement.ParentPart.PartType == BindingContextPartType.Header 
+                        )//&& ((TemplateDefinition)currentContextElement.ParentPart.TemplateDefinitionPart.Parent).TemplateOption.HeaderAsExpander != HeaderAsExpander.None)
                     {
-                        ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                        MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).OnLeftDoubleClick;
-                        if (callback != null)
-                        {
-                            ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem.ParentElement);
+                        if(CheckHeaderAsExpander(Renderer, target))
                             cancel = true;
-                        }
-                        if (!cancel)
-                            catchingContextElement = catchingContextElement.ParentPart.ParentContext == null ? null : catchingContextElement.ParentPart.ParentContext.Parent;
                     }
-                    while (!cancel && catchingContextElement != null);
                 }
+                //else
+                //{
+                //    // If not, ask the containing template (and its owner and the owner of its owner etc.... => bubble up the event)) if they contain a left double click callback
+                //    // Invoke the first found 
+                //    IBindingContextElement catchingContextElement = currentContextItem.ParentElement;
+                //    do
+                //    {
+                //        ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
+                //        MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).OnLeftDoubleClick;
+                //        if (callback != null)
+                //        {
+                //            ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem.ParentElement);
+                //            cancel = true;
+                //        }
+                //        if (!cancel)
+                //            catchingContextElement = catchingContextElement.ParentPart.ParentContext == null ? null : catchingContextElement.ParentPart.ParentContext.Parent;
+                //    }
+                //    while (!cancel && catchingContextElement != null);
+                //}
             }
 
             // Manage the expander (=> the header capability to expand)
@@ -678,6 +688,21 @@ namespace Etk.Excel.BindingTemplates.Views
         #endregion
 
         #region private methods
+        private bool CheckHeaderAsExpander(ExcelRenderer renderer,  ExcelInterop.Range target)
+        {
+            if (renderer.HeaderPartRenderer != null && renderer.HeaderPartRenderer.RenderedRange != null && ETKExcel.ExcelApplication.Application.Intersect(renderer.HeaderPartRenderer.RenderedRange, target) != null)
+                return true;
+            else
+            {
+                foreach (ExcelRenderer nestedRenderer in Renderer.NestedRenderer)
+                {
+                    if (CheckHeaderAsExpander(nestedRenderer, target))
+                        return true;
+                }
+            }
+            return false;
+        }
+
         private void HighlightSelection(ExcelInterop.Range selectedCell)
         {
             ExcelInterop.Range viewSelectedRange = null;

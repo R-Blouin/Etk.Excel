@@ -99,22 +99,19 @@
             }
         }
 
-        public void InitTestsStatus()
-        {
-            Tests.ForEach(t => t.InitTestStatus());
-        }
-
         /// <summary>
-        /// ExecuteTopic all th tests declared on this topic (property 'Tests').
+        /// ExecuteTopic all the tests declared on this topic (property 'Tests').
         /// Invoke by double-clicking on the template button 'ExecuteTopic' on the template 'TestTopics' declared on the sheet 'Dashboard Templates'
         /// </summary>
         public void Execute()
         {
-            testManager.ExecuteTopic(this);
+            testManager.ExecuteTopics(new[] { this });
         }
 
         public void ExecuteTests()
         {
+            Tests.ForEach(t => t.InitTestStatus());
+
             if (!renderDone)
                 Render();
 

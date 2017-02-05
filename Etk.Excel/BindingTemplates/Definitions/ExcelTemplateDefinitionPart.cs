@@ -33,15 +33,9 @@ namespace Etk.Excel.BindingTemplates.Definitions
         public bool ContainMultiLinesCells
         { get; set; }
 
-        /// <summary> Implements <see cref="ITemplateDefinition.ExpanderMode"> </summary> 
-        //public ExpanderMode ExpanderMode
-        //{ get { return TemplateOption.ExpanderMode; } }
-
-        /// <summary> If a header is defined, define if it is used as an exxpander (Default is 'True'.</summary>
-        public bool HeaderAsExpander { get; set; }
-
-        /// <summary> If a expandable header is defined, contains the binding excelTemplateDefinition used to manage the 'Expand' property of the template (needs a header defined on the template.</summary>
-        public IBindingDefinition ExpanderBindingDefinition { get; set; }
+        //@@/// <summary> If a expandable header is defined, contains the binding excelTemplateDefinition used to manage the 'Expand' property of the template (needs a header defined on the template.</summary>
+        //public IBindingDefinition ExpanderBindingDefinition
+        //{ get; set; }
         #endregion
         
         #region .ctors

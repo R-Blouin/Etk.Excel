@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Templates.Xml;
 using Etk.ModelManagement.DataAccessors;
@@ -26,13 +24,10 @@ namespace Etk.BindingTemplates.Definitions.Templates
         public IBindingDefinition MainBindingDefinition
         { get; set; }
 
-        public ExpanderMode ExpanderMode
+        public ExpanderType ExpanderType
         { get; set; }
 
-        public bool HeaderAsExpander
-        { get; set; }
-
-        public IBindingDefinition ExpanderBindingDefinition
+        public HeaderAsExpander HeaderAsExpander
         { get; set; }
 
         public string SelectionChanged
@@ -41,6 +36,7 @@ namespace Etk.BindingTemplates.Definitions.Templates
         public string ContextualMenu
         { get; set; }
 
+        
         public bool CanSort
         { get; set; }
 
@@ -60,24 +56,20 @@ namespace Etk.BindingTemplates.Definitions.Templates
             try
             {
                 Name = xmlTemplateOption.Name;
+                if (string.IsNullOrEmpty(xmlTemplateOption.Name))
+                    throw new ArgumentException("The template 'Name' cannot be null or empty");
+
                 Description = xmlTemplateOption.Description;
                 Orientation = xmlTemplateOption.Orientation;
-                ExpanderMode = xmlTemplateOption.ExpanderMode;
+                ExpanderType = xmlTemplateOption.ExpanderType;
                 HeaderAsExpander = xmlTemplateOption.HeaderAsExpander;
                 AddBorder = xmlTemplateOption.AddBorder;
-                CanSort = xmlTemplateOption.CanSort;
 
                 SelectionChanged = xmlTemplateOption.SelectionChanged;
                 ContextualMenu = xmlTemplateOption.ContextMenu;
 
                 if (!string.IsNullOrEmpty(xmlTemplateOption.Decorator))
                     DecoratorIdent = xmlTemplateOption.Decorator;
-
-                //if (string.IsNullOrEmpty(xmlTemplateOption.BindingType) && string.IsNullOrEmpty(xmlTemplateOption.BindingMethod))
-                //    throw new ArgumentException("One of the two elements 'BindingType' and 'BindingMethod' must be defined");
-
-                //if (!string.IsNullOrEmpty(xmlTemplateOption.BindingType) && !string.IsNullOrEmpty(xmlTemplateOption.BindingMethod))
-                //    throw new ArgumentException("The 'BindingMethod' and 'BindingType' elements cannot be both defined");
 
                 // Retrieve the 'MainBindingDefinition'
                 ///////////////////////////////////////
@@ -116,30 +108,21 @@ namespace Etk.BindingTemplates.Definitions.Templates
                     }
                 }
 
-                // Retrieve the Expander binding definition
-                ///////////////////////////////////////////
-                if (! string.IsNullOrEmpty(xmlTemplateOption.Expander))
+                if (xmlTemplateOption.CanSort.HasValue)
                 {
-                    try
-                    {
-                        string property = xmlTemplateOption.Expander.Trim();
-                        PropertyInfo propertyInfo = MainBindingDefinition.BindingType.GetProperties().FirstOrDefault(pi => pi.Name.Equals(property));
-                        ExpanderBindingDefinition = BindingDefinitionFactory.CreateInstance(propertyInfo);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new EtkException(string.Format("Cannot resolve the expander binding definition from '{0}'. {1}", xmlTemplateOption.Expander, ex.Message));
-                    }
+                    if (xmlTemplateOption.CanSort.Value && MainBindingDefinition == null)
+                        throw new EtkException("'CanSort' parameter can be set to 'true' only if the 'BindingWith' parameter is set.");
+
+                    CanSort = xmlTemplateOption.CanSort.Value;
                 }
+                else
+                    CanSort = MainBindingDefinition != null;
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Resolve the template oprion failed:{0}", ex.Message));
+                throw new EtkException(string.Format("Resolve the template option failed:{0}", ex.Message));
             }
         }
-        #endregion
-
-        #region pubolic methods
         #endregion
     }
 }

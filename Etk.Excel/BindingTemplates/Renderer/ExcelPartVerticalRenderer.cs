@@ -236,7 +236,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         private void RenderLink(RenderingContext renderingContext, IBindingContext linkedBindingContext, ExcelInterop.Worksheet worksheetTo)
         {
-            using (ExcelRenderer linkedRenderer = new ExcelRenderer(Parent.RootRenderer, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo, renderingContext.LinkedTemplateDefinition.MinOccurencesMethod))
+            using (ExcelRenderer linkedRenderer = new ExcelRenderer(Parent, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo, renderingContext.LinkedTemplateDefinition.MinOccurencesMethod))
             {
                 linkedRenderer.Render();
 

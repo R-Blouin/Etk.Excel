@@ -27,9 +27,17 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
         public string InstanceName
         { get; set; }
 
-        [XmlAttribute]
-        public bool CanSort
-        { get; set; }
+        [XmlIgnore]
+        public bool? CanSort
+        { get; private set; }
+
+        private bool canSortSet;
+        [XmlAttribute("CanSort")]
+        public bool CanSortSet
+        {
+            get { return canSortSet; }
+            set { CanSort = canSortSet = value; }
+        }
 
         [XmlAttribute]
         public bool AddBorder
@@ -63,34 +71,50 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
             }
         }
 
-        [XmlAttribute]
-        public bool HeaderAsExpander
-        { get; set; }
-
-        [XmlAttribute]
-        public string Expander
-        { get; set; }
-
         [XmlIgnore]
-        public ExpanderMode ExpanderMode
+        public ExpanderType ExpanderType
         { get; set; }
 
-        private string expanderModeStr;
-        [XmlAttribute("ExpanderMode")]
-        public string ExpanderModeStr
+        private string expanderTypeStr;
+        [XmlAttribute("ExpanderType")]
+        public string ExpanderTypeStr
         {
-            get { return expanderModeStr; }
+            get { return expanderTypeStr; }
             set
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    expanderModeStr = value.Trim().ToUpper();
-                    if (expanderModeStr.Equals("DONTRENDER") || expanderModeStr.Equals("DR"))
-                        ExpanderMode = ExpanderMode.DontRender;
-                    if (expanderModeStr.Equals("HIDE") || expanderModeStr.Equals("H"))
-                        ExpanderMode = ExpanderMode.Hide;
+                    expanderTypeStr = value.Trim().ToUpper();
+                    if (expanderTypeStr.Equals("DONTRENDER") || expanderTypeStr.Equals("DR"))
+                        ExpanderType = ExpanderType.DontRender;
+                    if (expanderTypeStr.Equals("HIDE") || expanderTypeStr.Equals("H"))
+                        ExpanderType = ExpanderType.Hide;
                     else
-                        throw new ArgumentException(string.Format("The attribut 'ExpanderMode' '{0}' is invalid. Value must be 'DontRender' (or 'DR') or 'Hide' (or 'H') (no case sentitive)", value));
+                        throw new ArgumentException(string.Format("The attribut 'ExpanderType' '{0}' is invalid. Value must be 'DontRender' (or 'DR') or 'Hide' (or 'H') (no case sentitive)", value));
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public HeaderAsExpander HeaderAsExpander
+        { get; set; }
+
+        private string headerAsExpanderStr;
+        [XmlAttribute("HeaderAsExpander")]
+        public string HeaderAsExpanderStr
+        {
+            get { return headerAsExpanderStr; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    headerAsExpanderStr = value.Trim().ToUpper();
+                    if (headerAsExpanderStr.Equals("STARTEXPANDED") || headerAsExpanderStr.Equals("SE"))
+                        HeaderAsExpander = HeaderAsExpander.StartExpanded;
+                    if (headerAsExpanderStr.Equals("STARTCLOSED") || headerAsExpanderStr.Equals("SC"))
+                        HeaderAsExpander = HeaderAsExpander.StartClosed;
+                    else
+                        throw new ArgumentException(string.Format("The attribut 'HeaderAsExpander' '{0}' is invalid. Value must be 'StartExpanded' (or 'SE') or 'StartClosed' (or 'SC') (no case sentitive)", value));
                 }
             }
         }
@@ -106,9 +130,8 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
         public XmlTemplateOption()
         {
             Orientation = Orientation.Vertical;
-            ExpanderMode = ExpanderMode.DontRender;
-            CanSort = true;
-            HeaderAsExpander = true;
+            ExpanderType = ExpanderType.Hide;
+            HeaderAsExpander = HeaderAsExpander.None;
         }
     }
 }

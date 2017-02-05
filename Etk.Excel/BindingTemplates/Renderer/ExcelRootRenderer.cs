@@ -197,7 +197,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (View.ClearingCell != null)
                 View.ClearingCell.Copy(RenderedRange);
             RowDecorators.Clear();
-
+            NestedRenderer.Clear();
             base.ClearPreviousRendering();
         }
 

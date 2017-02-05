@@ -23,9 +23,6 @@ namespace Etk.BindingTemplates.Views
         public Guid Ident
         { get; protected set; }
 
-        public ITemplateView Parent
-        { get; protected set; }
-
         public IBindingContext BindingContext
         { get; internal set; }
 
@@ -38,7 +35,6 @@ namespace Etk.BindingTemplates.Views
         /// <summary>To keep a trace of the filters defined in templates</summary>
         public Dictionary<object, Dictionary<BindingFilterDefinition, string>> FilterValueByFilterDefinitionByElement
         { get; protected set; }
-
 
         protected string searchValue;
         /// <summary>Contains the template search value </summary>
