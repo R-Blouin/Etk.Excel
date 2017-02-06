@@ -110,7 +110,18 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     try
                     {
                         IsClearing = true;
-                        ClearPreviousRendering();
+
+                        RenderedRange.Clear();
+                        if (this.View.TemplateDefinition.Orientation == Orientation.Horizontal)
+                            RenderedRange.EntireColumn.Hidden = false;
+                        else
+                            RenderedRange.EntireRow.Hidden = false;
+
+                        if (View.ClearingCell != null)
+                            View.ClearingCell.Copy(RenderedRange);
+
+                        RowDecorators.Clear();
+                        ClearRenderingData();
                     }
                     finally
                     {
@@ -185,22 +196,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #endregion
 
         #region internal, private and protected methods
-        protected override void ClearPreviousRendering()
-        {
-            RenderedRange.Clear();
-
-            if (this.View.TemplateDefinition.Orientation == Orientation.Horizontal)
-                RenderedRange.EntireColumn.Hidden = false;
-            else
-                RenderedRange.EntireRow.Hidden = false;
-
-            if (View.ClearingCell != null)
-                View.ClearingCell.Copy(RenderedRange);
-            RowDecorators.Clear();
-            NestedRenderer.Clear();
-            base.ClearPreviousRendering();
-        }
-
         private void OnNotifyPropertyChanged(IBindingContextItem contextItem, object param)
         {
             if (!IsDisposed && !IsClearing)

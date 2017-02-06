@@ -8,6 +8,9 @@ namespace Etk.BindingTemplates.Definitions.Templates
         /// <summary> Template Name</summary>
         string Name { get; }
 
+        /// <summary> Template Name</summary>
+        TemplateOption TemplateOption { get; }
+
         /// <summary> Template Description</summary>
         string Description { get; }
 

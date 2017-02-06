@@ -655,7 +655,8 @@ namespace Etk.Excel.BindingTemplates
                                     {
                                         excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
                                         excelTemplateView.RenderView();
-                                        if(!string.IsNullOrEmpty(view.SearchValue))
+                                        excelTemplateView.ManageExpander();
+                                        if (!string.IsNullOrEmpty(view.SearchValue))
                                             excelTemplateView.ExecuteSearch();
                                     }
                                     finally

@@ -57,6 +57,22 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public int Height
         { get; private set; }
 
+        public bool IsExpanded
+        {
+            get
+            {
+                //if ((FilterOwner as ExcelTemplateDefinition).ExpanderBindingDefinition != null)
+                //    isExpanded = (bool)(FilterOwner as ExcelTemplateDefinition).ExpanderBindingDefinition.ResolveBinding(GetDataSource());
+                return bindingContext.IsExpanded;
+            }
+            set
+            {
+                //&&if ((FilterOwner as ExcelTemplateDefinition).ExpanderBindingDefinition != null)
+                //    isExpanded = (bool)(FilterOwner as ExcelTemplateDefinition).ExpanderBindingDefinition.UpdateDataSource(GetDataSource(), !isExpanded);
+                //else
+                bindingContext.IsExpanded = value;
+            }
+        }
         #region .ctors
         public ExcelRenderer(ExcelRenderer parent, ITemplateDefinition templateDefinition, IBindingContext bindingContext, ExcelInterop.Range firstOutputCell, MethodInfo minOccurencesMethod)
         {
@@ -67,7 +83,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
             {
                 RootRenderer = parent.RootRenderer;
                 Parent = parent;
-                Parent.RegisterNestedRenderer(this);
             }
 
             this.templateDefinition = templateDefinition;
@@ -146,7 +161,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         {
             if (!IsDisposed)
             {
-                ClearPreviousRendering();
+                ClearRenderingData();
                 firstOutputCell = null;
                 IsDisposed = true;
             }
@@ -154,7 +169,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #endregion
 
         #region protected methods
-        protected virtual void ClearPreviousRendering()
+        protected virtual void ClearRenderingData()
         {
             if (HeaderPartRenderer != null)
             {
@@ -172,9 +187,12 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 FooterPartRenderer = null;
             }
 
+            foreach (ExcelRenderer nestedRenderer in NestedRenderer)
+                nestedRenderer.ClearRenderingData();
+
+            NestedRenderer.Clear();
             DataRows.Clear();
             RenderedRange = null;
-            RenderedArea = null;
             contextItems = null;
             cells = null;
         }

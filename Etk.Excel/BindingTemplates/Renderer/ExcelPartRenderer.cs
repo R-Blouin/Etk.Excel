@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
@@ -28,14 +27,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected ExcelInterop.Range currentRenderingFrom;
         protected ExcelInterop.Range currentRenderingTo;
 
+        internal ExcelInterop.Range RenderedRange
+        { get; private set; }
+
         public int Height
         { get; protected set; }
 
         public int Width
         { get; protected set; }
-
-        public ExcelInterop.Range RenderedRange
-        { get; private set; }
 
         public RenderedArea RenderedArea
         { get; protected set; }
@@ -79,6 +78,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             }
             if (Width > 0 && Height > 0)
             {
+                //RenderedArea = new RenderedArea(firstRangeTo.Column, firstRangeTo.Row, Width, Height);
                 RenderedArea = new RenderedArea(firstRangeTo.Column, firstRangeTo.Row, Width, Height);
                 RenderedRange = firstRangeTo.Resize[Height, Width];
             }

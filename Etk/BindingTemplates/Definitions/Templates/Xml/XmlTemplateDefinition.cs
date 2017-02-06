@@ -111,7 +111,7 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
                     headerAsExpanderStr = value.Trim().ToUpper();
                     if (headerAsExpanderStr.Equals("STARTEXPANDED") || headerAsExpanderStr.Equals("SE"))
                         HeaderAsExpander = HeaderAsExpander.StartExpanded;
-                    if (headerAsExpanderStr.Equals("STARTCLOSED") || headerAsExpanderStr.Equals("SC"))
+                    else if (headerAsExpanderStr.Equals("STARTCLOSED") || headerAsExpanderStr.Equals("SC"))
                         HeaderAsExpander = HeaderAsExpander.StartClosed;
                     else
                         throw new ArgumentException(string.Format("The attribut 'HeaderAsExpander' '{0}' is invalid. Value must be 'StartExpanded' (or 'SE') or 'StartClosed' (or 'SC') (no case sentitive)", value));
@@ -132,6 +132,7 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
             Orientation = Orientation.Vertical;
             ExpanderType = ExpanderType.Hide;
             HeaderAsExpander = HeaderAsExpander.None;
+            //AddBorder = true;
         }
     }
 }

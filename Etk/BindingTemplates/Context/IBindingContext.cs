@@ -27,6 +27,8 @@ namespace Etk.BindingTemplates.Context
         IBindingContextPart Body { get; }
         IBindingContextPart Footer { get; }
 
+        bool IsExpanded { get; set; }
+
         List<IFilterDefinition> TemplatedFilters { get; }
     }
 }

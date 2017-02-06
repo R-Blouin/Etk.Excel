@@ -121,24 +121,6 @@ namespace Etk.Excel.BindingTemplates.Views
                 }
             }
         }
-
-        private bool isExpanded = true;
-        public bool IsExpanded
-        {
-            get
-            {
-                //if ((FilterOwner as ExcelTemplateDefinition).ExpanderBindingDefinition != null)
-                //    isExpanded = (bool)(FilterOwner as ExcelTemplateDefinition).ExpanderBindingDefinition.ResolveBinding(GetDataSource());
-                return isExpanded;
-            }
-            set
-            {
-                //&&if ((FilterOwner as ExcelTemplateDefinition).ExpanderBindingDefinition != null)
-                //    isExpanded = (bool)(FilterOwner as ExcelTemplateDefinition).ExpanderBindingDefinition.UpdateDataSource(GetDataSource(), !isExpanded);
-                //else
-                    isExpanded = !isExpanded;
-            }
-        }
         #endregion
 
         #region .ctors
@@ -490,6 +472,12 @@ namespace Etk.Excel.BindingTemplates.Views
             }
         }
 
+        internal void ManageExpander()
+        {
+            if(Renderer != null)
+                ManageExpander(Renderer);
+        }
+
         /// <summary>
         /// Bind the template to Excel => RenderView Excel cells based on the datasource currently injected. 
         /// </summary>
@@ -645,7 +633,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 {
                     IBindingContextElement currentContextElement = currentContextItem.ParentElement;
                     if (currentContextElement != null && currentContextElement.ParentPart != null && currentContextElement.ParentPart.PartType == BindingContextPartType.Header 
-                        )//&& ((TemplateDefinition)currentContextElement.ParentPart.TemplateDefinitionPart.Parent).TemplateOption.HeaderAsExpander != HeaderAsExpander.None)
+                        && ((TemplateDefinition)currentContextElement.ParentPart.TemplateDefinitionPart.Parent).TemplateOption.HeaderAsExpander != HeaderAsExpander.None)
                     {
                         if(CheckHeaderAsExpander(Renderer, target))
                             cancel = true;
@@ -691,16 +679,47 @@ namespace Etk.Excel.BindingTemplates.Views
         private bool CheckHeaderAsExpander(ExcelRenderer renderer,  ExcelInterop.Range target)
         {
             if (renderer.HeaderPartRenderer != null && renderer.HeaderPartRenderer.RenderedRange != null && ETKExcel.ExcelApplication.Application.Intersect(renderer.HeaderPartRenderer.RenderedRange, target) != null)
+            {
+                renderer.IsExpanded = ! renderer.IsExpanded;
+                ManageExpander(renderer);
                 return true;
+            }
             else
             {
-                foreach (ExcelRenderer nestedRenderer in Renderer.NestedRenderer)
+                foreach (ExcelRenderer nestedRenderer in renderer.NestedRenderer)
                 {
                     if (CheckHeaderAsExpander(nestedRenderer, target))
                         return true;
                 }
             }
             return false;
+        }
+
+        private void ManageExpander(ExcelRenderer renderer)
+        {
+            using (FreezeExcel freezeExcel = new FreezeExcel())
+            {
+                if(renderer.BodyPartRenderer != null && renderer.BodyPartRenderer.RenderedRange != null 
+                    || renderer.FooterPartRenderer != null && renderer.FooterPartRenderer.RenderedRange != null)
+                {
+                    bool carryOn = true;
+                    if(renderer.HeaderPartRenderer != null)
+                    {
+                        carryOn = renderer.IsExpanded;
+                        ExcelInterop.Range toShowHide = null;
+                        toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
+                        toShowHide = toShowHide.Resize[renderer.RenderedArea.Height - renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
+                        toShowHide.EntireRow.Hidden = ! renderer.IsExpanded;
+                        toShowHide = null;
+                    }
+
+                    if (carryOn)
+                    {
+                        foreach (ExcelRenderer nestedRenderer in renderer.NestedRenderer)
+                            ManageExpander(nestedRenderer);
+                    }
+                }
+            }
         }
 
         private void HighlightSelection(ExcelInterop.Range selectedCell)

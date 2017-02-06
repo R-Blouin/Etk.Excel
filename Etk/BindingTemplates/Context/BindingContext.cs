@@ -41,6 +41,9 @@ namespace Etk.BindingTemplates.Context
         public List<IFilterDefinition> TemplatedFilters
         { get; private set; }
 
+        public bool IsExpanded
+        { get; set; }
+
         #region .ctors
         public BindingContext(IBindingContextElement parent, ITemplateView owner, ITemplateDefinition templateDefinition, object dataSource, List<IFilterDefinition> templatedFilters)
         {
@@ -54,6 +57,7 @@ namespace Etk.BindingTemplates.Context
                 Owner = owner;
                 TemplateDefinition = templateDefinition;
                 TemplatedFilters = templatedFilters;
+                IsExpanded = TemplateDefinition.TemplateOption.HeaderAsExpander != HeaderAsExpander.StartClosed;
 
                 //TemplatedSortsAndFilters = templatedSortsAndFilters;
                 Parent = parent;
