@@ -288,6 +288,9 @@ namespace Etk.Excel.BindingTemplates.Views
                     cells.Hidden = showOrHide.Value;
                     cells = null;
                 }
+
+                if (string.IsNullOrEmpty(SearchValue))
+                    ManageExpander();
             }
         }
 
@@ -626,7 +629,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 if (currentContextItem.BindingDefinition.OnClick != null)
                 {
                     ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(currentContextItem.BindingDefinition.OnClick, 
-                                                                                                target, currentContextItem.ParentElement, currentContextItem.ParentElement);
+                                                                                             target, currentContextItem.ParentElement, currentContextItem.ParentElement);
                     cancel = true;
                 }
                 else
@@ -639,37 +642,8 @@ namespace Etk.Excel.BindingTemplates.Views
                             cancel = true;
                     }
                 }
-                //else
-                //{
-                //    // If not, ask the containing template (and its owner and the owner of its owner etc.... => bubble up the event)) if they contain a left double click callback
-                //    // Invoke the first found 
-                //    IBindingContextElement catchingContextElement = currentContextItem.ParentElement;
-                //    do
-                //    {
-                //        ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                //        MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).OnLeftDoubleClick;
-                //        if (callback != null)
-                //        {
-                //            ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem.ParentElement);
-                //            cancel = true;
-                //        }
-                //        if (!cancel)
-                //            catchingContextElement = catchingContextElement.ParentPart.ParentContext == null ? null : catchingContextElement.ParentPart.ParentContext.Parent;
-                //    }
-                //    while (!cancel && catchingContextElement != null);
-                //}
             }
 
-            // Manage the expander (=> the header capability to expand)
-            //if (!ret && Expander != null && Expander.RenderedArea != null)
-            //{
-            //    Range intersectExpander = ETKExcel.ExcelApplication.Application.Intersect(Expander.RenderedRange, target);
-            //    if (intersectExpander != null)
-            //    {
-            //        ResolveExpander();
-            //        ret = true;
-            //    }
-            //}
             intersect = null;
             return true;
         }
@@ -700,17 +674,22 @@ namespace Etk.Excel.BindingTemplates.Views
             using (FreezeExcel freezeExcel = new FreezeExcel())
             {
                 if(renderer.BodyPartRenderer != null && renderer.BodyPartRenderer.RenderedRange != null 
-                    || renderer.FooterPartRenderer != null && renderer.FooterPartRenderer.RenderedRange != null)
+                   || renderer.FooterPartRenderer != null && renderer.FooterPartRenderer.RenderedRange != null)
                 {
                     bool carryOn = true;
-                    if(renderer.HeaderPartRenderer != null)
+                    if(renderer.HeaderPartRenderer != null && renderer.HasExpander)
                     {
                         carryOn = renderer.IsExpanded;
                         ExcelInterop.Range toShowHide = null;
-                        toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
-                        toShowHide = toShowHide.Resize[renderer.RenderedArea.Height - renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
-                        toShowHide.EntireRow.Hidden = ! renderer.IsExpanded;
-                        toShowHide = null;
+
+                        int toShowHideSize = renderer.RenderedArea.Height - renderer.HeaderPartRenderer.RenderedArea.Height;
+                        if (toShowHideSize > 1)
+                        {
+                            toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
+                            toShowHide = toShowHide.Resize[toShowHideSize, Type.Missing];
+                            toShowHide.EntireRow.Hidden = !renderer.IsExpanded;
+                            toShowHide = null;
+                        }
                     }
 
                     if (carryOn)

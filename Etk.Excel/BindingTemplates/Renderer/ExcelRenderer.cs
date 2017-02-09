@@ -57,6 +57,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public int Height
         { get; private set; }
 
+        public bool HasExpander { get{ return templateDefinition.TemplateOption.HeaderAsExpander != HeaderAsExpander.None; }}
+
         public bool IsExpanded
         {
             get
@@ -73,6 +75,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 bindingContext.IsExpanded = value;
             }
         }
+
         #region .ctors
         public ExcelRenderer(ExcelRenderer parent, ITemplateDefinition templateDefinition, IBindingContext bindingContext, ExcelInterop.Range firstOutputCell, MethodInfo minOccurencesMethod)
         {
