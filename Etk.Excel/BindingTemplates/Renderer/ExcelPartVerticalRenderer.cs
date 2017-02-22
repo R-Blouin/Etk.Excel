@@ -364,9 +364,12 @@ namespace Etk.Excel.BindingTemplates.Renderer
             ExcelInterop.Range workingRange = currentRenderingTo.Resize[1, gap];
             source.Copy(workingRange);
 
+            int bindingContextItemsCount =  renderingContext.ContextElement.BindingContextItems.Count;
             for (int colId = startPos; colId < endPos; colId++)
             {
-                IBindingContextItem item = partToRenderDefinition.DefinitionParts[renderingContext.RowId, colId] == null ? null : renderingContext.ContextElement.BindingContextItems[currentBindingContextItemId++];
+                IBindingContextItem item = partToRenderDefinition.DefinitionParts[renderingContext.RowId, colId] == null || bindingContextItemsCount <= currentBindingContextItemId 
+                                           ? null 
+                                           : renderingContext.ContextElement.BindingContextItems[currentBindingContextItemId++];
                 if (item != null && ((item.BindingDefinition != null && (item.BindingDefinition.IsEnum || item.BindingDefinition.IsMultiLine)) || item is IExcelControl || item is ExcelBindingSearchContextItem))
                 {                  
                     ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];

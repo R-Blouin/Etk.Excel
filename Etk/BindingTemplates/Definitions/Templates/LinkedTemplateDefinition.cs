@@ -57,7 +57,8 @@ namespace Etk.BindingTemplates.Definitions.Templates
                            || templateDefinition.Footer != null && ((TemplateDefinitionPart)templateDefinition.Footer).HasLinkedTemplates)
                             throw new Exception("'MinOccurencesMethod' is not supported with templates linked with other templates");
 
-                        MinOccurencesMethod = TypeHelpers.GetMethod(TemplateDefinition.MainBindingDefinition.BindingType, linkDefinition.MinOccurencesMethod);
+                        Type type = TemplateDefinition.MainBindingDefinition == null ? null : TemplateDefinition.MainBindingDefinition.BindingType;
+                        MinOccurencesMethod = TypeHelpers.GetMethod(type, linkDefinition.MinOccurencesMethod);
                         if (MinOccurencesMethod.GetParameters().Length > 2)
                             throw new Exception("The min occurences resolver method signature must be 'int <MethodName>([instance of element of the collection that owned the link declaration])'");
                     }
