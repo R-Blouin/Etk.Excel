@@ -353,50 +353,50 @@ namespace Etk.Excel.BindingTemplates.Views
         #endregion
 
         #region internal methods
-        internal void ResolveExpander()
-        {
-            //if (!FilterOwner.HeaderAsExpander)
-            //    return;
+        //internal void ResolveExpander()
+        //{
+        //    //if (!FilterOwner.HeaderAsExpander)
+        //    //    return;
 
-            //if (FilterOwner.ExpanderMode == ExpanderMode.Hide)
-            //{
-            //    Worksheet worksheet = Expander.OutputRange.Worksheet;
-            //    Range toShowHide;
-            //    try
-            //    {
-            //        if (FilterOwner.Orientation == Orientation.Vertical)
-            //        {
-            //            int headerHeight = Expander.OutputRange.Rows.Count;
-            //            toShowHide = worksheet.Cells[RenderedArea.YFirstCell + headerHeight, 1];
-            //            toShowHide = toShowHide.Resize[RenderedArea.Height - headerHeight, 1];
-            //        }
-            //        else
-            //        {
-            //            int headerWidth = Expander.OutputRange.Columns.Count;
-            //            toShowHide = worksheet.Cells[1, RenderedArea.XFirstCell + headerWidth];
-            //            toShowHide = toShowHide.Resize[1, RenderedArea.Width - headerWidth];
-            //        }
-            //        toShowHide.EntireRow.Hidden = IsExpanded;
-            //        IsExpanded = !IsExpanded;
-            //    }
-            //    finally
-            //    {
-            //        Marshal.ReleaseComObject(worksheet);
-            //        worksheet = null;
-            //        toShowHide = null;
-            //    }
-            //}
-            //else
-            //{
-            //    IsExpanded = !IsExpanded;
-            //    ITemplateView viewToRender = this;
-            //    while (viewToRender.ParentElement != null)
-            //    {
-            //        viewToRender = viewToRender.ParentElement;
-            //    }
-            //    ETKExcel.TemplateManager.RenderView((IExcelTemplateView)viewToRender);
-            //}
-        }
+        //    //if (FilterOwner.ExpanderMode == ExpanderMode.Hide)
+        //    //{
+        //    //    Worksheet worksheet = Expander.OutputRange.Worksheet;
+        //    //    Range toShowHide;
+        //    //    try
+        //    //    {
+        //    //        if (FilterOwner.Orientation == Orientation.Vertical)
+        //    //        {
+        //    //            int headerHeight = Expander.OutputRange.Rows.Count;
+        //    //            toShowHide = worksheet.Cells[RenderedArea.YFirstCell + headerHeight, 1];
+        //    //            toShowHide = toShowHide.Resize[RenderedArea.Height - headerHeight, 1];
+        //    //        }
+        //    //        else
+        //    //        {
+        //    //            int headerWidth = Expander.OutputRange.Columns.Count;
+        //    //            toShowHide = worksheet.Cells[1, RenderedArea.XFirstCell + headerWidth];
+        //    //            toShowHide = toShowHide.Resize[1, RenderedArea.Width - headerWidth];
+        //    //        }
+        //    //        toShowHide.EntireRow.Hidden = IsExpanded;
+        //    //        IsExpanded = !IsExpanded;
+        //    //    }
+        //    //    finally
+        //    //    {
+        //    //        Marshal.ReleaseComObject(worksheet);
+        //    //        worksheet = null;
+        //    //        toShowHide = null;
+        //    //    }
+        //    //}
+        //    //else
+        //    //{
+        //    //    IsExpanded = !IsExpanded;
+        //    //    ITemplateView viewToRender = this;
+        //    //    while (viewToRender.ParentElement != null)
+        //    //    {
+        //    //        viewToRender = viewToRender.ParentElement;
+        //    //    }
+        //    //    ETKExcel.TemplateManager.RenderView((IExcelTemplateView)viewToRender);
+        //    //}
+        //}
 
         internal void OnViewSheetIsActivated()
         {
@@ -683,7 +683,7 @@ namespace Etk.Excel.BindingTemplates.Views
                         ExcelInterop.Range toShowHide = null;
 
                         int toShowHideSize = renderer.RenderedArea.Height - renderer.HeaderPartRenderer.RenderedArea.Height;
-                        if (toShowHideSize > 1)
+                        if (toShowHideSize > 0)
                         {
                             toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
                             toShowHide = toShowHide.Resize[toShowHideSize, Type.Missing];
