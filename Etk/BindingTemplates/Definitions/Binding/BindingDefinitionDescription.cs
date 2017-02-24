@@ -9,6 +9,13 @@ using Etk.BindingTemplates.Definitions.Templates;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
+    public enum ShowHideMode
+    {
+        None,
+        StartShown,
+        StartHidden    
+    }
+
     public class BindingDefinitionDescription
     {
         private static DecoratorsManager decoratorsManager;
@@ -66,7 +73,10 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public MethodInfo MultiLineFactorResolver
         { get; private set; }
 
-        public bool? ShowHideStartShown
+        public ShowHideMode ShowHideMode
+        { get; private set; }
+
+        public int ShowHideValue
         { get; private set; }
 
         #region .ctors and factories
@@ -156,31 +166,31 @@ namespace Etk.BindingTemplates.Definitions.Binding
                                 }
                             }
                         }
-                        // On double left click, Show/Hide the x following/preceding colums. Start hidden  
-                        if (option.StartsWith("SHC="))
+                        // On double left click, Show/Hide the x following/preceding colums/rows. Start hidden  
+                        if (option.StartsWith("SV="))
                         {
-                            string numberOfConcernedColumns = option.Substring(4);
+                            string numberOfConcernedColumns = option.Substring(3);
                             int wrk; 
                             if (string.IsNullOrEmpty(numberOfConcernedColumns) && int.TryParse(numberOfConcernedColumns, out wrk))
                             {
-                                //OnLeftDoubleClick = todo
-                                ShowHideStartShown = false;
+                                ShowHideMode = ShowHideMode.StartShown;
+                                ShowHideValue = wrk;
                                 continue;
                             }
-                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SHC=<int>' whre '<int>' is a integer");
+                            throw new Exception("The 'Show/Hide' prototype must be defined as 'SV=<int>' whre '<int>' is a integer");
                         }
                         // On double left click, Show/Hide the x following/preceding colums. Start shown
-                        if (option.StartsWith("HSC="))
+                        if (option.StartsWith("SH="))
                         {
-                            string numberOfConcernedColumns = option.Substring(4);
+                            string numberOfConcernedColumns = option.Substring(3);
                             int wrk;
                             if (string.IsNullOrEmpty(numberOfConcernedColumns) && int.TryParse(numberOfConcernedColumns, out wrk))
                             {
-                                //OnLeftDoubleClick = todo
-                                ShowHideStartShown = true;
+                                ShowHideMode = ShowHideMode.StartHidden;
+                                ShowHideValue = wrk;
                                 continue;
                             }
-                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'HSC=<int>' whre '<int>' is a integer");
+                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SH=<int>' whre '<int>' is a integer");
                         }
                     }
                 }

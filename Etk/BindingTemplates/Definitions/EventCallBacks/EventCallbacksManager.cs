@@ -10,7 +10,7 @@ using Etk.Tools.Log;
 
 namespace Etk.BindingTemplates.Definitions.EventCallBacks
 {
-    /// <summary> Manage the <see cref="Decorator"/> used in the current application</summary>
+    /// <summary> Manage the <see cref="EventCallback"/> used in the current application</summary>
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class EventCallbacksManager : IDisposable
@@ -43,7 +43,6 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
                 throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message));
             }
         }
-
 
         /// <summary> Return a <see cref="EventCallback"/> given an ident</summary>
         /// <param name="ident">the ident of the <see cref="EventCallback"/> to return</param>
