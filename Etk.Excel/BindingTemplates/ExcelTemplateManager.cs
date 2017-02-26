@@ -491,8 +491,6 @@ namespace Etk.Excel.BindingTemplates
                                                                                                          , sheetTemplateName.EmptyIfNull()
                                                                                                          , templateName.EmptyIfNull());
                 Logger.Instance.LogException(LogType.Error, ex, message);
-                Logger.Instance.LogException(LogType.Error, ex, message);
-
                 throw new EtkException(message, ex);
                 //ExcelApplication.DisplayException(null, message, ex);
                 //return null;

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Excel", "Etk.Excel\Etk.Excel.csproj", "{14413CBB-3028-462C-958D-16E96575A06F}"
 EndProject
@@ -16,6 +16,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Tests.Templates.ExcelDna1", "TestsAndDemos\Tests\Etk.Tests.Templates.ExcelDna1\Etk.Tests.Templates.ExcelDna1.csproj", "{E1C41049-C580-40C8-8D8E-DA93C2923D1B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Tests.Data", "TestsAndDemos\Tests\Etk.Tests.Data\Etk.Tests.Data.csproj", "{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EtkTemplatesWithDna1", "..\EtkFramework\Etk-TestsAndDemos\Tests\ExcelDna\EtkTemplatesWithDna1\EtkTemplatesWithDna1.csproj", "{5FE46470-4F65-4AB0-9703-5E9AEF0AD3B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Temp", "Temp", "{EFB07806-F037-4B69-9082-246C40432490}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Tests.Data.Shops.Services", "..\EtkFramework\Etk-TestsAndDemos\Tests\Etk.Tests.Data.Shops.Services\Etk.Tests.Data.Shops.Services.csproj", "{2A6E78A1-BDCF-42D9-9EBE-779406500B80}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestsAndDemos", "TestsAndDemos", "{F6EA387B-EC51-4061-B8CC-328033EC1D21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +51,14 @@ Global
 		{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FE46470-4F65-4AB0-9703-5E9AEF0AD3B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FE46470-4F65-4AB0-9703-5E9AEF0AD3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FE46470-4F65-4AB0-9703-5E9AEF0AD3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FE46470-4F65-4AB0-9703-5E9AEF0AD3B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A6E78A1-BDCF-42D9-9EBE-779406500B80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A6E78A1-BDCF-42D9-9EBE-779406500B80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A6E78A1-BDCF-42D9-9EBE-779406500B80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A6E78A1-BDCF-42D9-9EBE-779406500B80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,5 +67,9 @@ Global
 		{14413CBB-3028-462C-958D-16E96575A06F} = {84EAE8AF-5805-4A27-824B-604491162B9C}
 		{10188A0E-231D-42DA-952E-A260402B3EA4} = {84EAE8AF-5805-4A27-824B-604491162B9C}
 		{3E0A9685-1208-46B4-B824-A94E7CB25FCF} = {84EAE8AF-5805-4A27-824B-604491162B9C}
+		{E1C41049-C580-40C8-8D8E-DA93C2923D1B} = {F6EA387B-EC51-4061-B8CC-328033EC1D21}
+		{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8} = {F6EA387B-EC51-4061-B8CC-328033EC1D21}
+		{5FE46470-4F65-4AB0-9703-5E9AEF0AD3B6} = {EFB07806-F037-4B69-9082-246C40432490}
+		{2A6E78A1-BDCF-42D9-9EBE-779406500B80} = {EFB07806-F037-4B69-9082-246C40432490}
 	EndGlobalSection
 EndGlobal

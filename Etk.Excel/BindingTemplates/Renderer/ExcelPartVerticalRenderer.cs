@@ -165,8 +165,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
                                 renderingContext.CurrentRowWidth += renderingContext.LinkedViewRenderedWidth;
                             }
 
-                            // RenderView after link
-                            if (linkCpt == lastPosLink && renderingContext.PosCurrentLink != partToRenderDefinition.Width)
+                            // RenderView after last link
+                            if (linkCpt == lastPosLink && renderingContext.PosCurrentLink + 1 < partToRenderDefinition.Width)
                                 bindingContextItemsCpt = RenderAfterLink(renderingContext, bindingContextItemsCpt);
 
                             if (renderingContext.CurrentRowWidth > elementWidth)
@@ -236,29 +236,49 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         private void RenderLink(RenderingContext renderingContext, IBindingContext linkedBindingContext, ExcelInterop.Worksheet worksheetTo)
         {
-            //using (ExcelRenderer linkedRenderer = new ExcelRenderer(Parent, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo,  renderingContext.LinkedTemplateDefinition.MinOccurencesMethod))
+            ExcelRenderer linkedRenderer = new ExcelRenderer(Parent, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo,
+                                                                renderingContext.LinkedTemplateDefinition.MinOccurencesMethod);
+            Parent.RegisterNestedRenderer(linkedRenderer);
+
+            linkedRenderer.Render();
+
+            if (linkedRenderer.RenderedArea != null)
             {
-                ExcelRenderer linkedRenderer = new ExcelRenderer(Parent, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo,
-                                                                 renderingContext.LinkedTemplateDefinition.MinOccurencesMethod);
-                Parent.RegisterNestedRenderer(linkedRenderer);
-
-                linkedRenderer.Render();
-
-                if (linkedRenderer.RenderedArea != null)
+                renderingContext.LinkedViewRenderedWidth = linkedRenderer.Width;
+                if (!renderingContext.RowAdded)
                 {
-                    renderingContext.LinkedViewRenderedWidth = linkedRenderer.Width;
-                    if (!renderingContext.RowAdded)
+                    AddRow(renderingContext);
+                    renderingContext.RowAdded = true;
+                }
+
+                renderingContext.DataRow.AddRange(linkedRenderer.DataRows[0]);
+
+                for (int i = 1; i < linkedRenderer.Height; i++) //for (int i = 1; i < linkedRenderer.DataRow.Count; i++)
+                {
+                    List<IBindingContextItem> rowToUse;
+                    if (i >= renderingContext.CurrentRowHeight)
                     {
-                        AddRow(renderingContext);
-                        renderingContext.RowAdded = true;
+                        rowToUse = renderingContext.CurrentRowWidth > 0 ? new List<IBindingContextItem>(new IBindingContextItem[renderingContext.CurrentRowWidth])
+                                                                        : new List<IBindingContextItem>();
+                        Parent.DataRows.Add(rowToUse);
                     }
-
-                    renderingContext.DataRow.AddRange(linkedRenderer.DataRows[0]);
-
-                    for (int i = 1; i < linkedRenderer.Height; i++) //for (int i = 1; i < linkedRenderer.DataRow.Count; i++)
+                    else
                     {
+                        rowToUse = Parent.DataRows[i + renderingContext.RefRow];
+                        if (rowToUse.Count < renderingContext.CurrentRowWidth)
+                            rowToUse.AddRange(new IBindingContextItem[renderingContext.CurrentRowWidth - rowToUse.Count]);
+                    }
+                    rowToUse.AddRange(linkedRenderer.DataRows[i]);
+                }
+
+                // To take the multilines into account
+                if (linkedRenderer.Height > linkedRenderer.DataRows.Count)
+                {
+                    for (int cpt = linkedRenderer.DataRows.Count + 1; cpt <= linkedRenderer.Height; cpt++)
+                    {
+                        //Parent.DataRow.Add(new List<IBindingContextItem>(new IBindingContextItem[0]));
                         List<IBindingContextItem> rowToUse;
-                        if (i >= renderingContext.CurrentRowHeight)
+                        if (cpt >= renderingContext.CurrentRowHeight)
                         {
                             rowToUse = renderingContext.CurrentRowWidth > 0 ? new List<IBindingContextItem>(new IBindingContextItem[renderingContext.CurrentRowWidth])
                                                                             : new List<IBindingContextItem>();
@@ -266,41 +286,18 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         }
                         else
                         {
-                            rowToUse = Parent.DataRows[i + renderingContext.RefRow];
+                            rowToUse = Parent.DataRows[cpt + renderingContext.RefRow];
                             if (rowToUse.Count < renderingContext.CurrentRowWidth)
                                 rowToUse.AddRange(new IBindingContextItem[renderingContext.CurrentRowWidth - rowToUse.Count]);
                         }
-                        rowToUse.AddRange(linkedRenderer.DataRows[i]);
+                        rowToUse.AddRange(new IBindingContextItem[linkedRenderer.Width]);
                     }
-
-                    // To take the multilines into account
-                    if (linkedRenderer.Height > linkedRenderer.DataRows.Count)
-                    {
-                        for (int cpt = linkedRenderer.DataRows.Count + 1; cpt <= linkedRenderer.Height; cpt++)
-                        {
-                            //Parent.DataRow.Add(new List<IBindingContextItem>(new IBindingContextItem[0]));
-                            List<IBindingContextItem> rowToUse;
-                            if (cpt >= renderingContext.CurrentRowHeight)
-                            {
-                                rowToUse = renderingContext.CurrentRowWidth > 0 ? new List<IBindingContextItem>(new IBindingContextItem[renderingContext.CurrentRowWidth])
-                                                                                : new List<IBindingContextItem>();
-                                Parent.DataRows.Add(rowToUse);
-                            }
-                            else
-                            {
-                                rowToUse = Parent.DataRows[cpt + renderingContext.RefRow];
-                                if (rowToUse.Count < renderingContext.CurrentRowWidth)
-                                    rowToUse.AddRange(new IBindingContextItem[renderingContext.CurrentRowWidth - rowToUse.Count]);
-                            }
-                            rowToUse.AddRange(new IBindingContextItem[linkedRenderer.Width]);
-                        }
-                    }
-
-                    if (renderingContext.CurrentRowHeight < linkedRenderer.Height)
-                        renderingContext.CurrentRowHeight = linkedRenderer.Height;
-
-                    currentRenderingTo = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + linkedRenderer.Width];
                 }
+
+                if (renderingContext.CurrentRowHeight < linkedRenderer.Height)
+                    renderingContext.CurrentRowHeight = linkedRenderer.Height;
+
+                currentRenderingTo = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + linkedRenderer.Width];
             }
         }
 
@@ -308,7 +305,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
         {
             int vOffset = 1;
             int startPosition = renderingContext.PosCurrentLink + 1;
-            if (renderingContext.LinkedTemplateDefinition.Positioning == LinkedTemplatePositioning.Absolute)
+            if (renderingContext.LinkedTemplateDefinition.Positioning == LinkedTemplatePositioning.Absolute 
+                )//&& renderingContext.ContextElement != null && renderingContext.ContextElement.BindingContextItems.Count > renderingContext.PosCurrentLink)
             {
                 int afterWrittenPosition = renderingContext.PosCurrentLink + renderingContext.LinkedViewRenderedWidth;
                 for (int i = startPosition; i < afterWrittenPosition; i++)
