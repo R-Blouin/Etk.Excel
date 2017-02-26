@@ -1,0 +1,18 @@
+﻿<metroControls:MetroWindow x:Class="Etk.Demo.Shops.UI.Wpf.MainWindow"
+                           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                           xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                           xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                           xmlns:metroControls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                           xmlns:CommonControls="clr-namespace:Etk.Demo.Shops.UI.Common.Controls;assembly=Etk.Demo.Shops.UI.Common"
+                           xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                                                      
+                           Title="Shops" 
+
+                           WindowTransitionsEnabled="True"
+                           GlowBrush="{DynamicResource AccentColorBrush}"
+                           ResizeMode="CanResizeWithGrip" 
+                           ShowInTaskbar="True" 
+>
+    <CommonControls:ShopsControl/>
+</metroControls:MetroWindow>

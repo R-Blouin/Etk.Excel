@@ -11,6 +11,16 @@
     {       
         #region attributes and properties
         static private ShopList shopList;
+
+        public static IEnumerable<Shop> Shops
+        {
+            get
+            {
+                if (shopList == null)
+                    return null;
+                return shopList.Shops;
+            }
+        }
         #endregion
 
         #region .ctors
@@ -35,36 +45,29 @@
         #endregion
 
         #region public methods
-        static public IEnumerable<Shop> GetShops()
-        {
-            if (shopList == null)
-                return null;
-            return shopList.Shops;
-        }
+        ///// <summary> Retrieve a shop by its Id</summary>
+        ///// <param name="shopId">shop Id to retrieve</param>
+        ///// <returns>A Customer having 'shopIdent' for id or null </returns>
+        //static public Shop GetShop(int shopId)
+        //{
+        //    if (shopList == null && shopList.Shops == null)
+        //        return null;
+        //    return shopList.Shops.FirstOrDefault(c => c.Id == shopId);
+        //}
 
-        /// <summary> Retrieve a shop by its Id</summary>
-        /// <param name="shopId">shop Id to retrieve</param>
-        /// <returns>A Customer having 'shopIdent' for id or null </returns>
-        static public Shop GetShop(int shopId)
-        {
-            if (shopList == null && shopList.Shops == null)
-                return null;
-            return shopList.Shops.FirstOrDefault(c => c.Id == shopId);
-        }
+        ///// <summary> Retrieve the customer of a specific shop.</summary>
+        ///// <param name="shopId">shop Id to retrieve</param>
+        //static public IEnumerable<Customer> GetShopCustomers(int shopId)
+        //{
+        //    if (shopList == null && shopList.Shops == null)
+        //        return null;
 
-        /// <summary> Retrieve the customer of a specific shop.</summary>
-        /// <param name="shopId">shop Id to retrieve</param>
-        static public IEnumerable<Customer> GetShopCustomers(int shopId)
-        {
-            if (shopList == null && shopList.Shops == null)
-                return null;
+        //    Shop shop = GetShop(shopId);
+        //    if (shop == null)
+        //        return null;
 
-            Shop shop = GetShop(shopId);
-            if (shop == null)
-                return null;
-
-            return shop.GetCustomers();
-        }
+        //    return shop.Customers;
+        //}
         #endregion
     }
 }

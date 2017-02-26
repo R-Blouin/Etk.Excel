@@ -12,6 +12,16 @@
     {
         #region attributes and properties
         static private CustomerList customerList;
+
+        public static IEnumerable<Customer> Customers
+        {
+            get
+            {
+                if (customerList == null)
+                    return null;
+                return customerList.Customers;
+            }
+        }
         #endregion
 
         #region .ctors
@@ -34,14 +44,6 @@
         #endregion
 
         #region public methods
-        /// <summary> Retrieve all the managed customers</summary>
-        public static IEnumerable<Customer> GetAllCustomers()
-        {
-            if (customerList == null)
-                return null;
-            return customerList.Customers;
-        }
-
         /// <summary>Return a list of specific customers</summary>
         /// <param name="ids">the customer ids to retrieve</param>
         public static IEnumerable<Customer> GetCustomers(IEnumerable<int> ids)
@@ -55,7 +57,7 @@
 
         public static int GetMaxOrdersLines()
         {
-            return customerList.Customers.SelectMany(c => c.GetOrders()).Max(o => o.Lines.Count);
+            return customerList.Customers.SelectMany(c => c.Orders).Max(o => o.Lines.Count);
         }
 
         /// <summary> Retrieve a customer by its Id</summary>
@@ -79,7 +81,7 @@
             Customer customer = GetCustomer(customerId);
             if (customer != null)
             {
-                IEnumerable<Order> orders = customer.GetOrders();
+                IEnumerable<Order> orders = customer.Orders;
                 if (orders != null)
                     order = orders.FirstOrDefault(o => o.Id == orderId);
             }
@@ -97,7 +99,7 @@
             IEnumerable<Order> orders = null;
             Customer customer = GetCustomer(customerId);
             if (customer != null)
-                orders = customer.GetOrders();
+                orders = customer.Orders;
  
             if (orders != null && date.HasValue)
                 orders = orders.Where(o => o.Date == date.Value);

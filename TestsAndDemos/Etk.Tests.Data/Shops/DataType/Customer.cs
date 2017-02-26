@@ -102,10 +102,11 @@
         public List<int> OrderIds
         { get; set; }
 
-
-        //[XmlIgnore]
-        //public List<Order> Orders
-        //{ get; private set; }
+        [XmlIgnore]
+        public IEnumerable<Order> Orders
+        {
+            get { return OrdersManager.GetOrders(OrderIds); }
+        }
 
         [XmlIgnore]
         public string Name
@@ -122,11 +123,6 @@
         #endregion
 
         #region public methods
-        public IEnumerable<Order> GetOrders()
-        {
-            return OrdersManager.GetOrders(OrderIds);
-        }
-
         public IEnumerable<OrderLine> GetAllOrdersLines()
         {
             List<OrderLine> ret = new List<OrderLine>();

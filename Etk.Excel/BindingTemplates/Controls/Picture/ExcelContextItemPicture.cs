@@ -12,7 +12,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
     {
         #region attributes and properties
         private ExcelBindingDefinitionPicture excelBindingDefinition;
-        private ExcelContextItemPicture picture;
+        //private ExcelContextItemPicture picture;
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
 
         public Action<IBindingContextItem, object> OnPropertyChangedAction
@@ -67,8 +67,8 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
                 EnableProperty = null;
             }
 
-            if (picture != null)
-                picture.Dispose();
+            //if (picture != null)
+            //    picture.Dispose();
         }
 
         public void OnPropertyChanged(object source, PropertyChangedEventArgs args)

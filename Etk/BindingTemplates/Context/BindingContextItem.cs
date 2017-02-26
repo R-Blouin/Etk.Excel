@@ -9,7 +9,7 @@ namespace Etk.BindingTemplates.Context
     public class BindingContextItem : IBindingContextItem
     {
         #region attributes and properties
-        private static long CurrentId = 0;
+        //private static long CurrentId = 0;
         
         private readonly ILogger log = Logger.Instance;
 

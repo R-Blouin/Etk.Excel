@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ExcelDna.Integration">
-      <HintPath>..\..\..\packages\ExcelDna.Integration.0.33.9\lib\ExcelDna.Integration.dll</HintPath>
+      <HintPath>..\..\packages\ExcelDna.Integration.0.33.9\lib\ExcelDna.Integration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
@@ -100,11 +100,11 @@
     <None Include="Etk.Tests.Templates.ExcelDna1.xlsx" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Etk.Excel\Etk.Excel.csproj">
+    <ProjectReference Include="..\..\Etk.Excel\Etk.Excel.csproj">
       <Project>{14413CBB-3028-462C-958D-16E96575A06F}</Project>
       <Name>Etk.Excel</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Etk\Etk.csproj">
+    <ProjectReference Include="..\..\Etk\Etk.csproj">
       <Project>{10188A0E-231D-42DA-952E-A260402B3EA4}</Project>
       <Name>Etk</Name>
     </ProjectReference>

@@ -11,6 +11,16 @@
     {       
         #region attributes and properties
         static private OrderList orderList;
+
+        public static IEnumerable<Order> Orders
+        {
+            get
+            {
+                if (orderList == null && orderList.Orders != null)
+                    return null;
+                return orderList.Orders;
+            }
+        }
         #endregion
 
         #region .ctors
@@ -22,14 +32,6 @@
         #endregion
 
         #region public methods
-        /// <summary>Return aall managed orders</summary>
-        public static IEnumerable<Order> GetAllOrders()
-        {
-            if (orderList == null && orderList.Orders != null)
-                return null;
-            return orderList.Orders;
-        }
-
         /// <summary>Return an order given its id</summary>
         /// <param name="id">Order id to retrieve</param>
         public static Order GetOrder(int id)

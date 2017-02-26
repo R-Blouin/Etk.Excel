@@ -45,6 +45,11 @@
         public List<int> CustomerIds
         { get; set; }
 
+        public IEnumerable<Customer> Customers
+        {
+            get { return CustomerManager.GetCustomers(CustomerIds); }
+        }
+
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -52,13 +57,6 @@
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-        #endregion
-
-        #region public methods
-        public IEnumerable<Customer> GetCustomers()
-        {
-            return CustomerManager.GetCustomers(CustomerIds);
         }
         #endregion
     }

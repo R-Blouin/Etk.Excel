@@ -16,3 +16,10 @@ obj
 /TestsAndDemos/Etk.Tests.Templates.ExcelDna1/Etk.Tests.Templates.ExcelDna1.csproj.user
 /TestsAndDemos/Etk.Tests.Templates.ExcelDna1/~$Etk.Tests.Templates.ExcelDna1.xlsx
 /*.suo
+/TestsAndDemos/Etk.Tests.Templates.ExcelDna1/bin
+/TestsAndDemos/Etk.Tests.Templates.ExcelDna1/obj
+/TestsAndDemos/Etk.Demo.Shops.UI.Common/bin
+/TestsAndDemos/Etk.Demo.Shops.UI.Excel/bin
+/TestsAndDemos/Etk.Demo.Shops.UI.Wpf/bin
+/TestsAndDemos/Etk.Tests.Data/bin
+/.vs/EtkWithExcelDnaDemos/v14/*.suo

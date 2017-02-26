@@ -84,7 +84,7 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests.BasicValueTypes.DataTypes
             get { return testInt; }
             set
             {
-                TestInt = value;
+                testInt = value;
                 OnPropertyChanged("TestInt");
             }
         }
