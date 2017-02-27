@@ -24,3 +24,4 @@ obj
 /TestsAndDemos/Etk.Tests.Data/bin
 /.vs/EtkWithExcelDnaDemos/v14/*.suo
 /TestsAndDemos/Etk.Demo.Shops.UI.Excel/Etk.Demo.Shops.UI.Excel.csproj.user
+/.vs/Etk/v14/.suo
