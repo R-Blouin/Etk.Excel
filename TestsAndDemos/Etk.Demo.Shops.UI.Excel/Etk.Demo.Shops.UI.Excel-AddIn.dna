@@ -1,5 +1,5 @@
 <DnaLibrary Name="Etk.Demo.Shops.UI.Excel Add-In" RuntimeVersion="v4.0">
-  <ExternalLibrary Path="Etk.Demo.Shops.UI.Excel.dll" LoadFromBytes="true" Pack="true" />
+  <ExternalLibrary Path="Etk.Demo.Shops.UI.Excel.dll" Pack="false" />
   
   <!-- 
        The RuntimeVersion attribute above allows two settings:

@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.Controls;
+﻿using Etk.Demo.Shops.UI.Common.Controls.ViewModels;
+using MahApps.Metro.Controls;
 
 namespace Etk.Demo.Shops.UI.Wpf
 {
@@ -10,6 +11,7 @@ namespace Etk.Demo.Shops.UI.Wpf
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new ShopsViewModel();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Etk.Demo.Shops.UI.Excel
 {
+    using Etk.Demo.Shops.UI.Excel.Sheets;
     using Etk.Excel;
     using ExcelDna.Integration;
     using Excel = Microsoft.Office.Interop.Excel;
@@ -19,6 +20,9 @@
 
             // Init the ETK Framework : mandatory before any uses of the framework
             ETKExcel.Init(ExcelApplication);
+
+            // Create, render and activate the dashboard view
+            SheetShops.CreateAndActivateDashBoard();
         }
 
         public void AutoClose()

@@ -11,7 +11,7 @@ namespace Etk.Demo.Shops.UI.Common.Controls
         public ShopsControl()
         {
             InitializeComponent();
-            DataContext = new ShopsViewModel();
+            //DataContext = new ShopsViewModel();
         }
     }
 }

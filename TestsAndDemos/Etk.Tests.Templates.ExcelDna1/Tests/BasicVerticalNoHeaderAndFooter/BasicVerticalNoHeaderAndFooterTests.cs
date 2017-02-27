@@ -14,7 +14,7 @@
         override protected void RenderViews()
         {
             CreateViews("BasicTemplates1", "BasicVerticalNoHeaderAndFooter");
-            TopicView.SetDataSource(ShopManager.GetShops());
+            TopicView.SetDataSource(ShopManager.Shops);
             ETKExcel.TemplateManager.Render(TopicView);
         }
     }

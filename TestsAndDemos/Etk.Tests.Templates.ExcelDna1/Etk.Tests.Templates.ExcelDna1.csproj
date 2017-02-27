@@ -97,7 +97,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Etk.Tests.Templates.ExcelDna1.xlsx" />
+    <None Include="Etk.Tests.Templates.ExcelDna1.xlsx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Etk.Excel\Etk.Excel.csproj">

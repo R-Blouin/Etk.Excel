@@ -16,7 +16,7 @@
         {
             CreateViews("BasicTemplates1", "BasicVerticalMultiHeaderAndFooter");
 
-            TopicView.SetDataSource(ShopManager.GetShops());
+            TopicView.SetDataSource(ShopManager.Shops);
             ETKExcel.TemplateManager.Render(TopicView);
         }
     }
