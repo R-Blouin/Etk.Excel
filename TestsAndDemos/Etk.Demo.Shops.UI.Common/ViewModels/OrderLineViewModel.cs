@@ -1,7 +1,7 @@
-﻿using Etk.Tests.Data.Shops.DataType;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using Etk.Tests.Data.Shops.DataType;
 
-namespace Etk.Demo.Shops.UI.Common.Controls.ViewModels
+namespace Etk.Demo.Shops.UI.Common.ViewModels
 {
     public class OrderLineViewModel : INotifyPropertyChanged
     {

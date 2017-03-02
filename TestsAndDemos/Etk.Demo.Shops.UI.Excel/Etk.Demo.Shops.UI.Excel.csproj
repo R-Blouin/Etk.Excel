@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddinManager.cs" />
+    <Compile Include="AddinRibbon.cs" />
     <Compile Include="Panels\ShopsPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -73,9 +74,11 @@
       <DependentUpon>ShopsPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sheets\SheetShopsRef.cs" />
     <Compile Include="Sheets\SheetShops.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddinRibbon.xml" />
     <Content Include="Etk.Demo.Shops.UI.Excel-AddIn.dna">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -98,6 +101,10 @@
     <ProjectReference Include="..\Etk.Demo.Shops.UI.Common\Etk.Demo.Shops.UI.Common.csproj">
       <Project>{70fb8809-1a44-4511-84e5-e2ea447fb467}</Project>
       <Name>Etk.Demo.Shops.UI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Etk.Tests.Data\Etk.Tests.Data.csproj">
+      <Project>{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}</Project>
+      <Name>Etk.Tests.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

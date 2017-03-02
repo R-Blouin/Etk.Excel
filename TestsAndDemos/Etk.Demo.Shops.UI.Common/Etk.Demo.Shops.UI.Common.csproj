@@ -56,11 +56,11 @@
     <Compile Include="Controls\ShopsControl.xaml.cs">
       <DependentUpon>ShopsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ViewModels\CustomerViewModel.cs" />
-    <Compile Include="Controls\ViewModels\OrderLineViewModel.cs" />
-    <Compile Include="Controls\ViewModels\OrderViewModel.cs" />
-    <Compile Include="Controls\ViewModels\ShopsViewModel.cs" />
-    <Compile Include="Controls\ViewModels\ShopViewModel.cs" />
+    <Compile Include="ViewModels\CustomerViewModel.cs" />
+    <Compile Include="ViewModels\OrderLineViewModel.cs" />
+    <Compile Include="ViewModels\OrderViewModel.cs" />
+    <Compile Include="ViewModels\ShopsViewModel.cs" />
+    <Compile Include="ViewModels\ShopViewModel.cs" />
     <Compile Include="Controls\VisibilityToNullableBooleanConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

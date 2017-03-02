@@ -1,9 +1,9 @@
-﻿using Etk.Tests.Data.Shops;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using Etk.Tests.Data.Shops;
 
-namespace Etk.Demo.Shops.UI.Common.Controls.ViewModels
+namespace Etk.Demo.Shops.UI.Common.ViewModels
 {
     public class ShopsViewModel : INotifyPropertyChanged
     {

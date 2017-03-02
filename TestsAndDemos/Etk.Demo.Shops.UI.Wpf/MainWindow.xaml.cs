@@ -1,4 +1,4 @@
-﻿using Etk.Demo.Shops.UI.Common.Controls.ViewModels;
+﻿using Etk.Demo.Shops.UI.Common.ViewModels;
 using MahApps.Metro.Controls;
 
 namespace Etk.Demo.Shops.UI.Wpf

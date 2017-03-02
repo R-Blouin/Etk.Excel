@@ -1,8 +1,8 @@
-﻿using Etk.Tests.Data.Shops.DataType;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Etk.Tests.Data.Shops.DataType;
 
-namespace Etk.Demo.Shops.UI.Common.Controls.ViewModels
+namespace Etk.Demo.Shops.UI.Common.ViewModels
 {
     public class OrderViewModel
     {

@@ -153,7 +153,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     if (results.Count == 1)
                         definitionDescriptions.Add(new BindingDefinitionDescription() { BindingExpression = results[0], IsReadOnly = definitionDescription.IsReadOnly});
                     else
-                        definitionDescriptions.AddRange(results.Select(s => new BindingDefinitionDescription() { BindingExpression = s, IsReadOnly = false}));
+                        definitionDescriptions.AddRange(results.Select(s => new BindingDefinitionDescription() { BindingExpression = s, IsReadOnly = true}));
 
                     List<IBindingDefinition> nestedDefinitions = BindingDefinitionFactory.CreateInstances(type, definitionDescriptions);
 

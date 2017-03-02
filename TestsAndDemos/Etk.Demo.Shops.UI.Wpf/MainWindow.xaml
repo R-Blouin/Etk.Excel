@@ -12,7 +12,8 @@
                            WindowTransitionsEnabled="True"
                            GlowBrush="{DynamicResource AccentColorBrush}"
                            ResizeMode="CanResizeWithGrip" 
-                           ShowInTaskbar="True" 
+                           ShowInTaskbar="True"
+                           Width="800"
 >
     <CommonControls:ShopsControl/>
 </metroControls:MetroWindow>

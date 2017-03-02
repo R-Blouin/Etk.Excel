@@ -7,15 +7,15 @@ using ExcelDna.Integration.CustomUI;
 
 namespace Etk.Demo.Shops.UI.Excel.Sheets
 {
-    class SheetShops
+    class SheetShopsRef
     {
-        private static SheetShops shopsSheet;
-        public static SheetShops Instance
+        private static SheetShopsRef shopsSheet;
+        public static SheetShopsRef Instance
         {
             get
             {
                 if(shopsSheet == null)
-                    shopsSheet = new SheetShops(new ShopsViewModel());
+                    shopsSheet = new SheetShopsRef(new ShopsViewModel());
                 return shopsSheet;
             }
         }
@@ -25,7 +25,7 @@ namespace Etk.Demo.Shops.UI.Excel.Sheets
         private IExcelTemplateView view;
 
         #region .ctors and factories
-        private SheetShops(ShopsViewModel viewModel)
+        private SheetShopsRef(ShopsViewModel viewModel)
         {
             this.viewModel = viewModel;
 
@@ -48,9 +48,9 @@ namespace Etk.Demo.Shops.UI.Excel.Sheets
                 ETKExcel.TemplateManager.RemoveView(view);
             }
 
-            view = ETKExcel.TemplateManager.AddView("TemplatesShops", "Main", "Shops", "B2");
+            view = ETKExcel.TemplateManager.AddView("TemplatesShops_Ref_Expander", "Main", "Shops", "B2");
             // Inject the data source
-            view.SetDataSource(viewModel.ShopsToDisplay);
+            view.SetDataSource(viewModel);
             // RenderView the sheet
             view.Render();
 
@@ -69,7 +69,7 @@ namespace Etk.Demo.Shops.UI.Excel.Sheets
 
         public static void DisplayName(CustomerViewModel customer)
         {
-            MessageBox.Show( $"{customer.Customer.Forename} {customer.Customer.Surname}");
+            MessageBox.Show($"{customer.Customer.Forename} {customer.Customer.Surname}");
         }
     }
 }

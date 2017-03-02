@@ -1,5 +1,4 @@
-﻿using Etk.Demo.Shops.UI.Common.Controls.ViewModels;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Etk.Demo.Shops.UI.Common.Controls
 {

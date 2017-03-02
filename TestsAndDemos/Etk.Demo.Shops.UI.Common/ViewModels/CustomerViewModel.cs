@@ -1,8 +1,9 @@
-﻿using Etk.Tests.Data.Shops.DataType;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using Etk.Tests.Data.Shops.DataType;
 
-namespace Etk.Demo.Shops.UI.Common.Controls.ViewModels
+namespace Etk.Demo.Shops.UI.Common.ViewModels
 {
     public class CustomerViewModel
     {
@@ -15,6 +16,11 @@ namespace Etk.Demo.Shops.UI.Common.Controls.ViewModels
         {
             Customer = customer;
             Orders = Customer.Orders.Select(o => new OrderViewModel(o)).ToArray();
+        }
+
+        public void DisplayName()
+        {
+            MessageBox.Show($"Yo !!! {Customer.Forename} {Customer.Surname}");
         }
     }
 }

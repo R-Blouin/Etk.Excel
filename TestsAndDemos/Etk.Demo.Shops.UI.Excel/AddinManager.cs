@@ -21,8 +21,8 @@
             // Init the ETK Framework : mandatory before any uses of the framework
             ETKExcel.Init(ExcelApplication);
 
-            // Create, render and activate the dashboard view
-            SheetShops.CreateAndActivateDashBoard();
+            // Create, render shoop view
+            SheetShopsRef.Instance.RenderViews();;
         }
 
         public void AutoClose()
