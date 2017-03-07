@@ -48,7 +48,7 @@ namespace Etk.Demo.Shops.UI.Excel.Sheets
                 ETKExcel.TemplateManager.RemoveView(view);
             }
 
-            view = ETKExcel.TemplateManager.AddView("TemplatesShops", "Main", "Shops", "B2");
+            view = ETKExcel.TemplateManager.AddView("TemplatesShops_Ref", "Main", "Shops", "B2");
             // Inject the data source
             view.SetDataSource(viewModel.ShopsToDisplay);
             // RenderView the sheet

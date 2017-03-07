@@ -252,7 +252,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
 
                 renderingContext.DataRow.AddRange(linkedRenderer.DataRows[0]);
-
                 for (int i = 1; i < linkedRenderer.Height; i++) //for (int i = 1; i < linkedRenderer.DataRow.Count; i++)
                 {
                     List<IBindingContextItem> rowToUse;

@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Serialization;
+using Etk.Tools.Extensions;
 
 namespace Etk.Excel.ContextualMenus.Definition
 {
+    [XmlRoot("ContextualMenu")]
     public class XmlContextualMenuDefinition : XmlContextualMenuPart
     {
         [XmlAttribute]
@@ -25,5 +28,23 @@ namespace Etk.Excel.ContextualMenus.Definition
         [XmlElement(ElementName = "ContextualMenu", Type = typeof(XmlContextualMenuDefinition))]
         public List<XmlContextualMenuPart> Items
         { get; set; }
+
+        public static XmlContextualMenuDefinition CreateInstance(string definitions)
+        {
+            XmlContextualMenuDefinition ret = null;
+            definitions = definitions.EmptyIfNull().Trim();
+            if (!string.IsNullOrEmpty(definitions))
+            {
+                try
+                {
+                    ret = definitions.Deserialize<XmlContextualMenuDefinition>();
+                }
+                catch (Exception ex)
+                {
+                    throw new EtkException(string.Format("Cannot retrieve the contextual menu. {0}", ex.Message));
+                }
+            }
+            return ret;
+        }
     }
 }

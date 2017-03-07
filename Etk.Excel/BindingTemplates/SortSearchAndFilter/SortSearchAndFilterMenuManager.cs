@@ -22,7 +22,7 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
             using (TextReader textReader = new StreamReader(assembly.GetManifestResourceStream("Etk.Excel.Resources.ViewSortSearchAndFilterContextualMenu.xml")))
             {
                 string menuXml = textReader.ReadToEnd();
-                sortSearchAndFilersMenu = ContextualMenuFactory.CreateInstances(menuXml).FirstOrDefault();
+                sortSearchAndFilersMenu = ContextualMenuFactory.CreateInstance(menuXml);
             }
         }
         #endregion

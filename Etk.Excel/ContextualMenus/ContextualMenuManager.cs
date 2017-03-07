@@ -95,7 +95,7 @@ namespace Etk.Excel.ContextualMenus
                             if (menu != null)
                             {
                                 if (contextualMenuByIdent.ContainsKey(menu.Name))
-                                    log.LogFormat(LogType.Warn, "Menu {0} already registred.", menu.Name ?? string.Empty);
+                                    log.LogFormat(LogType.Warn, "Menu {0} already registered.", menu.Name ?? string.Empty);
                                 contextualMenuByIdent[menu.Name] = menu;
                             }
                         }
@@ -109,6 +109,30 @@ namespace Etk.Excel.ContextualMenus
             }
         }
 
+        public IContextualMenu RegisterMenuDefinitionFromXml(string xml)
+        {
+            try
+            {
+                IContextualMenu menu = ContextualMenuFactory.CreateInstance(xml);
+                lock ((contextualMenuByIdent as ICollection).SyncRoot)
+                {
+                    if (menu != null)
+                    {
+                        if (contextualMenuByIdent.ContainsKey(menu.Name))
+                            log.LogFormat(LogType.Warn, "Menu {0} already registered.", menu.Name ?? string.Empty);
+                        contextualMenuByIdent[menu.Name] = menu;
+                    }
+                }
+                return menu;
+            }
+            catch (Exception ex)
+            {
+                string message = xml.Length > 350 ? xml.Substring(0, 350) + "..." : xml;
+                throw new EtkException(string.Format("Cannot create contextual menu from xml '{0}':{1}", message, ex.Message));
+            }
+        }
+
+
         public IContextualMenu GetContextualMenu(string name)
         {
             IContextualMenu ret = null;
@@ -116,8 +140,7 @@ namespace Etk.Excel.ContextualMenus
             {
                 lock ((contextualMenuByIdent as ICollection).SyncRoot)
                 {
-                    if(! contextualMenuByIdent.TryGetValue(name, out ret))
-                        throw new Exception(string.Format("Cannot find contextual menu '{0}'", name ?? string.Empty));
+                    contextualMenuByIdent.TryGetValue(name, out ret);
                 }
             }
             return ret;

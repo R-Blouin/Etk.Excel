@@ -771,7 +771,7 @@ namespace Etk.Excel.BindingTemplates
                             foreach (IExcelTemplateView view in views)
                             {
                                 ExcelTemplateView excelView = view as ExcelTemplateView;
-                                if (excelView != null)
+                                if (excelView != null && excelView.ViewSheet != null)
                                 {
                                     try
                                     {

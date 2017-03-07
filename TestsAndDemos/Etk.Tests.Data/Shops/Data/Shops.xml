@@ -35,7 +35,7 @@
     <CustomerId>15</CustomerId>
     <CustomerId>20</CustomerId>
   </Shop>
-  <Shop Id="4" Name="Fourth Shop" ReceptionPhone="Fourth Shop Reception Phone number">
+  <!--<Shop Id="4" Name="Fourth Shop" ReceptionPhone="Fourth Shop Reception Phone number">
     <Address Street="4 No Customer Shops Road" City="ShopCity"/>
-  </Shop>
+  </Shop>-->
 </Shops>

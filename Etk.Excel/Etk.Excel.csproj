@@ -290,9 +290,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\TemplateManagerAddContextualMenu.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\RequestsManagerContextualMenu.xml" />
     <EmbeddedResource Include="Resources\TemplateManagerUpdateDeleteContextualMenu.xml" />
   </ItemGroup>

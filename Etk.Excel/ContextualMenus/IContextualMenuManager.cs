@@ -10,6 +10,7 @@ namespace Etk.Excel.ContextualMenus
         event ContextualMenusRequestedHandler OnContextualMenusRequested;
 
         void RegisterMenuDefinitionsFromXml(string xml);
+        IContextualMenu RegisterMenuDefinitionFromXml(string xml);
         IContextualMenu GetContextualMenu(string name);
     }
 }
