@@ -22,7 +22,7 @@
             ETKExcel.Init(ExcelApplication);
 
             // Create, render shoop view
-            SheetShopsRef.Instance.RenderViews();;
+            SheetShops.Instance.RenderViews();;
         }
 
         public void AutoClose()

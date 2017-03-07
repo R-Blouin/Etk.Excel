@@ -520,28 +520,7 @@ namespace Etk.Excel.BindingTemplates
             if (excelView == null)
                 return;
 
-            try
-            {
-                lock (syncRoot)
-                {
-                    ClearView(excelView);
-
-                    KeyValuePair<ExcelInterop.Worksheet, List<ExcelTemplateView>> kvp = viewsBySheet.FirstOrDefault(s => s.Value.FirstOrDefault(v => v.Equals(view)) != null);
-                    if (kvp.Key != null && kvp.Value != null && kvp.Value.Count > 0)
-                        viewsBySheet[kvp.Key].Remove(excelView);
-
-                    if (log.GetLogLevel() == LogType.Debug)
-                        log.LogFormat(LogType.Debug, "View '{0}' from '{1}' removed.", excelView.Ident, excelView.TemplateDefinition.Name);
-                    bindingTemplateManager.RemoveView(excelView);
-                }
-            }
-            catch (Exception ex)
-            {
-                string message = "Remove View failed.";
-                Logger.Instance.LogException(LogType.Error, ex, message);
-                throw new EtkException(message, ex);
-                //ExcelApplication.DisplayException(null, message, ex);
-            }
+            RemoveViews(new IExcelTemplateView[] { view });
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.RemoveViews"/> </summary> 
@@ -554,14 +533,39 @@ namespace Etk.Excel.BindingTemplates
             {
                 lock (syncRoot)
                 {
-                    bool success = true;
-                    foreach (IExcelTemplateView view in views)
+                    if (ExcelApplication.IsInEditMode())
+                        ExcelApplication.DisplayMessageBox(null, "'Clear views' is not allowed: Excel is in Edit mode", System.Windows.Forms.MessageBoxIcon.Warning);
+                    else
                     {
-                        try { RemoveView(view); }
-                        catch { success = false; }
+                        bool success = true;
+                        foreach (IExcelTemplateView view in views)
+                        {
+                            ExcelTemplateView excelView = view as ExcelTemplateView;
+                            if (view != null)
+                            {
+                                try
+                                {
+                                    ClearView(excelView);
+
+                                    KeyValuePair<ExcelInterop.Worksheet, List<ExcelTemplateView>> kvp = viewsBySheet.FirstOrDefault(s => s.Value.FirstOrDefault(v => v.Equals(view)) != null);
+                                    if (kvp.Key != null && kvp.Value != null && kvp.Value.Count > 0)
+                                        viewsBySheet[kvp.Key].Remove(excelView);
+
+                                    if (log.GetLogLevel() == LogType.Debug)
+                                        log.LogFormat(LogType.Debug, "View '{0}' from '{1}' removed.", excelView.Ident, excelView.TemplateDefinition.Name);
+                                    bindingTemplateManager.RemoveView(excelView);
+                                }
+                                catch(Exception ex)
+                                {
+                                    string message = "Remove View failed.";
+                                    Logger.Instance.LogException(LogType.Error, ex, message);
+                                    success = false;
+                                }
+                            }
+                        }
+                        if (!success)
+                            throw new EtkException("No all views have been removed. Please check the logs.");
                     }
-                    if (!success)
-                        throw new EtkException("No all views have been removed. Please check the logs.");
                 }
             }
             catch (Exception ex)
