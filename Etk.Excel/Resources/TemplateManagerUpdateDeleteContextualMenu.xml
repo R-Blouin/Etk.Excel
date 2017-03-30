@@ -1,21 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContextualMenus>
-  <ContextualMenu Name="UdfsManagerManageContextualMenu">
-    <MenuItem BeginGroup="true" Caption="(ETK) Modify Template..." FaceId="2517" Action="Etk.Excel.TemplateManagement.TemplateContextualMenuManager, Etk.Excel, DeleteTemplate"/>
-    <MenuItem Caption="(ETK) Delete Template..." FaceId="2487" Action="Etk.Excel.TemplateManagement.TemplateContextualMenuManager, Etk.Excel, ModifyTemplate"/>
-  </ContextualMenu>
-</ContextualMenus>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<ContextualMenu Name="UdfsManagerManageContextualMenu">
+  <MenuItem BeginGroup="true" Caption="(ETK) Modify Template..." FaceId="2517" Action="Etk.Excel.TemplateManagement.TemplateContextualMenuManager, Etk.Excel, DeleteTemplate"/>
+  <MenuItem Caption="(ETK) Delete Template..." FaceId="2487" Action="Etk.Excel.TemplateManagement.TemplateContextualMenuManager, Etk.Excel, ModifyTemplate"/>
+</ContextualMenu>

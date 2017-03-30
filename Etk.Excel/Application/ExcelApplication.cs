@@ -45,7 +45,7 @@ namespace Etk.Excel.Application
                                                                                     Type.Missing, //the tag property (in this case missing)
                                                                                     Type.Missing, //the visible property (in this case missing)
                                                                                     true); //we want to look for it recursively
-                ExcelDispatcher.ShutdownStarted += (s, o) => ETKExcel.Instance.Dispose();
+                //@@ExcelDispatcher.ShutdownStarted += (s, o) => ETKExcel.Instance.Dispose();
                 postAsynchronousManager = new ExcelPostAsynchronousManager(ExcelDispatcher);
             }
             catch (Exception ex)

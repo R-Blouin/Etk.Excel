@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContextualMenus>
-  <ContextualMenu Name="RequestManagerAddContextualMenu">
-    <MenuItem BeginGroup="true" Caption="(ETK) Add Request..." FaceId="107" Action="Etk.Excel.RequestManagement.RequestsManager, Etk.Excel, AddRequest"/>
-    <MenuItem Caption="(ETK) Modify Request..." FaceId="2517" Action="Etk.Excel.RequestManagement.RequestsManager, Etk.Excel, ModifyRequest"/>
-    <MenuItem Caption="(ETK) Delete Request..." FaceId="2487" Action="Etk.Excel.RequestManagement.RequestsManager, Etk.Excel, DeleteRequest"/>
-  </ContextualMenu>
-</ContextualMenus>
-
+<ContextualMenu Name="RequestManagerAddContextualMenu">
+  <MenuItem BeginGroup="true" Caption="(ETK) Add Request..." FaceId="107" Action="Etk.Excel.RequestManagement.RequestsManager, Etk.Excel, AddRequest"/>
+  <MenuItem Caption="(ETK) Modify Request..." FaceId="2517" Action="Etk.Excel.RequestManagement.RequestsManager, Etk.Excel, ModifyRequest"/>
+  <MenuItem Caption="(ETK) Delete Request..." FaceId="2487" Action="Etk.Excel.RequestManagement.RequestsManager, Etk.Excel, DeleteRequest"/>
+</ContextualMenu>

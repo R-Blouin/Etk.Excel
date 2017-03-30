@@ -28,10 +28,9 @@ namespace Etk.Excel.BindingTemplates
         private const string TEMPLATE_START_FORMAT = "<Template*Name='{0}'";
 
         private bool disposed;
-        private static object syncRoot = new object();
+        private static readonly object syncRoot = new object();
 
         #region attributes and properties
-
         internal ExcelNotifyPropertyManager ExcelNotifyPropertyManager
         { get; private set; }
 
@@ -42,14 +41,14 @@ namespace Etk.Excel.BindingTemplates
         { get; private set; }
 
         private ILogger log = Logger.Instance;
-        private Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>> viewsBySheet = new Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>>();
+        private readonly Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>> viewsBySheet = new Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>>();
 
-        private ContextualMenuManager contextualMenuManager;
-        private ExcelDecoratorsManager excelDecoratorsManager;
-        private BindingTemplateManager bindingTemplateManager;
+        private readonly  ContextualMenuManager contextualMenuManager;
+        private readonly ExcelDecoratorsManager excelDecoratorsManager;
+        private readonly BindingTemplateManager bindingTemplateManager;
 
+        private readonly SortSearchAndFilterMenuManager sortSearchAndFilterMenuManager;
         private TemplateContextualMenuManager templateContextualMenuManager;
-        private SortSearchAndFilterMenuManager sortSearchAndFilterMenuManager; 
         #endregion
 
         #region .ctors
@@ -271,7 +270,11 @@ namespace Etk.Excel.BindingTemplates
             }
             finally
             {
-                worksheet = null;
+                //if (worksheet != null)
+                {
+                    //Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
             }
         }
 
@@ -333,6 +336,9 @@ namespace Etk.Excel.BindingTemplates
             {
                 ExcelInterop.Worksheet worksheet = target.Worksheet;
                 string message = string.Format("Sheet '{0}', At least one sheet change failed. Please, checked the log", worksheet.Name);
+
+                Marshal.ReleaseComObject(worksheet);
+                worksheet = null;
                 throw new EtkException(message);
             }
         }
@@ -553,6 +559,7 @@ namespace Etk.Excel.BindingTemplates
 
                                     if (log.GetLogLevel() == LogType.Debug)
                                         log.LogFormat(LogType.Debug, "View '{0}' from '{1}' removed.", excelView.Ident, excelView.TemplateDefinition.Name);
+
                                     bindingTemplateManager.RemoveView(excelView);
                                 }
                                 catch(Exception ex)
@@ -775,7 +782,7 @@ namespace Etk.Excel.BindingTemplates
                             foreach (IExcelTemplateView view in views)
                             {
                                 ExcelTemplateView excelView = view as ExcelTemplateView;
-                                if (excelView != null)
+                                if (excelView != null && excelView.ViewSheet != null)
                                 {
                                     try
                                     {
@@ -835,14 +842,19 @@ namespace Etk.Excel.BindingTemplates
                 {
                     disposed = true;
 
-                    //if (viewsBySheet != null)
-                    //{
-                    //    viewsBySheet.Values.Where(l => l != null)
-                    //                       .SelectMany(v => v)
-                    //                       .Where(v => v != null)
-                    //                       .ToList()
-                    //                       .ForEach(v => v.Dispose());
-                    //}
+                    if (viewsBySheet != null)
+                    {
+                        viewsBySheet.Values.Where(l => l != null)
+                                           .SelectMany(v => v)
+                                           .Where(v => v != null)
+                                           .ToList()
+                                           .ForEach(v => {
+                                                            v.ViewSheet.Change -= OnSheetChange;
+                                                            v.ViewSheet.SelectionChange -= OnSelectionChange;
+                                                            v.ViewSheet.BeforeDoubleClick -= OnBeforeBoubleClick;
+                                                            //v.Dispose();
+                                                         });
+                    }
 
                     contextualMenuManager.OnContextualMenusRequested -= ManageViewsContextualMenu;
 
@@ -857,8 +869,6 @@ namespace Etk.Excel.BindingTemplates
                         ExcelNotifyPropertyManager.Dispose();
                         ExcelNotifyPropertyManager = null;
                     }
-                    ExcelApplication.Dispose();
-                    ExcelApplication = null;
                 }
             }
         }

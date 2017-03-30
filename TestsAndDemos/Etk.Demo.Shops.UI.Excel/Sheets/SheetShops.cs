@@ -1,75 +1,62 @@
-﻿using System.Windows;
-using Etk.Demo.Shops.UI.Common.ViewModels;
-using Etk.Demo.Shops.UI.Excel.Panels;
-using Etk.Excel;
-using Etk.Excel.BindingTemplates.Views;
-using ExcelDna.Integration.CustomUI;
+﻿//using System.Windows;
+//using Etk.Demo.Shops.UI.Common.ViewModels;
+//using Etk.Demo.Shops.UI.Excel.Panels;
+//using Etk.Excel;
+//using Etk.Excel.BindingTemplates.Views;
+//using ExcelDna.Integration.CustomUI;
 
-namespace Etk.Demo.Shops.UI.Excel.Sheets
-{
-    class SheetShops
-    {
-        private static SheetShops shopsSheet;
-        public static SheetShops Instance
-        {
-            get
-            {
-                if(shopsSheet == null)
-                    shopsSheet = new SheetShops(new ShopsViewModel());
-                return shopsSheet;
-            }
-        }
+//namespace Etk.Demo.Shops.UI.Excel.Sheets
+//{
+//    class SheetShops
+//    {
+//        private readonly ShopsViewModel viewModel;
+//        private IExcelTemplateView view;
 
-        private readonly ShopsViewModel viewModel;
-        private readonly CustomTaskPane shopsTaskPane;
-        private IExcelTemplateView view;
+//        private static SheetShops shopsSheet;
+//        public static SheetShops Instance
+//        {
+//            get
+//            {
+//                if (shopsSheet == null)
+//                    shopsSheet = new SheetShops(new ShopsViewModel());
+//                return shopsSheet;
+//            }
+//        }
 
-        #region .ctors and factories
-        private SheetShops(ShopsViewModel viewModel)
-        {
-            this.viewModel = viewModel;
+//        #region .ctors and factories
+//        private SheetShops(ShopsViewModel viewModel)
+//        {
+//            this.viewModel = viewModel;
+//        }
+//        #endregion
 
-            // Create and display a taskpane => to see the interaction between data in Wpf UI and ETK templates
-            shopsTaskPane = CustomTaskPaneFactory.CreateCustomTaskPane(typeof(ShopsPanel), "Shops Panel");
-            shopsTaskPane.DockPosition = MsoCTPDockPosition.msoCTPDockPositionRight;
+//        /// <summary> Create and render view</summary>
+//        public void RenderViews()
+//        {
+//            if (view != null)
+//            {
+//                viewModel.PropertyChanged -= OnViewPropertiesChanged;
+//                ETKExcel.TemplateManager.RemoveView(view);
+//            }
 
-            (shopsTaskPane.ContentControl as ShopsPanel).SetViewModel(viewModel);
-            shopsTaskPane.Visible = true;
-        }
-        #endregion
+//            view = ETKExcel.TemplateManager.AddView("TemplatesShops", "Main", "Shops", "B2");
+//            // Inject the data source
+//            view.SetDataSource(viewModel.ShopsToDisplay);
+//            // RenderView the sheet
+//            view.Render();
 
-        #region 
-        /// <summary> Create and render view</summary>
-        public void RenderViews()
-        {
-            if (view != null)
-            {
-                viewModel.PropertyChanged -= OnViewPropertiesChanged;
-                ETKExcel.TemplateManager.RemoveView(view);
-            }
+//            viewModel.PropertyChanged += OnViewPropertiesChanged;
+//        }
 
-            view = ETKExcel.TemplateManager.AddView("TemplatesShops", "Main", "Shops", "B2");
-            // Inject the data source
-            view.SetDataSource(viewModel.ShopsToDisplay);
-            // RenderView the sheet
-            view.Render();
+//        private void OnViewPropertiesChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+//        {
+//            if (e.PropertyName == "ShopsToDisplay")
+//                RenderViews();
+//        }
 
-            view.ViewSheetIsActivated += notUsedParameter => shopsTaskPane.Visible = true;
-            view.ViewSheetIsDeactivated += notUsedParameter => shopsTaskPane.Visible = false;
-
-            viewModel.PropertyChanged += OnViewPropertiesChanged;
-        }
-
-        private void OnViewPropertiesChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "ShopsToDisplay")
-                RenderViews();
-        }
-        #endregion
-
-        public static void DisplayName(CustomerViewModel customer)
-        {
-            MessageBox.Show( $"{customer.Customer.Forename} {customer.Customer.Surname}");
-        }
-    }
-}
+//        public static void DisplayName(CustomerViewModel customer)
+//        {
+//            MessageBox.Show($"{customer.Customer.Forename} {customer.Customer.Surname}");
+//        }
+//    }
+//}

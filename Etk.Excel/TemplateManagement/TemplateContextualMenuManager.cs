@@ -26,15 +26,10 @@ namespace Etk.Excel.TemplateManagement
 
             // Create the contextual menu instances. 
             Assembly assembly = Assembly.GetExecutingAssembly();
-            using (TextReader textReader = new StreamReader(assembly.GetManifestResourceStream("Etk.Excel.Resources.TemplateManagerAddContextualMenu.xml")))
-            {
-                string menuXml = textReader.ReadToEnd();
-                addTemplateMenu = null;//addTemplateMenu = ContextualMenuFactory.CreateInstances(menuXml).FirstOrDefault();
-            }
             using (TextReader textReader = new StreamReader(assembly.GetManifestResourceStream("Etk.Excel.Resources.TemplateManagerUpdateDeleteContextualMenu.xml")))
             {
                 string menuXml = textReader.ReadToEnd();
-                manageTemplateMenu = null;//ùùmanageTemplateMenu = ContextualMenuFactory.CreateInstances(menuXml).FirstOrDefault();
+                manageTemplateMenu = null;//ùùmanageTemplateMenu = ContextualMenuFactory.CreateInstance(menuXml);
             }
 
             // Declare the contextual menus activators. 

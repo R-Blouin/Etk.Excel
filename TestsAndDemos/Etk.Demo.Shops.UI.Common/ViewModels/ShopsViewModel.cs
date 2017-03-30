@@ -34,7 +34,7 @@ namespace Etk.Demo.Shops.UI.Common.ViewModels
         {
             List<ShopViewModel> shops = new List<ShopViewModel>();
             shops.Add(new ShopViewModel(null));
-            shops.AddRange(ShopManager.Shops.Select(s => new ShopViewModel(s)));
+            shops.AddRange(ShopManager.Shops.Select(s => new ShopViewModel(s)).OrderBy(s => s.Name));
 
             Shops = shops;
             SelectedShop = Shops.First();

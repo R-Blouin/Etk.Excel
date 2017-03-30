@@ -74,35 +74,45 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         {
             OwnerRange = range;
             OwnerRange.Value2 = null;
-            ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
-            Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
+            ExcelInterop.Worksheet worksheet = null;
 
-            ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
+            try
+            {
+                worksheet = OwnerRange.Worksheet;
+                Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
 
-            ExcelInterop.OLEObject obj = oleObjects.Add("Forms.CommandButton.1", 
-                                           Type.Missing,
-                                           false,
-                                           false,
-                                           Type.Missing,
-                                           Type.Missing,
-                                           Type.Missing,
-                                           OwnerRange.Left + definition.X,
-                                           OwnerRange.Top + definition.Y,
-                                           definition.W == 0 ? OwnerRange.Width : definition.W,
-                                           definition.H == 0 ? OwnerRange.Height : definition.H);
+                ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
 
-            obj.Name = Name;
-            object s = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null);
-            commandButton = s as ExcelForms.CommandButton;
-            commandButton.FontName = "Arial";
-            commandButton.Font.Size = 8;
-            commandButton.Caption = definition.Label;
-            //if (excelTemplateDefinition.W == 0 && excelTemplateDefinition.H == 0)
-            //    commandButton.AutoSize = true;
-            obj.Placement = ExcelInterop.XlPlacement.xlMove;
+                ExcelInterop.OLEObject obj = oleObjects.Add("Forms.CommandButton.1",
+                    Type.Missing,
+                    false,
+                    false,
+                    Type.Missing,
+                    Type.Missing,
+                    Type.Missing,
+                    OwnerRange.Left + definition.X,
+                    OwnerRange.Top + definition.Y,
+                    definition.W == 0 ? OwnerRange.Width : definition.W,
+                    definition.H == 0 ? OwnerRange.Height : definition.H);
 
-            Marshal.ReleaseComObject(worksheet);
-            worksheet = null;
+                obj.Name = Name;
+                object s = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null);
+                commandButton = s as ExcelForms.CommandButton;
+                commandButton.FontName = "Arial";
+                commandButton.Font.Size = 8;
+                commandButton.Caption = definition.Label;
+                //if (excelTemplateDefinition.W == 0 && excelTemplateDefinition.H == 0)
+                //    commandButton.AutoSize = true;
+                obj.Placement = ExcelInterop.XlPlacement.xlMove;
+            }
+            finally
+            {
+                if (worksheet != null)
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
+            }
         }
         #endregion
 
@@ -117,8 +127,10 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     commandButton.Click -= CurrentCommand;
 
                 ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
+
                 worksheet.OLEObjects(Name).Delete();
                 Marshal.ReleaseComObject(worksheet);
+
                 worksheet = null;
                 commandButton = null;
                 OwnerRange = null;

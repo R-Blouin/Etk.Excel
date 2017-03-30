@@ -71,7 +71,10 @@ namespace Etk.Excel.BindingTemplates.Definitions
             finally
             {
                 if (worksheet != null)
+                {
                     Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
             }
         }
 

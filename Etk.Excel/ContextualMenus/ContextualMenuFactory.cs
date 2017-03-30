@@ -36,15 +36,66 @@ namespace Etk.Excel.ContextualMenus
                             List<IContextualPart> items = new List<IContextualPart>();
                             foreach (XmlContextualMenuPart xmlPart in definition.Items)
                             {
+                                if(xmlPart is XmlContextualMenuItemDefinition)
+                                {
+                                    XmlContextualMenuItemDefinition xmlItem = xmlPart as XmlContextualMenuItemDefinition;
+                                    MethodInfo methodInfo = ConstextualMethodRetriever.RetrieveContextualMethodInfo(xmlItem.Action);
+                                    IContextualMenuItem menuItem = new ContextualMenuItem(xmlItem.Caption, xmlItem.BeginGroup, methodInfo, xmlItem.FaceId);
+
+                                    items.Add((IContextualPart)menuItem);
+                                }
+                                if (xmlPart is XmlContextualMenuDefinition)
+                                {
+                                    //items.Add((IContextualPart)menuItem);
+                                }
+                            }
+                            if (items.Count > 0)
+                                ret.Add(new ContextualMenu(definition.Name, definition.Caption, definition.BeginGroup, items));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                string message = xmlValue.Length > 350 ? xmlValue.Substring(0, 350) + "..." : xmlValue;
+                throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message));
+            }
+            return ret;
+        }
+
+        public static IContextualMenu CreateInstance(string xmlValue)
+        {
+            IContextualMenu ret = null;
+            XmlContextualMenuDefinition definition = null;
+            try
+            {
+                definition = XmlContextualMenuDefinition.CreateInstance(xmlValue);
+                if (definition != null)
+                {
+                    definition.Name = definition.Name.EmptyIfNull().Trim();
+                    if (string.IsNullOrEmpty(definition.Name))
+                        throw new EtkException("Contextual menu must have a name");
+
+                    if (definition.Items != null && definition.Items.Count > 0)
+                    {
+                        List<IContextualPart> items = new List<IContextualPart>();
+                        foreach (XmlContextualMenuPart xmlPart in definition.Items)
+                        {
+                            if (xmlPart is XmlContextualMenuItemDefinition)
+                            {
                                 XmlContextualMenuItemDefinition xmlItem = xmlPart as XmlContextualMenuItemDefinition;
                                 MethodInfo methodInfo = ConstextualMethodRetriever.RetrieveContextualMethodInfo(xmlItem.Action);
                                 IContextualMenuItem menuItem = new ContextualMenuItem(xmlItem.Caption, xmlItem.BeginGroup, methodInfo, xmlItem.FaceId);
 
                                 items.Add((IContextualPart)menuItem);
                             }
-                            if (items.Count > 0)
-                                ret.Add(new ContextualMenu(definition.Name, definition.Caption, definition.BeginGroup, items));
+                            if (xmlPart is XmlContextualMenuDefinition)
+                            {
+                                //items.Add((IContextualPart)menuItem);
+                            }
                         }
+                        if (items.Count > 0)
+                            ret = new ContextualMenu(definition.Name, definition.Caption, definition.BeginGroup, items);
                     }
                 }
             }

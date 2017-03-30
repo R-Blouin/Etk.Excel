@@ -218,7 +218,11 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
 
                     CellsThatContainSearchValue.Clear();
-                    ViewSheet = null;
+                    if (ViewSheet != null)
+                    {
+                        Marshal.ReleaseComObject(ViewSheet);
+                        ViewSheet = null;
+                    }
                     FirstOutputCell = null;
                     ClearingCell = null;
                     base.Dispose();

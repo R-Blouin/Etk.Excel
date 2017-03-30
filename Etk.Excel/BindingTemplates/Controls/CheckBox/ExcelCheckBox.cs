@@ -40,37 +40,47 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
         {
             OwnerRange = range;
             OwnerRange.Value2 = null;
-            ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
-            Name = string.Format("ExcelCB{0}", Interlocked.Increment(ref cpt));
+            ExcelInterop.Worksheet worksheet = null;
+            try
+            {
+                worksheet = OwnerRange.Worksheet;
+                Name = string.Format("ExcelCB{0}", Interlocked.Increment(ref cpt));
 
-            ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
-            ExcelInterop.OLEObject oleObject = oleObjects.Add("Forms.CheckBox.1",
-                                        Type.Missing,
-                                        true,
-                                        false,
-                                        Type.Missing,
-                                        Type.Missing,
-                                        Type.Missing,
-                                        OwnerRange.Left + 3,
-                                        OwnerRange.Top + 1,
-                                        12,
-                                        12);
-            oleObject.Name = Name;
-            oleObject.Placement = ExcelInterop.XlPlacement.xlMove;
-            CheckBox  = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null) as ExcelForms.CheckBox;
+                ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
+                ExcelInterop.OLEObject oleObject = oleObjects.Add("Forms.CheckBox.1",
+                                            Type.Missing,
+                                            true,
+                                            false,
+                                            Type.Missing,
+                                            Type.Missing,
+                                            Type.Missing,
+                                            OwnerRange.Left + 3,
+                                            OwnerRange.Top + 1,
+                                            12,
+                                            12);
+                oleObject.Name = Name;
+                oleObject.Placement = ExcelInterop.XlPlacement.xlMove;
+                CheckBox = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null) as ExcelForms.CheckBox;
 
-            CheckBox.SpecialEffect = ExcelForms.fmButtonEffect.fmButtonEffectSunken;
-            CheckBox.TripleState = false;
+                CheckBox.SpecialEffect = ExcelForms.fmButtonEffect.fmButtonEffectSunken;
+                CheckBox.TripleState = false;
 
-            CheckBox.Caption = string.Empty;
-            CheckBox.BackColor = (int)OwnerRange.Interior.Color;
-            CheckBox.BackStyle = ExcelForms.fmBackStyle.fmBackStyleTransparent;
-            oleObject.Interior.ColorIndex = -4142;
-            CheckBox.AutoSize = false;
+                CheckBox.Caption = string.Empty;
+                CheckBox.BackColor = (int)OwnerRange.Interior.Color;
+                CheckBox.BackStyle = ExcelForms.fmBackStyle.fmBackStyleTransparent;
+                oleObject.Interior.ColorIndex = -4142;
+                CheckBox.AutoSize = false;
 
-            oleObject = null;
-            Marshal.ReleaseComObject(worksheet);
-            worksheet = null;
+                oleObject = null;
+            }
+            finally
+            {
+                if (worksheet != null)
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
+            }
         }
 
         public void SetOnClick(System.Action action)
@@ -95,11 +105,21 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
                 if (CurrentOnClick != null)
                     CheckBox.Click -= CurrentOnClick;
 
-                ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
-                worksheet.OLEObjects(Name).Delete();
-                Marshal.ReleaseComObject(worksheet);
+                ExcelInterop.Worksheet worksheet = null;
+                try
+                {
+                    worksheet = OwnerRange.Worksheet;
+                    worksheet.OLEObjects(Name).Delete();
+                }
+                finally
+                {
+                    if (worksheet != null)
+                    {
+                        Marshal.ReleaseComObject(worksheet);
+                        worksheet = null;
+                    }
+                }
 
-                worksheet = null;
                 CheckBox = null;
                 OwnerRange = null;
             }

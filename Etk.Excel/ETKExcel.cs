@@ -24,7 +24,7 @@ namespace Etk.Excel
         private bool isDisposed = false;
         private static readonly object syncObj = new object();
 
-        private List<ExcelInterop.Workbook> managedWorkbooks = new List<ExcelInterop.Workbook>();
+        private readonly List<ExcelInterop.Workbook> managedWorkbooks = new List<ExcelInterop.Workbook>();
 
         [Import(AllowDefault = false)]
         private ExcelApplication excelApplication = null;
@@ -39,7 +39,7 @@ namespace Etk.Excel
         private RequestsManager RequestsManager = null;
 
         #region singleton
-        internal static ETKExcel Instance;
+        private static ETKExcel Instance;
         #endregion
 
         /// <summary>Give acces to the <see cref="IExcelTemplateManager"/> part of the  framework</summary>
@@ -104,7 +104,7 @@ namespace Etk.Excel
 
         ~ETKExcel()
         {
-            Dispose();
+            InternalDispose();
         }
         #endregion
 
@@ -131,7 +131,6 @@ namespace Etk.Excel
                         // Compose the current instance
                         CompositionManager.Instance.ComposeParts(Instance);
 
-                        ExcelInterop.Workbook workbook = application.ActiveWorkbook;
                         Instance.AddManagedWorkbook(application.ActiveWorkbook);
 
                         application.WorkbookOpen += Instance.AddManagedWorkbook;
@@ -145,37 +144,14 @@ namespace Etk.Excel
             }
         }
 
+        public static void Dispose()
+        {
+            Instance.InternalDispose();
+        }
         #endregion
 
         #region internal methods
-        internal void Dispose()
-        {
-            lock (syncObj)
-            {
-                if (!isDisposed)
-                {
 
-                    if (excelApplication != null)
-                    {
-                        if (excelApplication.Application != null)
-                        {
-                            excelApplication.Application.WorkbookBeforeClose -= OnWorkbookBeforeClose;
-                            excelApplication.Application.WorkbookOpen -= Instance.AddManagedWorkbook;
-                        }
-                        excelApplication.Dispose();
-                    }
-                    if (templateManager != null)
-                        templateManager.Dispose();
-                    if (RequestsManager != null)
-                        RequestsManager.Dispose();
-                    if (contextualMenuManager != null)
-                        contextualMenuManager.Dispose();
-
-                    isDisposed = true;
-                    Instance = null;
-                }
-            }
-        }
         #endregion
 
         #region private methods
@@ -195,6 +171,37 @@ namespace Etk.Excel
         {
             if (!cancel && workbook.Application.Workbooks.Count >= 1)
                 Instance.managedWorkbooks.Remove(workbook);
+        }
+
+        private void InternalDispose()
+        {
+            lock (syncObj)
+            {
+                if (!isDisposed)
+                {
+                    if (templateManager != null)
+                        templateManager.Dispose();
+                    if (RequestsManager != null)
+                        RequestsManager.Dispose();
+                    if (contextualMenuManager != null)
+                        contextualMenuManager.Dispose();
+
+                    managedWorkbooks.Clear();
+
+                    if (excelApplication != null)
+                    {
+                        if (excelApplication.Application != null)
+                        {
+                            excelApplication.Application.WorkbookBeforeClose -= OnWorkbookBeforeClose;
+                            excelApplication.Application.WorkbookOpen -= Instance.AddManagedWorkbook;
+                        }
+                        excelApplication.Dispose();
+                    }
+
+                    isDisposed = true;
+                    Instance = null;
+                }
+            }
         }
         #endregion
     }

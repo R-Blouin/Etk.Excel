@@ -8,7 +8,8 @@ using Etk.Excel.ContextualMenus;
 using Etk.Tools.Extensions;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Reflection;
-using Etk.Tools.Reflection; 
+using Etk.Tools.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -69,17 +70,47 @@ namespace Etk.Excel.BindingTemplates.Definitions
             Init(header, body, footer);
 
             RetrieveSelectionChangeMethod();
-            RetrieveContextualMenuMethod();
+            RetrieveContextualMenu();
             RetrieveDecorator();
         }
         #endregion
 
         #region private method
-        private void RetrieveContextualMenuMethod()
+        private void RetrieveContextualMenu()
         {
-            string contextMenu = TemplateOption.ContextualMenu;
-            if (!string.IsNullOrEmpty(contextMenu))
-                ContextualMenu = ETKExcel.ContextualMenuManager.GetContextualMenu(contextMenu);
+            string contextMenuRef = TemplateOption.ContextualMenu;
+            if (!string.IsNullOrEmpty(contextMenuRef))
+            {
+                ContextualMenu = ETKExcel.ContextualMenuManager.GetContextualMenu(contextMenuRef);
+                if(ContextualMenu == null)
+                {
+                    ExcelInterop.Worksheet worksheet = null;
+                    ExcelInterop.Range menuRange = null;
+                    try
+                    {
+                        worksheet = DefinitionFirstCell.Worksheet;
+                        try
+                        {
+                            menuRange = worksheet.Range[contextMenuRef];
+                        }
+                        catch
+                        { }
+                        if(menuRange != null)
+                            ContextualMenu = ETKExcel.ContextualMenuManager.RegisterMenuDefinitionFromXml(menuRange.Value2);
+                    }
+                    finally
+                    {
+                        if (worksheet != null)
+                        {
+                            Marshal.ReleaseComObject(worksheet);
+                            worksheet = null;
+                        }
+                        menuRange = null;
+                    }
+                }
+                if (ContextualMenu == null)
+                    throw new Exception(string.Format("Cannot find contextual menu '{0}'", contextMenuRef ?? string.Empty));
+            }
         }
 
         private void RetrieveSelectionChangeMethod()

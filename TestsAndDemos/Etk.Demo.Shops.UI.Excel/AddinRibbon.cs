@@ -26,7 +26,7 @@ namespace Etk.Demo.Shops.UI.Excel
         #region event Handlers
         public void OnReloadViews(IRibbonControl control)
         {
-            SheetShops.Instance.RenderViews();
+            SheetShopsRef.Instance.RenderViews();
         }
         #endregion
     }

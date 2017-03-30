@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
 using Etk.Excel.Extensions;
@@ -39,40 +40,51 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
         public ExcelSortAndFilterButton(ExcelTemplateView templateView)
         {
             this.View = templateView;
-            ExcelInterop.Worksheet worksheet = View.ViewSheet;
-            OwnerRange = View.FirstOutputCell;
-            Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
+            ExcelInterop.Worksheet worksheet = null;
+            try
+            {
+                worksheet = View.ViewSheet;
+                OwnerRange = View.FirstOutputCell;
+                Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
 
-            ExcelInterop.Shape shape = (ExcelInterop.Shape)worksheet.Shapes.AddOLEObject("Forms.CommandButton.1",
-                                                                Type.Missing,
-                                                                false,
-                                                                false,
-                                                                Type.Missing,
-                                                                Type.Missing,
-                                                                Type.Missing,
-                                                                OwnerRange.Left,
-                                                                OwnerRange.Top,
-                                                                20,
-                                                                20);
+                ExcelInterop.Shape shape = (ExcelInterop.Shape) worksheet.Shapes.AddOLEObject("Forms.CommandButton.1",
+                    Type.Missing,
+                    false,
+                    false,
+                    Type.Missing,
+                    Type.Missing,
+                    Type.Missing,
+                    OwnerRange.Left,
+                    OwnerRange.Top,
+                    20,
+                    20);
 
-            shape.Name = Name;
-            object s = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null);
-            commandButton = s as ExcelForms.CommandButton;
- 
- 
-            commandButton.FontName = "Arial";
-            commandButton.Font.Size = 8;
-            commandButton.Caption = "S/F";
-            commandButton.ForeColor = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
+                shape.Name = Name;
+                object s = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null);
+                commandButton = s as ExcelForms.CommandButton;
 
-            commandButton.Click += () => {  
-                                            using(ExcelMainWindow excelWindow = new ExcelMainWindow(View.ViewSheet.Application.Hwnd))
-                                            {
-                                                SortAndFilterManagement.DisplaySortAndFilterWindow(excelWindow, View);
-                                            }
-                                         };
 
-            worksheet = null;
+                commandButton.FontName = "Arial";
+                commandButton.Font.Size = 8;
+                commandButton.Caption = "S/F";
+                commandButton.ForeColor = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.Red);
+
+                commandButton.Click += () =>
+                {
+                    using (ExcelMainWindow excelWindow = new ExcelMainWindow(View.ViewSheet.Application.Hwnd))
+                    {
+                        SortAndFilterManagement.DisplaySortAndFilterWindow(excelWindow, View);
+                    }
+                };
+            }
+            finally
+            {
+                if (worksheet != null)
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
+            }
         }
         #endregion
 

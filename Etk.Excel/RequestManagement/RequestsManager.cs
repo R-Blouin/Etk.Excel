@@ -41,7 +41,7 @@ namespace Etk.Excel.RequestManagement
                 using (TextReader textReader = new StreamReader(assembly.GetManifestResourceStream("Etk.Excel.Resources.RequestsManagerContextualMenu.xml")))
                 {
                     string menuXml = textReader.ReadToEnd();
-                    RequestManagementMenu = ContextualMenuFactory.CreateInstances(menuXml).FirstOrDefault();
+                    RequestManagementMenu = ContextualMenuFactory.CreateInstance(menuXml);
                 }
                 // Declare the contextual menus activators. 
                 contextualMenuManager.OnContextualMenusRequested += ManageRequestsContexualMenu;

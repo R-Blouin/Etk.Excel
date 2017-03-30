@@ -10,7 +10,6 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
     {
         #region properties and attributes
         private ExcelBindingDefinitionNamedRange excelBindingDefinitionNamedRange;
-        private ExcelInterop.Worksheet workSheet;
         private string name;
         private ExcelInterop.Name rangeName;
 
@@ -65,29 +64,41 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         #region public methods
         public void CreateControl(ExcelInterop.Range range)
         {
-            this.Range = range;
-            workSheet = this.Range.Worksheet;
-            if (!string.IsNullOrEmpty(name))
+            ExcelInterop.Worksheet workSheet = null;
+            try
             {
-                ExcelInterop.Names names = null;
-                try
+                this.Range = range;
+                workSheet = this.Range.Worksheet;
+                if (!string.IsNullOrEmpty(name))
                 {
-                    names = workSheet.Names;
-                    rangeName = names.Add(name, this.Range);
+                    ExcelInterop.Names names = null;
+                    try
+                    {
+                        names = workSheet.Names;
+                        rangeName = names.Add(name, this.Range);
+                    }
+                    catch (COMException ex)
+                    {
+                        throw new EtkException(string.Format("Cannot create named caller '{0}': {1}", name, ex.Message));
+                    }
+                    finally
+                    {
+                        if (names != null)
+                            Marshal.ReleaseComObject(names);
+                    }
                 }
-                catch (COMException ex)
+
+                if (NestedContextItem != null && NestedContextItem is IExcelControl)
+                    ((IExcelControl) NestedContextItem).CreateControl(range);
+            }
+            finally
+            {
+                if (workSheet != null)
                 {
-                    throw new EtkException(string.Format("Cannot create named caller '{0}': {1}", name, ex.Message));
-                }
-                finally
-                { 
-                    if(names != null)
-                        Marshal.ReleaseComObject(names);
+                    Marshal.ReleaseComObject(workSheet);
+                    workSheet = null;
                 }
             }
-
-            if (NestedContextItem != null && NestedContextItem is IExcelControl)
-                ((IExcelControl) NestedContextItem).CreateControl(range);
         }
 
         public override void RealDispose()
@@ -97,12 +108,6 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 
             if (NestedContextItem != null)
                 NestedContextItem.Dispose();
-
-            if (workSheet != null)
-            {
-                Marshal.ReleaseComObject(workSheet);
-                workSheet = null;
-            }
             Range = null;
         }
 

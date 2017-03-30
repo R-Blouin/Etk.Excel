@@ -105,11 +105,12 @@ namespace Etk.Excel.Application
             if (isDisposed || context.ContextItem.IsDisposed || !context.View.IsRendered)
                 return;
 
-            ExcelInterop.Worksheet worksheet = context.View.FirstOutputCell.Worksheet;
+            ExcelInterop.Worksheet worksheet = null;
             ExcelInterop.Range range = null;
             bool enableEvent = ExcelApplication.Application.EnableEvents;
             try
             {
+                worksheet = context.View.FirstOutputCell.Worksheet;
                 KeyValuePair<int, int> kvp = context.Param;
                 range = worksheet.Cells[context.View.FirstOutputCell.Row + kvp.Key, context.View.FirstOutputCell.Column + kvp.Value];
                 if (range != null)
@@ -145,17 +146,22 @@ namespace Etk.Excel.Application
             }
             finally
             {
+                if(worksheet != null)
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
+
                 try
                 {
+
                     if (ExcelApplication.Application.EnableEvents != enableEvent)
                         ExcelApplication.Application.EnableEvents = enableEvent;
                 }
                 catch
                 { }
             }
-            Marshal.ReleaseComObject(worksheet);
             range = null;
-            worksheet = null;
         }
         #endregion
     }

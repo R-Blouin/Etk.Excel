@@ -12,9 +12,7 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
     {
         #region properties and attributes
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
-        private ExcelBindingDefinitionFormulaResult excelBindingDefinitionFormulaResult;
-        private ExcelInterop.Worksheet workSheet;
-        private ExcelInterop.Application application;
+        private readonly ExcelBindingDefinitionFormulaResult excelBindingDefinitionFormulaResult;
         private object currentValue;
 
         public ExcelInterop.Range Range
@@ -50,8 +48,6 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
         public void CreateControl(ExcelInterop.Range range)
         {
             this.Range = range;
-            application = this.Range.Application;
-            workSheet = this.Range.Worksheet;
         }
 
         public override void RealDispose()
@@ -63,16 +59,6 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
                     obj.PropertyChanged -= OnPropertyChanged;
                 objectsToNotify = null;
             }
-            if (workSheet != null)
-            {
-                Marshal.ReleaseComObject(workSheet);
-                workSheet = null;
-            }
-            if (application != null)
-            {
-                Marshal.ReleaseComObject(application);
-                application = null;
-            }
             Range = null;
         }
 
@@ -83,8 +69,7 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
 
             if (Range != null && Range.HasFormula)
                 return Range.Formula;
-            else
-                return excelBindingDefinitionFormulaResult.NestedBindingDefinition.ResolveBinding(this.DataSource);
+            return excelBindingDefinitionFormulaResult.NestedBindingDefinition.ResolveBinding(this.DataSource);
         }
 
         public override bool UpdateDataSource(object data, out object retValue)
@@ -109,7 +94,8 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
         {
             if (Range.HasFormula && ! object.Equals(Range.Value2, currentValue))
             {
-                if (application.WorksheetFunction.IsError(Range))
+                ExcelInterop.WorksheetFunction worksheetFunction = ETKExcel.ExcelApplication.Application.WorksheetFunction; 
+                if (worksheetFunction.IsError(Range))
                 { 
                     Type type = excelBindingDefinitionFormulaResult.NestedBindingDefinition.BindingType;
                     object nullValue = type.IsValueType ? Activator.CreateInstance(type) : null;
@@ -118,6 +104,12 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
                 else
                     excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(this.DataSource, Range.Value2);
                 currentValue = Range.Value2;
+
+                if (worksheetFunction != null)
+                {
+                    Marshal.ReleaseComObject(worksheetFunction);
+                    worksheetFunction = null;
+                }
             }
         } 
     }

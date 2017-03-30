@@ -6,7 +6,6 @@ using System.Text;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Decorators;
-using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
 
@@ -19,11 +18,11 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         private const string POS_KEYWORD = "[POS]";
         private const string ALL_POS_KEYWORD = "[ALLPOS]";
 
-        private bool usePos = false;
-        private bool useAllPos = false;
-        private string rootName;
-        ExcelNamedRangeDefinition definition;
-        private IBindingDefinition nameBindingDefinition;
+        private readonly bool usePos = false;
+        private readonly bool useAllPos = false;
+        private readonly string rootName;
+        private readonly ExcelNamedRangeDefinition definition;
+        private readonly IBindingDefinition nameBindingDefinition;
 
         public IBindingDefinition NestedBindingDefinition
         { get; private set; }
