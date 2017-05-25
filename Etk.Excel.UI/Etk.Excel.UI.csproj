@@ -1,0 +1,237 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C42164F4-3F2A-44E8-84B9-503F2D84F38E}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Etk.Excel.UI</RootNamespace>
+    <AssemblyName>Etk.Excel.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MahApps.Metro, Version=1.5.0.23, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net40\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\Etk-git\Dependencies\Office Interop 12\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="Office, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\Etk-git\Dependencies\Office Interop 12\Office.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.5.0\lib\net40\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Behaviors\BindableSelectedItemBehavior.cs" />
+    <Compile Include="Converters\CustomImagePathConverter.cs" />
+    <Compile Include="Converters\EnumMatchToBooleanConverter.cs" />
+    <Compile Include="Converters\TypeOfConverter.cs" />
+    <Compile Include="DynamicTemplateSelector.cs" />
+    <Compile Include="ModelManagement\ExcelModelDefinitionManager.cs" />
+    <Compile Include="ModelManagement\IExcelModelDefinitionManager.cs" />
+    <Compile Include="MvvmBase\RelayCommand.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="RequestManagement\Definitions\ExcelRequestDefinition.cs" />
+    <Compile Include="RequestManagement\IRequestManager.cs" />
+    <Compile Include="RequestManagement\RequestsManager.cs" />
+    <Compile Include="TemplateManagement\TemplateContextualMenuManager.cs" />
+    <Compile Include="Windows\ModelManagement\Controls\AccessorsParameters.xaml.cs">
+      <DependentUpon>AccessorsParameters.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ModelManagement\Controls\RequestProperties.xaml.cs">
+      <DependentUpon>RequestProperties.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ModelManagement\Controls\ViewProperties.xaml.cs">
+      <DependentUpon>ViewProperties.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ModelManagement\DynamicRequestManagementWindow.xaml.cs">
+      <DependentUpon>DynamicRequestManagementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ModelManagement\ParametersTemplateSelector.cs" />
+    <Compile Include="Windows\ModelManagement\ViewModels\AccessorParameter.cs" />
+    <Compile Include="Windows\ModelManagement\ViewModels\AccessorsParametersViewModel.cs" />
+    <Compile Include="Windows\ModelManagement\ViewModels\ModelPropertyViewModel.cs" />
+    <Compile Include="Windows\ModelManagement\ViewModels\ModelTypeViewModel.cs" />
+    <Compile Include="Windows\ModelManagement\ViewModels\RequestViewModel.cs" />
+    <Compile Include="Windows\ModelManagement\ViewModels\ViewPropertiesViewModel.cs" />
+    <Compile Include="Windows\ModelManagement\ViewModels\WizardViewModel.cs" />
+    <Compile Include="Windows\SortAndFilter\Converters\SelectionConverter.cs" />
+    <Compile Include="Windows\SortAndFilter\Converters\SelectionMarginConverter.cs" />
+    <Compile Include="Windows\SortAndFilter\FilterOnCondition.xaml.cs">
+      <DependentUpon>FilterOnCondition.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SortAndFilter\FilterOnValue.xaml.cs">
+      <DependentUpon>FilterOnValue.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SortAndFilter\SortAndFilerWindow.xaml.cs">
+      <DependentUpon>SortAndFilerWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SortAndFilter\SortAndFilterManagement.cs" />
+    <Compile Include="Windows\SortAndFilter\ViewModels\BindingDefinitionViewModel.cs" />
+    <Compile Include="Windows\SortAndFilter\ViewModels\SortAndFilterViewModel.cs" />
+    <Compile Include="Windows\SortAndFilter\ViewModels\TemplateViewModel.cs" />
+    <Compile Include="Windows\SortAndFilter\ViewModels\ValueSelection.cs" />
+    <Compile Include="Windows\ViewsAndtemplates\TemplateManagementWindow.xaml.cs">
+      <DependentUpon>TemplateManagementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\ViewsAndtemplates\ViewModels\TemplateManagementViewModel.cs" />
+    <Compile Include="Windows\Wizard\IWizardStep.cs" />
+    <Compile Include="Windows\Wizard\WizardControl.xaml.cs">
+      <DependentUpon>WizardControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Wizard\WizardControlViewModel.cs" />
+    <Compile Include="Windows\Wizard\WizardStepContainer.xaml.cs">
+      <DependentUpon>WizardStepContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Wizard\WizardStepContainerViewModel.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Resources\Controls.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\EtkMainStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ModelManagement\Controls\AccessorsParameters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ModelManagement\Controls\RequestProperties.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ModelManagement\Controls\ViewProperties.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ModelManagement\DynamicRequestManagementWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\SortAndFilter\FilterOnCondition.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\SortAndFilter\FilterOnValue.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\SortAndFilter\SortAndFilerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\ViewsAndtemplates\TemplateManagementWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Wizard\WizardControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Wizard\WizardStepContainer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Windows\ModelManagement\Images\Invoke.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Windows\ModelManagement\Images\Property.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Windows\ModelManagement\Images\PropertyLeaf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Etk.Excel\Etk.Excel.csproj">
+      <Project>{14413cbb-3028-462c-958d-16e96575a06f}</Project>
+      <Name>Etk.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Etk\Etk.csproj">
+      <Project>{10188a0e-231d-42da-952e-a260402b3ea4}</Project>
+      <Name>Etk</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

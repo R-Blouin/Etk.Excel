@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="Etk.Excel.UI.Windows.ModelManagement.Controls.ViewProperties"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:source="clr-namespace:Etk.ModelManagement;assembly=Etk"
+             xmlns:dest="clr-namespace:Etk.Excel.UI.Windows.ModelManagement.ViewModels"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Margin="3, 6, 3, 8" Content="Set View Properties" HorizontalAlignment="Left" FontSize="25" />
+
+        <Separator Grid.Row="1" Height="15" Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Top"/>
+
+        <!--<Label Grid.Row="2" Margin="3, 6, 3, 8" Content="Drag and Drop properties..." HorizontalAlignment="Left" />-->
+        <Label Grid.Row="2" Margin="3, 6, 3, 8" Content="{Binding Name}" HorizontalAlignment="Left" />
+        
+        <Border Grid.Row="3"  Padding="3" BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Source -->
+                <TreeView Grid.Row="0" ItemsSource="{Binding SourceProperties}">
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type source:ModelProperty}" ItemsSource="{Binding Properties}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="16" Height="16" Margin="3,0" Source="..\Images\Property.png" />
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+
+                        <DataTemplate DataType="{x:Type source:ModelLeafProperty}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Width="16" Height="16" Margin="3,0" Source="..\Images\PropertyLeaf.png" />
+                                <TextBlock Text="{Binding Name}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+
+                <Border Grid.Column="1" Width="1" Margin="3" Background="{DynamicResource AccentColorBrush}" BorderThickness="0"/>
+
+                <!-- Destination -->
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TreeView Grid.Row="0" ItemsSource="{Binding SourceProperties}">
+                        <TreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type source:ModelProperty}" ItemsSource="{Binding Properties}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+
+                            <DataTemplate DataType="{x:Type source:ModelLeafProperty}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
+
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0">Header Name:</Label>
+                        <TextBox Grid.Column="1"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
