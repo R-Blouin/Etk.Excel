@@ -6,11 +6,11 @@ using System.Runtime.CompilerServices;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates;
 using Etk.Excel.ContextualMenus;
-using Etk.Excel.RequestManagement;
 using Etk.ModelManagement;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 [assembly: InternalsVisibleTo("Etk.Tests.Templates.ExcelDna1")]
+[assembly: InternalsVisibleTo("Etk.Excel.UI")]
 namespace Etk.Excel
 {
     /// <summary> 
@@ -35,8 +35,8 @@ namespace Etk.Excel
 
         [Import(AllowDefault = false)]
         private ModelDefinitionManager modelDefinitionManager = null;
-        [Import(AllowDefault = false)]
-        private RequestsManager RequestsManager = null;
+        //[Import(AllowDefault = false)]
+        //private RequestsManager RequestsManager = null;
 
         #region singleton
         private static ETKExcel Instance;
@@ -181,8 +181,8 @@ namespace Etk.Excel
                 {
                     if (templateManager != null)
                         templateManager.Dispose();
-                    if (RequestsManager != null)
-                        RequestsManager.Dispose();
+                    //@@if (RequestsManager != null)
+                    //    RequestsManager.Dispose();
                     if (contextualMenuManager != null)
                         contextualMenuManager.Dispose();
 

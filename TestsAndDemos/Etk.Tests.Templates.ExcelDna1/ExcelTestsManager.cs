@@ -1,16 +1,15 @@
-﻿namespace Etk.Tests.Templates.ExcelDna1
-{
-    using Etk.BindingTemplates.Views;
-    using Etk.Excel;
-    using Excel.Application;
-    using Etk.Excel.UI.MvvmBase;
-    using Etk.Tests.Templates.ExcelDna1.Tests;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using ExcelInterop = Microsoft.Office.Interop.Excel;
+﻿using Etk.BindingTemplates.Views;
+using Etk.Excel;
+using Etk.Excel.Application;
+using Etk.Excel.MvvmBase;
+using Etk.Tests.Templates.ExcelDna1.Tests;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
+namespace Etk.Tests.Templates.ExcelDna1
+{
     interface IExcelTestsManager
     {
         void ExecuteTopics(IEnumerable<IExcelTestTopic> topicq);

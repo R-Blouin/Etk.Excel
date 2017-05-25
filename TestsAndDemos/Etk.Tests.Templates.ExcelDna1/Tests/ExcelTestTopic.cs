@@ -1,14 +1,14 @@
-﻿namespace Etk.Tests.Templates.ExcelDna1.Tests
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Runtime.InteropServices;
-    using Etk.Excel;
-    using Etk.Excel.BindingTemplates.Views;
-    using Etk.Excel.UI.MvvmBase;
-    using Etk.Tests.Templates.ExcelDna1.Extensions;
-    using ExcelInterop = Microsoft.Office.Interop.Excel;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using Etk.Excel;
+using Etk.Excel.BindingTemplates.Views;
+using Etk.Excel.MvvmBase;
+using Etk.Tests.Templates.ExcelDna1.Extensions;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
+namespace Etk.Tests.Templates.ExcelDna1.Tests
+{
     abstract class ExcelTestTopic : ViewModelBase, IExcelTestTopic
     {
         #region properties and attributes

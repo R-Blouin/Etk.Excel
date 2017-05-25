@@ -4,7 +4,7 @@
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace Etk.Excel.UI.MvvmBase
+namespace Etk.Excel.MvvmBase
 {
     /// <summary>
     /// Base class for all ViewModel classes in the application.

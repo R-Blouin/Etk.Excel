@@ -14,7 +14,6 @@ using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using Etk.Excel.BindingTemplates.Views;
 using Etk.Excel.ContextualMenus;
-using Etk.Excel.TemplateManagement;
 using Etk.Tools.Extensions;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
@@ -48,7 +47,7 @@ namespace Etk.Excel.BindingTemplates
         private readonly BindingTemplateManager bindingTemplateManager;
 
         private readonly SortSearchAndFilterMenuManager sortSearchAndFilterMenuManager;
-        private TemplateContextualMenuManager templateContextualMenuManager;
+        //@@private TemplateContextualMenuManager templateContextualMenuManager;
         #endregion
 
         #region .ctors
@@ -71,7 +70,7 @@ namespace Etk.Excel.BindingTemplates
             // Create the notify property manager . 
             ExcelNotifyPropertyManager = new ExcelNotifyPropertyManager(ExcelApplication);
             // Create the template contextual menus manager. 
-            templateContextualMenuManager = new TemplateContextualMenuManager(contextualMenuManager);
+            //@@templateContextualMenuManager = new TemplateContextualMenuManager(contextualMenuManager);
             // Declare the contextual menus activators for the template views. 
             contextualMenuManager.OnContextualMenusRequested += ManageViewsContextualMenu;
 
@@ -858,11 +857,11 @@ namespace Etk.Excel.BindingTemplates
 
                     contextualMenuManager.OnContextualMenusRequested -= ManageViewsContextualMenu;
 
-                    if (templateContextualMenuManager != null)
-                    {
-                        templateContextualMenuManager.Dispose();
-                        templateContextualMenuManager = null;
-                    }
+                    //@@if (templateContextualMenuManager != null)
+                    //{
+                    //    templateContextualMenuManager.Dispose();
+                    //    templateContextualMenuManager = null;
+                    //}
 
                     if (ExcelNotifyPropertyManager != null)
                     {

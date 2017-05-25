@@ -4,7 +4,7 @@ using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.ContextualMenus
 {
-    class ContextualMenu : IContextualMenu 
+    public class ContextualMenu : IContextualMenu 
     {
         #region properties and attributes
         public string Name

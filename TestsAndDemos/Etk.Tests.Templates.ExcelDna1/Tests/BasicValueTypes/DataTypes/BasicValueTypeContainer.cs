@@ -1,5 +1,4 @@
-﻿
-using Etk.Excel.UI.MvvmBase;
+﻿using Etk.Excel.MvvmBase;
 
 namespace Etk.Tests.Templates.ExcelDna1.Tests.BasicValueTypes.DataTypes
 {

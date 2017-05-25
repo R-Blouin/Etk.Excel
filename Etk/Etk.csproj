@@ -169,6 +169,7 @@
     <Compile Include="Tools\Log\Logger.cs" />
     <Compile Include="Tools\Log\LoggerManager.cs" />
     <Compile Include="Tools\Log\LogType.cs" />
+    <Compile Include="Tools\MvvmBase\ViewModelBase.cs" />
     <Compile Include="Tools\Patterns\Singleton.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Reflection\TypeConvertor.cs" />

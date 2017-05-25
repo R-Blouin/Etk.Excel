@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
 using Etk.Excel.Extensions;
-using Etk.Excel.UI.Windows.SortAndFilter;
 using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
@@ -73,7 +72,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
                 {
                     using (ExcelMainWindow excelWindow = new ExcelMainWindow(View.ViewSheet.Application.Hwnd))
                     {
-                        SortAndFilterManagement.DisplaySortAndFilterWindow(excelWindow, View);
+                        //@@SortAndFilterManagement.DisplaySortAndFilterWindow(excelWindow, View);
                     }
                 };
             }
