@@ -8,7 +8,7 @@ namespace Etk.Excel.BindingTemplates.Controls
 {
     class EnumManager
     {
-        private Dictionary<Type, string> enumByType = new Dictionary<Type, string>();
+        private readonly Dictionary<Type, string> enumByType = new Dictionary<Type, string>();
 
         public void CreateControl(IBindingContextItem item, ref ExcelInterop.Range range)
         {
