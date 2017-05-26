@@ -4,6 +4,6 @@ Manage objects, rows, cells selections. Add decorators, dynamic menus, buttons, 
 
 
 ETK is used since the mid of 2015 in production by one of the largest French asset manager. 
-Two of its most sensitive applications used everyday are based on ETK to manage a large set of asset funds (from exposition checking to financial order executions). These applications are written without any vba code and mixe happily Wpf and Excel.
+Some of its most sensitive applications used everyday are based on ETK to manage a large set of asset funds (from exposition checking to financial order executions). These applications are written without any vba code and mixe happily Wpf and Excel.
 
 It's also used to build rich Excel reports.
