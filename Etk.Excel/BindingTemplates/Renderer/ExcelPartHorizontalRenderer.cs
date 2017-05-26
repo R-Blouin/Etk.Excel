@@ -53,8 +53,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                                 if (item.BindingDefinition.IsEnum )
                                     enumManager.CreateControl(item, ref range);
                                 else
-                                    ManageControls(item, ref range);
-
+                                    ((IExcelControl)item).CreateControl(range);
                                 range = null;
                             }
                             Parent.DataRows[rowId].Add(item);
@@ -138,7 +137,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                         enumManager.CreateControl(item, ref range);
                     else
-                        ManageControls(item, ref range);
+                        ((IExcelControl) item).CreateControl(range);
                     range = null;
                 }
                 col.Add(item);

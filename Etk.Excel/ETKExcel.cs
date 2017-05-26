@@ -88,19 +88,8 @@ namespace Etk.Excel
         #endregion
 
         #region .ctors
-        private ETKExcel(ExcelInterop.Application application)
-        {
-            if (application == null)
-                throw new EtkException("ETKExcel initialization: the 'application' parameter is mandatory");
-
-            // Init System.Windows.Application (Wpf)
-            ////////////////////////////////////////
-            //if (System.Windows.Application.Current == null)
-            //{
-            //    new System.Windows.Application();
-            //    System.Windows.Application.Current.ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown;
-            //}
-        }
+        private ETKExcel()
+        {}
 
         ~ETKExcel()
         {
@@ -124,7 +113,7 @@ namespace Etk.Excel
                     {
                         // Init ETKExcel
                         ////////////////
-                        Instance = new ETKExcel(application);
+                        Instance = new ETKExcel();
 
                         // Inject the Excel application reference
                         CompositionManager.Instance.ComposeExportedValue(application);
