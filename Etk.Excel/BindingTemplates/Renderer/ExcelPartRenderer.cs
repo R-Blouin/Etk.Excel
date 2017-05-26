@@ -106,8 +106,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         protected void ManageControls(IBindingContextItem item, ref ExcelInterop.Range range)
         {
-            if (item is IExcelControl)
-                ((IExcelControl)item).CreateControl(range);
+            if (   null != item.BindingDefinition
+                && item.BindingDefinition.IsEnum
+                && !item.BindingDefinition.IsReadOnly) { enumManager.CreateControl(item, ref range); }
+            else { (item as IExcelControl)?.CreateControl(range); }
         }
     }
 }

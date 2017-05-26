@@ -85,5 +85,12 @@ namespace Etk.Excel.BindingTemplates
         /// <summary> Register Event callback definitions 
         /// <param name="callback">The callback to register</param>
         void RegisterEventCallback(EventCallback callback);
+
+        /// <summary>
+        /// Returns template details from template identifed by name given in parameter.
+        /// </summary>
+        /// <param name="sheetName">Search template's name</param>
+        /// <returns>Template details from template identifed by name given in parameter.</returns>
+        IEnumerable<IExcelTemplateDetails> GetTemplateDetails(string sheetName);
     }
 }

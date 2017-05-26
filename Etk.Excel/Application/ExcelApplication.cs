@@ -28,6 +28,11 @@ namespace Etk.Excel.Application
 
         public Dispatcher ExcelDispatcher
         { get; private set; }
+
+        /// <summary>
+        /// Indicates whether status remains visible.
+        /// </summary>
+        public bool KeepStatusVisible { get; set; }
         #endregion
 
         #region .ctors

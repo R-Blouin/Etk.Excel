@@ -78,10 +78,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                                 if (item is ExcelBindingSearchContextItem)
                                     ((ExcelBindingSearchContextItem)item).SetRange(ref range);
 
-                                if (item.BindingDefinition != null && item.BindingDefinition.IsEnum)
-                                    enumManager.CreateControl(item, ref range);
-                                else
-                                    ManageControls(item, ref range);
+                                this.ManageControls(item, ref range);
                                 range = null;
                             }
                             row.Add(item);
@@ -384,8 +381,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             multiLineManager.CreateControl(item, ref range, ref localSource, ref vOffset);
                         }
                     }
-                    if (item is IExcelControl)
-                        ManageControls(item, ref range);
+                    this.ManageControls(item, ref range);
                     range = null;
                 }
                 renderingContext.DataRow.Add(item);

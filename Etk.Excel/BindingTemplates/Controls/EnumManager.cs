@@ -27,7 +27,6 @@ namespace Etk.Excel.BindingTemplates.Controls
                 values = string.Join(separator, list);
                 enumByType[item.BindingDefinition.BindingType] = values;
             }
-
             range.Validation.Add(ExcelInterop.XlDVType.xlValidateList,
                                  ExcelInterop.XlDVAlertStyle.xlValidAlertInformation,
                                  ExcelInterop.XlFormatConditionOperator.xlBetween,

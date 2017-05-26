@@ -15,6 +15,15 @@ using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
+    public enum AutoFitMode
+    {
+        None = 0,
+        Width = 1,
+        Height = 2,
+        WidthHeight = 3,
+        HeightWidth = 4,
+    }
+
     class SelectionPattern
     {
         public ExcelInterop.XlPattern Pattern;
@@ -41,6 +50,7 @@ namespace Etk.Excel.BindingTemplates.Views
     class ExcelTemplateView : TemplateView, IExcelTemplateView
     {
         #region attributes and properties
+        private const int AutoFitMaxIterationCount = 10;
         private ILogger log = Logger.Instance;
         private ExcelInterop.Range currentSelectedRange;
         private readonly List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
@@ -71,7 +81,7 @@ namespace Etk.Excel.BindingTemplates.Views
             }
         }
 
-        public bool AutoFit
+        public AutoFitMode AutoFit
         { get; set; }
 
         public ExcelInterop.Worksheet ViewSheet
@@ -130,7 +140,7 @@ namespace Etk.Excel.BindingTemplates.Views
             ViewSheet = sheetDestination;
             FirstOutputCell = firstOutputCell;
             ClearingCell = clearingCell;
-            AutoFit = true;
+            AutoFit = AutoFitMode.WidthHeight;
             CellsThatContainSearchValue = new List<ExcelBindingSearchContextItem>();
         }
         #endregion
@@ -243,12 +253,12 @@ namespace Etk.Excel.BindingTemplates.Views
 
         public override void ExecuteSearch()
         {
-            using (FreezeExcel freezeExcel = new FreezeExcel())
+            using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
             {
                 if (Renderer == null || Renderer.BodyPartRenderer == null || Renderer.BodyPartRenderer.RenderedArea == null)
                     return;
 
-                List<KeyValuePair<ExcelInterop.Range, bool>> toShowOrHide = new List<KeyValuePair<ExcelInterop.Range, bool>>();
+                var toShowOrHide = new List<KeyValuePair<ExcelInterop.Range, bool>>();
 
                 ExcelInterop.Range firstRange = ViewSheet.Cells[Renderer.BodyPartRenderer.RenderedArea.YPos, Renderer.BodyPartRenderer.RenderedArea.XPos];
                 ExcelInterop.Range lastRange = ViewSheet.Cells[Renderer.BodyPartRenderer.RenderedArea.YPos + Renderer.BodyPartRenderer.RenderedArea.Height - 1, Renderer.BodyPartRenderer.RenderedArea.XPos + Renderer.BodyPartRenderer.RenderedArea.Width - 1];
@@ -332,12 +342,77 @@ namespace Etk.Excel.BindingTemplates.Views
 
         public void ExecuteAutoFit()
         {
-            if (Renderer != null && Renderer.RenderedRange != null)
+            switch (this.AutoFit)
             {
-                if (TemplateDefinition.Orientation == Orientation.Horizontal)
-                    Renderer.RenderedRange.Rows.AutoFit();
-                else
-                    Renderer.RenderedRange.Columns.AutoFit();
+                case AutoFitMode.Width:
+                case AutoFitMode.WidthHeight:
+                    {
+                        var range = null != this.ViewSheet && null != this.ViewSheet.Columns
+                                        ? this.ViewSheet.Columns
+                                        : (null != this.Renderer.RenderedRange && null != this.ViewSheet.Columns
+                                            ? this.Renderer.RenderedRange.Columns
+                                            : null);
+                        if (null != range)
+                        {
+                            this.AutoFitColumns(range);
+                            if (this.AutoFit == AutoFitMode.WidthHeight)
+                            {
+                                this.AutoFitRows(range);
+                            }
+                        }
+                    }
+                    break;
+
+                case AutoFitMode.Height:
+                case AutoFitMode.HeightWidth:
+                    {
+                        var range = null != this.ViewSheet && null != this.ViewSheet.Rows
+                                        ? this.ViewSheet.Rows
+                                        : (null != this.Renderer.RenderedRange && null != this.ViewSheet.Rows
+                                            ? this.Renderer.RenderedRange.Rows
+                                            : null);
+                        if (null != range)
+                        {
+                            this.AutoFitRows(range);
+                            if (this.AutoFit == AutoFitMode.HeightWidth)
+                            {
+                                this.AutoFitColumns(range);
+                            }
+                        }
+                    }
+                    break;
+
+                case AutoFitMode.None:
+                default:
+                    return;
+            }
+        }
+
+        private void AutoFitRows(Microsoft.Office.Interop.Excel.Range rows)
+        {
+            double previousSize = -2;
+            double currentSize = -1;
+            var iteration = 0;
+            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
+            {
+                iteration++;
+                previousSize = rows.Height;
+                rows.Rows.AutoFit();
+                currentSize = rows.Height;
+            }
+        }
+
+        private void AutoFitColumns(Microsoft.Office.Interop.Excel.Range columns)
+        {
+            double previousSize = -2;
+            double currentSize = -1;
+            var iteration = 0;
+            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
+            {
+                iteration++;
+                previousSize = columns.Width;
+                columns.Columns.AutoFit();
+                currentSize = columns.Width;
             }
         }
 
@@ -450,7 +525,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
                     try
                     {
-                        using (FreezeExcel freezeExcel = new FreezeExcel())
+                        using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                         {
                             if (BeforeRendering != null)
                                 BeforeRendering(false);
@@ -460,8 +535,8 @@ namespace Etk.Excel.BindingTemplates.Views
                             Renderer.Clear();
 
                             Renderer.Render();
-                            if(AutoFit)
-                                ExecuteAutoFit();
+
+                            ExecuteAutoFit();
 
                             if (log.GetLogLevel() == LogType.Debug)
                                 log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
@@ -503,7 +578,7 @@ namespace Etk.Excel.BindingTemplates.Views
                             RenderView();
                         else
                         {
-                            using (FreezeExcel freezeExcel = new FreezeExcel())
+                            using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                             {
                                 if (BindingContext != null && BindingContext.Body.ElementsToRender != null)
                                 {
@@ -525,7 +600,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
                     catch (Exception ex)
                     {
-                        string message = string.Format("Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                        var message = string.Format("Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
                         throw new EtkException(message, ex, false);
                     }
                 }
@@ -539,7 +614,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 ExcelInterop.Range intersect = excelApplication.Application.Intersect(Renderer.RenderedRange, target);
                 if (intersect != null)
                 {
-                    using (FreezeExcel freeze = new FreezeExcel())
+                    using (var freeze = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                     {
                         if (Renderer.OnDataChanged(intersect) && DataChanged != null)
                             DataChanged(null, null);
@@ -675,7 +750,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
         private void ManageExpander(ExcelRenderer renderer)
         {
-            using (FreezeExcel freezeExcel = new FreezeExcel())
+            using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
             {
                 if(renderer.BodyPartRenderer != null && renderer.BodyPartRenderer.RenderedRange != null 
                    || renderer.FooterPartRenderer != null && renderer.FooterPartRenderer.RenderedRange != null)

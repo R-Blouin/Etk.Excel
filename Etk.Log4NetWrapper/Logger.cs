@@ -27,6 +27,9 @@ namespace Etk.Log4NetWrapper
         private LogType logLevel;
 
         #region .ctors
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public Logger()
         {
             LoadConfiguration();
@@ -47,40 +50,84 @@ namespace Etk.Log4NetWrapper
         #endregion
 
         #region ILog Membres
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public LogType GetLogLevel()
         {
             return logLevel;
         }
-        
+
+        /// <summary>
+        /// Log message
+        /// </summary>
+        /// <param name="logType"></param>
+        /// <param name="message"></param>
         public void Log(LogType logType, string message)
         {
             Log4NetLog(logType, null, message, null);
         }
 
+        /// <summary>
+        /// Log message with format
+        /// </summary>
+        /// <param name="logType"></param>
+        /// <param name="messageFormat"></param>
+        /// <param name="o"></param>
         public void LogFormat(LogType logType, string messageFormat, object o)
         {
             Log4NetLog(logType, null, messageFormat, new object[] {o});
         }
 
+        /// <summary>
+        /// Log message with format
+        /// </summary>
+        /// <param name="logType"></param>
+        /// <param name="messageFormat"></param>
+        /// <param name="os"></param>
         public void LogFormat(LogType logType, string messageFormat, object[] os)
         {
             Log4NetLog(logType, null, messageFormat, os);
         }
 
+        /// <summary>
+        /// Log exception
+        /// </summary>
+        /// <param name="logType"></param>
+        /// <param name="ex"></param>
+        /// <param name="message"></param>
         public void LogException(LogType logType, Exception ex, string message)
         {
             Log4NetLog(logType, ex, message, null);
         }
 
+        /// <summary>
+        /// Log exception with format
+        /// </summary>
+        /// <param name="logType"></param>
+        /// <param name="ex"></param>
+        /// <param name="messageFormat"></param>
+        /// <param name="o"></param>
         public void LogExceptionFormat(LogType logType, Exception ex, string messageFormat, object o)
         {
             Log4NetLog(logType, ex, messageFormat, new object[] {o});
         }
 
+        /// <summary>
+        /// Log exception with format
+        /// </summary>
+        /// <param name="logType"></param>
+        /// <param name="ex"></param>
+        /// <param name="messageFormat"></param>
+        /// <param name="os"></param>
         public void LogExceptionFormat(LogType logType, Exception ex, string messageFormat, object[] os)
         {
             Log4NetLog(logType, ex, messageFormat, os);
         }
+        #endregion
+
+        #region private methods
         #endregion
 
         #region private methods
@@ -141,9 +188,7 @@ namespace Etk.Log4NetWrapper
                 iLog.Error(exceptionMessage, exx);
             }
         }
-        #endregion
 
-        #region private methods
         private void LoadConfiguration()
         {
             if (! log4net.LogManager.GetRepository().Configured)
