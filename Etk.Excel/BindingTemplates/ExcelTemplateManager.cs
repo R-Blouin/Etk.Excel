@@ -17,6 +17,9 @@ using Etk.Excel.ContextualMenus;
 using Etk.Tools.Extensions;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using System.Collections;
+using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace Etk.Excel.BindingTemplates
 {
@@ -24,8 +27,8 @@ namespace Etk.Excel.BindingTemplates
     [PartCreationPolicy(CreationPolicy.Shared)]
     class ExcelTemplateManager : IExcelTemplateManager, IDisposable
     {
-        private const string TEMPLATE_START_FORMAT = "<Template*Name='{0}'";
-
+        private const string TEMPLATE_START_FORMAT = "<Template* Name='{0}'*";
+        private const string TEMPLATE_END_FORMAT = "<EndTemplate Name='{0}'*/>";
         private bool disposed;
         private static readonly object syncRoot = new object();
 
@@ -515,6 +518,57 @@ namespace Etk.Excel.BindingTemplates
             }
         }
 
+
+        public IEnumerable<IExcelTemplateDetails> GetTemplateDetails(string sheetName)
+        {
+            var workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
+
+            var sheetContainer = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetName);
+            return GetTemplateDetails(sheetContainer);
+        }
+
+        private IEnumerable<IExcelTemplateDetails> GetTemplateDetails(ExcelInterop.Worksheet sheetContainer)
+        {
+            var result = new List<IExcelTemplateDetails>();
+            var i = 0;
+            var searchedPattern = string.Format(TEMPLATE_START_FORMAT, "*");
+            ExcelInterop.Range range =
+                sheetContainer.Cells
+                              .Find(searchedPattern, Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
+            if (null != range)
+            {
+                do
+                {
+                    Match match = Regex.Match(range.Value, "<Template[ \\w]* Name='(\\w+)'.*");
+                    if (match.Success)
+                    {
+                        var templateName = match.Groups[1].Value;
+                        var startRowIndex = range.Row;
+                        var startColIndex = range.Column;
+                        var endCell =
+                            sheetContainer.Cells
+                                          .Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
+                        if (null != endCell)
+                        {
+                            var endRowIndex = endCell.Row;
+                            var endColIndex = endCell.Column;
+                            if (result.Any(_ => _.Name == templateName)) break;
+                            var details = new ExcelTemplateDetails
+                            {
+                                Name = templateName,
+                                StartLocation = new Point(startRowIndex, startColIndex),
+                                EndLocation = new Point(endRowIndex, endColIndex)
+                            };
+                            result.Add(details);
+                        }
+                        range = range.FindNext(range);
+                    }
+                }
+                while (null != range);
+            }
+            return result;
+        }
+
         /// <summary> Implements <see cref="IExcelTemplateManager.RemoveView"/> </summary> 
         public void RemoveView(IExcelTemplateView view)
         {
@@ -652,7 +706,7 @@ namespace Etk.Excel.BindingTemplates
                     else
                     {
                         ExcelInterop.Range selectedRange = ExcelApplication.Application.Selection as ExcelInterop.Range;
-                        using (FreezeExcel freezeExcel = new FreezeExcel())
+                        using (var freezeExcel = new FreezeExcel(this.ExcelApplication.KeepStatusVisible))
                         {
                             foreach (IExcelTemplateView view in views)
                             {
@@ -718,7 +772,7 @@ namespace Etk.Excel.BindingTemplates
                     else
                     {
                         ExcelInterop.Range selectedRange = ExcelApplication.Application.Selection as ExcelInterop.Range;
-                        using (FreezeExcel freezeExcel = new FreezeExcel())
+                        using (FreezeExcel freezeExcel = new FreezeExcel(this.ExcelApplication.KeepStatusVisible))
                         {
                             foreach (IExcelTemplateView view in views)
                             {
@@ -776,7 +830,7 @@ namespace Etk.Excel.BindingTemplates
                         ExcelApplication.DisplayMessageBox(null, "'Clear views' is not allowed: Excel is in Edit mode", System.Windows.Forms.MessageBoxIcon.Warning);
                     else
                     {
-                        using (FreezeExcel freezeExcel = new FreezeExcel())
+                        using (var freezeExcel = new FreezeExcel(this.ExcelApplication.KeepStatusVisible))
                         {
                             foreach (IExcelTemplateView view in views)
                             {
@@ -871,5 +925,21 @@ namespace Etk.Excel.BindingTemplates
                 }
             }
         }
+    }
+
+    public class ExcelTemplateDetails : IExcelTemplateDetails
+    {
+        public string Name { get; set; }
+
+        public Point StartLocation { get; set; }
+        public Point EndLocation { get; set; }
+    }
+
+    public interface IExcelTemplateDetails
+    {
+        string Name { get; set; }
+
+        Point StartLocation { get; set; }
+        Point EndLocation { get; set; }
     }
 }

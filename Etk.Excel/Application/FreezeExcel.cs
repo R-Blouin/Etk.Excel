@@ -18,7 +18,7 @@ namespace Etk.Excel.Application
         private bool displayStatusBar;
         private ExcelInterop.XlCalculation calculationMode;
 
-        public FreezeExcel()
+        public FreezeExcel(bool keepStatusVisible = true, bool keepScreenUpdating = false, bool keepEnabledEvent = false, bool keepCalculation = false)
         {
             lock (objSync)
             {
@@ -32,10 +32,10 @@ namespace Etk.Excel.Application
                         displayStatusBar = ETKExcel.ExcelApplication.Application.DisplayStatusBar;
                         calculationMode = ETKExcel.ExcelApplication.Application.Calculation;
 
-                        ETKExcel.ExcelApplication.Application.ScreenUpdating = false;
-                        ETKExcel.ExcelApplication.Application.EnableEvents = false;
-                        ETKExcel.ExcelApplication.Application.DisplayStatusBar = false;
-                        ETKExcel.ExcelApplication.Application.Calculation = ExcelInterop.XlCalculation.xlCalculationManual;
+                        ETKExcel.ExcelApplication.Application.ScreenUpdating   = keepScreenUpdating && this.screenUpdating;
+                        ETKExcel.ExcelApplication.Application.EnableEvents     = keepEnabledEvent && this.enableEvents;
+                        ETKExcel.ExcelApplication.Application.DisplayStatusBar = keepStatusVisible && this.displayStatusBar;
+                        ETKExcel.ExcelApplication.Application.Calculation      = keepCalculation ? ETKExcel.ExcelApplication.Application.Calculation : ExcelInterop.XlCalculation.xlCalculationManual;
                     }
                 }
             }

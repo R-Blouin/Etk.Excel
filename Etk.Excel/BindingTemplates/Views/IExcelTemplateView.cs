@@ -14,7 +14,7 @@ namespace Etk.Excel.BindingTemplates.Views
         /// <summary>Contains the size of the rendered aread</summary>
         RenderedArea RenderedArea { get; }
         /// <summary>Set/get if view must autofit after a complete rendering (default is true)</summary>
-        bool AutoFit { get; set; }
+        AutoFitMode AutoFit { get; set; }
         /// <summary>Set the cell uses to clear the rendered area of the view</summary>
         ExcelInterop.Range ClearingCell { get; set; }
 

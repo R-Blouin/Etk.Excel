@@ -9,7 +9,7 @@ namespace Etk.Excel.ContextualMenus
 {
     public delegate void MenuAction(ExcelInterop.Range range);
 
-    static public class ContextualMenuFactory
+    static class ContextualMenuFactory
     {
         /// <summary>
         /// Create a contextual menu from an Xml

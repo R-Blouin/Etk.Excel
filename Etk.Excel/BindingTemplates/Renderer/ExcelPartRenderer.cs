@@ -104,10 +104,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected abstract void ManageTemplateWithoutLinkedTemplates();
         protected abstract void ManageTemplateWithLinkedTemplates();
 
-        protected void ManageControls(IBindingContextItem item, ref ExcelInterop.Range range)
-        {
-            if (item is IExcelControl)
-                ((IExcelControl)item).CreateControl(range);
-        }
+        //protected void ManageControls(IBindingContextItem item, ref ExcelInterop.Range range)
+        //{
+        //    if (item is IExcelControl)
+        //        ((IExcelControl)item).CreateControl(range);
+        //}
     }
 }

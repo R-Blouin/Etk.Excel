@@ -71,18 +71,26 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         for (int colId = 0; colId < partToRenderDefinition.Width; colId++)
                         {
                             IBindingContextItem item = partToRenderDefinition.DefinitionParts[rowId, colId] == null ? null : contextElement.BindingContextItems[cptItems++];
-                            if (item != null && ((item.BindingDefinition != null && (item.BindingDefinition.IsEnum)) || item is IExcelControl || item is ExcelBindingSearchContextItem))
+                            if (item != null)
                             {
-                                ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
-
                                 if (item is ExcelBindingSearchContextItem)
+                                {
+                                    ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                     ((ExcelBindingSearchContextItem)item).SetRange(ref range);
-
-                                if (item.BindingDefinition != null && item.BindingDefinition.IsEnum)
+                                    range = null;
+                                }
+                                else if (item is IExcelControl)
+                                {
+                                    ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
+                                    ((IExcelControl)item).CreateControl(range);
+                                    range = null;
+                                }
+                                else if (item.BindingDefinition != null && !item.BindingDefinition.IsReadOnly && item.BindingDefinition.IsEnum)
+                                {
+                                    ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                     enumManager.CreateControl(item, ref range);
-                                else
-                                    ManageControls(item, ref range);
-                                range = null;
+                                    range = null;
+                                }
                             }
                             row.Add(item);
                         }
@@ -367,27 +375,39 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 IBindingContextItem item = partToRenderDefinition.DefinitionParts[renderingContext.RowId, colId] == null || bindingContextItemsCount <= currentBindingContextItemId 
                                            ? null 
                                            : renderingContext.ContextElement.BindingContextItems[currentBindingContextItemId++];
-                if (item != null && ((item.BindingDefinition != null && (item.BindingDefinition.IsEnum || item.BindingDefinition.IsMultiLine)) || item is IExcelControl || item is ExcelBindingSearchContextItem))
-                {                  
-                    ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
 
+                if (item != null)
+                {
                     if (item is ExcelBindingSearchContextItem)
+                    {
+                        ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                         ((ExcelBindingSearchContextItem)item).SetRange(ref range);
-
-                    if(item.BindingDefinition != null)
+                        range = null;
+                    }
+                    else if (item is IExcelControl)
+                    {
+                        ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
+                        ((IExcelControl) item).CreateControl(range);
+                        range = null;
+                    }
+                    if (item.BindingDefinition != null)
                     {
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
+                        {
+                            ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             enumManager.CreateControl(item, ref range);
+                            range = null;
+                        }
                         if (item.BindingDefinition.IsMultiLine)
                         {
+                            ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             ExcelInterop.Range localSource = source[1, 1 + colId - startPos];
                             multiLineManager.CreateControl(item, ref range, ref localSource, ref vOffset);
+                            range = null;
                         }
                     }
-                    if (item is IExcelControl)
-                        ManageControls(item, ref range);
-                    range = null;
                 }
+
                 renderingContext.DataRow.Add(item);
             }
 

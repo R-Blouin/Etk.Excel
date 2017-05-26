@@ -105,7 +105,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         {
             if (!IsDisposed && RenderedRange != null)
             {
-                using (FreezeExcel freezeExcel = new FreezeExcel())
+                using (FreezeExcel freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                 {
                     try
                     {
