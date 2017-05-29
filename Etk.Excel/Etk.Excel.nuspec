@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>ETK.Excel</id>
+    <version>1.0.0</version>
+    <authors>R-BLOUIN</authors>
+    <owners>R-BLOUIN</owners>
+    <licenseUrl>https://github.com/R-Blouin/ETK/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/R-Blouin/ETK</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Render/bind .Net objects into Excel via Templates. Binding can be bi-directional. Manage objects, rows, cells selections. Add decorators, dynamic menus, buttons into your templates...</description>
+    <summary>Render/bind .Net objects into Excel via Templates. Binding can be bi-directional. Manage objects, rows, cells selections. Add decorators, dynamic menus, buttons into your templates...</summary>
+    <releaseNotes/>
+    <copyright>Copyright 2017</copyright>
+    <tags>.NET Excel Binding Templating Template</tags>
+  </metadata>
+  <files>
+		<file src="..\bin\Etk.dll" target="lib\net40\Etk.dll"/>
+		<file src="..\bin\Etk.pdb" target="lib\net40\Etk.pdb"/>
+		<file src="..\bin\Etk.xml" target="lib\net40\Etk.xml"/>
+		<file src="..\bin\Etk.Excel.dll" target="lib\net40\Etk.Excel.dll"/>
+		<file src="..\bin\Etk.Excel.pdb" target="lib\net40\Etk.Excel.pdb" />
+		<file src="..\bin\Etk.Excel.xml" target="lib\net40\Etk.Excel.xml"/>
+    <file src="install.ps1" target="tools\install.ps1" />
+  </files>
+</package>

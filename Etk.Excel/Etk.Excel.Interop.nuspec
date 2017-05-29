@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Etk.Excel.Interop</id>
+    <version>1.0.0</version>
+    <authors>R-BLOUIN</authors>
+    <owners>R-BLOUIN</owners>
+    <projectUrl>https://github.com/R-Blouin/ETK</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Interop assembly for Etk.Excel</description>
+    <summary>Interop assembly for Etk.Excel</summary>
+    <releaseNotes/>
+    <copyright>Copyright 2017</copyright>
+    <tags>.NET Etk Excel Interop</tags>
+  </metadata>
+  <files>
+    <file src="..\Dependencies\Office Interop 12\Microsoft.Office.Interop.Excel.dll" target="lib\net40\Interop\Microsoft.Office.Interop.Excel.dll"/>
+    <file src="..\Dependencies\Office Interop 12\Microsoft.Vbe.Interop.dll" target="lib\net40\Interop\Microsoft.Vbe.Interop.dll"/>
+    <file src="..\Dependencies\Office Interop 12\Microsoft.Vbe.Interop.Forms.dll" target="lib\net40\Microsoft.Vbe.Interop.Forms.dll"/>
+    <file src="..\Dependencies\Office Interop 12\Office.dll" target="lib\net40\Office.dll"/>
+  </files>
+</package>

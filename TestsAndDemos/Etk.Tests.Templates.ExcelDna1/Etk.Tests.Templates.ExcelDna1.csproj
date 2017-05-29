@@ -31,12 +31,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Etk, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ETK.Excel.1.0.0\lib\net40\Etk.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Etk.Excel, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ETK.Excel.1.0.0\lib\net40\Etk.Excel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ExcelDna.Integration">
       <HintPath>..\..\packages\ExcelDna.Integration.0.33.9\lib\ExcelDna.Integration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
       <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\packages\Etk.Excel.Interop.1.0.0\lib\net40\Interop\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\packages\Etk.Excel.Interop.1.0.0\lib\net40\Interop\Microsoft.Vbe.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Vbe.Interop.Forms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\packages\Etk.Excel.Interop.1.0.0\lib\net40\Microsoft.Vbe.Interop.Forms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Office, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\packages\Etk.Excel.Interop.1.0.0\lib\net40\Office.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -102,14 +127,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Etk.Excel\Etk.Excel.csproj">
-      <Project>{14413CBB-3028-462C-958D-16E96575A06F}</Project>
-      <Name>Etk.Excel</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Etk\Etk.csproj">
-      <Project>{10188A0E-231D-42DA-952E-A260402B3EA4}</Project>
-      <Name>Etk</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Etk.Tests.Data\Etk.Tests.Data.csproj">
       <Project>{9c0f98f3-1c09-4b52-b5e4-0907a45c82a8}</Project>
       <Name>Etk.Tests.Data</Name>
