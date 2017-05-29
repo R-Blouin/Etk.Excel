@@ -15,10 +15,6 @@
     <tags>.NET Excel Binding Templating Template</tags>
   </metadata>
   <files>
-		<file src="..\Dependencies\Office Interop 12\Microsoft.Office.Interop.Excel.dll" target="lib\net40\Interop\Microsoft.Office.Interop.Excel.dll"/>
-		<file src="..\Dependencies\Office Interop 12\Microsoft.Vbe.Interop.dll" target="lib\net40\Interop\Microsoft.Vbe.Interop.dll"/>
-		<file src="..\Dependencies\Office Interop 12\Microsoft.Vbe.Interop.Forms.dll" target="lib\net40\Microsoft.Vbe.Interop.Forms.dll"/>
-		<file src="..\Dependencies\Office Interop 12\Office.dll" target="lib\net40\Office.dll"/>
 		<file src="..\bin\Etk.dll" target="lib\net40\Etk.dll"/>
 		<file src="..\bin\Etk.pdb" target="lib\net40\Etk.pdb"/>
 		<file src="..\bin\Etk.xml" target="lib\net40\Etk.xml"/>
