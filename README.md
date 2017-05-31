@@ -7,3 +7,9 @@ ETK is used since the mid of 2015 in production by one of the largest French ass
 Some of its most sensitive applications used everyday are based on ETK to manage a large set of asset funds (from exposition checking to financial order executions). These applications are written without any vba code and mixe happily Wpf and Excel.
 
 It's also used to build rich Excel reports.
+<br/><br/>
+To reference in your solutions the last version of Etk.Excel<br/>
+[![](https://img.shields.io/badge/Nuget-Etk.Excel%201.0.0-green.svg)](https://www.nuget.org/packages/Etk.Excel/)
+
+To reference in your solutions the Office interrop assembles used bt Etk.Excel <br/>
+[![](https://img.shields.io/badge/Nuget-Etk.Excel.Interop%201.0.0-green.svg)](https://www.nuget.org/packages/Etk.Excel/)
