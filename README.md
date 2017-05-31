@@ -1,4 +1,4 @@
-# ETK
+# Etk.Excel
 Render/bind .Net objects into Excel via Templates. Binding can be bi-directional (changes in Excel will affect underlying objects). 
 Manage objects, rows, cells selections. Add decorators, dynamic menus, buttons, expander, etc ..., into your templates.
 
