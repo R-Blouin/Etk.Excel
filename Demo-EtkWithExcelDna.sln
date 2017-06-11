@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B50F7E32-39AE-4050-9334-9C299CBD4FC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Demo.ExcelDna1", "Demos\Etk.Demo.ExcelDna1\Etk.Demo.ExcelDna1.csproj", "{E1C41049-C580-40C8-8D8E-DA93C2923D1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Demos.Data", "Demos\Etk.Demos.Data\Etk.Demos.Data.csproj", "{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E1C41049-C580-40C8-8D8E-DA93C2923D1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1C41049-C580-40C8-8D8E-DA93C2923D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
