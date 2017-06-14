@@ -7,8 +7,8 @@
     <ProjectGuid>{E1C41049-C580-40C8-8D8E-DA93C2923D1B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Etk.Tests.Templates.ExcelDna1</RootNamespace>
-    <AssemblyName>Etk.Tests.Templates.ExcelDna1</AssemblyName>
+    <RootNamespace>Etk.Demo.ExcelDna1</RootNamespace>
+    <AssemblyName>Etk.Demo.ExcelDna1</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -31,14 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Etk, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ETK.Excel.1.0.0\lib\net40\Etk.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Etk.Excel, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ETK.Excel.1.0.0\lib\net40\Etk.Excel.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ExcelDna.Integration">
       <HintPath>..\..\packages\ExcelDna.Integration.0.33.9\lib\ExcelDna.Integration.dll</HintPath>
       <Private>False</Private>
@@ -84,6 +76,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Etk.Demo.ExcelDna1.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <Content Include="Etk.Demo.ExcelDna1-AddIn.dna">
       <SubType>Designer</SubType>
@@ -91,6 +86,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Etk.Excel\Etk.Excel.csproj">
+      <Project>{14413cbb-3028-462c-958d-16e96575a06f}</Project>
+      <Name>Etk.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Etk\Etk.csproj">
+      <Project>{10188a0e-231d-42da-952e-a260402b3ea4}</Project>
+      <Name>Etk</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Etk.Demos.Data\Etk.Demos.Data.csproj">
       <Project>{9c0f98f3-1c09-4b52-b5e4-0907a45c82a8}</Project>
       <Name>Etk.Demos.Data</Name>
@@ -99,7 +102,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)\packages\ExcelDna.AddIn.0.33.9\tools\ExcelDna.xll" "$(TargetDir)Etk.Tests.Templates.ExcelDna1-AddIn.xll*" /C /Y
+    <PostBuildEvent>xcopy "$(SolutionDir)\packages\ExcelDna.AddIn.0.33.9\tools\ExcelDna.xll" "$(TargetDir)Etk.Demo.ExcelDna1-AddIn.xll*" /C /Y
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

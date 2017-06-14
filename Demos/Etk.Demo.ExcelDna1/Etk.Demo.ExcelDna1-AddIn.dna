@@ -1,5 +1,5 @@
 <DnaLibrary Name="EtkTemplatesWithDna1 Add-In" RuntimeVersion="v4.0">
-  <ExternalLibrary Path="Etk.Tests.Templates.ExcelDna1.dll" Pack="false" />
+  <ExternalLibrary Path="Etk.Demo.ExcelDna1.dll" Pack="false" />
 
   <!-- 
        The RuntimeVersion attribute above allows two settings:
