@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Etk.BindingTemplates.Definitions.Binding;
 
 namespace Etk.BindingTemplates.Convertors
@@ -10,49 +11,29 @@ namespace Etk.BindingTemplates.Convertors
             if (data == null)
                 return null;
 
-            if (bindingDefinition.BindingType.Equals(data.GetType()) || bindingDefinition.BindingType == typeof(object))
+            if (bindingDefinition.BindingType == data.GetType() || bindingDefinition.BindingType == typeof(object))
                 return data;
 
-            if (bindingDefinition.IsNullable && bindingDefinition.BindingGenericType.Equals(data.GetType()))
+            Type toConvertType = bindingDefinition.IsNullable ? bindingDefinition.BindingGenericType : bindingDefinition.BindingType;
+
+            if (toConvertType == data.GetType())
                 return data;
 
-            if (bindingDefinition.IsEnum)
-            {
-                string ret = data is string ? (string) data : data.ToString();
-                Type type = bindingDefinition.IsNullable ? bindingDefinition.BindingGenericType : bindingDefinition.BindingType;
-                return Enum.Parse(type, ret, true);
-            }
+            if (toConvertType == typeof(DateTime))
+                return ToDateTime(data);
 
-            if (data.GetType() == typeof(string))
-                return Convert.ChangeType(data, bindingDefinition.BindingType);
+            if (toConvertType == typeof(bool))
+                return ToBoolean(data);
 
-            if (bindingDefinition.BindingType.Equals(typeof(DateTime)) || (bindingDefinition.IsNullable && bindingDefinition.BindingGenericType.Equals(typeof(DateTime))))
-            {
-                if (data is double)
-                    return DateTime.FromOADate((double) data);
-                else if (data is string)
-                {
-                    //@@ Manage local
-                    return DateTime.Parse(data as string);
-                }
-                else
-                    return Convert.ChangeType(data, typeof(DateTime));
-            }
+            if (toConvertType.IsEnum)
+                return ToEnum(toConvertType, data);
 
-
-            if (bindingDefinition.BindingType == typeof(bool) || (bindingDefinition.BindingTypeIsGeneric && bindingDefinition.BindingGenericType == typeof(bool)))
-                return ToBoolean(bindingDefinition.BindingType, data);
-
-            return Convert.ChangeType(data, bindingDefinition.BindingType);
+            return Convert.ChangeType(data, toConvertType);
         }
 
-        private static object ToBoolean(Type type, object obj)
+        private static object ToBoolean(object obj)
         {
-            string objAsString;
-            if (obj is string)
-                objAsString = obj as string;
-            else
-                objAsString = obj.ToString();
+            string objAsString = obj as string ?? obj.ToString();
 
             bool b;
             if (bool.TryParse(objAsString, out b))
@@ -66,6 +47,21 @@ namespace Etk.BindingTemplates.Convertors
                     obj = false;
             }
             return obj;
+        }
+
+        private static object ToDateTime(object data)
+        {
+            if (data is double)
+                return DateTime.FromOADate((double)data);
+            if (data is string) //@@ Manage local
+                return DateTime.Parse(data as string);
+            return Convert.ChangeType(data, typeof(DateTime));           
+        }
+
+        private static object ToEnum(Type type, object data)
+        {
+            string ret = data is string ? (string) data : data.ToString();
+            return Enum.Parse(type, ret, true);
         }
     }
 }

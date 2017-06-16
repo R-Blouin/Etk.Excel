@@ -119,22 +119,22 @@ namespace Etk.Excel.Application
                     if (value != null && value is Enum)
                         value = ((Enum)value).ToString();
 
-                    if (!object.Equals(range.Value2, value))
+                    if (! object.Equals(range.Value2, value))
                     {
-                        ExcelApplication.Application.EnableEvents = false;
+                        if (enableEvent)
+                            ExcelApplication.Application.EnableEvents = false;
                         range.Value2 = value;
-
-                        if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
-                        {
-                            ExcelInterop.Range currentSelectedRange = context.View.CurrentSelectedCell;
-                            context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
-                            if (currentSelectedRange != null)
-                                currentSelectedRange.Select();
-                        }
+                    }
+                    if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
+                    {
+                        ExcelInterop.Range currentSelectedRange = context.View.CurrentSelectedCell;
+                        context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
+                        if (currentSelectedRange != null)
+                            currentSelectedRange.Select();
                     }
                 }
             }
-            catch (COMException)
+            catch (COMException comeEx)
             {
                 waitExcelBusy = true;
                 NotifyPropertyChanged(context);
@@ -158,7 +158,7 @@ namespace Etk.Excel.Application
                     if (ExcelApplication.Application.EnableEvents != enableEvent)
                         ExcelApplication.Application.EnableEvents = enableEvent;
                 }
-                catch
+                catch (COMException comeEx)
                 { }
             }
             range = null;
