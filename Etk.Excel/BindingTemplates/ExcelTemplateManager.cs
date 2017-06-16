@@ -17,7 +17,6 @@ using Etk.Excel.ContextualMenus;
 using Etk.Tools.Extensions;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
-using System.Collections;
 using System.Drawing;
 using System.Text.RegularExpressions;
 
@@ -449,9 +448,8 @@ namespace Etk.Excel.BindingTemplates
             catch (Exception ex)
             {
                 string message = string.Format("Sheet '{0}', cannot add the View from template '{1}.{2}'", sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty
-                                                                                                                    , sheetContainer != null ? sheetContainer.Name.EmptyIfNull() : string.Empty
-                                                                                                                    , templateName.EmptyIfNull());
-                Logger.Instance.LogException(LogType.Error, ex, message);
+                                                                                                         , sheetContainer != null ? sheetContainer.Name.EmptyIfNull() : string.Empty
+                                                                                                         , templateName.EmptyIfNull()); Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
                 //ExcelApplication.DisplayException(null, message, ex);
                 //return null;
@@ -459,24 +457,38 @@ namespace Etk.Excel.BindingTemplates
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
-        public IExcelTemplateView AddView(string sheetTemplateName, string templateName, string sheetDestinationName, string destinationRange, string clearingCellName)
+        public IExcelTemplateView AddView(string sheetTemplatePath, string templateName, string sheetDestinationName, string destinationRange, string clearingCellName)
         {
+            ExcelInterop.Workbooks workbooks = null;
             ExcelInterop.Workbook workbook = null;
             ExcelInterop.Worksheet sheetContainer = null;
             ExcelInterop.Worksheet sheetDestination = null;
             try
             {
-                if (string.IsNullOrEmpty(sheetTemplateName))
+                if (string.IsNullOrEmpty(sheetTemplatePath))
                     throw new ArgumentNullException("the sheet container name is mandatory");
 
                 if (sheetDestinationName == null)
                     throw new ArgumentNullException("Destination sheet name is mandatory");
 
-                workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
+                string sheetTemplateName;
+                if (sheetTemplatePath.Contains("|"))
+                {
+                    sheetTemplateName = sheetTemplatePath.Substring(sheetTemplatePath.LastIndexOf("|") + 1);
+                    string workbookPath = sheetTemplatePath.Substring(sheetTemplatePath.LastIndexOf("|") - 1);
+                    workbooks = ETKExcel.ExcelApplication.Application.Workbooks;
+                    workbook = workbooks.Open(workbookPath, true, true);
+                }
+                else
+                {
+                    sheetTemplateName = sheetTemplatePath;
+                    workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
+                }
+
 
                 sheetContainer = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetTemplateName);
                 if (sheetContainer == null)
-                    throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetTemplateName);
+                    throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetTemplatePath);
                 sheetDestination = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetDestinationName);
                 if (sheetDestination == null)
                     throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetDestinationName);
@@ -496,7 +508,7 @@ namespace Etk.Excel.BindingTemplates
             catch (Exception ex)
             {
                 string message = string.Format("Sheet '{0}', cannot add the View from template '{1}.{2}'", sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty
-                                                                                                         , sheetTemplateName.EmptyIfNull()
+                                                                                                         , sheetTemplatePath.EmptyIfNull()
                                                                                                          , templateName.EmptyIfNull());
                 Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
@@ -514,6 +526,11 @@ namespace Etk.Excel.BindingTemplates
                 {
                     Marshal.ReleaseComObject(workbook);
                     workbook = null;
+                }
+                if (workbooks != null)
+                {
+                    Marshal.ReleaseComObject(workbooks);
+                    workbooks = null;
                 }
             }
         }
@@ -572,9 +589,6 @@ namespace Etk.Excel.BindingTemplates
         /// <summary> Implements <see cref="IExcelTemplateManager.RemoveView"/> </summary> 
         public void RemoveView(IExcelTemplateView view)
         {
-            if (view == null)
-                return;
-
             ExcelTemplateView excelView = view as ExcelTemplateView;
             if (excelView == null)
                 return;

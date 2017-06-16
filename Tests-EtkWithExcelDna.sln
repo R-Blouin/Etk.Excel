@@ -5,9 +5,9 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B50F7E32-39AE-4050-9334-9C299CBD4FC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Tests.Templates.ExcelDna1", "TestsAndDemos\Etk.Tests.Templates.ExcelDna1\Etk.Tests.Templates.ExcelDna1.csproj", "{E1C41049-C580-40C8-8D8E-DA93C2923D1B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Tests.Templates.ExcelDna1", "Tests\Etk.Tests.Templates.ExcelDna1\Etk.Tests.Templates.ExcelDna1.csproj", "{E1C41049-C580-40C8-8D8E-DA93C2923D1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Tests.Data", "TestsAndDemos\Etk.Tests.Data\Etk.Tests.Data.csproj", "{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etk.Tests.Data", "Tests\Etk.Tests.Data\Etk.Tests.Data.csproj", "{9C0F98F3-1C09-4B52-B5E4-0907A45C82A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

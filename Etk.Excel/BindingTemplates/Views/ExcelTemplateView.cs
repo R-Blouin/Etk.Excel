@@ -421,7 +421,7 @@ namespace Etk.Excel.BindingTemplates.Views
             if (!ViewSheet.ProtectContents)
             {
                 ViewSheet.Cells.Locked = false;
-                ViewSheet.Protect(System.Type.Missing, true, true, System.Type.Missing, false, true,
+                ViewSheet.Protect(System.Type.Missing, false, false, System.Type.Missing, false, true,
                                   true, true,
                                   false, false,
                                   false,
@@ -618,8 +618,8 @@ namespace Etk.Excel.BindingTemplates.Views
                     {
                         if (Renderer.OnDataChanged(intersect) && DataChanged != null)
                             DataChanged(null, null);
-                        intersect = null;
                     }
+                    intersect = null;
                     return true;
                 }
             }
