@@ -9,7 +9,7 @@ Some of its most sensitive applications used everyday are based on ETK to manage
 It's also used to build rich Excel reports.
 <br/><br/>
 To reference in your projects the last version of Etk.Excel<br/>
-[![](https://img.shields.io/badge/Nuget-Etk.Excel%201.0.0-green.svg)](https://www.nuget.org/packages/Etk.Excel/)
+[![](https://img.shields.io/badge/Nuget-Etk.Excel%201.0.1-green.svg)](https://www.nuget.org/packages/Etk.Excel/)
 
 To reference in your projects the Office interrop assemblies used bt Etk.Excel <br/>
 [![](https://img.shields.io/badge/Nuget-Etk.Excel.Interop%201.0.0-green.svg)](https://www.nuget.org/packages/Etk.Excel/)
