@@ -1,6 +1,6 @@
 ﻿namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
 {
-    public interface ISheetCalculate
+    public interface IFormulaCalculation
     {
         void OnSheetCalculate();
     }

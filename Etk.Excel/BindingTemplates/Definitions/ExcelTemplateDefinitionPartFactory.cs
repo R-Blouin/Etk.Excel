@@ -129,28 +129,33 @@ namespace Etk.Excel.BindingTemplates.Definitions
         /// <summary>Create a binding definition from a cell value</summary>
         private IBindingDefinition CreateBindingDefinition(ExcelTemplateDefinitionPart templateDefinitionPart, string value, string trimmedValue)
         {
+            ExcelTemplateDefinition excelTemplateDefinition = templateDefinitionPart.Parent as ExcelTemplateDefinition;
+
             IBindingDefinition ret = null;
             if (trimmedValue.StartsWith(ExcelBindingDefinitionButton.BUTTON_TEMPLATE_PREFIX))
-                ret = ExcelBindingDefinitionButton.CreateInstance(templateDefinitionPart.Parent as ExcelTemplateDefinition, trimmedValue);
+                ret = ExcelBindingDefinitionButton.CreateInstance(excelTemplateDefinition, trimmedValue);
             else if (trimmedValue.StartsWith(ExcelBindingDefinitionCheckBox.CHECKBOX_TEMPLATE_PREFIX))
-                ret = ExcelBindingDefinitionCheckBox.CreateInstance(templateDefinitionPart.Parent as ExcelTemplateDefinition, trimmedValue);
+                ret = ExcelBindingDefinitionCheckBox.CreateInstance(excelTemplateDefinition, trimmedValue);
             else if (trimmedValue.StartsWith(ExcelBindingDefinitionFormulaResult.FORMULA_RESULT_PREFIX))
-                ret = ExcelBindingDefinitionFormulaResult.CreateInstance(templateDefinitionPart.Parent as ExcelTemplateDefinition, trimmedValue);
+                ret = ExcelBindingDefinitionFormulaResult.CreateInstance(excelTemplateDefinition, trimmedValue);
             else if (trimmedValue.StartsWith(ExcelBindingDefinitionNamedRange.NAMEDRANGE_TEMPLATE_PREFIX))
             {
-                ExcelNamedRangeDefinition excelTemplateDefinition = ExcelBindingDefinitionNamedRange.RetrieveNamedRangeDefinition(trimmedValue);
-                if (excelTemplateDefinition != null)
+                ExcelNamedRangeDefinition excelNamedRangeDefinition = ExcelBindingDefinitionNamedRange.RetrieveNamedRangeDefinition(trimmedValue);
+                if (excelNamedRangeDefinition != null)
                 {
                     BindingDefinition nestedBindingDefinition = null;
-                    if (!string.IsNullOrEmpty(excelTemplateDefinition.Value))
-                        nestedBindingDefinition = CreateBindingDefinition(templateDefinitionPart, excelTemplateDefinition.Value, excelTemplateDefinition.Value.Trim()) as BindingDefinition;
-                    ret = ExcelBindingDefinitionNamedRange.CreateInstance(templateDefinitionPart, excelTemplateDefinition, nestedBindingDefinition);
+                    if (!string.IsNullOrEmpty(excelNamedRangeDefinition.Value))
+                        nestedBindingDefinition = CreateBindingDefinition(templateDefinitionPart, excelNamedRangeDefinition.Value, excelNamedRangeDefinition.Value.Trim()) as BindingDefinition;
+                    ret = ExcelBindingDefinitionNamedRange.CreateInstance(templateDefinitionPart, excelNamedRangeDefinition, nestedBindingDefinition);
                 }
             }
             else
             {
                 BindingDefinitionDescription bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinitionPart.Parent, value, trimmedValue);
-                ret = BindingDefinitionFactory.CreateInstances(templateDefinitionPart.Parent as ExcelTemplateDefinition, bindingDefinitionDescription);
+                if (bindingDefinitionDescription.Formula != null)
+                    ret = ExcelBindingDefinitionWithFormula.CreateInstance(excelTemplateDefinition, bindingDefinitionDescription);
+                else
+                    ret = BindingDefinitionFactory.CreateInstances(excelTemplateDefinition, bindingDefinitionDescription);
             }
             return ret;
         }

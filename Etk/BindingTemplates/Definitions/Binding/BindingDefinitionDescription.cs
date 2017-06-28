@@ -79,6 +79,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public int ShowHideValue
         { get; private set; }
 
+        public string Formula
+        { get; private set; }
+
         #region .ctors and factories
         public BindingDefinitionDescription()
         {}
@@ -192,6 +195,13 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             }
                             throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SH=<int>' whre '<int>' is a integer");
                         }
+
+                        // Formula
+                        if (option.StartsWith("F="))
+                        {
+                            Formula = option.Substring(2);
+                            continue;
+                        }
                     }
                 }
             }
@@ -273,18 +283,13 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     int compoStart = bindingExpression.IndexOf('{');
                     string toAnalyzeOptions = compoStart == -1 ? bindingExpression : bindingExpression.Substring(0, compoStart);
 
-                    string[] parts = toAnalyzeOptions.Split(':');
-                    if (parts.Count() > 2)
-                        throw new BindingTemplateException(string.Format("Cannot create BindingDefinition from '{0}': options not properly set. Syntax is: {opt1,opt2...:...}", toAnalyze));
-                    if (parts.Count() == 2)
+                    int postSep = toAnalyzeOptions.LastIndexOf(':');
+                    if (postSep != -1)
                     {
-                        string optionsString = parts[0];
+                        string optionsString = toAnalyzeOptions.Substring(0, postSep);
                         string[] optionsArray = optionsString.Split(';');
                         options = optionsArray.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim()).ToList();
-                        if (compoStart == -1)
-                            bindingExpression = parts[1];
-                        else
-                            bindingExpression = bindingExpression.Substring(compoStart);
+                        bindingExpression = toAnalyzeOptions.Substring(postSep + 1);
                     }
                 }
 

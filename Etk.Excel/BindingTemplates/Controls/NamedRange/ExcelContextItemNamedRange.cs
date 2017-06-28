@@ -2,11 +2,12 @@
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
-using ExcelInterop = Microsoft.Office.Interop.Excel; 
+using Etk.Excel.BindingTemplates.Controls.FormulaResult;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 {
-    class ExcelContextItemNamedRange : BindingContextItem, IBindingContextItemCanNotify, IExcelControl
+    class ExcelContextItemNamedRange : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, IFormulaCalculation
     {
         #region properties and attributes
         private ExcelBindingDefinitionNamedRange excelBindingDefinitionNamedRange;
@@ -67,8 +68,8 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             ExcelInterop.Worksheet workSheet = null;
             try
             {
-                this.Range = range;
-                workSheet = this.Range.Worksheet;
+                Range = range;
+                workSheet = Range.Worksheet;
                 if (!string.IsNullOrEmpty(name))
                 {
                     ExcelInterop.Names names = null;
@@ -108,6 +109,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 
             if (NestedContextItem != null)
                 NestedContextItem.Dispose();
+
             Range = null;
         }
 
@@ -131,6 +133,12 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         {
             if (NestedContextItem != null && NestedContextItem is IBindingContextItemCanNotify)
                 ((IBindingContextItemCanNotify) NestedContextItem).OnPropertyChanged(source, args);
+        }
+
+        public void OnSheetCalculate()
+        {
+            if(NestedContextItem != null && NestedContextItem is IFormulaCalculation)
+                ((IFormulaCalculation)NestedContextItem).OnSheetCalculate();
         }
         #endregion
     }

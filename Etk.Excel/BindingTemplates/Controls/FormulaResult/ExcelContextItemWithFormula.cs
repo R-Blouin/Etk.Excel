@@ -4,30 +4,29 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
-using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
 {
-    class ExcelContextItemFormulaResult : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, IFormulaCalculation
+    class ExcelContextItemWithFormula : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, IFormulaCalculation
     {
         #region properties and attributes
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
         private readonly ExcelBindingDefinitionFormulaResult excelBindingDefinitionFormulaResult;
         private object currentValue;
 
-        public ExcelInterop.Range Range
+        public Microsoft.Office.Interop.Excel.Range Range
         { get; private set; }
 
         public Action<IBindingContextItem, object> OnPropertyChangedAction
         { get; set; }
 
         public object OnPropertyChangedActionArgs
-        { get; set; }     
+        { get; set; }
         #endregion
 
         #region .ctors
-        public ExcelContextItemFormulaResult(IBindingContextElement parent, IBindingDefinition bindingDefinition)
-                                            : base(parent, bindingDefinition)
+        public ExcelContextItemWithFormula(IBindingContextElement parent, IBindingDefinition bindingDefinition)
+                                          : base(parent, bindingDefinition)
         {
             excelBindingDefinitionFormulaResult = bindingDefinition as ExcelBindingDefinitionFormulaResult;
             CanNotify = excelBindingDefinitionFormulaResult.CanNotify;
@@ -45,7 +44,7 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
         }
         #endregion
 
-        public void CreateControl(ExcelInterop.Range range)
+        public void CreateControl(Microsoft.Office.Interop.Excel.Range range)
         {
             Range = range;
         }
@@ -95,12 +94,12 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
             if (!Range.HasFormula)
                 return;
 
-            object resolvedBinding =  excelBindingDefinitionFormulaResult.NestedBindingDefinition.ResolveBinding(DataSource);
-            if (Range.FormulaLocal != resolvedBinding || ! object.Equals(Range.Value2, currentValue))
+            object resolvedBinding = excelBindingDefinitionFormulaResult.NestedBindingDefinition.ResolveBinding(DataSource);
+            if (Range.FormulaLocal != resolvedBinding || !object.Equals(Range.Value2, currentValue))
             {
-                ExcelInterop.WorksheetFunction worksheetFunction = ETKExcel.ExcelApplication.Application.WorksheetFunction; 
+                Microsoft.Office.Interop.Excel.WorksheetFunction worksheetFunction = ETKExcel.ExcelApplication.Application.WorksheetFunction;
                 if (worksheetFunction.IsError(Range))
-                { 
+                {
                     Type type = excelBindingDefinitionFormulaResult.NestedBindingDefinition.BindingType;
                     if (type != null)
                     {
@@ -118,6 +117,6 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
                     worksheetFunction = null;
                 }
             }
-        } 
+        }
     }
 }

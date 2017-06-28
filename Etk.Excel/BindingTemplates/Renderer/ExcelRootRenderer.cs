@@ -28,6 +28,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         public List<ExcelElementDecorator> RowDecorators
         { get; private set; }
+
+        public IEnumerable<IFormulaCalculation> toOperateOnSheetCalculation;
         #endregion
 
         #region .ctors 
@@ -46,6 +48,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 return;
 
             base.Render();
+
+            toOperateOnSheetCalculation = DataRows == null ? null : DataRows.SelectMany(r => r.Where(ci => ci is IFormulaCalculation))
+                                                                            .Select(c =>(IFormulaCalculation) c).ToArray();
             RenderDataOnly();
         }
 
@@ -97,7 +102,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             }
 
             // Redraw the borders of the current selection
-            if (((TemplateDefinition) this.View.TemplateDefinition).AddBorder)
+            if (((TemplateDefinition) View.TemplateDefinition).AddBorder)
                 BorderAround(RenderedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlMedium, 1);
         }
 
@@ -175,11 +180,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         public void OnCalculate()
         {
-            if (!IsDisposed && DataRows != null)
+            if (!IsDisposed && toOperateOnSheetCalculation != null)
             {
-                IEnumerable<IBindingContextItem> items = DataRows.SelectMany(r => r.Where(ci => ci is ISheetCalculate));
-                foreach (IBindingContextItem item in items)
-                    ((ISheetCalculate) item).OnSheetCalculate();
+                foreach (IFormulaCalculation item in toOperateOnSheetCalculation)
+                    item.OnSheetCalculate();
             }
         }
 

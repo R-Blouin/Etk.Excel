@@ -84,7 +84,9 @@
     <Compile Include="Application\IExcelApplication.cs" />
     <Compile Include="BindingTemplates\AccessorParametersManager.cs" />
     <Compile Include="BindingTemplates\Controls\EnumManager.cs" />
-    <Compile Include="BindingTemplates\Controls\FormulaResult\ISheetCalculate.cs" />
+    <Compile Include="BindingTemplates\Controls\FormulaResult\ExcelBindingDefinitionWithFormula.cs" />
+    <Compile Include="BindingTemplates\Controls\FormulaResult\ExcelContextItemWithFormula.cs" />
+    <Compile Include="BindingTemplates\Controls\FormulaResult\IFormulaCalculation.cs" />
     <Compile Include="BindingTemplates\Controls\MultiLineManager.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelBindingDefinitionPicture.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelPicture.cs" />

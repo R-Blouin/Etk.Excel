@@ -114,7 +114,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                     int xOffset = templateDefinition.Orientation == Orientation.Horizontal ? xs[0] : 0;
                     int yOffset = templateDefinition.Orientation == Orientation.Horizontal ? 0 : ys[0];
-                    nextFirstOutputCell = firstOutputCell.get_Offset(yOffset, xOffset);
+                    nextFirstOutputCell = firstOutputCell.Offset[yOffset, xOffset];
                 }
             }
 
@@ -129,7 +129,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                     int xOffset = templateDefinition.Orientation == Orientation.Horizontal ? xs[1] : 0;
                     int yOffset = templateDefinition.Orientation == Orientation.Horizontal ? 0 : ys[1];
-                    nextFirstOutputCell = (nextFirstOutputCell ?? firstOutputCell).get_Offset(yOffset, xOffset);
+                    nextFirstOutputCell = (nextFirstOutputCell ?? firstOutputCell).Offset[yOffset, xOffset];
                 }
             }
 
