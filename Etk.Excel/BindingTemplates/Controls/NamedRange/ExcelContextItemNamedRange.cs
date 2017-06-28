@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
-using Etk.Excel.BindingTemplates.Controls.FormulaResult;
+using Etk.Excel.BindingTemplates.Controls.WithFormula;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Controls.NamedRange

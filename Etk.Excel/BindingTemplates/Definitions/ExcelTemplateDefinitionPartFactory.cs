@@ -6,7 +6,7 @@ using Etk.BindingTemplates.Definitions.Templates;
 using Etk.BindingTemplates.Definitions.Templates.Xml;
 using Etk.Excel.BindingTemplates.Controls.Button;
 using Etk.Excel.BindingTemplates.Controls.CheckBox;
-using Etk.Excel.BindingTemplates.Controls.FormulaResult;
+using Etk.Excel.BindingTemplates.Controls.WithFormula;
 using Etk.Excel.BindingTemplates.Controls.NamedRange;
 using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using Etk.Tools.Extensions;

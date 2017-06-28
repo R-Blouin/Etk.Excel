@@ -18,33 +18,21 @@ namespace Etk.Demos.Data.Shops.DataType
     [Serializable]
     public class Customer : INotifyPropertyChanged
     {
-        private TestEnum enum1;
-        [XmlIgnore]
-        public TestEnum Enum1
-        {
-            get { return enum1; }
-            set
-            {
-                enum1 = value;
-                OnPropertyChanged("Enum1");
-            }
-        }
-
-        private TestEnum? enumNullable1;
-        [XmlIgnore]
-        public TestEnum? EnumNullable1
-        {
-            get { return enumNullable1; }
-            set
-            {
-                enumNullable1 = value;
-                OnPropertyChanged("EnumNullable1");
-            }
-        }
-
         [XmlAttribute]
         public int Id
         { get; set; }
+
+        private int idPlus5;
+        public int IdPlus5
+        {
+            get { return idPlus5; }
+            set
+            {
+                idPlus5 = value;
+                OnPropertyChanged("IdPlus5");
+            }
+        }
+
 
         private string forename;
         [XmlAttribute]

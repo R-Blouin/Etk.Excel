@@ -84,9 +84,9 @@
     <Compile Include="Application\IExcelApplication.cs" />
     <Compile Include="BindingTemplates\AccessorParametersManager.cs" />
     <Compile Include="BindingTemplates\Controls\EnumManager.cs" />
-    <Compile Include="BindingTemplates\Controls\FormulaResult\ExcelBindingDefinitionWithFormula.cs" />
-    <Compile Include="BindingTemplates\Controls\FormulaResult\ExcelContextItemWithFormula.cs" />
-    <Compile Include="BindingTemplates\Controls\FormulaResult\IFormulaCalculation.cs" />
+    <Compile Include="BindingTemplates\Controls\WithFormula\ExcelBindingDefinitionWithFormula.cs" />
+    <Compile Include="BindingTemplates\Controls\WithFormula\ExcelContextItemWithFormula.cs" />
+    <Compile Include="BindingTemplates\Controls\WithFormula\IFormulaCalculation.cs" />
     <Compile Include="BindingTemplates\Controls\MultiLineManager.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelBindingDefinitionPicture.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelPicture.cs" />
@@ -128,11 +128,11 @@
     <Compile Include="BindingTemplates\Controls\CheckBox\ExcelCheckBoxDefinition.cs" />
     <Compile Include="BindingTemplates\Controls\CheckBox\ExcelCheckBox.cs" />
     <Compile Include="BindingTemplates\Controls\CheckBox\ExcelContextItemCheckBox.cs" />
-    <Compile Include="BindingTemplates\Controls\FormulaResult\ExcelBindingDefinitionFormulaResult.cs" />
+    <Compile Include="BindingTemplates\Controls\WithFormula\ExcelBindingDefinitionFormulaResult.cs" />
     <Compile Include="BindingTemplates\Controls\Button\ExcelContextItemButton.cs" />
     <Compile Include="BindingTemplates\Controls\Button\ExcelButton.cs" />
     <Compile Include="BindingTemplates\Controls\Button\ExcelButtonDefinition.cs" />
-    <Compile Include="BindingTemplates\Controls\FormulaResult\ExcelContextItemFormulaResult.cs" />
+    <Compile Include="BindingTemplates\Controls\WithFormula\ExcelContextItemFormulaResult.cs" />
     <Compile Include="BindingTemplates\Controls\IExcelControl.cs" />
     <Compile Include="BindingTemplates\Controls\NamedRange\ExcelBindingDefinitionNamedRange.cs" />
     <Compile Include="BindingTemplates\Controls\NamedRange\ExcelNamedRangeDefinition.cs" />

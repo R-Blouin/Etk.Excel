@@ -32,12 +32,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Etk, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ETK.Excel.1.0.0\lib\net40\Etk.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\Etk.Excel.1.0.1\lib\net40\Etk.dll</HintPath>
     </Reference>
     <Reference Include="Etk.Excel, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\ETK.Excel.1.0.0\lib\net40\Etk.Excel.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\..\packages\Etk.Excel.1.0.1\lib\net40\Etk.Excel.dll</HintPath>
     </Reference>
     <Reference Include="ExcelDna.Integration">
       <HintPath>..\..\packages\ExcelDna.Integration.0.33.9\lib\ExcelDna.Integration.dll</HintPath>

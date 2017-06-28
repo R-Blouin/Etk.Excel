@@ -7,7 +7,7 @@ using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
 
-namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
+namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 {
     class ExcelBindingDefinitionFormulaResult : BindingDefinition
     {

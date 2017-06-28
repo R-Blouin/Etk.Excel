@@ -99,6 +99,13 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 {
                     foreach (string option in options)
                     {
+                        // Formula
+                        if (option.StartsWith("F="))
+                        {
+                            Formula = option.Substring(2);
+                            continue;
+                        }
+
                         // Description
                         if (option.StartsWith("D="))
                         {
@@ -195,13 +202,6 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             }
                             throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SH=<int>' whre '<int>' is a integer");
                         }
-
-                        // Formula
-                        if (option.StartsWith("F="))
-                        {
-                            Formula = option.Substring(2);
-                            continue;
-                        }
                     }
                 }
             }
@@ -280,16 +280,14 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         throw new BindingTemplateException(string.Format("Cannot create BindingDefinition from '{0}': cannot find the closing '}'", toAnalyze));
                     bindingExpression = trimmedToAnalyze.Substring(1, trimmedToAnalyze.Length - 2);
 
-                    int compoStart = bindingExpression.IndexOf('{');
-                    string toAnalyzeOptions = compoStart == -1 ? bindingExpression : bindingExpression.Substring(0, compoStart);
-
-                    int postSep = toAnalyzeOptions.LastIndexOf(':');
+                    int postSep = bindingExpression.LastIndexOf(":");
                     if (postSep != -1)
                     {
-                        string optionsString = toAnalyzeOptions.Substring(0, postSep);
+                        string optionsString = bindingExpression.Substring(0, postSep);
                         string[] optionsArray = optionsString.Split(';');
+                        //string[] optionsArray = optionsString.Split(new string[] { "::" }, StringSplitOptions.None);
                         options = optionsArray.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim()).ToList();
-                        bindingExpression = toAnalyzeOptions.Substring(postSep + 1);
+                        bindingExpression = bindingExpression.Substring(postSep + 1);
                     }
                 }
 

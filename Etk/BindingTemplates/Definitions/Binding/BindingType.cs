@@ -4,6 +4,7 @@ using System.Linq;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Tools.Collections;
 using Etk.Tools.Emit;
+using System.Reflection;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
@@ -60,15 +61,21 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     if (emitProperties.Count > 0)
                     {
                         Type type;
-                        Dictionary<string, BindingTypeProperty> propertyByName;
                         lock (syncObj)
                         {
+                            Dictionary<string, BindingTypeProperty> propertyByName = new Dictionary<string, BindingTypeProperty>();
                             type = typeBuilderFactory.CreateType(string.Format("BindType{0}", classIdent++), emitProperties);
-                            propertyByName = type.GetProperties().Select(p => new BindingTypeProperty(p.Name, descriptionByName[p.Name], p.GetGetMethod(), p.GetSetMethod()))
-                                                                 .ToDictionary(bp => bp.Name, bp => bp);
-                        }
 
-                        bindingType = new BindingType(type, propertyByName);
+                            foreach (PropertyInfo pi in type.GetProperties())
+                            {
+                                string name = pi.Name;
+                                while (propertyByName.ContainsKey(name))
+                                    name = name + "_";
+
+                                propertyByName[name] = new BindingTypeProperty(name, descriptionByName[pi.Name], pi.GetGetMethod(), pi.GetSetMethod());
+                            }
+                            bindingType = new BindingType(type, propertyByName);
+                        }
                     }
                 }
             }

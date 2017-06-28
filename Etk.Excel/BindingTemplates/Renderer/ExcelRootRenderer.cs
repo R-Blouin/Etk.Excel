@@ -8,7 +8,7 @@ using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.Application;
-using Etk.Excel.BindingTemplates.Controls.FormulaResult;
+using Etk.Excel.BindingTemplates.Controls.WithFormula;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;

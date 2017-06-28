@@ -1,4 +1,4 @@
-﻿namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
+﻿namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 {
     public interface IFormulaCalculation
     {

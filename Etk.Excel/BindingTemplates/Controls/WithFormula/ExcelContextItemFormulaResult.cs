@@ -6,7 +6,7 @@ using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
-namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
+namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 {
     class ExcelContextItemFormulaResult : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, IFormulaCalculation
     {
