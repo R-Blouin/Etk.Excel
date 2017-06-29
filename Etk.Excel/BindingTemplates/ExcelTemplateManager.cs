@@ -187,7 +187,7 @@ namespace Etk.Excel.BindingTemplates
 
         private void OnSheetCalculate(object sheet)
         {
-            List<ExcelTemplateView> views = null;
+            List<ExcelTemplateView> views;
             viewsBySheet.TryGetValue(sheet as ExcelInterop.Worksheet, out views);
             if (views != null)
             {
@@ -451,8 +451,6 @@ namespace Etk.Excel.BindingTemplates
                                                                                                          , sheetContainer != null ? sheetContainer.Name.EmptyIfNull() : string.Empty
                                                                                                          , templateName.EmptyIfNull()); Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
-                //ExcelApplication.DisplayException(null, message, ex);
-                //return null;
             }
         }
 

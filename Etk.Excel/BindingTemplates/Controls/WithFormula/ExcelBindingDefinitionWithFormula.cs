@@ -31,7 +31,8 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         {
             TargetBindingDefinition = targetBindingDefinition;
             FormulaBindingDefinition = formulaBindingDefinition;
-            CanNotify = TargetBindingDefinition.CanNotify;
+            if(TargetBindingDefinition != null)
+                CanNotify = TargetBindingDefinition.CanNotify;
 
             DefinitionDescription = new BindingDefinitionDescription();
         }

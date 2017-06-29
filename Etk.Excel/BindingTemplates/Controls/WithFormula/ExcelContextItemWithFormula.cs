@@ -14,6 +14,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         private readonly ExcelBindingDefinitionWithFormula excelBindingDefinitionWithFormula;
         private object currentValue;
         private object currentFormula;
+        private bool useFormula;
 
         public Microsoft.Office.Interop.Excel.Range Range
         { get; private set; }
@@ -31,6 +32,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         {
             excelBindingDefinitionWithFormula = bindingDefinition as ExcelBindingDefinitionWithFormula;
             CanNotify = excelBindingDefinitionWithFormula.CanNotify;
+            useFormula = excelBindingDefinitionWithFormula.FormulaBindingDefinition != null;
 
             if (CanNotify)
             {
@@ -63,22 +65,45 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override object ResolveBinding()
         {
-            object formula = null;
-            if (excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
+            if (useFormula)
             {
-                formula = excelBindingDefinitionWithFormula.FormulaBindingDefinition.ResolveBinding(DataSource);
-                return formula != null ? "=" + formula : null;
+                if(excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
+                    return "=" + excelBindingDefinitionWithFormula.FormulaBindingDefinition.ResolveBinding(DataSource);
+                return Range.HasFormula ? Range.Formula : null;
             }
-            return Range.HasFormula ? Range.Formula : null;
+
+            if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
+                return excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
+            return null;
         }
 
         public override bool UpdateDataSource(object data, out object retValue)
         {
-            retValue = null;
-            if (excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
-                retValue = excelBindingDefinitionWithFormula.FormulaBindingDefinition.UpdateDataSource(DataSource, data);
+            retValue = data;
+            if (data == null) // If null enter => ResolveBinding the binding
+            {
+                useFormula = excelBindingDefinitionWithFormula.FormulaBindingDefinition != null;
+                if (excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
+                    retValue = "=" + excelBindingDefinitionWithFormula.FormulaBindingDefinition.ResolveBinding(DataSource);
+                else if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
+                    retValue = excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
+            }
             else
-                retValue = Range.HasFormula? Range.Formula : null;
+            {
+                useFormula = data.ToString().Trim().StartsWith("=");
+                if (useFormula)
+                {
+                    try
+                    {
+                        Range.Formula = data.ToString();
+                        retValue = Range.Formula;
+                    }
+                    catch
+                    { }
+                }
+                else if(excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
+                    retValue = excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, data);
+            }
             return true;
         }
 
@@ -93,23 +118,27 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public void OnSheetCalculate()
         {
-            if (excelBindingDefinitionWithFormula.TargetBindingDefinition == null || !Range.HasFormula)
-                return;
-
             if ((Range.HasFormula && Range.Formula != currentFormula) ||  ! object.Equals(Range.Value2, currentValue))
             {
                 Microsoft.Office.Interop.Excel.WorksheetFunction worksheetFunction = ETKExcel.ExcelApplication.Application.WorksheetFunction;
-                if (worksheetFunction.IsError(Range))
+                if (Range.HasFormula && worksheetFunction.IsError(Range))
                 {
-                    Type type = excelBindingDefinitionWithFormula.TargetBindingDefinition.BindingType;
-                    if (type != null)
+                    if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
                     {
-                        object nullValue = type.IsValueType ? Activator.CreateInstance(type) : null;
-                        excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, nullValue);
+                        Type type = excelBindingDefinitionWithFormula.TargetBindingDefinition.BindingType;
+                        if (type != null)
+                        {
+                            object nullValue = type.IsValueType ? Activator.CreateInstance(type) : null;
+                            excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, nullValue);
+                        }
                     }
                 }
                 else
-                    excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, Range.Value2);
+                {
+                    if(excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
+                        excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, Range.Value2);
+                }
+
                 currentValue = Range.Value2;
                 currentFormula = Range.HasFormula ? Range.Formula : null;
 
