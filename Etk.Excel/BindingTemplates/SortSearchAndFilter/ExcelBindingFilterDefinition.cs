@@ -12,7 +12,7 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
     public class ExcelBindingFilterDefinition : BindingFilterDefinition
     {
         #region attributes and properties
-        private const string ExceptionTextFormat = "Filter definition  '{0}' is invalid. The correct definition is '{1}<watermark>:property to filter path{2}'.";
+        private const string ExceptionTextFormat = "Filter definition  '{0}' is invalid. The correct definition is '{1}<watermark>::property to filter path{2}'.";
         public const string Filter_PREFIX = "{*";
         public const string Filter_POSTFIX = "*}";
         #endregion
@@ -32,7 +32,7 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
             if(string.IsNullOrEmpty(trimmedDefinition))
                 throw new Exception(string.Format(ExceptionTextFormat, trimmedDefinition, Filter_PREFIX, Filter_POSTFIX));
 
-            string[] defParts = trimmedDefinition.Split(':');
+            string[] defParts = trimmedDefinition.Split(new [] { "::" }, StringSplitOptions.None);
 
             string watermark = null;
             string definitionPath;

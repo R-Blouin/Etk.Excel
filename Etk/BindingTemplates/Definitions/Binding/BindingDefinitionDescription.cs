@@ -263,13 +263,14 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             throw new BindingTemplateException(string.Format("Cannot create constante BindingDefinition from '{0}': cannot find the closing ']'", toAnalyze));
                         bindingExpression = trimmedToAnalyze.Substring(1, trimmedToAnalyze.Length - 2);
 
-                        int optionsEnd  = bindingExpression.IndexOf(':');
-                        if (optionsEnd != -1)
+                        int postSep = bindingExpression.LastIndexOf("::");
+                        if (postSep != -1)
                         {
-                            string optionsString = bindingExpression.Substring(0, optionsEnd);
+                            string optionsString = bindingExpression.Substring(0, postSep);
                             string[] optionsArray = optionsString.Split(';');
+                            //string[] optionsArray = optionsString.Split(new string[] { "::" }, StringSplitOptions.None);
                             options = optionsArray.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim()).ToList();
-                            bindingExpression = bindingExpression.Substring(optionsEnd + 1);
+                            bindingExpression = bindingExpression.Substring(postSep + 2);
                         }
                     }
                     else
