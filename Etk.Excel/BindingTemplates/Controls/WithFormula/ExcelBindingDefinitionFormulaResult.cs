@@ -7,7 +7,7 @@ using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
 
-namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
+namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 {
     class ExcelBindingDefinitionFormulaResult : BindingDefinition
     {
@@ -51,7 +51,7 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
                     throw new ArgumentException(string.Format("dataAccessor '{0}' is invalid.", definition));
 
                 string useFormulaDefinition = null;
-                string underlyingDefinition = null;
+                string underlyingDefinition;
                 if (parts.Count() == 1)
                     underlyingDefinition = string.Format("{{{0}}}", parts[0].Trim());
                 else
@@ -80,10 +80,9 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
         }
         #endregion
 
-
         public override IBindingContextItem ContextItemFactory(IBindingContextElement parent)
         {
-            IBindingContextItem nestedContextItem = NestedBindingDefinition.ContextItemFactory(parent);
+            //IBindingContextItem nestedContextItem = NestedBindingDefinition.ContextItemFactory(parent);
             return new ExcelContextItemFormulaResult(parent, this);
         }
 

@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Decorators;
-using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
@@ -129,6 +128,11 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public MethodInfo MultiLineFactorResolver
         {
             get { return DefinitionDescription.MultiLineFactorResolver; }
+        }
+
+        public string Formula
+        {
+            get { return DefinitionDescription.Formula; }
         }
         #endregion
 

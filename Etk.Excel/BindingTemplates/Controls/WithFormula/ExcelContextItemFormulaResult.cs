@@ -6,9 +6,9 @@ using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
-namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
+namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 {
-    class ExcelContextItemFormulaResult : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, ISheetCalculate
+    class ExcelContextItemFormulaResult : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, IFormulaCalculation
     {
         #region properties and attributes
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
@@ -47,7 +47,7 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
 
         public void CreateControl(ExcelInterop.Range range)
         {
-            this.Range = range;
+            Range = range;
         }
 
         public override void RealDispose()
@@ -65,11 +65,11 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
         public override object ResolveBinding()
         {
             if (excelBindingDefinitionFormulaResult.UseFormulaBindingDefinition != null)
-                excelBindingDefinitionFormulaResult.UseFormulaBindingDefinition.UpdateDataSource(this.DataSource, (bool)Range.HasFormula);
+                excelBindingDefinitionFormulaResult.UseFormulaBindingDefinition.UpdateDataSource(DataSource, (bool)Range.HasFormula);
 
             if (Range != null && Range.HasFormula)
                 return Range.Formula;
-            return excelBindingDefinitionFormulaResult.NestedBindingDefinition.ResolveBinding(this.DataSource);
+            return excelBindingDefinitionFormulaResult.NestedBindingDefinition.ResolveBinding(DataSource);
         }
 
         public override bool UpdateDataSource(object data, out object retValue)
@@ -85,24 +85,31 @@ namespace Etk.Excel.BindingTemplates.Controls.FormulaResult
         {
             if (CanNotify && objectsToNotify != null && OnPropertyChangedAction != null)
             {
-                if (BindingDefinition.MustNotify(this.DataSource, source, args))
+                if (BindingDefinition.MustNotify(DataSource, source, args))
                     OnPropertyChangedAction(this, OnPropertyChangedActionArgs);
             }
         }
 
         public void OnSheetCalculate()
         {
-            if (Range.HasFormula && ! object.Equals(Range.Value2, currentValue))
+            if (!Range.HasFormula)
+                return;
+
+            object resolvedBinding =  excelBindingDefinitionFormulaResult.NestedBindingDefinition.ResolveBinding(DataSource);
+            if (Range.FormulaLocal != resolvedBinding || ! object.Equals(Range.Value2, currentValue))
             {
                 ExcelInterop.WorksheetFunction worksheetFunction = ETKExcel.ExcelApplication.Application.WorksheetFunction; 
                 if (worksheetFunction.IsError(Range))
                 { 
                     Type type = excelBindingDefinitionFormulaResult.NestedBindingDefinition.BindingType;
-                    object nullValue = type.IsValueType ? Activator.CreateInstance(type) : null;
-                    excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(this.DataSource, nullValue);
+                    if (type != null)
+                    {
+                        object nullValue = type.IsValueType ? Activator.CreateInstance(type) : null;
+                        excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(DataSource, nullValue);
+                    }
                 }
                 else
-                    excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(this.DataSource, Range.Value2);
+                    excelBindingDefinitionFormulaResult.NestedBindingDefinition.UpdateDataSource(DataSource, Range.Value2);
                 currentValue = Range.Value2;
 
                 if (worksheetFunction != null)

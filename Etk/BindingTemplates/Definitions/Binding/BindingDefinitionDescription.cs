@@ -79,6 +79,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public int ShowHideValue
         { get; private set; }
 
+        public string Formula
+        { get; private set; }
+
         #region .ctors and factories
         public BindingDefinitionDescription()
         {}
@@ -96,6 +99,13 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 {
                     foreach (string option in options)
                     {
+                        // Formula
+                        if (option.StartsWith("F="))
+                        {
+                            Formula = option.Substring(2);
+                            continue;
+                        }
+
                         // Description
                         if (option.StartsWith("D="))
                         {
@@ -238,11 +248,12 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public static BindingDefinitionDescription CreateBindingDescription(ITemplateDefinition templateDefinition, string toAnalyze, string trimmedToAnalyze)
         {
             BindingDefinitionDescription ret = null;
-            string bindingExpression;
             List<string> options = null;
             if (!string.IsNullOrEmpty(trimmedToAnalyze))
             {
+                string bindingExpression;
                 bool isConstante = false;
+                // Constante
                 if (!trimmedToAnalyze.StartsWith("{") || trimmedToAnalyze.StartsWith("["))
                 {
                     isConstante = true;
@@ -252,39 +263,39 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             throw new BindingTemplateException(string.Format("Cannot create constante BindingDefinition from '{0}': cannot find the closing ']'", toAnalyze));
                         bindingExpression = trimmedToAnalyze.Substring(1, trimmedToAnalyze.Length - 2);
 
-                        int optionsEnd  = bindingExpression.IndexOf(':');
-                        if (optionsEnd != -1)
+                        int postSep = bindingExpression.LastIndexOf("::");
+                        if (postSep != -1)
                         {
-                            string optionsString = bindingExpression.Substring(0, optionsEnd);
+                            string optionsString = bindingExpression.Substring(0, postSep);
                             string[] optionsArray = optionsString.Split(';');
+                            //string[] optionsArray = optionsString.Split(new string[] { "::" }, StringSplitOptions.None);
                             options = optionsArray.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim()).ToList();
-                            bindingExpression = bindingExpression.Substring(optionsEnd + 1);
+                            bindingExpression = bindingExpression.Substring(postSep + 2);
                         }
                     }
                     else
                         bindingExpression = toAnalyze;
                 }
+                // No Constante
                 else
                 {
                     if (!trimmedToAnalyze.EndsWith("}"))
                         throw new BindingTemplateException(string.Format("Cannot create BindingDefinition from '{0}': cannot find the closing '}'", toAnalyze));
                     bindingExpression = trimmedToAnalyze.Substring(1, trimmedToAnalyze.Length - 2);
 
-                    int compoStart = bindingExpression.IndexOf('{');
-                    string toAnalyzeOptions = compoStart == -1 ? bindingExpression : bindingExpression.Substring(0, compoStart);
-
-                    string[] parts = toAnalyzeOptions.Split(':');
-                    if (parts.Count() > 2)
-                        throw new BindingTemplateException(string.Format("Cannot create BindingDefinition from '{0}': options not properly set. Syntax is: {opt1,opt2...:...}", toAnalyze));
-                    if (parts.Count() == 2)
+                    int postSep = bindingExpression.LastIndexOf("::");
+                    if (postSep != -1)
                     {
-                        string optionsString = parts[0];
+                        string optionsString = bindingExpression.Substring(0, postSep);
                         string[] optionsArray = optionsString.Split(';');
+                        //string[] optionsArray = optionsString.Split(new string[] { "::" }, StringSplitOptions.None);
                         options = optionsArray.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim()).ToList();
-                        if (compoStart == -1)
-                            bindingExpression = parts[1];
-                        else
-                            bindingExpression = bindingExpression.Substring(compoStart);
+                        bindingExpression = bindingExpression.Substring(postSep + 2);
+                    }
+                    else if (bindingExpression.StartsWith("=")) // USe for Formula not bind with the model
+                    {
+                        options = new List<string>(new []{ "F" + bindingExpression });
+                        bindingExpression = string.Empty;
                     }
                 }
 

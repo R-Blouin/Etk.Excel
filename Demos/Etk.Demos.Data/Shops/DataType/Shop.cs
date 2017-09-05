@@ -12,6 +12,9 @@ namespace Etk.Demos.Data.Shops.DataType
         [XmlAttribute]
         public int Id
         { get; set; }
+        
+        public int IdPlus
+        { get; set; }
 
         private string name;
         [XmlAttribute]

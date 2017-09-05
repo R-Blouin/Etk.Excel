@@ -8,7 +8,6 @@ using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
-using Etk.BindingTemplates.Context.SortSearchAndFilter;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -333,7 +332,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 int realEnd = partToRenderDefinition.Width;
                 for (int i = partToRenderDefinition.Width - 1; i >= startPosition; i--)
                 {
-                    ExcelInterop.Range current = partToRenderDefinition.DefinitionFirstCell[1, i];
+                    ExcelInterop.Range current = partToRenderDefinition.DefinitionFirstCell.get_Offset(0, 1);
                     if (current.MergeCells || partToRenderDefinition.DefinitionParts[renderingContext.RowId, i] != null)
                         break;
                     realEnd--;

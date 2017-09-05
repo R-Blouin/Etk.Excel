@@ -61,7 +61,8 @@ namespace Etk.Excel.BindingTemplates.Views
         internal List<ExcelBindingSearchContextItem> CellsThatContainSearchValue
         { get; private set; }
 
-        public event Action<object, object> DataChanged;
+        //public event Action<object, object> DataChanged;
+        public event Action DataChanged;
         public event Action<bool> BeforeRendering;
         public event Action<bool> AfterRendering;
         public event Action<IExcelTemplateView> ViewSheetIsDeactivated;
@@ -617,7 +618,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     using (var freeze = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                     {
                         if (Renderer.OnDataChanged(intersect) && DataChanged != null)
-                            DataChanged(null, null);
+                            DataChanged();// null, null);
                     }
                     intersect = null;
                     return true;

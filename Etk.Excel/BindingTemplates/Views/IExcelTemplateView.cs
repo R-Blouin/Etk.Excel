@@ -31,7 +31,7 @@ namespace Etk.Excel.BindingTemplates.Views
         void ExecuteAutoFit();
 
         /// <summary>Event calls when a data bound this the View is changed</summary>
-        event Action<object, object> DataChanged;
+        event Action DataChanged;
         /// <summary>Event calls when the View is about to be rendered (When the rendering is done with 'RenderView' function, the parameter is set to false. When the rendering is done with 'RenderViewDataOnly' function, the parameter is set to true</summary>
         event Action<bool> BeforeRendering;
         /// <summary>Event calls after the rendering of the View (When the rendering is done with 'RenderView' function, the parameter is set to false. When the rendering is done with 'RenderViewDataOnly' function, the parameter is set to true</summary>

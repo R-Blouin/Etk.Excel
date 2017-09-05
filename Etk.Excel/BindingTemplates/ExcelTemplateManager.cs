@@ -19,6 +19,7 @@ using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Text.RegularExpressions;
+// ReSharper disable NotResolvedInText
 
 namespace Etk.Excel.BindingTemplates
 {
@@ -187,7 +188,7 @@ namespace Etk.Excel.BindingTemplates
 
         private void OnSheetCalculate(object sheet)
         {
-            List<ExcelTemplateView> views = null;
+            List<ExcelTemplateView> views;
             viewsBySheet.TryGetValue(sheet as ExcelInterop.Worksheet, out views);
             if (views != null)
             {
@@ -451,8 +452,6 @@ namespace Etk.Excel.BindingTemplates
                                                                                                          , sheetContainer != null ? sheetContainer.Name.EmptyIfNull() : string.Empty
                                                                                                          , templateName.EmptyIfNull()); Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
-                //ExcelApplication.DisplayException(null, message, ex);
-                //return null;
             }
         }
 
@@ -488,17 +487,17 @@ namespace Etk.Excel.BindingTemplates
 
                 sheetContainer = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetTemplateName);
                 if (sheetContainer == null)
-                    throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetTemplatePath);
+                    throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'", sheetTemplatePath));
                 sheetDestination = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetDestinationName);
                 if (sheetDestination == null)
-                    throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'"), sheetDestinationName);
+                    throw new ArgumentException(string.Format("Cannot find the Destination sheet '{0}'", sheetDestinationName));
 
                 ExcelInterop.Range clearingCell = null;
                 if (! string.IsNullOrEmpty(clearingCellName))
                 {
                     clearingCell =  ETKExcel.ExcelApplication.Application.Range[clearingCellName];
                     if (clearingCell == null)
-                        throw new ArgumentException(string.Format("Cannot find the clearing cell '{0}'. Please use the 'sheetname!rangeaddress' format"), clearingCellName);
+                        throw new ArgumentException(string.Format("Cannot find the clearing cell '{0}'. Please use the 'sheetname!rangeaddress' format", clearingCellName));
                 }
 
                 ExcelInterop.Range destinationRangeRange = sheetDestination.Range[destinationRange];
@@ -661,7 +660,7 @@ namespace Etk.Excel.BindingTemplates
                 {
                     lock (syncRoot)
                     {
-                        List<ExcelTemplateView> views = null;
+                        List<ExcelTemplateView> views;
                         if (viewsBySheet.TryGetValue(sheet, out views))
                         {
                             IEnumerable<ITemplateView> templateViews = bindingTemplateManager.GetAllViews().Where(v => views.Contains(v) && v is ExcelTemplateView);
@@ -706,7 +705,7 @@ namespace Etk.Excel.BindingTemplates
             return iViews;
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.RenderView"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.Render"/> </summary> 
         public void Render(IEnumerable<IExcelTemplateView> views)
         {
             if (views == null)
@@ -720,13 +719,13 @@ namespace Etk.Excel.BindingTemplates
                     else
                     {
                         ExcelInterop.Range selectedRange = ExcelApplication.Application.Selection as ExcelInterop.Range;
-                        using (var freezeExcel = new FreezeExcel(this.ExcelApplication.KeepStatusVisible))
+                        using (new FreezeExcel(ExcelApplication.KeepStatusVisible))
                         {
                             foreach (IExcelTemplateView view in views)
                             {
-                                if (view != null)
+                                ExcelTemplateView excelTemplateView = view as ExcelTemplateView;
+                                if (excelTemplateView != null)
                                 {
-                                    ExcelTemplateView excelTemplateView = view as ExcelTemplateView;
                                     try
                                     {
                                         excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
@@ -762,14 +761,14 @@ namespace Etk.Excel.BindingTemplates
         public void Render(IExcelTemplateView view)
         {
             if (view != null)
-                Render(new IExcelTemplateView[] { view });
+                Render(new [] { view });
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.RenderViewDataOnly"/> </summary> 
         public void RenderDataOnly(IExcelTemplateView view)
         {
             if (view != null)
-                RenderDataOnly(new IExcelTemplateView[] { view });
+                RenderDataOnly(new [] { view });
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.RenderViewDataOnly"/> </summary> 
@@ -786,13 +785,13 @@ namespace Etk.Excel.BindingTemplates
                     else
                     {
                         ExcelInterop.Range selectedRange = ExcelApplication.Application.Selection as ExcelInterop.Range;
-                        using (FreezeExcel freezeExcel = new FreezeExcel(this.ExcelApplication.KeepStatusVisible))
+                        using (new FreezeExcel(ExcelApplication.KeepStatusVisible))
                         {
                             foreach (IExcelTemplateView view in views)
                             {
-                                if (view != null)
+                                ExcelTemplateView excelTemplateView = view as ExcelTemplateView;
+                                if (excelTemplateView != null)
                                 {
-                                    ExcelTemplateView excelTemplateView = view as ExcelTemplateView;
                                     try
                                     {
                                         excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
@@ -823,7 +822,7 @@ namespace Etk.Excel.BindingTemplates
         public void ClearView(IExcelTemplateView view)
         {
             if (view != null)
-                ClearViews(new IExcelTemplateView[] { view });
+                ClearViews(new [] { view });
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.ClearViews"/> </summary> 
@@ -833,7 +832,7 @@ namespace Etk.Excel.BindingTemplates
                 return;
 
             views = views.Where(v => v != null);
-            if (views.Count() == 0)
+            if (! views.Any())
                 return;
 
             try
@@ -844,7 +843,7 @@ namespace Etk.Excel.BindingTemplates
                         ExcelApplication.DisplayMessageBox(null, "'Clear views' is not allowed: Excel is in Edit mode", System.Windows.Forms.MessageBoxIcon.Warning);
                     else
                     {
-                        using (var freezeExcel = new FreezeExcel(this.ExcelApplication.KeepStatusVisible))
+                        using (new FreezeExcel(this.ExcelApplication.KeepStatusVisible))
                         {
                             foreach (IExcelTemplateView view in views)
                             {
@@ -893,8 +892,9 @@ namespace Etk.Excel.BindingTemplates
             CallbacksManager.RegisterEventCallbacksFromXml(xmLDefinition);
         }
 
-        /// <summary> Register Event callback definitions 
+        /// <summary> Register Event callback definitions
         /// <param name="callback">The callback to register</param>
+        /// </summary> 
         public void RegisterEventCallback(EventCallback callback)
         {
             CallbacksManager.RegisterCallback(callback);
