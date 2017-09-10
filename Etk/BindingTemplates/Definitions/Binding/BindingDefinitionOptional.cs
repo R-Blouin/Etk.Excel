@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using Etk.BindingTemplates.Context;
+using System.Runtime.InteropServices;
+using System.Reflection;
+using Etk.Tools.Log;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
     class BindingDefinitionOptional : BindingDefinition
     {
+        private ILogger log = Logger.Instance;
+        private bool isComObject;
+        private Type type;
+
         private Dictionary<Type, IBindingDefinition> bindingDefinitionByType = new Dictionary<Type, IBindingDefinition>();
         
         public override string Name
@@ -41,11 +48,26 @@ namespace Etk.BindingTemplates.Definitions.Binding
         #region public methods
         public override object UpdateDataSource(object dataSource, object data)
         {
-            return null;
+            try
+            {
+                if (dataSource == null)
+                    return null;
+
+                if (! IsReadOnly)
+                    type.InvokeMember(Name, BindingFlags.SetProperty, null, dataSource, new object[] { data }, null);
+                return ResolveBinding(dataSource);
+            }
+            catch (Exception ex)
+            {
+                log.LogFormat(LogType.Warn, "'UpdateDataSource' failed for BindingExpression '{0}', value '{1}': {2}", BindingExpression, data == null ? string.Empty : data.ToString(), ex.Message);
+                return ResolveBinding(dataSource);
+            }
         }
 
         public override object ResolveBinding(object dataSource)
         {
+            if (dataSource != null && isComObject)
+                return type.InvokeMember(Name, BindingFlags.GetProperty, null, dataSource, null, null);
             return null;
         }
 
@@ -67,11 +89,20 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 ret = new BindingContextItem(parent, this);
             else
             {
-                IBindingDefinition realBindingDefinition = CreateRealBindingDefinition(parent.DataSource.GetType());
-                if (realBindingDefinition.CanNotify)
-                    ret = new BindingContextItemCanNotify(parent, realBindingDefinition);
+                isComObject = Marshal.IsComObject(parent.DataSource);
+                if(isComObject)
+                {
+                    type = parent.DataSource.GetType();
+                    ret = new BindingContextItem(parent, this);
+                }
                 else
-                    ret = new BindingContextItem(parent, realBindingDefinition);
+                {
+                    IBindingDefinition realBindingDefinition = CreateRealBindingDefinition(parent.DataSource.GetType());
+                    if (realBindingDefinition.CanNotify)
+                        ret = new BindingContextItemCanNotify(parent, realBindingDefinition);
+                    else
+                        ret = new BindingContextItem(parent, realBindingDefinition);
+                }
             }
             ret.Init();
             return ret;

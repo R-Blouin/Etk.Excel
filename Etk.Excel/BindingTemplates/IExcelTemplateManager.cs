@@ -2,11 +2,10 @@
 using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Views;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates
 {
-    using ExcelInterop = Microsoft.Office.Interop.Excel;
-
     public interface IExcelTemplateManager
     {
         /// <summary> Create a View.</summary>

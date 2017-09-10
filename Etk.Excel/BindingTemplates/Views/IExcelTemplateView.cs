@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Etk.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
