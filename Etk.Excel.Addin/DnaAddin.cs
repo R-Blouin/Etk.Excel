@@ -8,8 +8,8 @@ namespace Etk.Excel.Addin
     [ComVisible(false)]
     class DnaAddin : IExcelAddIn
     {
-        private string etkTlbName = "Etk.Excel.Addin.tlb";
-        private string etkXllName = "Etk_Excel_Addin";
+        private readonly string etkTlbName = "Etk.Excel.Addin.tlb";
+        private readonly string etkXllName = "Etk_Excel_Addin";
 
         public void AutoOpen()
         {

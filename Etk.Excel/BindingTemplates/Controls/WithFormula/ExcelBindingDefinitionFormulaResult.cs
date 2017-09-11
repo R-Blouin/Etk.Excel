@@ -20,11 +20,10 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         public IBindingDefinition NestedBindingDefinition
         { get; private set; }
 
-        public override string Name
-        { get { return NestedBindingDefinition != null ? NestedBindingDefinition.Name : string.Empty; } }
+        public override string Name => NestedBindingDefinition != null ? NestedBindingDefinition.Name : string.Empty;
 
-        public override string Description
-        { get { return NestedBindingDefinition != null ? NestedBindingDefinition.Description : string.Empty; } }
+        public override string Description => NestedBindingDefinition != null ? NestedBindingDefinition.Description : string.Empty;
+
         #endregion
 
         #region .ctors and factories
@@ -48,16 +47,16 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
                 //UseFormulaBindingDefinition
                 string[] parts = definition.Split(';');
                 if (parts.Count() > 2)
-                    throw new ArgumentException(string.Format("dataAccessor '{0}' is invalid.", definition));
+                    throw new ArgumentException($"dataAccessor '{definition}' is invalid.");
 
                 string useFormulaDefinition = null;
                 string underlyingDefinition;
                 if (parts.Count() == 1)
-                    underlyingDefinition = string.Format("{{{0}}}", parts[0].Trim());
+                    underlyingDefinition = $"{{{parts[0].Trim()}}}";
                 else
                 {
-                    useFormulaDefinition = string.Format("{{{0}}}", parts[0].Trim());
-                    underlyingDefinition = string.Format("{{{0}}}", parts[1].Trim());
+                    useFormulaDefinition = $"{{{parts[0].Trim()}}}";
+                    underlyingDefinition = $"{{{parts[1].Trim()}}}";
                 }
 
                 BindingDefinitionDescription bindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinition, underlyingDefinition, underlyingDefinition);
@@ -74,7 +73,8 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot retrieve the formula result binding dataAccessor '{0}'. {1}", definition.EmptyIfNull(), ex.Message);
+                string message =
+                    $"Cannot retrieve the formula result binding dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
                 throw new EtkException(message);
             }
         }

@@ -30,13 +30,13 @@ namespace Etk.Excel.BindingTemplates.Decorators
     public class ExcelRangeDecorator : Decorator
     {
         //private bool useOnlyColors;
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
         //private bool isRangedName;
-        private string rangeId ;
+        private readonly string rangeId ;
         private ExcelInterop.Range decoratorRange;
-        private ExcelInterop.Application excelApplication;
+        private readonly ExcelInterop.Application excelApplication;
         private bool addConcernedRangeParameter;
-        private bool notOnlyColor;
+        private readonly bool notOnlyColor;
         private List<DecoratorProperty> decoratorProperties = null;
 
         #region .ctors and factories
@@ -56,7 +56,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch(Exception ex)
             {
-                log.LogFormat(LogType.Warn, string.Format("'ExcelRangeDecorator' constructor:{0}", ex.Message));
+                log.LogFormat(LogType.Warn, $"'ExcelRangeDecorator' constructor:{ex.Message}");
             }
         }
 
@@ -83,7 +83,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Cannot create decorator '{0}':{1}", xmlDecorator.Ident ?? string.Empty, ex.Message));
+                throw new Exception($"Cannot create decorator '{xmlDecorator.Ident ?? string.Empty}':{ex.Message}");
             }
         }
         #endregion
@@ -154,7 +154,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch (Exception ex)
             {
-                log.LogExceptionFormat(LogType.Error, ex, string.Format("Cannot resolve decorator '{0}':{1}", Ident, ex.Message));
+                log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve decorator '{Ident}':{ex.Message}");
                 return false;
             }
         }
@@ -232,7 +232,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch (Exception ex)
             {
-                log.LogExceptionFormat(LogType.Error, ex, string.Format("Cannot resolve decorator '{0}':{1}", Ident, ex.Message));
+                log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve decorator '{Ident}':{ex.Message}");
                 return false;
             }
         }
@@ -298,7 +298,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch (Exception ex)
             { 
-                throw new Exception(string.Format("Cannot resolve Decorator range '{0}':{1}", rangeId ?? string.Empty, ex.Message));
+                throw new Exception($"Cannot resolve Decorator range '{rangeId ?? string.Empty}':{ex.Message}");
             }
         }
         #endregion

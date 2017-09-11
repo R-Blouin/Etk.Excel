@@ -11,8 +11,8 @@ namespace Etk.BindingTemplates.Definitions.Decorators
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class DecoratorsManager : IDisposable
     {
-        private ILogger log = Logger.Instance;
-        private Dictionary<string, Decorator> decoratorByIdent = new Dictionary<string, Decorator>();
+        private readonly ILogger log = Logger.Instance;
+        private readonly Dictionary<string, Decorator> decoratorByIdent = new Dictionary<string, Decorator>();
 
         /// <summary> Return a <see cref="Decorator"/> given an ident</summary>
         /// <param name="ident">the ident of the <see cref="Decorator"/> to return</param>
@@ -25,7 +25,7 @@ namespace Etk.BindingTemplates.Definitions.Decorators
                 lock ((decoratorByIdent as ICollection).SyncRoot)
                 {
                     if (!decoratorByIdent.TryGetValue(ident, out ret))
-                        throw new Exception(string.Format("Cannot find Decorator '{0}'", ident ));
+                        throw new Exception($"Cannot find Decorator '{ident}'");
                 }
             }
             return ret;

@@ -31,8 +31,8 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
         public ExcelInterop.Range OwnerRange
         { get; protected set; }
 
-        public ExcelForms.Font Font
-        { get { return commandButton == null ? null : commandButton.Font; } }
+        public ExcelForms.Font Font => commandButton == null ? null : commandButton.Font;
+
         #endregion
 
         #region .ctors
@@ -44,7 +44,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
             {
                 worksheet = View.ViewSheet;
                 OwnerRange = View.FirstOutputCell;
-                Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
+                Name = $"ExcelBtn{Interlocked.Increment(ref cpt)}";
 
                 ExcelInterop.Shape shape = (ExcelInterop.Shape) worksheet.Shapes.AddOLEObject("Forms.CommandButton.1",
                     Type.Missing,

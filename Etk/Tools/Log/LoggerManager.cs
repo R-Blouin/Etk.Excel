@@ -12,7 +12,7 @@ namespace Etk.Tools.Log
         [ImportingConstructor]
         private LoggerManager([Import(AllowDefault = true)] ILogger logger)
         {
-            Instance = logger == null ? new DefaultLogger() : logger;
+            Instance = logger ?? new DefaultLogger();
         }
     }
 }

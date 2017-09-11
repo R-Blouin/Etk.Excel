@@ -4,16 +4,17 @@ using System.Linq;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.MvvmBase;
+using Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels;
 
-namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
+namespace Etk.Excel.UI.Windows.SortAndFilter.ViewModels
 {
     class BindingDefinitionViewModel : ViewModelBase, IDisposable
     {
         #region attributes and properties
         private static event Action<TemplateViewModel, BindingDefinitionViewModel> SortOrFilterSelected;
 
-        private TemplateViewModel parent;
-        private List<IBindingContextItem> items;
+        private readonly TemplateViewModel parent;
+        private readonly List<IBindingContextItem> items;
 
         public IBindingDefinition BindingDefinition
         { get; private set; }
@@ -24,7 +25,7 @@ namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
             {
                 if (string.IsNullOrEmpty(BindingDefinition.Description))
                     return BindingDefinition.Name;
-                return string.Format("{0} ({1})", BindingDefinition.Name, BindingDefinition.Description);
+                return $"{BindingDefinition.Name} ({BindingDefinition.Description})";
             } 
         }
 
@@ -109,8 +110,8 @@ namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
                     isSortOrFilterSelected = value;
                     if (isSortOrFilterSelected)
                     {
-                        SortOrFilterSelected(this.parent, this);
-                        parent.BindingDefinitionSelectedRequest(this.parent, this);
+                        SortOrFilterSelected(parent, this);
+                        parent.BindingDefinitionSelectedRequest(parent, this);
                     }
                     OnPropertyChanged("IsSortOrFilterSelected");
                 }

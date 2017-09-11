@@ -79,8 +79,8 @@
                     <ListView Grid.Row="1" x:Name="lstAccessors" SelectedItem="{Binding SelectedAccessor}" Visibility="{Binding Path=HasNoFilter, Converter={StaticResource BoolToVis}}">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name"></GridViewColumn>
-                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Description"></GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Description" />
                             </GridView>
                         </ListView.View>
                         <ListView.GroupStyle>
@@ -117,8 +117,8 @@
                     <ListView Grid.Row="1" SelectedItem="{Binding SelectedAccessor}" ItemsSource="{Binding FilteredAccessors}" Visibility="{Binding Path=HasFilter, Converter={StaticResource BoolToVis}}">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name"></GridViewColumn>
-                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Description"></GridViewColumn>
+                                <GridViewColumn DisplayMemberBinding="{Binding Name}" Header="Name" />
+                                <GridViewColumn DisplayMemberBinding="{Binding Description}" Header="Description" />
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -127,3 +127,18 @@
         </Grid>
     </Grid>
 </UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -89,7 +89,7 @@ namespace Etk.ModelManagement.DataAccessors
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Connat create Data Accessor for '{0}':{1}", bindingMethod, ex.Message));
+                throw new EtkException($"Connat create Data Accessor for '{bindingMethod}':{ex.Message}");
             }
         }
         #endregion
@@ -109,7 +109,7 @@ namespace Etk.ModelManagement.DataAccessors
                     return DataAccessorInstanceType.Singleton;
 
                 default:
-                    throw new EtkException(string.Format("DataAccessorInstanceType instance '{0}' is not valid", from));
+                    throw new EtkException($"DataAccessorInstanceType instance '{@from}' is not valid");
             }
         }
         #endregion

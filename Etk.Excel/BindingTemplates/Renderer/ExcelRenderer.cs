@@ -57,7 +57,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public int Height
         { get; private set; }
 
-        public bool HasExpander { get{ return templateDefinition.TemplateOption.HeaderAsExpander != HeaderAsExpander.None; }}
+        public bool HasExpander => templateDefinition.TemplateOption.HeaderAsExpander != HeaderAsExpander.None;
 
         public bool IsExpanded
         {

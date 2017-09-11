@@ -14,7 +14,7 @@ namespace Etk.ModelManagement.Views
         #endregion
 
         #region properties and attributes
-        private string propertiesList;
+        private readonly string propertiesList;
         private string accessorName;
 
         ///// <summary> Implements <see cref="IModelView.Ident"/> </summary> 
@@ -29,10 +29,9 @@ namespace Etk.ModelManagement.Views
         public string Description
         { get; private set; }
 
-        private ModelType parent;
+        private readonly ModelType parent;
         /// <summary> Implements <see cref="IModelView.ParentElement"/> </summary> 
-        public IModelType Parent
-        { get { return parent; } }
+        public IModelType Parent => parent;
 
         /// <summary> Implements <see cref="IModelView.IsDefault"/> </summary> 
         public bool IsDefault
@@ -43,8 +42,7 @@ namespace Etk.ModelManagement.Views
         { get; private set; }
 
         /// <summary> Implements <see cref="IModelView.Parts"/> </summary> 
-        public IEnumerable<IModelViewPart> Parts
-        { get { return ChangeableParts; } }
+        public IEnumerable<IModelViewPart> Parts => ChangeableParts;
 
         public List<IModelViewPart> ChangeableParts
         { get; private set; }
@@ -99,7 +97,7 @@ namespace Etk.ModelManagement.Views
                 else
                 {
                     if (endSubproperties == -1)
-                        throw new EtkException(string.Format("'Cannot create View. '{0}' doesn't contain '{1}'", toAnalyze, SUB_PROP_END));
+                        throw new EtkException($"'Cannot create View. '{toAnalyze}' doesn't contain '{SUB_PROP_END}'");
 
                     subProperties = toAnalyze.Substring(startSubProperties + 1, endSubproperties - startSubProperties - 1);
                     beforeSubProperties = toAnalyze.Substring(0, startSubProperties);
@@ -126,7 +124,7 @@ namespace Etk.ModelManagement.Views
                     {
                         ModelType nestedModelType = modelView.Parent.Parent.GetModelType(part) as ModelType;
                         if (nestedModelType == null)
-                            throw new EtkException(string.Format("Cannot find the model type '{0}'", part));
+                            throw new EtkException($"Cannot find the model type '{part}'");
 
                         ModelView nestedModelView = new ModelView(nestedModelType, subProperties);
                         ChangeableParts.Add(nestedModelView);
@@ -141,7 +139,7 @@ namespace Etk.ModelManagement.Views
                         }
                         catch (Exception ex)
                         {
-                            throw new EtkException(string.Format("Cannot find property '{0}':{1}", part, ex.Message));
+                            throw new EtkException($"Cannot find property '{part}':{ex.Message}");
                         }
                     }
                 }

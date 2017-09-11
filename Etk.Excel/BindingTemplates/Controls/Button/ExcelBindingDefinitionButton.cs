@@ -63,7 +63,8 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 }
                 catch (Exception ex)
                 {
-                    string message = string.Format("Cannot retrieve the button dataAccessor '{0}'. {1}", definition.EmptyIfNull(), ex.Message);
+                    string message =
+                        $"Cannot retrieve the button dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
                     throw new EtkException(message);
                 }
             }
@@ -115,14 +116,16 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     if (method.IsStatic)
                     {
                         if (parameters.Count() > 2)
-                            throw new EtkException(string.Format("Method dataAccessor must be 'void static {0}(object currentObject [, Range <currentObject caller>]'", method.Name));
+                            throw new EtkException(
+                                $"Method dataAccessor must be 'void static {method.Name}(object currentObject [, Range <currentObject caller>]'");
 
                         OnClickWithRange = parameters.Count() == 2;
                     }
                     else
                     {
                         if (parameters.Count() > 1 || (parameters.Count() == 1 && parameters[0].ParameterType != typeof(Microsoft.Office.Interop.Excel.Range)))
-                            throw new EtkException(string.Format("Method dataAccessor must be 'void {0}([Range <currentObject caller>])'", method.Name));
+                            throw new EtkException(
+                                $"Method dataAccessor must be 'void {method.Name}([Range <currentObject caller>])'");
 
                         OnClickWithRange = parameters.Count() == 1;
                     }
@@ -130,7 +133,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Get 'Command' methodInfo information failed:{0}", ex.Message));
+                    throw new EtkException($"Get 'Command' methodInfo information failed:{ex.Message}");
                 }
             }
         }
@@ -170,11 +173,11 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
 
                     EnablePropertyInfo = type.GetProperty(enablePropElements[2]);
                     if (EnablePropertyInfo == null)
-                        throw new ArgumentException(string.Format("Property '{0}' not found", enablePropElements[2]));
+                        throw new ArgumentException($"Property '{enablePropElements[2]}' not found");
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Get 'EnableProp' property information failed:{0}", ex.Message));
+                    throw new EtkException($"Get 'EnableProp' property information failed:{ex.Message}");
                 }
             }
         }

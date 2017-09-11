@@ -66,7 +66,8 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
                     else if (orientationStr.Equals("V") || orientationStr.Equals("VERTICAL"))
                         Orientation = Orientation.Vertical;
                     else
-                        throw new ArgumentException(string.Format("The attribut 'Orientation' '{0}' is invalid. Value must be 'Vertical' (or 'V') or 'Horizontal' (or 'V') (no case sentitive)", value));
+                        throw new ArgumentException(
+                            $"The attribut 'Orientation' '{value}' is invalid. Value must be 'Vertical' (or 'V') or 'Horizontal' (or 'V') (no case sentitive)");
                 }
             }
         }
@@ -90,7 +91,8 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
                     if (expanderTypeStr.Equals("HIDE") || expanderTypeStr.Equals("H"))
                         ExpanderType = ExpanderType.Hide;
                     else
-                        throw new ArgumentException(string.Format("The attribut 'ExpanderType' '{0}' is invalid. Value must be 'DontRender' (or 'DR') or 'Hide' (or 'H') (no case sentitive)", value));
+                        throw new ArgumentException(
+                            $"The attribut 'ExpanderType' '{value}' is invalid. Value must be 'DontRender' (or 'DR') or 'Hide' (or 'H') (no case sentitive)");
                 }
             }
         }
@@ -114,7 +116,8 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
                     else if (headerAsExpanderStr.Equals("STARTCLOSED") || headerAsExpanderStr.Equals("SC"))
                         HeaderAsExpander = HeaderAsExpander.StartClosed;
                     else
-                        throw new ArgumentException(string.Format("The attribut 'HeaderAsExpander' '{0}' is invalid. Value must be 'StartExpanded' (or 'SE') or 'StartClosed' (or 'SC') (no case sentitive)", value));
+                        throw new ArgumentException(
+                            $"The attribut 'HeaderAsExpander' '{value}' is invalid. Value must be 'StartExpanded' (or 'SE') or 'StartClosed' (or 'SC') (no case sentitive)");
                 }
             }
         }

@@ -92,7 +92,8 @@ namespace Etk.Excel.Application
                 if (ex is OperationCanceledException)
                     Logger.Instance.Log(LogType.Info, "ExcelNotifyPropertyManager properly ended");
                 else
-                    Logger.Instance.LogException(LogType.Error, ex, string.Format("ExcelNotifyPropertyManager not properly ended", ex.Message));
+                    Logger.Instance.LogException(LogType.Error, ex,
+                        $"ExcelNotifyPropertyManager not properly ended:{ex.Message}");
             }
             finally
             {
@@ -141,7 +142,7 @@ namespace Etk.Excel.Application
             }
             catch (Exception ex)
             {
-                string message = string.Format("'ExecuteNotity' failed.{0}", ex.Message);
+                string message = $"'ExecuteNotity' failed.{ex.Message}";
                 Logger.Instance.LogException(LogType.Error, ex, message);
             }
             finally

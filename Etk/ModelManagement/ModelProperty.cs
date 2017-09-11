@@ -19,14 +19,13 @@ namespace Etk.ModelManagement
         public string Description
         { get; set; }
 
-        public bool IsACollection
-        { get { return BindingDefinition.IsACollection; } }
+        public bool IsACollection => BindingDefinition.IsACollection;
 
         public IModelType ModelType
         { get; private set; }
 
-        public IEnumerable<IModelProperty>  Properties
-        { get { return ModelType == null ? null : ModelType.GetProperties(); } }
+        public IEnumerable<IModelProperty>  Properties => ModelType == null ? null : ModelType.GetProperties();
+
         #endregion
 
         #region .ctors and factories
@@ -50,7 +49,7 @@ namespace Etk.ModelManagement
             {
                 ModelType = Etk.ModelManagement.ModelType.CreateInstance(modelDefinition, BindingDefinition.BindingType);
                 if (ModelType == null)
-                    throw new Exception(string.Format("Cannot retrieve Model type for ModelProperty '{0}'", Name));
+                    throw new Exception($"Cannot retrieve Model type for ModelProperty '{Name}'");
                 modelDefinition.AddModelType(ModelType);
             }
         }

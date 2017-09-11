@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
+using Etk.BindingTemplates.Context;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
@@ -24,7 +26,6 @@ namespace Etk.BindingTemplates.Definitions.Binding
 
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
-            List<INotifyPropertyChanged> notifyPropertyChangedList = new List<INotifyPropertyChanged>();
             dataSource = realBindingDefinition.ResolveBinding(dataSource);
             return childBindingDefinition.GetObjectsToNotify(dataSource);
         }
@@ -65,7 +66,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
-                throw new BindingTemplateException(string.Format("Cannot create the 'Hierarchical BindingDefinition' '{0}'. {1}", definitionDescription.BindingExpression, ex.Message));
+                throw new BindingTemplateException($"Cannot create the 'Hierarchical BindingDefinition' '{definitionDescription.BindingExpression}'. {ex.Message}");
             }
         }
         #endregion

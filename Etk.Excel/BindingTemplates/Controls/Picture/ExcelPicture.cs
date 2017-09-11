@@ -41,7 +41,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
             OwnerRange = range;
             OwnerRange.Value2 = null;
             ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
-            Name = string.Format("ExcelCB{0}", Interlocked.Increment(ref cpt));
+            Name = $"ExcelCB{Interlocked.Increment(ref cpt)}";
 
             ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
             ExcelInterop.OLEObject oleObject = oleObjects.Add("Forms.CheckBox.1",

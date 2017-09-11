@@ -134,10 +134,7 @@ namespace Etk.BindingTemplates.Context
             {
                 disposed = true;
                 foreach (IBindingContextItem item in BindingContextItems)
-                {
-                    if (item != null)
-                        item.Dispose();
-                }
+                    item?.Dispose();
                 BindingContextItems.Clear();
 
                 foreach (IBindingContext part in LinkedBindingContexts)

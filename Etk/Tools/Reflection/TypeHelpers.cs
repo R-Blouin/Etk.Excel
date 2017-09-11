@@ -10,7 +10,7 @@ namespace Etk.Tools.Reflection
     public static class TypeHelpers
     {
         private static readonly object syncObj = new object();
-        private static Dictionary<Type, FieldInfo[]> fieldsByType = new Dictionary<Type, FieldInfo[]>();
+        private static readonly Dictionary<Type, FieldInfo[]> fieldsByType = new Dictionary<Type, FieldInfo[]>();
 
         /// <summary>Return a type given a string having 'Type,Assembly' as pattern</summary>
         /// <param name="typeName">The string containing the type definition</param>

@@ -40,7 +40,7 @@ namespace Etk.Excel.MvvmBase
         /// </summary>
         ~ViewModelBase()
         {
-            string msg = string.Format("{0} ({1}) ({2}) Finalized", this.GetType().Name, this.DisplayName, this.GetHashCode());
+            string msg = $"{GetType().Name} ({DisplayName}) ({GetHashCode()}) Finalized";
             Debug.WriteLine(msg);
         }
 #endif

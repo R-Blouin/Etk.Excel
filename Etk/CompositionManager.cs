@@ -15,7 +15,8 @@ namespace Etk
                                                                             return manager;
                                                                         });
 
-        public static CompositionManager Instance { get { return instance.Value; } }
+        public static CompositionManager Instance => instance.Value;
+
         #endregion
 
         #region attributes and properties
@@ -35,7 +36,7 @@ namespace Etk
 
         public void ComposeExportedValue<T>(T o)
         {
-            container.ComposeExportedValue<T>(o);
+            container.ComposeExportedValue(o);
         }
 
         public T GetExportedValue<T>()

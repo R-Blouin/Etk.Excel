@@ -35,7 +35,7 @@ namespace Etk.Tools.Extensions
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("DeepClone failed for UnderlyingType '{0}'.{1}", typeof(T).Name, ex.Message));
+                throw new EtkException($"DeepClone failed for UnderlyingType '{typeof(T).Name}'.{ex.Message}");
             }
         }
     }

@@ -16,12 +16,10 @@ namespace Etk.BindingTemplates.Definitions.Binding
 
         protected BindingDefinitionDescription DefinitionDescription;
 
-        public BindingPartType PartType
-        { get { return BindingPartType.BindingDefinition; } }
+        public BindingPartType PartType => BindingPartType.BindingDefinition;
 
         /// <summary> Implements <see cref="IBindingDefinition.BindingExpression"/> </summary>
-        public string BindingExpression
-        { get { return DefinitionDescription.BindingExpression; } }
+        public string BindingExpression => DefinitionDescription.BindingExpression;
 
         /// <summary> Implements <see cref="IBindingDefinition.IsACollection"/> </summary>
         public bool IsACollection
@@ -89,10 +87,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         }
 
         /// <summary> Implements <see cref="IBindingDefinition.DecoratorDefinition"/> </summary>
-        public Decorator DecoratorDefinition
-        {
-            get { return DefinitionDescription.Decorator; }
-        }
+        public Decorator DecoratorDefinition => DefinitionDescription.Decorator;
 
         /// <summary> Implements <see cref="IBindingDefinition.IsNullable"/> </summary>
         public bool IsNullable
@@ -103,37 +98,20 @@ namespace Etk.BindingTemplates.Definitions.Binding
         { get; protected set;}
 
         /// <summary> Implements <see cref="IBindingDefinition.OnSelection"/> </summary>
-        public MethodInfo OnSelection
-        {
-            get { return DefinitionDescription.OnSelection; }
-        }
+        public MethodInfo OnSelection => DefinitionDescription.OnSelection;
 
         /// <summary> Implements <see cref="IBindingDefinition.OnClick"/> </summary>
-        public MethodInfo OnClick
-        {
-            get { return DefinitionDescription.OnLeftDoubleClick; }
-        }
+        public MethodInfo OnClick => DefinitionDescription.OnLeftDoubleClick;
 
         /// <summary> Implements <see cref="IBindingDefinition.IsMultiLine"/> </summary>
-        public bool IsMultiLine
-        {
-            get { return DefinitionDescription.IsMultiLine; }
-        }
+        public bool IsMultiLine => DefinitionDescription.IsMultiLine;
 
-        public double MultiLineFactor
-        {
-            get { return DefinitionDescription.MultiLineFactor; }
-        }
+        public double MultiLineFactor => DefinitionDescription.MultiLineFactor;
 
-        public MethodInfo MultiLineFactorResolver
-        {
-            get { return DefinitionDescription.MultiLineFactorResolver; }
-        }
+        public MethodInfo MultiLineFactorResolver => DefinitionDescription.MultiLineFactorResolver;
 
-        public string Formula
-        {
-            get { return DefinitionDescription.Formula; }
-        }
+        public string Formula => DefinitionDescription.Formula;
+
         #endregion
 
         #region .ctors
@@ -142,7 +120,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             DefinitionDescription = bindingDefinitionDescription;
             CanNotify = false;
             IsBoundWithData = true;
-            IsReadOnly = DefinitionDescription == null ? true : DefinitionDescription.IsReadOnly;
+            IsReadOnly = DefinitionDescription?.IsReadOnly ?? true;
         }
         #endregion
 
@@ -160,7 +138,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 {
                     Type[] types = BindingType.GetGenericArguments();
                     if (types == null || types.Count() != 1)
-                        throw new BindingTemplateException(string.Format("'{0}': Only collection with one generic argument are taken into account.", BindingType.FullName));
+                        throw new BindingTemplateException($"'{BindingType.FullName}': Only collection with one generic argument are taken into account.");
                     CollectionType = BindingType;
                     BindingType = types[0];
                 }

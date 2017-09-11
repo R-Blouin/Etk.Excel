@@ -14,7 +14,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         private static readonly object syncObj = new object();
         private static int classIdent;
 
-        private static TypeBuilderFactory typeBuilderFactory = new TypeBuilderFactory("BindedTypeAssembly");
+        private static readonly TypeBuilderFactory typeBuilderFactory = new TypeBuilderFactory("BindedTypeAssembly");
 
         public Type BindType
         { get; private set; }
@@ -64,7 +64,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         lock (syncObj)
                         {
                             Dictionary<string, BindingTypeProperty> propertyByName = new Dictionary<string, BindingTypeProperty>();
-                            type = typeBuilderFactory.CreateType(string.Format("BindType{0}", classIdent++), emitProperties);
+                            type = typeBuilderFactory.CreateType($"BindType{classIdent++}", emitProperties);
 
                             foreach (PropertyInfo pi in type.GetProperties())
                             {

@@ -51,7 +51,7 @@ namespace Etk.SortAndFilter
             {
                 object o = toWorkWith[i];
                 if (o == null)
-                    o = expressionArray[i] = string.Format("{0} == null");
+                    expressionArray[i] = $"{DefinitionToFilter.Name} == null";
                 else
                 {
                     if (isString)

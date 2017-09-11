@@ -172,7 +172,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
                                 }
                                 catch (Exception ex)
                                 {
-                                    throw new Exception(string.Format("Cannot resolve the 'ME' attribute for the binding definition '{0}'", bindingExpression), ex);
+                                    throw new Exception(
+                                        $"Cannot resolve the 'ME' attribute for the binding definition '{bindingExpression}'", ex);
                                 }
                             }
                         }
@@ -235,13 +236,13 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 }
 
                 if (methodInfo == null)
-                    throw new Exception(string.Format("Cannot find the callback '{0}'", methodInfoIdent));
+                    throw new Exception($"Cannot find the callback '{methodInfoIdent}'");
 
                 return methodInfo;
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Property option '{0}'. {1}", option, ex.Message));
+                throw new Exception($"Property option '{option}'. {ex.Message}");
             }
         }
 
@@ -260,7 +261,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     if (trimmedToAnalyze.StartsWith("["))
                     {
                         if (!trimmedToAnalyze.EndsWith("]"))
-                            throw new BindingTemplateException(string.Format("Cannot create constante BindingDefinition from '{0}': cannot find the closing ']'", toAnalyze));
+                            throw new BindingTemplateException(
+                                $"Cannot create constante BindingDefinition from '{toAnalyze}': cannot find the closing ']'");
                         bindingExpression = trimmedToAnalyze.Substring(1, trimmedToAnalyze.Length - 2);
 
                         int postSep = bindingExpression.LastIndexOf("::");
@@ -280,7 +282,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 else
                 {
                     if (!trimmedToAnalyze.EndsWith("}"))
-                        throw new BindingTemplateException(string.Format("Cannot create BindingDefinition from '{0}': cannot find the closing '}'", toAnalyze));
+                        throw new BindingTemplateException($"Cannot create BindingDefinition from '{toAnalyze}': cannot find the closing '}}'");
                     bindingExpression = trimmedToAnalyze.Substring(1, trimmedToAnalyze.Length - 2);
 
                     int postSep = bindingExpression.LastIndexOf("::");

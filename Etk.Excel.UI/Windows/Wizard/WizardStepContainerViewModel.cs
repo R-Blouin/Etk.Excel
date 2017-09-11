@@ -10,8 +10,7 @@ namespace Etk.Excel.UI.Windows.Wizard
         public WizardControlViewModel ParentWizard
         { get; private set; }
 
-        public bool StepVisible
-        { get { return ParentWizard.CurrentStep == Step; } }
+        public bool StepVisible => ParentWizard.CurrentStep == Step;
 
         IWizardStep stepViewModel;
         public IWizardStep StepViewModel

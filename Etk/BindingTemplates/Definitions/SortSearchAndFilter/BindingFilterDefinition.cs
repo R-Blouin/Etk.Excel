@@ -12,13 +12,10 @@ namespace Etk.BindingTemplates.Definitions.SortSearchAndFilter
     public abstract class BindingFilterDefinition : IDefinitionPart
     {
         #region attribuets and properties
-        private string definition;
-        private IEnumerable<string> propertyToFilterPath;
+        private readonly string definition;
+        private readonly IEnumerable<string> propertyToFilterPath;
 
-        public BindingPartType PartType
-        {
-            get { return BindingPartType.FilterDefinition; }
-        }
+        public BindingPartType PartType => BindingPartType.FilterDefinition;
 
         /// <summary>Template definition part that owns the filter</summary>
         public ITemplateDefinitionPart FilterOwner
@@ -100,7 +97,7 @@ namespace Etk.BindingTemplates.Definitions.SortSearchAndFilter
                 }
             }
             if (DefinitionToFilter == null)
-                throw new Exception(string.Format("Cannot resolve the path to the filter '{0}'.", definition));
+                throw new Exception($"Cannot resolve the path to the filter '{definition}'.");
         }
 
         public string GetFilterExpression(string filterValue)
@@ -108,9 +105,8 @@ namespace Etk.BindingTemplates.Definitions.SortSearchAndFilter
             if (string.IsNullOrEmpty(filterValue))
                 return null;
             if (DefinitionToFilter.BindingType.IsValueType)
-                return string.Format("{0}.ToString().ToUpper().Contains(\"{1}\")", DefinitionToFilter.Name, filterValue.ToUpper());
-            else
-                return string.Format("{0} != null && {0}.ToString().ToUpper().Contains(\"{1}\")", DefinitionToFilter.Name, filterValue.ToUpper());
+                return $"{DefinitionToFilter.Name}.ToString().ToUpper().Contains(\"{filterValue.ToUpper()}\")";
+            return string.Format("{0} != null && {0}.ToString().ToUpper().Contains(\"{1}\")", DefinitionToFilter.Name, filterValue.ToUpper());
         }
 
         public abstract BindingFilterContextItem CreateContextItem(ITemplateView view, IBindingContextElement parent);

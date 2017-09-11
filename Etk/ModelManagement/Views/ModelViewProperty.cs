@@ -3,10 +3,9 @@
     class ModelViewProperty : IModelViewProperty
     {
         public IModelProperty ModelProperty
-        { get; private set; }
+        { get; }
 
-        public string Name
-        { get { return ModelProperty.Name; } }
+        public string Name => ModelProperty.Name;
 
         public string Header
         { get; private set; }
@@ -35,7 +34,7 @@
             name = name.Trim();
             IModelProperty modelProperty = parent.GetProperty(name);
             if (modelProperty == null)
-                throw new EtkException(string.Format("Cannot find property '{0}' for model type {1}", name, parent.Name));
+                throw new EtkException($"Cannot find property '{name}' for model type {parent.Name}");
 
             return new ModelViewProperty(parent, modelProperty);
         }

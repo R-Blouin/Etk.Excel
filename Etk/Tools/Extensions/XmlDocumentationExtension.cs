@@ -16,7 +16,7 @@ namespace Etk.Tools.Extensions
     public static class XmlDocumentationExtensions
     {
 
-        private static Dictionary<string, XDocument> cachedXml;
+        private static readonly Dictionary<string, XDocument> cachedXml;
 
         /// <summary>
         /// Static constructor.
@@ -83,7 +83,7 @@ namespace Etk.Tools.Extensions
             }
 
             // elements are of the form "M:Namespace.Class.Method"
-            return String.Format("{0}:{1}", prefixCode, memberName);
+            return $"{prefixCode}:{memberName}";
         }
 
         /// <summary>
@@ -124,11 +124,7 @@ namespace Etk.Tools.Extensions
         /// <returns>The contents of the summary tag for the member.</returns>
         public static string GetXmlDocumentation(this MemberInfo member, XDocument xml)
         {
-            return xml.XPathEvaluate(
-                String.Format(
-                    "string(/doc/members/member[@name='{0}']/summary)",
-                    GetMemberElementName(member)
-                )
+            return xml.XPathEvaluate($"string(/doc/members/member[@name='{GetMemberElementName(member)}']/summary)"
             ).ToString().Trim();
         }
 
@@ -171,19 +167,10 @@ namespace Etk.Tools.Extensions
         public static string GetXmlDocumentation(this ParameterInfo parameter, XDocument xml)
         {
             if (parameter.IsRetval || String.IsNullOrEmpty(parameter.Name))
-                return xml.XPathEvaluate(
-                    String.Format(
-                        "string(/doc/members/member[@name='{0}']/returns)",
-                        GetMemberElementName(parameter.Member)
-                    )
+                return xml.XPathEvaluate($"string(/doc/members/member[@name='{GetMemberElementName(parameter.Member)}']/returns)"
                 ).ToString().Trim();
             else
-                return xml.XPathEvaluate(
-                    String.Format(
-                        "string(/doc/members/member[@name='{0}']/param[@name='{1}'])",
-                        GetMemberElementName(parameter.Member),
-                        parameter.Name
-                    )
+                return xml.XPathEvaluate($"string(/doc/members/member[@name='{GetMemberElementName(parameter.Member)}']/param[@name='{parameter.Name}'])"
                 ).ToString().Trim();
         }
     }

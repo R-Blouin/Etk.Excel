@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Tools.Extensions;
 using Etk.Tools.Log;
@@ -14,19 +13,18 @@ namespace Etk.BindingTemplates.Context
         private readonly ILogger log = Logger.Instance;
 
         public IBindingContextElement ParentElement
-        { get; private set; }
+        { get;  }
 
         //public long Id
         //{ get; private set; }
 
         public string Name
-        { get; private set; }
+        { get;  }
 
         public IBindingDefinition BindingDefinition
-        { get; private set; }
+        { get; }
 
-        public object DataSource
-        { get { return ParentElement.DataSource; } }
+        public object DataSource => ParentElement.DataSource;
 
         public bool CanNotify
         { get; protected set; }
@@ -56,7 +54,7 @@ namespace Etk.BindingTemplates.Context
             if (ParentElement.Element != null && BindingDefinition != null && BindingDefinition.IsBoundWithData)
             {
                 BindingTypeProperty property = ParentElement.ParentPart.ParentContext.TemplateDefinition.BindingType.PropertyByName[BindingDefinition.Name];
-                property.SetMethod.Invoke(ParentElement.Element, new object[] { ResolveBinding() });
+                property.SetMethod.Invoke(ParentElement.Element, new [] { ResolveBinding() });
             }
         }
         #endregion
@@ -66,11 +64,11 @@ namespace Etk.BindingTemplates.Context
         {
             try
             {
-                return BindingDefinition == null ? null : BindingDefinition.ResolveBinding(DataSource);
+                return BindingDefinition?.ResolveBinding(DataSource);
             }
             catch (Exception ex)
             {
-                string message = string.Format("Can't resolve binding for 'BindingDefinition' '{0}': {1}", Name, ex.Message.EmptyIfNull());
+                string message = $"Can't resolve binding for 'BindingDefinition' '{Name}': {ex.Message.EmptyIfNull()}";
                 log.LogException(LogType.Error, ex, message);
                 return "##Binding Error##";
             }

@@ -31,7 +31,7 @@ namespace Etk.Excel.BindingTemplates.Decorators.XmlDefinitions
                     string def = definition.EmptyIfNull().Trim();
                     if (def.Length > 150)
                         def = def.Substring(0, 149) + "...";
-                    throw new EtkException(string.Format("Cannot retrieve the Excel decorators from '{0}'. {1}", def, ex.Message));
+                    throw new EtkException($"Cannot retrieve the Excel decorators from '{def}'. {ex.Message}");
                 }
             }
             return ret;

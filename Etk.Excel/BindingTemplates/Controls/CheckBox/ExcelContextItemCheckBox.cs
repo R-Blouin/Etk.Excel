@@ -11,7 +11,7 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
     class ExcelContextItemCheckBox : BindingContextItem, IBindingContextItemCanNotify, IExcelControl
     {
         #region attributes and properties
-        private ExcelBindingDefinitionCheckBox excelBindingDefinition;
+        private readonly ExcelBindingDefinitionCheckBox excelBindingDefinition;
         private ExcelCheckBox checkBox;
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
 
@@ -22,7 +22,7 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
         { get; set; }
 
         public MethodInfo EnablePropertyGet
-        { get; private set; }
+        { get; }
 
         public INotifyPropertyChanged EnableProperty
         { get; private set; }
@@ -67,8 +67,7 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
                 EnableProperty = null;
             }
 
-            if (checkBox != null)
-                checkBox.Dispose();
+            checkBox?.Dispose();
         }
 
         public void OnPropertyChanged(object source, PropertyChangedEventArgs args)

@@ -109,7 +109,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     }
                 }
                 if (ContextualMenu == null)
-                    throw new Exception(string.Format("Cannot find contextual menu '{0}'", contextMenuRef ?? string.Empty));
+                    throw new Exception($"Cannot find contextual menu '{contextMenuRef ?? string.Empty}'");
             }
         }
 
@@ -135,11 +135,11 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         SelectionChanged = TypeHelpers.GetMethod(null, selectionChanged);
 
                     if (SelectionChanged == null)
-                        throw new Exception(string.Format("Cannot find the callback '{0}'", selectionChanged));
+                        throw new Exception($"Cannot find the callback '{selectionChanged}'");
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Retrieve 'SelectionChanged' method information failed:[0}", ex.Message));
+                    throw new EtkException($"Retrieve 'SelectionChanged' method information failed:{ex.Message}");
                 }
             }
         }

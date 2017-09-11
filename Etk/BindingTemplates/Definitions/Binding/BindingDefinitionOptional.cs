@@ -13,7 +13,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
     {
         private readonly ILogger log = Logger.Instance;
 
-        private Dictionary<Type, IBindingDefinition> bindingDefinitionByType = new Dictionary<Type, IBindingDefinition>();
+        private readonly Dictionary<Type, IBindingDefinition> bindingDefinitionByType = new Dictionary<Type, IBindingDefinition>();
         
         public override string Name => string.IsNullOrEmpty(DefinitionDescription.Name) ? DefinitionDescription.BindingExpression : DefinitionDescription.Name;
 
@@ -26,7 +26,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             if (string.IsNullOrEmpty(definitionDescription.Name))
             {
                 definitionDescription.Name = definitionDescription.BindingExpression.Replace('.', '_');
-                MatchCollection ret = BindingDefinition.ValidCharExtract.Matches(definitionDescription.Name);
+                MatchCollection ret = ValidCharExtract.Matches(definitionDescription.Name);
                 StringBuilder sb = new StringBuilder();
                 foreach (Match m in ret)
                     sb.Append(m.Value);
@@ -47,7 +47,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     return null;
 
                 if (!IsReadOnly)
-                    dataSource.GetType().InvokeMember(Name, BindingFlags.SetProperty, null, dataSource, new object[] { data }, null);
+                    dataSource.GetType().InvokeMember(Name, BindingFlags.SetProperty, null, dataSource, new [] { data }, null);
                 return ResolveBinding(dataSource);
             }
             catch (Exception ex)

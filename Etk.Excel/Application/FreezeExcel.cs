@@ -10,13 +10,13 @@ namespace Etk.Excel.Application
     public class FreezeExcel : IDisposable
     {
         private static int requestsCpt = 0;
-        private static object objSync = new object();
+        private static readonly object objSync = new object();
 
         private bool disposed;
-        private bool screenUpdating;
-        private bool enableEvents;
-        private bool displayStatusBar;
-        private ExcelInterop.XlCalculation calculationMode;
+        private readonly bool screenUpdating;
+        private readonly bool enableEvents;
+        private readonly bool displayStatusBar;
+        private readonly ExcelInterop.XlCalculation calculationMode;
 
         public FreezeExcel(bool keepStatusVisible = true, bool keepScreenUpdating = false, bool keepEnabledEvent = false, bool keepCalculation = false)
         {
@@ -32,9 +32,9 @@ namespace Etk.Excel.Application
                         displayStatusBar = ETKExcel.ExcelApplication.Application.DisplayStatusBar;
                         calculationMode = ETKExcel.ExcelApplication.Application.Calculation;
 
-                        ETKExcel.ExcelApplication.Application.ScreenUpdating   = keepScreenUpdating && this.screenUpdating;
-                        ETKExcel.ExcelApplication.Application.EnableEvents     = keepEnabledEvent && this.enableEvents;
-                        ETKExcel.ExcelApplication.Application.DisplayStatusBar = keepStatusVisible && this.displayStatusBar;
+                        ETKExcel.ExcelApplication.Application.ScreenUpdating   = keepScreenUpdating && screenUpdating;
+                        ETKExcel.ExcelApplication.Application.EnableEvents     = keepEnabledEvent && enableEvents;
+                        ETKExcel.ExcelApplication.Application.DisplayStatusBar = keepStatusVisible && displayStatusBar;
                         ETKExcel.ExcelApplication.Application.Calculation      = keepCalculation ? ETKExcel.ExcelApplication.Application.Calculation : ExcelInterop.XlCalculation.xlCalculationManual;
                     }
                 }

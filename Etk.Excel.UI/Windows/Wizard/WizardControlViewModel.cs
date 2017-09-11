@@ -11,14 +11,14 @@ namespace Etk.Excel.UI.Windows.Wizard
     {
         #region command
         private RelayCommand previousCommand;
-        /// <summary> PreviousCommand command
+        /// <summary> PreviousCommand command</summary>
         public ICommand PreviousCommand
         {
             get { return previousCommand ?? (previousCommand = new RelayCommand(param => CurrentStep -= 1)); }
         }
 
         private RelayCommand nextCommand;
-        /// <summary> Next command
+        /// <summary> Next command</summary>
         public ICommand NextCommand
         {
             get
@@ -53,7 +53,7 @@ namespace Etk.Excel.UI.Windows.Wizard
         }
 
         private RelayCommand finishCommand;
-        /// <summary> Finish command
+        /// <summary> Finish command</summary>
         public ICommand FinishCommand
         {
             get { return finishCommand ?? (finishCommand = new RelayCommand(param => CurrentStep = currentStep)); }
@@ -91,20 +91,18 @@ namespace Etk.Excel.UI.Windows.Wizard
         }
 
         /// <summary>Next is enabled</summary>
-        public bool NextEnabled
-        { get { return currentStep >= 0 && currentStep < stepMax && steps[currentStep] != null && steps[currentStep].CheckCanNext(); }}
+        public bool NextEnabled => currentStep >= 0 && currentStep < stepMax && steps[currentStep] != null && steps[currentStep].CheckCanNext();
 
         /// <summary>Previous is enabled</summary>
-        public bool PreviousEnabled
-        { get { return currentStep > 0; } }
+        public bool PreviousEnabled => currentStep > 0;
 
         /// <summary> Finish is enabled</summary>
         public bool FinishEnabled
         { get { return steps.FirstOrDefault(s => s != null && ! s.CheckCanNext()) == null; }}
 
-        private List<IWizardStep> steps;
-        public IEnumerable<IWizardStep> Steps
-        { get { return steps; } }
+        private readonly List<IWizardStep> steps;
+        public IEnumerable<IWizardStep> Steps => steps;
+
         #endregion
 
         #region .ctors and factories

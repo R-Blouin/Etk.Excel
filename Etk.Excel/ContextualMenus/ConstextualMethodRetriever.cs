@@ -14,7 +14,7 @@ namespace Etk.Excel.ContextualMenus
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(string.Format("Method '{0}' not resolved:{1}", methodName, ex.Message));
+                throw new ArgumentException($"Method '{methodName}' not resolved:{ex.Message}");
             }
         }
 
@@ -26,7 +26,7 @@ namespace Etk.Excel.ContextualMenus
             }
             catch (Exception ex)
             {
-                throw new ArgumentException(string.Format("Method '{0}' not resolved:{1}", methodName, ex.Message));
+                throw new ArgumentException($"Method '{methodName}' not resolved:{ex.Message}");
             }
         }
     }

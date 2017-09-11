@@ -9,16 +9,15 @@ namespace Etk.ModelManagement
     class ModelAccessorGroup : IModelAccessorGroup
     {
         #region properties and attributes
-        private ILogger log = Logger.Instance;
+        //private ILogger log = Logger.Instance;
 
         /// <summary>Model definition manager that owned the accessor.</summary>
         public IModelDefinitionManager Parent
         { get; private set; }
 
-        List<IModelAccessor> accessors;
+        readonly List<IModelAccessor> accessors;
         /// <summary>Model definition manager that owned the accessor.</summary>
-        public IEnumerable<IModelAccessor> Accessors
-        { get { return accessors; } }
+        public IEnumerable<IModelAccessor> Accessors => accessors;
 
         /// <summary>Accessor Name.</summary>
         public string Name
@@ -69,7 +68,7 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot create 'Model Accessor Group' '{0}': {2}", definition.Name.EmptyIfNull(), ex.Message));
+                throw new EtkException($"Cannot create 'Model Accessor Group' '{definition.Name.EmptyIfNull()}': {ex.Message}");
             }
             return group;
         }

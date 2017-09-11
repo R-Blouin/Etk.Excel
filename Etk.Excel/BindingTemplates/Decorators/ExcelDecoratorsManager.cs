@@ -11,8 +11,8 @@ namespace Etk.Excel.BindingTemplates.Decorators
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class ExcelDecoratorsManager 
     {
-        private ExcelInterop.Application excelApplication;
-        private DecoratorsManager decoratorsManager;
+        private readonly ExcelInterop.Application excelApplication;
+        private readonly DecoratorsManager decoratorsManager;
 
         [ImportingConstructor]
         public ExcelDecoratorsManager([Import] ExcelInterop.Application application, [Import] DecoratorsManager decoratorsManager)
@@ -51,7 +51,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             catch (Exception ex)
             {
                 string message = xml.Length > 350 ? xml.Substring(0, 350) + "..." : xml;
-                throw new EtkException(string.Format("Cannot create decorators from xml '{0}':{1}", message, ex.Message));
+                throw new EtkException($"Cannot create decorators from xml '{message}':{ex.Message}");
             }
         }
 
@@ -67,7 +67,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot register decorator '{0}':{1}", decorator.Ident ?? string.Empty, ex.Message));
+                throw new EtkException($"Cannot register decorator '{decorator.Ident ?? string.Empty}':{ex.Message}");
             }
         }
     }

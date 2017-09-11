@@ -40,18 +40,18 @@ namespace Etk.Tools.Collections
             if (e.NewItems != null)
             {
                 foreach (object item in e.NewItems)
-                    (item as INotifyPropertyChanged).PropertyChanged += new PropertyChangedEventHandler(ItemPropertyChanged);
+                    (item as INotifyPropertyChanged).PropertyChanged += ItemPropertyChanged;
             }
             if (e.OldItems != null)
             {
                 foreach (object item in e.OldItems)
-                    (item as INotifyPropertyChanged).PropertyChanged -= new PropertyChangedEventHandler(ItemPropertyChanged);
+                    (item as INotifyPropertyChanged).PropertyChanged -= ItemPropertyChanged;
             }
         }
 
         private void HookupCollectionChangedEvent()
         {
-            CollectionChanged += new NotifyCollectionChangedEventHandler(TrulyObservableCollectionChanged);
+            CollectionChanged += TrulyObservableCollectionChanged;
         }
     }
 }

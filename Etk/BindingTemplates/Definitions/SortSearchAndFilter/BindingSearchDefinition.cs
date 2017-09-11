@@ -6,13 +6,9 @@ using Etk.BindingTemplates.Views;
 namespace Etk.BindingTemplates.Definitions.SortSearchAndFilter
 {
     public abstract class BindingSearchDefinition : IDefinitionPart
-
     {
         #region attribuets and properties
-        public BindingPartType PartType
-        {
-            get { return BindingPartType.SearchDefinition; }
-        }
+        public BindingPartType PartType => BindingPartType.SearchDefinition;
 
         /// <summary>Watermark</summary>
         public string Watermark

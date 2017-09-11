@@ -55,7 +55,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 worksheet = templateDeclarationFirstCell.Worksheet;
                 ExcelInterop.Range templateDeclarationLastRange = worksheet.Cells.Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                 if (templateDeclarationLastRange == null)
-                    throw new EtkException(string.Format("Cannot find the end of template '{0}' in sheet '{1}'", templateName.EmptyIfNull(), worksheet.Name.EmptyIfNull()));
+                    throw new EtkException($"Cannot find the end of template '{templateName.EmptyIfNull()}' in sheet '{worksheet.Name.EmptyIfNull()}'");
 
                 ExcelTemplateDefinition excelTemplateDefinition = new ExcelTemplateDefinition(templateDeclarationFirstCell, templateDeclarationLastRange, templateOption);
                 ExcelTemplateDefinitionPart header, body, footer;
@@ -66,7 +66,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot create the template '{0}'. {1}", templateName.EmptyIfNull(), ex.Message));
+                throw new EtkException($"Cannot create the template '{templateName.EmptyIfNull()}'. {ex.Message}");
             }
             finally
             {
@@ -143,7 +143,8 @@ namespace Etk.Excel.BindingTemplates.Definitions
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("The parsing of template '{0}' in sheet '{1}' failed: {2}", excelTemplateDefinition.Name, worksheet.Name.EmptyIfNull(), ex.Message));
+                throw new EtkException(
+                    $"The parsing of template '{excelTemplateDefinition.Name}' in sheet '{worksheet.Name.EmptyIfNull()}' failed: {ex.Message}");
             }
         }
 

@@ -10,8 +10,8 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
     class ExcelContextItemNamedRange : BindingContextItem, IBindingContextItemCanNotify, IExcelControl, IFormulaCalculation
     {
         #region properties and attributes
-        private ExcelBindingDefinitionNamedRange excelBindingDefinitionNamedRange;
-        private string name;
+        private readonly ExcelBindingDefinitionNamedRange excelBindingDefinitionNamedRange;
+        private readonly string name;
         private ExcelInterop.Name rangeName;
 
         public ExcelInterop.Range Range
@@ -80,7 +80,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
                     }
                     catch (COMException ex)
                     {
-                        throw new EtkException(string.Format("Cannot create named caller '{0}': {1}", name, ex.Message));
+                        throw new EtkException($"Cannot create named caller '{name}': {ex.Message}");
                     }
                     finally
                     {

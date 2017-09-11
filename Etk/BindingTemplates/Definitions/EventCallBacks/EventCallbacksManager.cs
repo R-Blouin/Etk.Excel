@@ -15,8 +15,8 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class EventCallbacksManager : IDisposable
     {
-        private ILogger log = Logger.Instance;
-        private Dictionary<string, EventCallback> callbackByIdent = new Dictionary<string, EventCallback>();
+        private readonly ILogger log = Logger.Instance;
+        private readonly Dictionary<string, EventCallback> callbackByIdent = new Dictionary<string, EventCallback>();
 
         /// <summary>Register event callbacks from xml definitions</summary>
         /// <param name="xml">The xml that contains the callback definitions </param>
@@ -40,7 +40,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             catch (Exception ex)
             {
                 string message = xml.Length > 350 ? xml.Substring(0, 350) + "..." : xml;
-                throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message));
+                throw new EtkException($"Cannot create Event Callbacks from xml '{message}':{ex.Message}");
             }
         }
 
@@ -82,7 +82,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             int nbrParameters = callback.GetParameters().Length;
 
             if(nbrParameters > 4)
-                throw new Exception(string.Format("Method info '{0}' signature is not correct", callback.Name));
+                throw new Exception($"Method info '{callback.Name}' signature is not correct");
 
             object[] parameters;
             switch (nbrParameters)

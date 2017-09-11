@@ -51,7 +51,7 @@ namespace Etk.Excel.BindingTemplates.Views
     {
         #region attributes and properties
         private const int AutoFitMaxIterationCount = 10;
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
         private ExcelInterop.Range currentSelectedRange;
         private readonly List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
 
@@ -97,14 +97,11 @@ namespace Etk.Excel.BindingTemplates.Views
         public ExcelRootRenderer Renderer
         { get; private set; }
 
-        public bool IsRendered
-        { get { return Renderer != null && Renderer.RenderedRange != null; } }
+        public bool IsRendered => Renderer != null && Renderer.RenderedRange != null;
 
-        public ExcelInterop.Range RenderedRange
-        { get { return Renderer != null ? Renderer.RenderedRange : null; } }
+        public ExcelInterop.Range RenderedRange => Renderer != null ? Renderer.RenderedRange : null;
 
-        public RenderedArea RenderedArea
-        { get { return Renderer != null ? Renderer.RenderedArea : null; } }
+        public RenderedArea RenderedArea => Renderer != null ? Renderer.RenderedArea : null;
 
         public AccessorParametersManager AccessorParametersManager
         { get; private set; }
@@ -188,7 +185,8 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
                     catch (Exception ex)
                     {
-                        string message = string.Format("Sheet '{0}', View '{1}' from '{2}' Set data source failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                        string message =
+                            $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' Set data source failed.";
                         throw new EtkException(message, ex, false);
                     }
                 }
@@ -489,8 +487,8 @@ namespace Etk.Excel.BindingTemplates.Views
             }
             catch (Exception ex)
             {
-                string message = string.Format("Sheet '{0}', Template '{1}'. 'ViewSheetIsActivated' failed: '{2}'",
-                                                ViewSheet.Name, TemplateDefinition.Name, ex.Message);
+                string message =
+                    $"Sheet '{ViewSheet.Name}', Template '{TemplateDefinition.Name}'. 'ViewSheetIsActivated' failed: '{ex.Message}'";
                 log.LogException(LogType.Error, ex, message);
             }
         }
@@ -506,8 +504,8 @@ namespace Etk.Excel.BindingTemplates.Views
             }
             catch (Exception ex)
             {
-                string message = string.Format("Sheet '{0}', Template '{1}'. 'ViewSheetIsDeactivated' failed: '{2}'",
-                                                ViewSheet.Name, TemplateDefinition.Name, ex.Message);
+                string message =
+                    $"Sheet '{ViewSheet.Name}', Template '{TemplateDefinition.Name}'. 'ViewSheetIsDeactivated' failed: '{ex.Message}'";
                 log.LogException(LogType.Error, ex, message);
             }
         }
@@ -548,7 +546,8 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
                     catch (Exception ex)
                     {
-                        string message = string.Format("Sheet '{0}', View '{1}' from '{2}' render failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                        string message =
+                            $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' render failed.";
                         throw new EtkException(message, ex, false);
                     }
                 }
@@ -601,7 +600,8 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
                     catch (Exception ex)
                     {
-                        var message = string.Format("Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                        var message =
+                            $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' render data only failed.";
                         throw new EtkException(message, ex, false);
                     }
                 }
@@ -687,7 +687,8 @@ namespace Etk.Excel.BindingTemplates.Views
             }
             catch (Exception ex)
             {
-                string message = string.Format("Sheet '{0}', Template '{1}' 'OnSelectionChange' failed: '{2}'", target.Worksheet.Name, TemplateDefinition.Name, ex.Message);
+                string message =
+                    $"Sheet '{target.Worksheet.Name}', Template '{TemplateDefinition.Name}' 'OnSelectionChange' failed: '{ex.Message}'";
                 log.LogException(LogType.Error, ex, message);
             }
             return CurrentSelectedCell != null;

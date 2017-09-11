@@ -10,7 +10,7 @@ namespace Etk.ModelManagement
 {
     class ModelAccessor : IModelAccessor
     {
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
 
         #region properties and attributes
         private string modelType;
@@ -19,8 +19,7 @@ namespace Etk.ModelManagement
         public IModelAccessorGroup Parent
         { get; private set; }
 
-        public string ParentName
-        { get { return Parent.Name; } }
+        public string ParentName => Parent.Name;
 
         /// <summary>Accessor Ident.</summary>
         public string Ident
@@ -84,7 +83,8 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot create 'ModelAccessor' '{0} {1}': {2}", definition.Name.EmptyIfNull(), definition.Method.EmptyIfNull(), ex.Message));
+                throw new EtkException(
+                    $"Cannot create 'ModelAccessor' '{definition.Name.EmptyIfNull()} {definition.Method.EmptyIfNull()}': {ex.Message}");
             }
             return accessor;
         }
@@ -104,7 +104,8 @@ namespace Etk.ModelManagement
                 if (ReturnModelType != null)
                 {
                     if (!ReturnModelType.UnderlyingType.Equals(accessorReturnType) || ! accessorReturnType.IsAssignableFrom(ReturnModelType.UnderlyingType))
-                        throw new EtkException(string.Format("'Model type '{0}' underlying type '{1}' is not compatible with accessor return type '{2}'", modelTypeToTest, ReturnModelType.UnderlyingType.Name, accessorReturnType.Name));
+                        throw new EtkException(
+                            $"'Model type '{modelTypeToTest}' underlying type '{ReturnModelType.UnderlyingType.Name}' is not compatible with accessor return type '{accessorReturnType.Name}'");
                 }
                 else
                     ReturnModelType = ((ModelDefinitionManager)this.Parent.Parent).AddModelType(accessorReturnType);
@@ -116,7 +117,7 @@ namespace Etk.ModelManagement
             }
             catch(Exception ex)
             {
-                throw new EtkException(string.Format("Cannot resolve dependencies of 'ModelAccessor' '{0}': {1}", Ident, ex.Message));
+                throw new EtkException($"Cannot resolve dependencies of 'ModelAccessor' '{Ident}': {ex.Message}");
             }
         }
         #endregion

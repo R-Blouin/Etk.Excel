@@ -8,7 +8,7 @@ namespace Etk.Excel.UI.Windows.Wizard
     /// </summary>
     public partial class WizardControl : UserControl
     {
-        List<WizardStepContainer> steps = new List<WizardStepContainer>();
+        readonly List<WizardStepContainer> steps = new List<WizardStepContainer>();
 
         public WizardControlViewModel ViewModel
         { get; protected set; }

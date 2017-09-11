@@ -16,16 +16,11 @@ namespace Etk.Tools.Collections
     {
         #region Privateattributes and Properties
         private XmlSerializer valueSerializer;
-        protected XmlSerializer ValueSerializer
-        {
-            get { return valueSerializer ?? (valueSerializer = new XmlSerializer(typeof(TVal))); }
-        }
+        protected XmlSerializer ValueSerializer => valueSerializer ?? (valueSerializer = new XmlSerializer(typeof(TVal)));
 
         private XmlSerializer keySerializer;
-        private XmlSerializer KeySerializer
-        {
-            get { return keySerializer ?? (keySerializer = new XmlSerializer(typeof(TKey))); }
-        }
+        private XmlSerializer KeySerializer => keySerializer ?? (keySerializer = new XmlSerializer(typeof(TKey)));
+
         #endregion
 
         #region Constructors
@@ -99,7 +94,8 @@ namespace Etk.Tools.Collections
 
             // Move past container
             if (reader.NodeType == XmlNodeType.Element && !reader.Read())
-                throw new EtkException(string.Format("Error in Deserialization of SerializableDictionary<{0}, {1}>", typeof(TKey).FullName, typeof(TVal).FullName));
+                throw new EtkException(
+                    $"Error in Deserialization of SerializableDictionary<{typeof(TKey).FullName}, {typeof(TVal).FullName}>");
             while (reader.NodeType != XmlNodeType.EndElement)
             {
                 reader.ReadStartElement("item");
@@ -118,7 +114,7 @@ namespace Etk.Tools.Collections
             if (reader.NodeType == XmlNodeType.EndElement)
                 reader.ReadEndElement();
             else
-                throw new EtkException(string.Format("Error in Deserialization of SerializableDictionary<{0}, {1}>", typeof(TKey).FullName, typeof(TVal).FullName));
+                throw new EtkException($"Error in Deserialization of SerializableDictionary<{typeof(TKey).FullName}, {typeof(TVal).FullName}>");
         }
 
         XmlSchema IXmlSerializable.GetSchema()

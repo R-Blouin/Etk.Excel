@@ -18,21 +18,20 @@ namespace Etk.SortAndFilter
         { get; private set; }
 
         public List<ISorterDefinition> Sorters
-        { get; private set; }
+        { get;  }
 
-        public Type ResultType
-        { get { return typeof(T); } }
+        public Type ResultType => typeof(T);
 
-        public bool IsActive
-        { get { return Filters != null && Filters.Any() || Sorters != null && Sorters.Any(); } }
+        public bool IsActive => Filters != null && Filters.Any() || Sorters != null && Sorters.Any();
+
         #endregion
 
         #region .ctors
         public SortersAndFilters(ITemplateDefinition templateDefinition, IEnumerable<IFilterDefinition> filters, IEnumerable<ISorterDefinition> sorters)
         {
             TemplateDefinition = templateDefinition;
-            Filters = filters != null ? filters.ToList() : null;
-            Sorters = sorters != null ? sorters.ToList() : null;
+            Filters = filters?.ToList();
+            Sorters = sorters?.ToList();
             SetFilterMethod();
         }
         #endregion
@@ -82,7 +81,7 @@ namespace Etk.SortAndFilter
             if (Filters != null)
             {
                 string[] filters = Filters.Where(f => !string.IsNullOrEmpty(f.FilterExpression))
-                                          .Select(f => string.Format("({0})", f.FilterExpression))
+                                          .Select(f => $"({f.FilterExpression})")
                                           .ToArray();
                 if (filters.Any())
                 {

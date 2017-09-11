@@ -59,7 +59,7 @@ namespace Etk.Excel.Application
                                 }
                                 catch (Exception ex)
                                 {
-                                    string message = string.Format("'ExcelPostAsynchronousManager.ExecuteAction' failed.{0}", ex.Message);
+                                    string message = $"'ExcelPostAsynchronousManager.ExecuteAction' failed.{ex.Message}";
                                     Logger.Instance.LogException(LogType.Error, ex, message);
                                 }
                             }));
@@ -102,7 +102,8 @@ namespace Etk.Excel.Application
                     catch (Exception ex)
                     {
                         postExecutionAction = null;
-                        string message = string.Format("'ExcelPostAsynchronousManager.ExecutePostExecutionAction' failed.{0}", ex.Message);
+                        string message =
+                            $"'ExcelPostAsynchronousManager.ExecutePostExecutionAction' failed.{ex.Message}";
                         Logger.Instance.LogException(LogType.Error, ex, message);
                     }
                 }));

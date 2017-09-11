@@ -10,7 +10,7 @@ namespace Etk.Tools.Collections
 {
     public sealed class ReadOnlyDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
-        private IDictionary<TKey, TValue> _dictionary;
+        private readonly IDictionary<TKey, TValue> _dictionary;
 
         public ReadOnlyDictionary(IDictionary<TKey, TValue> source)
         {
@@ -47,10 +47,7 @@ namespace Etk.Tools.Collections
         }
 
 
-        public TValue this[TKey key]
-        {
-            get { return _dictionary[key]; }
-        }
+        public TValue this[TKey key] => _dictionary[key];
 
 
         public ICollection<TKey> Keys
@@ -58,7 +55,7 @@ namespace Etk.Tools.Collections
             get
             {
                 ReadOnlyCollection<TKey> keys = new ReadOnlyCollection<TKey>(new List<TKey>(_dictionary.Keys));
-                return (ICollection<TKey>)keys;
+                return keys;
             }
         }
 
@@ -68,21 +65,15 @@ namespace Etk.Tools.Collections
             get
             {
                 ReadOnlyCollection<TValue> values = new ReadOnlyCollection<TValue>(new List<TValue>(_dictionary.Values));
-                return (ICollection<TValue>)values;
+                return values;
             }
         }
 
 
-        public int Count
-        {
-            get { return _dictionary.Count; }
-        }
+        public int Count => _dictionary.Count;
 
 
-        public bool IsReadOnly
-        {
-            get { return true; }
-        }
+        public bool IsReadOnly => true;
 
 
         void IDictionary<TKey, TValue>.Add(TKey key, TValue value)

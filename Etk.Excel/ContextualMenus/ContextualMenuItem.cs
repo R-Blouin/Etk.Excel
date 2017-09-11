@@ -42,7 +42,7 @@ namespace Etk.Excel.ContextualMenus
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot create contextual menu '{0}': {1}", caption.EmptyIfNull(), ex.Message));
+                throw new EtkException($"Cannot create contextual menu '{caption.EmptyIfNull()}': {ex.Message}");
             }
         }
         #endregion

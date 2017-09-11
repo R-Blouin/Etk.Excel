@@ -8,7 +8,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
 {
     class BindingDefinitionMethod : BindingDefinition
     {
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
 
         public MethodInfo MethodInfo
         { get; protected set; }
@@ -24,7 +24,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
-                throw new BindingTemplateException(string.Format("Cannot Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
+                throw new BindingTemplateException($"Cannot Resolve the 'Binding' for the BindingExpression '{BindingExpression}'. {ex.Message}");
             }
         }
 

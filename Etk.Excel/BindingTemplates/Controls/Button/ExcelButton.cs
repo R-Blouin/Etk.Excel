@@ -30,8 +30,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         public ExcelInterop.Range OwnerRange
         { get; protected set; }
 
-        public ExcelForms.Font Font
-        { get { return commandButton == null ? null : commandButton.Font; } }
+        public ExcelForms.Font Font => commandButton == null ? null : commandButton.Font;
 
         public ExcelInterop.XlPlacement Placement
         {
@@ -79,7 +78,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
             try
             {
                 worksheet = OwnerRange.Worksheet;
-                Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
+                Name = $"ExcelBtn{Interlocked.Increment(ref cpt)}";
 
                 ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
 

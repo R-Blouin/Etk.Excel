@@ -10,7 +10,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
 {
     class BindingDefinitionProperty : BindingDefinition
     {
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
 
         private PropertyInfo PropertyInfo
         { get; set; }
@@ -81,7 +81,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
-                throw new BindingTemplateException(string.Format("Cannot Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
+                throw new BindingTemplateException($"Cannot Resolve the 'Binding' for the BindingExpression '{BindingExpression}'. {ex.Message}");
             }
         }
 
@@ -113,7 +113,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     }
                 }
                 object value = ResolveBinding(datasource);
-                return value != null && value is Enum ? ((Enum) value).ToString() : value;
+                return value is Enum ? ((Enum) value).ToString() : value;
             }
             catch (Exception ex)
             {
@@ -125,7 +125,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
             INotifyPropertyChanged notifyPropertyChanged = dataSource as INotifyPropertyChanged;
-            return notifyPropertyChanged == null ? null : new INotifyPropertyChanged[] { notifyPropertyChanged };
+            return notifyPropertyChanged == null ? null : new [] { notifyPropertyChanged };
         }
         
         public override bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)

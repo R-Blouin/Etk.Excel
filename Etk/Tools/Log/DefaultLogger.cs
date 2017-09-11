@@ -10,7 +10,7 @@ namespace Etk.Tools.Log
 
         public void Log(LogType logType, string message)
         {
-            Debug.WriteLine(string.Format("'{0}'. {1}", logType.ToString(), message ?? string.Empty));        
+            Debug.WriteLine($"'{logType}'. {message ?? string.Empty}");        
         }
 
         public void LogFormat(LogType logType, string message, object o)
@@ -19,11 +19,11 @@ namespace Etk.Tools.Log
             {
                 if (message != null)
                     message = string.Format(message, o);
-                Debug.WriteLine(string.Format("'{0}'. {1}", logType.ToString(), message ?? string.Empty));
+                Debug.WriteLine($"'{logType}'. {message ?? string.Empty}");
             }
             catch
             {
-                Debug.WriteLine(string.Format("'Error'. Can't log '{1}'", message ?? string.Empty));
+                Debug.WriteLine($"'Error'. Can't log '{message ?? string.Empty}'");
             }
         }
 
@@ -33,11 +33,11 @@ namespace Etk.Tools.Log
             {
                 if (message != null)
                     message = string.Format(message, os);
-                Debug.WriteLine(string.Format("'{0}'. {1}", logType.ToString(), message ?? string.Empty));
+                Debug.WriteLine($"'{logType}'. {message ?? string.Empty}");
             }
             catch
             {
-                Debug.WriteLine(string.Format("'Error'. Can't log '{1}'", message ?? string.Empty));
+                Debug.WriteLine($"'Error'. Can't log '{message ?? string.Empty}'");
             }
         }
 
@@ -45,11 +45,11 @@ namespace Etk.Tools.Log
         {
             try
             {
-                Debug.WriteLine(string.Format("'{0}'. {1}. {2}", logType.ToString(), message ?? string.Empty, ex == null ? string.Empty : ex.Message));
+                Debug.WriteLine($"'{logType}'. {message ?? string.Empty}. {ex?.Message ?? string.Empty}");
             }
             catch
             {
-                Debug.WriteLine(string.Format("'Error'. Can't log '{1}'", message ?? string.Empty));
+                Debug.WriteLine($"'Error'. Can't log '{message ?? string.Empty}'");
             }
         }
 
@@ -59,11 +59,11 @@ namespace Etk.Tools.Log
             {
                 if (message != null)
                     message = string.Format(message, o);
-                Debug.WriteLine(string.Format("'{0}'. {1}. {2}", logType.ToString(), message ?? string.Empty, ex == null ? string.Empty : ex.Message));
+                Debug.WriteLine($"'{logType}'. {message ?? string.Empty}. {ex?.Message ?? string.Empty}");
             }
             catch
             {
-                Debug.WriteLine(string.Format("'Error'. Can't log '{1}'", message ?? string.Empty));
+                Debug.WriteLine($"'Error'. Can't log '{message ?? string.Empty}'");
             }
         }
 
@@ -73,11 +73,11 @@ namespace Etk.Tools.Log
             {
                 if (message != null)
                     message = string.Format(message, os);
-                Debug.WriteLine(string.Format("'{0}'. {1}. {2}", logType.ToString(), message ?? string.Empty, ex == null ? string.Empty : ex.Message));
+                Debug.WriteLine($"'{logType}'. {message ?? string.Empty}. {ex?.Message ?? string.Empty}");
             }
             catch
             {
-                Debug.WriteLine(string.Format("'Error'. Can't log '{1}'", message ?? string.Empty));
+                Debug.WriteLine($"'Error'. Can't log '{message ?? string.Empty}'");
             }
         }
     }

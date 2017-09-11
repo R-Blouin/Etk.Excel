@@ -19,8 +19,8 @@ namespace Etk.Excel.Application
         #region attribute and properties
         private bool isDisposed;
         private readonly object syncObj = new object();
-        private CommandBarControl newMenu;
-        private ExcelPostAsynchronousManager postAsynchronousManager;
+        private readonly CommandBarControl newMenu;
+        private readonly ExcelPostAsynchronousManager postAsynchronousManager;
 
         /// <summary> Implements <see cref="IExcelApplication.Application"/> </summary> 
         public ExcelInterop.Application Application
@@ -55,7 +55,7 @@ namespace Etk.Excel.Application
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("ExcelApplication initialization failed:{0}", ex.Message));
+                throw new EtkException($"ExcelApplication initialization failed:{ex.Message}");
             }
         }
 

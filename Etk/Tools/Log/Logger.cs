@@ -13,7 +13,7 @@ namespace Etk.Tools.Log
         private LoggerManager LoggerManager = null;
 
         private static volatile Logger instance;
-        private static object syncRoot = new object();
+        private static readonly object syncRoot = new object();
 
         public static ILogger Instance
         {

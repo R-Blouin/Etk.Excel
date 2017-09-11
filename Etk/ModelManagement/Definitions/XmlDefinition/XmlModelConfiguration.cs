@@ -34,7 +34,7 @@ namespace Etk.ModelManagement.Definitions.XmlDefinition
                     return null;
 
                 if (! File.Exists(path))
-                    throw new EtkException(string.Format("Cannot find the file '{0}", path));
+                    throw new EtkException($"Cannot find the file '{path}");
 
                 XmlModelConfiguration conf;
                 using (FileStream reader = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -46,7 +46,8 @@ namespace Etk.ModelManagement.Definitions.XmlDefinition
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("'XmlModelConfiguration' initialization failed:{0}", ex.InnerException == null ? ex.Message : ex.InnerException.Message));
+                throw new EtkException(
+                    $"'XmlModelConfiguration' initialization failed:{(ex.InnerException == null ? ex.Message : ex.InnerException.Message)}");
             }
         }
 
@@ -66,7 +67,8 @@ namespace Etk.ModelManagement.Definitions.XmlDefinition
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("'XmlModelConfiguration' initialization failed:{0}", ex.InnerException == null ? ex.Message : ex.InnerException.Message));
+                throw new EtkException(
+                    $"'XmlModelConfiguration' initialization failed:{(ex.InnerException == null ? ex.Message : ex.InnerException.Message)}");
             }
         }
         #endregion

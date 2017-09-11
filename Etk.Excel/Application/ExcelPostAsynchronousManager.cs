@@ -92,7 +92,8 @@ namespace Etk.Excel.Application
                                                             }
                                                             catch (Exception ex)
                                                             {
-                                                                string message = string.Format("'ExcelPostAsynchronousManager.ExecuteAction' failed.{0}", ex.Message);
+                                                                string message =
+                                                                    $"'ExcelPostAsynchronousManager.ExecuteAction' failed.{ex.Message}";
                                                                 Logger.Instance.LogException(LogType.Error, ex, message);
                                                             }
                                                         }));
@@ -110,7 +111,8 @@ namespace Etk.Excel.Application
                 if (ex is OperationCanceledException)
                     Logger.Instance.Log(LogType.Info, "PostAsynchronousManager properly ended");
                 else
-                    Logger.Instance.LogException(LogType.Error, ex, string.Format("PostAsynchronousManager not properly ended", ex.Message));
+                    Logger.Instance.LogException(LogType.Error, ex,
+                        $"PostAsynchronousManager not properly ended:{ex.Message}");
             }
             finally
             {

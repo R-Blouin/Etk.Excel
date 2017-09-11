@@ -3,30 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
-using Etk.SortAndFilter;
 using Etk.Excel.MvvmBase;
+using Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels;
+using Etk.SortAndFilter;
 
-namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
+namespace Etk.Excel.UI.Windows.SortAndFilter.ViewModels
 {
     class TemplateViewModel : ViewModelBase, IDisposable
     {
         #region attributes and properties
         public static event Action<TemplateViewModel, BindingDefinitionViewModel> BindingDefinitionSelected;
 
-        private SortAndFilterViewModel parent;
+        private readonly SortAndFilterViewModel parent;
 
         public ITemplateDefinition TemplateDefinition
         { get; private set; }
 
-        private List<BindingDefinitionViewModel> bindingDefinitions = new List<BindingDefinitionViewModel>();
-        public List<BindingDefinitionViewModel> BindingDefinitions
-        { get { return bindingDefinitions; } }
+        private readonly List<BindingDefinitionViewModel> bindingDefinitions = new List<BindingDefinitionViewModel>();
+        public List<BindingDefinitionViewModel> BindingDefinitions => bindingDefinitions;
 
-        public string Name
-        { get { return TemplateDefinition.Name; } }
+        public string Name => TemplateDefinition.Name;
 
-        public string Description
-        { get { return TemplateDefinition.Description; } }
+        public string Description => TemplateDefinition.Description;
 
         private BindingDefinitionViewModel selectedBindingDefinition;
         public BindingDefinitionViewModel SelectedBindingDefinition
@@ -73,9 +71,7 @@ namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
 
         public void BindingDefinitionSelectedRequest(TemplateViewModel template, BindingDefinitionViewModel bindingDefinition)
         {
-            if (BindingDefinitionSelected != null)
-                BindingDefinitionSelected(template, bindingDefinition);
-
+            BindingDefinitionSelected?.Invoke(template, bindingDefinition);
             parent.SelectedDefinition = bindingDefinition;
         }
 
@@ -115,8 +111,8 @@ namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
                         if (bindingDefinition.ValueSelectionList != null && bindingDefinition.ValueSelectionList.Count > 0)
                         {
                             IEnumerable<ValueSelection> selectedValues = bindingDefinition.ValueSelectionList.Where(v => v.IsSelected);
-                            if (selectedValues.Count() == 0)
-                                throw new EtkException(string.Format("{0} none values selected.", bindingDefinition.Description));
+                            if (!selectedValues.Any())
+                                throw new EtkException($"{bindingDefinition.Description} none values selected.");
 
                             if (selectedValues.Count() != bindingDefinition.ValueSelectionList.Count)
                             {
@@ -125,10 +121,6 @@ namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
                                 elements.Add(element);
                             }
                         }
-                    }
-                    else
-                    { 
-                        
                     }
                 }
             }
