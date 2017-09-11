@@ -11,18 +11,11 @@ namespace Etk.BindingTemplates.Definitions.Binding
 {
     class BindingDefinitionOptional : BindingDefinition
     {
-        private ILogger log = Logger.Instance;
-        private bool isComObject;
-        private Type type;
+        private readonly ILogger log = Logger.Instance;
 
         private Dictionary<Type, IBindingDefinition> bindingDefinitionByType = new Dictionary<Type, IBindingDefinition>();
         
-        public override string Name
-        { 
-        //            //if (string.IsNullOrEmpty(definitionDescription.Name))
-        //            //definitionDescription.Name = definitionDescription.BindingExpression.Replace('.', '_');
-            get { return string.IsNullOrEmpty(DefinitionDescription.Name) ? DefinitionDescription.BindingExpression : DefinitionDescription.Name; }
-        }
+        public override string Name => string.IsNullOrEmpty(DefinitionDescription.Name) ? DefinitionDescription.BindingExpression : DefinitionDescription.Name;
 
         #region .ctors and factories
         private BindingDefinitionOptional(BindingDefinitionDescription definitionDescription) : base(definitionDescription)
@@ -53,21 +46,25 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 if (dataSource == null)
                     return null;
 
-                if (! IsReadOnly)
-                    type.InvokeMember(Name, BindingFlags.SetProperty, null, dataSource, new object[] { data }, null);
+                if (!IsReadOnly)
+                    dataSource.GetType().InvokeMember(Name, BindingFlags.SetProperty, null, dataSource, new object[] { data }, null);
                 return ResolveBinding(dataSource);
             }
             catch (Exception ex)
             {
-                log.LogFormat(LogType.Warn, "'UpdateDataSource' failed for BindingExpression '{0}', value '{1}': {2}", BindingExpression, data == null ? string.Empty : data.ToString(), ex.Message);
+                log.LogFormat(LogType.Warn, "'UpdateDataSource' failed for BindingExpression '{0}', value '{1}': {2}", BindingExpression, data?.ToString() ?? string.Empty, ex.Message);
                 return ResolveBinding(dataSource);
             }
         }
 
         public override object ResolveBinding(object dataSource)
         {
-            if (dataSource != null && isComObject)
-                return type.InvokeMember(Name, BindingFlags.GetProperty, null, dataSource, null, null);
+            if (dataSource != null)
+            {
+                Type type = dataSource.GetType();
+                if (Marshal.IsComObject(dataSource))
+                    return type.InvokeMember(Name, BindingFlags.GetProperty, null, dataSource, null, null);
+            }
             return null;
         }
 
@@ -89,12 +86,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 ret = new BindingContextItem(parent, this);
             else
             {
-                isComObject = Marshal.IsComObject(parent.DataSource);
-                if(isComObject)
-                {
-                    type = parent.DataSource.GetType();
+                if(Marshal.IsComObject(parent.DataSource))
                     ret = new BindingContextItem(parent, this);
-                }
                 else
                 {
                     IBindingDefinition realBindingDefinition = CreateRealBindingDefinition(parent.DataSource.GetType());
