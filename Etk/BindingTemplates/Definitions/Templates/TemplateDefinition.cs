@@ -1,6 +1,7 @@
 ﻿using System;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.ModelManagement.DataAccessors;
+using System.Reflection;
 
 namespace Etk.BindingTemplates.Definitions.Templates
 {
@@ -49,7 +50,6 @@ namespace Etk.BindingTemplates.Definitions.Templates
         public bool CanSort => TemplateOption.CanSort;
 
         public bool AddBorder => TemplateOption.AddBorder;
-
         #endregion
 
         #region .ctors

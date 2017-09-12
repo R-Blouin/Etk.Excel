@@ -39,7 +39,7 @@ namespace Etk.Excel.BindingTemplates
         internal ExcelApplication ExcelApplication
         { get; private set; }
 
-        internal EventCallbacksManager CallbacksManager
+        internal EventExcelCallbacksManager CallbacksManager
         { get; private set; }
 
         private readonly ILogger log = Logger.Instance;
@@ -58,7 +58,7 @@ namespace Etk.Excel.BindingTemplates
         public ExcelTemplateManager([Import] ExcelApplication excelApplication,
                                     [Import] ContextualMenuManager contextualMenuManager,
                                     [Import] ExcelDecoratorsManager excelDecoratorsManager,
-                                    [Import] EventCallbacksManager eventCallbacksManager,
+                                    [Import] EventExcelCallbacksManager eventCallbacksManager,
                                     [Import] BindingTemplateManager bindingTemplateManager)
         {
             if (excelApplication == null)

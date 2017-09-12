@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Etk.BindingTemplates.Context;
 using Etk.Tools.Reflection;
 
 namespace Etk.BindingTemplates.Definitions.EventCallBacks

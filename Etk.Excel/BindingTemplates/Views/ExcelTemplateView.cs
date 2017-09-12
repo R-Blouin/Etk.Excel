@@ -651,7 +651,7 @@ namespace Etk.Excel.BindingTemplates.Views
                             if (currentContextItem.BindingDefinition.OnSelection != null)
                             {
                                 ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(currentContextItem.BindingDefinition.OnSelection, 
-                                                                                                         target, currentContextItem.ParentElement, currentContextItem.ParentElement);
+                                                                                                         target, currentContextItem.ParentElement, currentContextItem);
                             }
                             else
                             {
@@ -665,7 +665,7 @@ namespace Etk.Excel.BindingTemplates.Views
                                     MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
                                     if (callback != null)
                                     {
-                                        ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem.ParentElement);
+                                        ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem);
                                         isResolved = true;
                                     }
                                     if (!isResolved)
@@ -704,7 +704,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 if (currentContextItem.BindingDefinition.OnClick != null)
                 {
                     ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(currentContextItem.BindingDefinition.OnClick, 
-                                                                                             target, currentContextItem.ParentElement, currentContextItem.ParentElement);
+                                                                                             target, currentContextItem.ParentElement, currentContextItem);
                     cancel = true;
                 }
                 else

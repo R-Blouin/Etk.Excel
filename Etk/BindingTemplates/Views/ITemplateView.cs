@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.SortAndFilter;
-using System.Runtime.InteropServices;
 
 namespace Etk.BindingTemplates.Views
 {

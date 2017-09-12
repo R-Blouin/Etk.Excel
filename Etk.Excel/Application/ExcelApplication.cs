@@ -8,6 +8,8 @@ using Etk.Excel.Extensions;
 using Microsoft.Office.Core;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Collections.Generic;
+using Etk.BindingTemplates.Definitions;
+using System.Reflection;
 
 namespace Etk.Excel.Application
 {
@@ -201,6 +203,26 @@ namespace Etk.Excel.Application
 
                 workkingRange = workkingRange.Resize[Type.Missing, numberOfCells];
                 workkingRange.EntireColumn.Hidden = ! (bool) workkingRange.EntireColumn.Hidden;
+            }
+        }
+        
+        public void ExecuteVbaMAcro(string functionName, object[] parameters)
+        {
+            try
+            {
+                object[] p ; 
+                if (parameters == null)
+                    p = new object[] { functionName};
+                else
+                {
+                    List<object> lp = new List<object>(new object[] { functionName });
+                    lp.AddRange(parameters);
+                    p = lp.ToArray();
+                }
+                Application.GetType().InvokeMember("Run", BindingFlags.Default | BindingFlags.InvokeMethod, null, Application, p);
+            }
+            catch (Exception ex)
+            {
             }
         }
         #endregion

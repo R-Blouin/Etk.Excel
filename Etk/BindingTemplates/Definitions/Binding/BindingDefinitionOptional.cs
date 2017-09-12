@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 using Etk.BindingTemplates.Context;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -11,6 +9,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
 {
     class BindingDefinitionOptional : BindingDefinition
     {
+        private bool comNameIsInvalid;
         private readonly ILogger log = Logger.Instance;
 
         private readonly Dictionary<Type, IBindingDefinition> bindingDefinitionByType = new Dictionary<Type, IBindingDefinition>();
@@ -33,12 +32,21 @@ namespace Etk.BindingTemplates.Definitions.Binding
         {
             try
             {
-                if (dataSource == null)
+                if (dataSource == null || comNameIsInvalid)
                     return null;
 
-                if (!IsReadOnly)
-                    dataSource.GetType().InvokeMember(Name, BindingFlags.SetProperty, null, dataSource, new [] { data }, null);
+                if (! IsReadOnly)
+                {
+                    if (Marshal.IsComObject(dataSource) && !comNameIsInvalid)
+                        dataSource.GetType().InvokeMember(Name, BindingFlags.SetProperty, null, dataSource, new[] { data }, null);
+                }
                 return ResolveBinding(dataSource);
+            }
+            catch (COMException ex)
+            {
+                if (ex.ErrorCode == (int) SpecificException.DISP_E_UNKNOWNNAME)
+                    comNameIsInvalid = true;
+                return null;
             }
             catch (Exception ex)
             {
@@ -52,8 +60,18 @@ namespace Etk.BindingTemplates.Definitions.Binding
             if (dataSource != null)
             {
                 Type type = dataSource.GetType();
-                if (Marshal.IsComObject(dataSource))
-                    return type.InvokeMember(Name, BindingFlags.GetProperty, null, dataSource, null, null);
+                if (Marshal.IsComObject(dataSource) && !comNameIsInvalid)
+                {
+                    try
+                    {
+                        return type.InvokeMember(Name, BindingFlags.GetProperty, null, dataSource, null, null);
+                    }
+                    catch (COMException ex)
+                    {
+                        if (ex.ErrorCode == (int)SpecificException.DISP_E_UNKNOWNNAME)
+                            comNameIsInvalid = true;
+                    }
+                }
             }
             return null;
         }

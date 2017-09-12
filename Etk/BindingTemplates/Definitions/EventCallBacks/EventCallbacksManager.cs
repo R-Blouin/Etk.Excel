@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions;
@@ -11,12 +10,10 @@ using Etk.Tools.Log;
 namespace Etk.BindingTemplates.Definitions.EventCallBacks
 {
     /// <summary> Manage the <see cref="EventCallback"/> used in the current application</summary>
-    [Export]
-    [PartCreationPolicy(CreationPolicy.Shared)]
     public class EventCallbacksManager : IDisposable
     {
-        private readonly ILogger log = Logger.Instance;
-        private readonly Dictionary<string, EventCallback> callbackByIdent = new Dictionary<string, EventCallback>();
+        protected readonly ILogger log = Logger.Instance;
+        protected readonly Dictionary<string, EventCallback> callbackByIdent = new Dictionary<string, EventCallback>();
 
         /// <summary>Register event callbacks from xml definitions</summary>
         /// <param name="xml">The xml that contains the callback definitions </param>
@@ -76,7 +73,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         }
 
         #region public methods
-        public bool Invoke(MethodInfo callback, object sender, IBindingContextElement catchingContextElement, IBindingContextElement currentContextItem)
+        public bool Invoke(MethodInfo callback, object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
         {
             object invokeTarget = callback.IsStatic ? null : catchingContextElement.DataSource;
             int nbrParameters = callback.GetParameters().Length;
@@ -87,14 +84,17 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             object[] parameters;
             switch (nbrParameters)
             {
+                case 4:
+                    parameters = new object[] { catchingContextElement, catchingContextElement.DataSource, currentContextItem, currentContextItem.DataSource };
+                    break;
                 case 3:
-                    parameters = new object[] { sender, catchingContextElement.DataSource, currentContextItem.DataSource };
+                    parameters = new object[] { sender, catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
                 break;
                 case 2:
                     if(callback.GetParameters()[0].ParameterType == typeof(ITemplateView))
                         parameters = new object[] { catchingContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
                     else
-                        parameters = new object[] { catchingContextElement.DataSource, currentContextItem.DataSource };
+                        parameters = new object[] { catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
                 break;
                 case 1:
                     parameters = new object[] { catchingContextElement.DataSource };

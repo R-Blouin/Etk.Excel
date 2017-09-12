@@ -86,7 +86,7 @@ namespace Etk.Tools.Reflection
             else
             {
                 methodName = methodNameElements[2].EmptyIfNull().Trim();
-                type = TypeHelpers.GetType(methodNameElements[1], methodNameElements[0]);
+                type = GetType(methodNameElements[1], methodNameElements[0]);
             }
 
             MethodInfo ret = type.GetMethod(methodName);

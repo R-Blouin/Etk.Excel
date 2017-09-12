@@ -7,7 +7,6 @@ using Etk.BindingTemplates.Views;
 using Etk.Excel.BindingTemplates.Views;
 using Etk.Excel.MvvmBase;
 using Etk.Excel.UI.MvvmBase;
-using Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels;
 using Etk.SortAndFilter;
 
 namespace Etk.Excel.UI.Windows.SortAndFilter.ViewModels

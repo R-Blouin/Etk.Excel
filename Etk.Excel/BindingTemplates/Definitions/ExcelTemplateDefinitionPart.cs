@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Etk.BindingTemplates.Definitions;
-using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Templates;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 

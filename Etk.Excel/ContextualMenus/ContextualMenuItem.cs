@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
-using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 

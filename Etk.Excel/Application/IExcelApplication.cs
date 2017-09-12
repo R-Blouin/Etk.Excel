@@ -47,9 +47,9 @@ namespace Etk.Excel.Application
         /// <summary> Return the sheet having 'name' as name owned by the given workbook</summary>
         ExcelInterop.Worksheet GetWorkSheetFromName(ExcelInterop.Workbook workbook, string name);
 
-        /// <summary>
-        /// Indicates whether status remains visible.
-        /// </summary>
+        /// <summary> Indicates whether status remains visible</summary>
         bool KeepStatusVisible { get; set; }
+
+        void ExecuteVbaMAcro(string functionName, object[] parameters);
     }
 }

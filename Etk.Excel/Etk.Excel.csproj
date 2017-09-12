@@ -100,6 +100,7 @@
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelRangeDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelDecorators.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventExcelCallbacksManager.cs" />
     <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionFactory.cs" />
     <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionPartFactory.cs" />
     <Compile Include="BindingTemplates\Renderer\ExcelPartHorizontalRenderer.cs" />
