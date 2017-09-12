@@ -1,6 +1,8 @@
 ﻿using ExcelDna.ComInterop;
 using ExcelDna.Integration;
 using Microsoft.Office.Interop.Excel;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Etk.Excel.Addin
@@ -13,7 +15,8 @@ namespace Etk.Excel.Addin
 
         public void AutoOpen()
         {
-            Microsoft.Office.Interop.Excel.Application  excelApplication = ExcelDnaUtil.Application as Microsoft.Office.Interop.Excel.Application;
+            Microsoft.Office.Interop.Excel.Application excelApplication = ExcelDnaUtil.Application as Microsoft.Office.Interop.Excel.Application;
+            ETKExcel.Init(excelApplication);
 
             ComServer.DllRegisterServer();
 
@@ -22,8 +25,6 @@ namespace Etk.Excel.Addin
 
             if (excelApplication.ActiveWorkbook != null)
                 Register(excelApplication.ActiveWorkbook);
-
-            ETKExcel.Init(excelApplication);
         }
 
         public void AutoClose()
@@ -56,7 +57,9 @@ namespace Etk.Excel.Addin
 
         private void RegisterTlb(Workbook workbook)
         {
-            workbook.VBProject.References.AddFromFile(etkTlbName);
+            string assemblyPath = Assembly.GetExecutingAssembly().Location;
+            string tlbPath = Path.Combine(Path.GetDirectoryName(assemblyPath), etkTlbName);
+            workbook.VBProject.References.AddFromFile(tlbPath);
         }
     }
 }

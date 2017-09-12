@@ -182,8 +182,7 @@ namespace Etk.ModelManagement
                     }
                     catch (Exception ex)
                     {
-                        throw new EtkException(
-                            $"Cannot resolve the dependencies of the ModelType '{Name.EmptyIfNull()}': {ex.Message}");
+                        throw new EtkException($"Cannot resolve the dependencies of the ModelType '{Name.EmptyIfNull()}': {ex.Message}");
                     }
                 }            
             }
@@ -204,8 +203,7 @@ namespace Etk.ModelManagement
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(
-                        $"Cannot resolve the views of the ModelType '{Name.EmptyIfNull()}': {ex.Message}");
+                    throw new EtkException($"Cannot resolve the views of the ModelType '{Name.EmptyIfNull()}': {ex.Message}");
                 }
             }
         }
@@ -254,8 +252,7 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(
-                    $"Cannot retrieve properties for UnderlyingType '{Name.EmptyIfNull()}': {ex.Message}");
+                throw new EtkException($"Cannot retrieve properties for UnderlyingType '{Name.EmptyIfNull()}': {ex.Message}");
             }
         }
 

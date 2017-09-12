@@ -236,8 +236,7 @@ namespace Etk.Excel.ContextualMenus
                                                           catch (Exception ex)
                                                           {
                                                             string methodName = contextualMenuItem.MethodInfo == null ? string.Empty : contextualMenuItem.MethodInfo.Name; 
-                                                            throw new EtkException(
-                                                                $"Contextual menu: '{methodName}' invocation failed: {ex.Message}.");
+                                                            throw new EtkException($"Contextual menu: '{methodName}' invocation failed: {ex.Message}.");
                                                           }
                                                       };
                         }

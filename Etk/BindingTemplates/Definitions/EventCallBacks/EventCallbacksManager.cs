@@ -61,7 +61,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         }
 
         /// <summary> Register a <see cref="EventCallback"/></summary>
-        /// <param name="decorator">The <see cref="EventCallback"/> to register</param>
+        /// <param name="callback">The <see cref="EventCallback"/> to register</param>
         public void RegisterCallback(EventCallback callback)
         {
             lock ((callbackByIdent as ICollection).SyncRoot)

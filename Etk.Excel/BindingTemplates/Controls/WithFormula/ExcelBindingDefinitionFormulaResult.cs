@@ -73,8 +73,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
             }
             catch (Exception ex)
             {
-                string message =
-                    $"Cannot retrieve the formula result binding dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
+                string message = $"Cannot retrieve the formula result binding dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
                 throw new EtkException(message);
             }
         }

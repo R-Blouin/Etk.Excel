@@ -88,8 +88,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         }
                         catch (Exception ex)
                         {
-                            string message =
-                                $"Cannot create the linked template dataAccessor '{trimmedValue}'. {ex.Message}";
+                            string message = $"Cannot create the linked template dataAccessor '{trimmedValue}'. {ex.Message}";
                             throw new EtkException(message, false);
                         }
                     }
@@ -117,8 +116,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             }
                             catch (Exception ex)
                             {
-                                string message =
-                                    $"Cannot create the binding definition for '{trimmedValue}'. {ex.Message}";
+                                string message = $"Cannot create the binding definition for '{trimmedValue}'. {ex.Message}";
                                 throw new EtkException(message, false);
                             }
                         }

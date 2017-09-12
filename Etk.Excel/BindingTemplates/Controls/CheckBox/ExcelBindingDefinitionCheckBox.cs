@@ -52,8 +52,7 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
                 }
                 catch (Exception ex)
                 {
-                    string message =
-                        $"Cannot retrieve the checkbox dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
+                    string message = $"Cannot retrieve the checkbox dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
                     throw new EtkException(message);
                 }
             }

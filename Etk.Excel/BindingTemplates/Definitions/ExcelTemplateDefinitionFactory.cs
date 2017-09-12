@@ -143,8 +143,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
             }
             catch (Exception ex)
             {
-                throw new EtkException(
-                    $"The parsing of template '{excelTemplateDefinition.Name}' in sheet '{worksheet.Name.EmptyIfNull()}' failed: {ex.Message}");
+                throw new EtkException($"The parsing of template '{excelTemplateDefinition.Name}' in sheet '{worksheet.Name.EmptyIfNull()}' failed: {ex.Message}");
             }
         }
 

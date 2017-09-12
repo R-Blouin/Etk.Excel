@@ -61,8 +61,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
             }
             catch (Exception ex)
             {
-                string message =
-                    $"Cannot create the 'ExcelBindingDefinitionWithFormula' from '{definition.BindingExpression ?? string.Empty}'. {ex.Message}";
+                string message = $"Cannot create the 'ExcelBindingDefinitionWithFormula' from '{definition.BindingExpression ?? string.Empty}'. {ex.Message}";
                 throw new EtkException(message);
             }
         }

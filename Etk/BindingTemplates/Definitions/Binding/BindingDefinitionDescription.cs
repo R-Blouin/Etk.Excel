@@ -172,8 +172,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                                 }
                                 catch (Exception ex)
                                 {
-                                    throw new Exception(
-                                        $"Cannot resolve the 'ME' attribute for the binding definition '{bindingExpression}'", ex);
+                                    throw new Exception($"Cannot resolve the 'ME' attribute for the binding definition '{bindingExpression}'", ex);
                                 }
                             }
                         }
@@ -261,8 +260,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     if (trimmedToAnalyze.StartsWith("["))
                     {
                         if (!trimmedToAnalyze.EndsWith("]"))
-                            throw new BindingTemplateException(
-                                $"Cannot create constante BindingDefinition from '{toAnalyze}': cannot find the closing ']'");
+                            throw new BindingTemplateException($"Cannot create constante BindingDefinition from '{toAnalyze}': cannot find the closing ']'");
                         bindingExpression = trimmedToAnalyze.Substring(1, trimmedToAnalyze.Length - 2);
 
                         int postSep = bindingExpression.LastIndexOf("::");

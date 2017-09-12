@@ -63,8 +63,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 }
                 catch (Exception ex)
                 {
-                    string message =
-                        $"Cannot retrieve the button dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
+                    string message = $"Cannot retrieve the button dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
                     throw new EtkException(message);
                 }
             }
@@ -116,16 +115,14 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     if (method.IsStatic)
                     {
                         if (parameters.Count() > 2)
-                            throw new EtkException(
-                                $"Method dataAccessor must be 'void static {method.Name}(object currentObject [, Range <currentObject caller>]'");
+                            throw new EtkException($"Method dataAccessor must be 'void static {method.Name}(object currentObject [, Range <currentObject caller>]'");
 
                         OnClickWithRange = parameters.Count() == 2;
                     }
                     else
                     {
                         if (parameters.Count() > 1 || (parameters.Count() == 1 && parameters[0].ParameterType != typeof(Microsoft.Office.Interop.Excel.Range)))
-                            throw new EtkException(
-                                $"Method dataAccessor must be 'void {method.Name}([Range <currentObject caller>])'");
+                            throw new EtkException($"Method dataAccessor must be 'void {method.Name}([Range <currentObject caller>])'");
 
                         OnClickWithRange = parameters.Count() == 1;
                     }

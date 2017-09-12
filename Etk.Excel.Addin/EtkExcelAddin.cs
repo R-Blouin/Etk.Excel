@@ -21,9 +21,11 @@ namespace Etk.Excel.Addin
             return ETKExcel.TemplateManager.AddView(sheetTemplatePath, templateName, sheetDestinationName, destinationRange, clearingCell);
         }
 
-        public void SetDataSource(IExcelTemplateView view, object dataSource)
+        public void SetDataSource(IExcelTemplateView viewobject, object dataSource)
         {
-            view.SetDataSource(dataSource);
+            IExcelTemplateView view = viewobject as IExcelTemplateView;
+            if (view != null)
+                view.SetDataSource(dataSource);
         }
         
 
@@ -34,9 +36,11 @@ namespace Etk.Excel.Addin
         }
 
         /// <summary> Remove a View.</summary>
-        public void RemoveView(IExcelTemplateView view)
+        public void RemoveView(IExcelTemplateView viewobject)
         {
-            ETKExcel.TemplateManager.RemoveView(view);
+            IExcelTemplateView view = viewobject as IExcelTemplateView;
+            if (view != null)
+                ETKExcel.TemplateManager.RemoveView(view);
         }
 
         /// <summary> Get all the views owned by a given sheet.</summary>
@@ -54,9 +58,11 @@ namespace Etk.Excel.Addin
         }
 
         /// <summary> Rerender (description, style and data) the View given as parameter.</summary>
-        public void RenderView(IExcelTemplateView view)
+        public void RenderView(IExcelTemplateView viewobject)
         {
-            ETKExcel.TemplateManager.Render(view);
+            IExcelTemplateView view = viewobject as IExcelTemplateView;
+            if (view != null)
+                ETKExcel.TemplateManager.Render(view);
         }
 
         /// <summary> Rerender (description, style and data) all the views given as parameters.</summary>
@@ -66,9 +72,11 @@ namespace Etk.Excel.Addin
         }
 
         /// <summary> Rerender only the data of the View given as parameter 
-        public void RenderViewDataOnly(IExcelTemplateView view)
+        public void RenderViewDataOnly(IExcelTemplateView viewobject)
         {
-            ETKExcel.TemplateManager.Render(view);
+            IExcelTemplateView view = viewobject as IExcelTemplateView;
+            if (view != null)
+                ETKExcel.TemplateManager.Render(view);
         }
 
         /// <summary> Rerender only the data of all the views given as parameters 
@@ -79,9 +87,11 @@ namespace Etk.Excel.Addin
 
         /// <summary> Clear the previously rendering View
         /// <param name="View">The View to clear.</param>
-        public void ClearView(IExcelTemplateView view)
+        public void ClearView(IExcelTemplateView viewobject)
         {
-            ETKExcel.TemplateManager.ClearView(view);
+            IExcelTemplateView view = viewobject as IExcelTemplateView;
+            if (view != null)
+                ETKExcel.TemplateManager.ClearView(view);
         }
 
         /// <summary> Clear the previously rendering views

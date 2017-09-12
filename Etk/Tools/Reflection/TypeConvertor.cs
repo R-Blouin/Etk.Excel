@@ -57,8 +57,7 @@ namespace Etk.Tools.Reflection
             }
             catch (Exception ex)
             {
-                throw new EtkException(
-                    $"'ConvertObject' failed. Can't convert '{value?.ToString() ?? string.Empty}' to UnderlyingType '{type.ToString()}'. {ex.Message}");
+                throw new EtkException($"'ConvertObject' failed. Can't convert '{value?.ToString() ?? string.Empty}' to UnderlyingType '{type.ToString()}'. {ex.Message}");
             }
         }
 

@@ -102,8 +102,7 @@ namespace Etk.Excel.Application
                     catch (Exception ex)
                     {
                         postExecutionAction = null;
-                        string message =
-                            $"'ExcelPostAsynchronousManager.ExecutePostExecutionAction' failed.{ex.Message}";
+                        string message = $"'ExcelPostAsynchronousManager.ExecutePostExecutionAction' failed.{ex.Message}";
                         Logger.Instance.LogException(LogType.Error, ex, message);
                     }
                 }));

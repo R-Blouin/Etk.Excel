@@ -83,8 +83,7 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(
-                    $"Cannot create 'ModelAccessor' '{definition.Name.EmptyIfNull()} {definition.Method.EmptyIfNull()}': {ex.Message}");
+                throw new EtkException($"Cannot create 'ModelAccessor' '{definition.Name.EmptyIfNull()} {definition.Method.EmptyIfNull()}': {ex.Message}");
             }
             return accessor;
         }
@@ -104,8 +103,7 @@ namespace Etk.ModelManagement
                 if (ReturnModelType != null)
                 {
                     if (!ReturnModelType.UnderlyingType.Equals(accessorReturnType) || ! accessorReturnType.IsAssignableFrom(ReturnModelType.UnderlyingType))
-                        throw new EtkException(
-                            $"'Model type '{modelTypeToTest}' underlying type '{ReturnModelType.UnderlyingType.Name}' is not compatible with accessor return type '{accessorReturnType.Name}'");
+                        throw new EtkException($"'Model type '{modelTypeToTest}' underlying type '{ReturnModelType.UnderlyingType.Name}' is not compatible with accessor return type '{accessorReturnType.Name}'");
                 }
                 else
                     ReturnModelType = ((ModelDefinitionManager)this.Parent.Parent).AddModelType(accessorReturnType);

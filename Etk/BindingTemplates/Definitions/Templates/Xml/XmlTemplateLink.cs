@@ -45,8 +45,7 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
                     else if (positionStr.Equals("A") || positionStr.Equals("ABSOLUTE"))
                         Position = LinkedTemplatePositioning.Absolute;
                     else
-                        throw new ArgumentException(
-                            $"The attribut 'Position' '{value}' is invalid. Value must be 'Relative' (or 'R') or 'Absolute' (or 'A') (no case sentitive)");
+                        throw new ArgumentException($"The attribut 'Position' '{value}' is invalid. Value must be 'Relative' (or 'R') or 'Absolute' (or 'A') (no case sentitive)");
                 }
             }
         }

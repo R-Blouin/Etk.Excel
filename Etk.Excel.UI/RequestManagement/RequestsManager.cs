@@ -143,8 +143,7 @@ namespace Etk.Excel.UI.RequestManagement
                                 }
                                 catch (Exception ex)
                                 {
-                                    string errorMessage =
-                                        $"#ERR:{ex.Message}.{(ex.InnerException == null ? string.Empty : ex.InnerException.Message)}";
+                                    string errorMessage = $"#ERR:{ex.Message}.{(ex.InnerException == null ? string.Empty : ex.InnerException.Message)}";
                                     application.PostAsynchronousAction(() => (test.View as ExcelTemplateView).FirstOutputCell.Value2 = errorMessage);
                                 }
                                                          

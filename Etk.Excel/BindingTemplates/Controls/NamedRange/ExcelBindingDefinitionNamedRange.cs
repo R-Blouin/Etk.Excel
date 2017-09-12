@@ -105,8 +105,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
                     if(bindingDefinitionDescription != null && ! string.IsNullOrEmpty(bindingDefinitionDescription.BindingExpression))
                     {
                         if(bindingDefinitionDescription.BindingExpression.Contains(ALL_POS_KEYWORD) || bindingDefinitionDescription.BindingExpression.Contains(POS_KEYWORD))
-                            throw new ArgumentException(
-                                $"Cannot mixte the keywords '{POS_KEYWORD}' and '{ALL_POS_KEYWORD}' with binding dataAccessor");
+                            throw new ArgumentException($"Cannot mixte the keywords '{POS_KEYWORD}' and '{ALL_POS_KEYWORD}' with binding dataAccessor");
                         nameBindingDefinition = BindingDefinitionFactory.CreateInstances(templateDefinition.Parent as ExcelTemplateDefinition, bindingDefinitionDescription);
                     }
                 }
@@ -114,8 +113,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             }
             catch (Exception ex)
             {
-                string message =
-                    $"Cannot create create the named caller binding dataAccessor '{definition.Name}'. {ex.Message}";
+                string message = $"Cannot create create the named caller binding dataAccessor '{definition.Name}'. {ex.Message}";
                 throw new EtkException(message);
             }
         }
@@ -131,8 +129,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             }
             catch (Exception ex)
             {
-                string message =
-                    $"Cannot retrieve the named caller dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
+                string message = $"Cannot retrieve the named caller dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
                 throw new EtkException(message);
             }
             return ret;

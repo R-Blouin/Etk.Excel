@@ -51,8 +51,7 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(
-                    $"Retrieve model configuration from file '{configurationFilePath.EmptyIfNull()}' failed: {ex.Message}", ex);
+                throw new EtkException($"Retrieve model configuration from file '{configurationFilePath.EmptyIfNull()}' failed: {ex.Message}", ex);
             }
             finally
             {

@@ -69,8 +69,7 @@ namespace Etk.BindingTemplates.Definitions.Templates
             }
             catch (Exception ex)
             {
-                string message =
-                    $"Cannot resolve linked template definition 'To={linkDefinition.To}, With='{linkDefinition.With}'";
+                string message = $"Cannot resolve linked template definition 'To={linkDefinition.To}, With='{linkDefinition.With}'";
                 throw new Exception(message, ex);
             }
         }

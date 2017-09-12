@@ -23,17 +23,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         
         public static BindingDefinitionOptional CreateInstance(BindingDefinitionDescription definitionDescription)
         {
-            if (string.IsNullOrEmpty(definitionDescription.Name))
-            {
-                definitionDescription.Name = definitionDescription.BindingExpression.Replace('.', '_');
-                MatchCollection ret = ValidCharExtract.Matches(definitionDescription.Name);
-                StringBuilder sb = new StringBuilder();
-                foreach (Match m in ret)
-                    sb.Append(m.Value);
-                definitionDescription.Name = sb.ToString();
-            }
             BindingDefinitionOptional definition = new BindingDefinitionOptional(definitionDescription) { IsOptional = true };
-
             return definition;
         }
         #endregion

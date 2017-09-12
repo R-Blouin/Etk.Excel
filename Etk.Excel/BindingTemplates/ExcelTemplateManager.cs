@@ -112,8 +112,7 @@ namespace Etk.Excel.BindingTemplates
 
             ExcelInterop.Range range = sheetContainer.Cells.Find(string.Format(TEMPLATE_START_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
             if (range == null)
-                throw new EtkException(
-                    $"Cannot find the template '{templateName.EmptyIfNull()}' in sheet '{sheetContainer.Name.EmptyIfNull()}'");
+                throw new EtkException($"Cannot find the template '{templateName.EmptyIfNull()}' in sheet '{sheetContainer.Name.EmptyIfNull()}'");
 
             string templateDescriptionKey = $"{sheetContainer.Name}-{templateName}";
             TemplateDefinition templateDefinition = bindingTemplateManager.GetTemplateDefinition(templateDescriptionKey);
@@ -325,8 +324,7 @@ namespace Etk.Excel.BindingTemplates
                             }
                             catch (Exception ex)
                             {
-                                string message =
-                                    $"Sheet '{target.Worksheet.Name}', Template '{view.TemplateDefinition.Name}'. Sheet change failed: '{ex.Message}'";
+                                string message = $"Sheet '{target.Worksheet.Name}', Template '{view.TemplateDefinition.Name}'. Sheet change failed: '{ex.Message}'";
                                 log.LogException(LogType.Error, ex, message);
                                 inError = true;
                             }
@@ -403,8 +401,7 @@ namespace Etk.Excel.BindingTemplates
                     List<ExcelInterop.Worksheet> sheets = new List<ExcelInterop.Worksheet>(workbook.Worksheets.Cast<ExcelInterop.Worksheet>());
                     sheetContainer = sheets.FirstOrDefault(s => !string.IsNullOrEmpty(s.Name) && s.Name.Equals(worksheetContainerName));
                     if (sheetContainer == null)
-                        throw new EtkException(
-                            $"Cannot find the sheet '{worksheetContainerName}' in the current workbook", false);
+                        throw new EtkException($"Cannot find the sheet '{worksheetContainerName}' in the current workbook", false);
 
                     Marshal.ReleaseComObject(workbook);
                     workbook = null;
@@ -416,8 +413,7 @@ namespace Etk.Excel.BindingTemplates
                 {
                     ExcelInterop.Range range = sheetContainer.Cells.Find(string.Format(TEMPLATE_START_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                     if (range == null)
-                        throw new EtkException(
-                            $"Cannot find the template '{templateName.EmptyIfNull()}' in sheet '{sheetContainer.Name.EmptyIfNull()}'");
+                        throw new EtkException($"Cannot find the template '{templateName.EmptyIfNull()}' in sheet '{sheetContainer.Name.EmptyIfNull()}'");
                     templateDefinition = ExcelTemplateDefinitionFactory.CreateInstance(templateName, range);
                     bindingTemplateManager.RegisterTemplateDefinition(templateDefinition);
 
@@ -451,8 +447,7 @@ namespace Etk.Excel.BindingTemplates
             }
             catch (Exception ex)
             {
-                string message =
-                    $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{(sheetContainer != null ? sheetContainer.Name.EmptyIfNull() : string.Empty)}.{templateName.EmptyIfNull()}'"; Logger.Instance.LogException(LogType.Error, ex, message);
+                string message = $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{(sheetContainer != null ? sheetContainer.Name.EmptyIfNull() : string.Empty)}.{templateName.EmptyIfNull()}'"; Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
             }
         }
@@ -499,8 +494,7 @@ namespace Etk.Excel.BindingTemplates
                 {
                     clearingCell =  ETKExcel.ExcelApplication.Application.Range[clearingCellName];
                     if (clearingCell == null)
-                        throw new ArgumentException(
-                            $"Cannot find the clearing cell '{clearingCellName}'. Please use the 'sheetname!rangeaddress' format");
+                        throw new ArgumentException($"Cannot find the clearing cell '{clearingCellName}'. Please use the 'sheetname!rangeaddress' format");
                 }
 
                 ExcelInterop.Range destinationRangeRange = sheetDestination.Range[destinationRange];
@@ -509,8 +503,7 @@ namespace Etk.Excel.BindingTemplates
             }
             catch (Exception ex)
             {
-                string message =
-                    $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{sheetTemplatePath.EmptyIfNull()}.{templateName.EmptyIfNull()}'";
+                string message = $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{sheetTemplatePath.EmptyIfNull()}.{templateName.EmptyIfNull()}'";
                 Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
                 //ExcelApplication.DisplayException(null, message, ex);

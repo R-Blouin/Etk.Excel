@@ -28,8 +28,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
-                throw new BindingTemplateException(
-                    $"Can't Resolve the 'Binding' for the BindingExpression '{BindingExpression}'. {ex.Message}");
+                throw new BindingTemplateException($"Can't Resolve the 'Binding' for the BindingExpression '{BindingExpression}'. {ex.Message}");
             }
         }
 

@@ -94,8 +94,7 @@ namespace Etk.Tools.Collections
 
             // Move past container
             if (reader.NodeType == XmlNodeType.Element && !reader.Read())
-                throw new EtkException(
-                    $"Error in Deserialization of SerializableDictionary<{typeof(TKey).FullName}, {typeof(TVal).FullName}>");
+                throw new EtkException($"Error in Deserialization of SerializableDictionary<{typeof(TKey).FullName}, {typeof(TVal).FullName}>");
             while (reader.NodeType != XmlNodeType.EndElement)
             {
                 reader.ReadStartElement("item");

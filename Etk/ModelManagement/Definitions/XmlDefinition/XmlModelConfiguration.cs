@@ -46,8 +46,7 @@ namespace Etk.ModelManagement.Definitions.XmlDefinition
             }
             catch (Exception ex)
             {
-                throw new EtkException(
-                    $"'XmlModelConfiguration' initialization failed:{(ex.InnerException == null ? ex.Message : ex.InnerException.Message)}");
+                throw new EtkException($"'XmlModelConfiguration' initialization failed:{(ex.InnerException == null ? ex.Message : ex.InnerException.Message)}");
             }
         }
 
@@ -67,8 +66,7 @@ namespace Etk.ModelManagement.Definitions.XmlDefinition
             }
             catch (Exception ex)
             {
-                throw new EtkException(
-                    $"'XmlModelConfiguration' initialization failed:{(ex.InnerException == null ? ex.Message : ex.InnerException.Message)}");
+                throw new EtkException($"'XmlModelConfiguration' initialization failed:{(ex.InnerException == null ? ex.Message : ex.InnerException.Message)}");
             }
         }
         #endregion
