@@ -95,7 +95,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     definition.H == 0 ? OwnerRange.Height : definition.H);
 
                 obj.Name = Name;
-                object s = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null);
+                object s = worksheet.GetType().InvokeMember(Name, BindingFlags.Default | BindingFlags.GetProperty, null, worksheet, null);
                 commandButton = s as ExcelForms.CommandButton;
                 commandButton.FontName = "Arial";
                 commandButton.Font.Size = 8;

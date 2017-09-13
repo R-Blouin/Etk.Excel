@@ -57,7 +57,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
                                         12);
             oleObject.Name = Name;
             oleObject.Placement = ExcelInterop.XlPlacement.xlMove;
-            CheckBox  = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null) as ExcelForms.CheckBox;
+            CheckBox  = worksheet.GetType().InvokeMember(Name, BindingFlags.Default | BindingFlags.GetProperty, null, worksheet, null) as ExcelForms.CheckBox;
 
             CheckBox.SpecialEffect = ExcelForms.fmButtonEffect.fmButtonEffectSunken;
             CheckBox.TripleState = false;

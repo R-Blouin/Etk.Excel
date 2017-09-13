@@ -24,8 +24,7 @@ namespace Etk.Excel.Addin
         public void SetDataSource(IExcelTemplateView viewobject, object dataSource)
         {
             IExcelTemplateView view = viewobject as IExcelTemplateView;
-            if (view != null)
-                view.SetDataSource(dataSource);
+            view?.SetDataSource(dataSource);
         }
         
 

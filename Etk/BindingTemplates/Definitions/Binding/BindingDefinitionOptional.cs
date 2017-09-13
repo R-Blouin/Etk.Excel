@@ -11,6 +11,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
     {
         private bool comNameIsInvalid;
         private readonly ILogger log = Logger.Instance;
+        private static readonly object syncObj = new object();
 
         private readonly Dictionary<Type, IBindingDefinition> bindingDefinitionByType = new Dictionary<Type, IBindingDefinition>();
         
@@ -38,7 +39,12 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 if (! IsReadOnly)
                 {
                     if (Marshal.IsComObject(dataSource) && !comNameIsInvalid)
-                        dataSource.GetType().InvokeMember(Name, BindingFlags.SetProperty, null, dataSource, new[] { data }, null);
+                    {
+                        //lock (syncObj) // we need to synchro Com exec
+                        //{
+                            dataSource.GetType().InvokeMember(Name, BindingFlags.Default | BindingFlags.SetProperty, null, dataSource, new[] { data }, null);
+                        //}
+                    }
                 }
                 return ResolveBinding(dataSource);
             }
@@ -64,7 +70,10 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 {
                     try
                     {
-                        return type.InvokeMember(Name, BindingFlags.GetProperty, null, dataSource, null, null);
+                        //lock (syncObj) // we need to synchro Com exec
+                        //{
+                            return type.InvokeMember(Name, BindingFlags.Default | BindingFlags.GetProperty, null, dataSource, null, null);
+                        //}
                     }
                     catch (COMException ex)
                     {
@@ -78,7 +87,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
 
         public IBindingDefinition CreateRealBindingDefinition(Type type)
         { 
-            IBindingDefinition definition = null;
+            IBindingDefinition definition;
             if (!bindingDefinitionByType.TryGetValue(type, out definition))
             {
                 definition = BindingDefinitionFactory.CreateInstance(type, DefinitionDescription) ?? this;
@@ -99,10 +108,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 else
                 {
                     IBindingDefinition realBindingDefinition = CreateRealBindingDefinition(parent.DataSource.GetType());
-                    if (realBindingDefinition.CanNotify)
-                        ret = new BindingContextItemCanNotify(parent, realBindingDefinition);
-                    else
-                        ret = new BindingContextItem(parent, realBindingDefinition);
+                    ret = realBindingDefinition.CanNotify ? new BindingContextItemCanNotify(parent, realBindingDefinition) 
+                                                          : new BindingContextItem(parent, realBindingDefinition);
                 }
             }
             ret.Init();

@@ -11,6 +11,7 @@ using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Controls.WithFormula;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Views;
+using Microsoft.Vbe.Interop.Forms;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Renderer
@@ -63,10 +64,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
             cells = new object[RenderedArea.Height, RenderedArea.Width];
             ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>> decorators = new ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>>();
 
-            Parallel.For(0, DataRows.Count, i =>
+            //Parallel.For(0, DataRows.Count, i => // Parrallel problem with Com object
+            for (int i = 0; i <DataRows.Count(); i++)
             {
-                List<IBindingContextItem> itemsInRow = DataRows[i];
                 int colId = 0;
+                List<IBindingContextItem> itemsInRow = DataRows[i];
                 foreach (IBindingContextItem item in itemsInRow)
                 {
                     if (item != null)
@@ -81,12 +83,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             ((IBindingContextItemCanNotify)item).OnPropertyChangedActionArgs = new KeyValuePair<int, int>(i, colId);
                         }
                         object value = item.ResolveBinding();
-                        cells[i, colId++] = value != null && value is Enum ? ((Enum) value).ToString() : value;
+                        cells[i, colId++] = (value as Enum)?.ToString() ?? value;
                     }
                     else
                         cells[i, colId++] = null;
                 }
-            });
+            }
+            //);
             RenderedRange.Value2 = cells;
 
             // Element decorators managements
