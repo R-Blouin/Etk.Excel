@@ -20,8 +20,8 @@ namespace Etk.Excel.Addin
 
             ComServer.DllRegisterServer();
 
-            excelApplication.WorkbookOpen += (wb) => Register(wb);
-            excelApplication.WorkbookBeforeClose += (Workbook wb, ref bool cancel) => UnRegisterTlb(wb);
+            //excelApplication.WorkbookOpen += (wb) => Register(wb);
+            //excelApplication.WorkbookBeforeClose += (Workbook wb, ref bool cancel) => UnRegisterTlb(wb);
 
             if (excelApplication.ActiveWorkbook != null)
                 Register(excelApplication.ActiveWorkbook);

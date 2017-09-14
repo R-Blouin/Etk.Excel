@@ -6,7 +6,8 @@ using System.Runtime.InteropServices;
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
-    [Export]
+    [Export(typeof(EventExcelCallbacksManager))]
+    [Export(typeof(EventCallbacksManager))]
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class EventExcelCallbacksManager : EventCallbacksManager
     {
