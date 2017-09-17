@@ -11,12 +11,12 @@ namespace Etk.Excel.BindingTemplates.Definitions
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class EventExcelCallbacksManager : EventCallbacksManager
     {
-        public static void ComInvoke(IBindingContextElement catchingContextElement, object catchingDataSource, IBindingContextItem currentContextItem, object currentContextItemDataSource)
+        protected override void InvokeNotDotNet(EventCallback callback, object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
         {
             ExcelTemplateDefinition templateDefinition = catchingContextElement.ParentPart.ParentContext.TemplateDefinition as ExcelTemplateDefinition;
             try
             {
-                ETKExcel.ExcelApplication.ExecuteVbaMAcro(templateDefinition.SelectionChangedComFonctionName, new[] { catchingDataSource, currentContextItem.BindingDefinition.Name });
+                ETKExcel.ExcelApplication.ExecuteVbaMAcro(callback.Ident, new[] { catchingContextElement?.DataSource, currentContextItem.BindingDefinition.Name });
             }
             catch (COMException ex)
             {

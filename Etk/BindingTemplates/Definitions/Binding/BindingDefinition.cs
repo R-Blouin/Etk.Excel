@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
@@ -98,17 +98,17 @@ namespace Etk.BindingTemplates.Definitions.Binding
         { get; protected set;}
 
         /// <summary> Implements <see cref="IBindingDefinition.OnSelection"/> </summary>
-        public MethodInfo OnSelection => DefinitionDescription.OnSelection;
+        public EventCallback OnSelection => DefinitionDescription.OnSelection;
 
         /// <summary> Implements <see cref="IBindingDefinition.OnClick"/> </summary>
-        public MethodInfo OnClick => DefinitionDescription.OnLeftDoubleClick;
+        public EventCallback OnClick => DefinitionDescription.OnLeftDoubleClick;
 
         /// <summary> Implements <see cref="IBindingDefinition.IsMultiLine"/> </summary>
         public bool IsMultiLine => DefinitionDescription.IsMultiLine;
 
         public double MultiLineFactor => DefinitionDescription.MultiLineFactor;
 
-        public MethodInfo MultiLineFactorResolver => DefinitionDescription.MultiLineFactorResolver;
+        public EventCallback MultiLineFactorResolver => DefinitionDescription.MultiLineFactorResolver;
 
         public string Formula => DefinitionDescription.Formula;
 

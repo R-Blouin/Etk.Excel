@@ -12,6 +12,7 @@ using Etk.Excel.BindingTemplates.Renderer;
 using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
@@ -662,7 +663,7 @@ namespace Etk.Excel.BindingTemplates.Views
                                 do
                                 {
                                     ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                                    MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
+                                    EventCallback callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
                                     if (callback != null)
                                     {
                                         ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem);

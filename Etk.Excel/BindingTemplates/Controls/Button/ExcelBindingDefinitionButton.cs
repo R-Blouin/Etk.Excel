@@ -8,12 +8,24 @@ using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
 using Etk.Tools.Reflection;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.Excel.BindingTemplates.Controls.Button
 {
     class ExcelBindingDefinitionButton : BindingDefinition
     {
         #region attributes and properties
+        private static EventCallbacksManager eventCallbacksManager;
+        private static EventCallbacksManager EventCallbacksManager
+        {
+            get
+            {
+                if (eventCallbacksManager == null)
+                    eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>();
+                return eventCallbacksManager;
+            }
+        }
+
         public const string BUTTON_TEMPLATE_PREFIX = "<Button";
 
         public IBindingDefinition LabelBindingDefinition
@@ -25,7 +37,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         public ExcelTemplateDefinition TemplateDefinition
         { get; private set; }
 
-        public MethodInfo Command
+        public EventCallback Command
         { get; private set; }
 
         public bool OnClickWithRange
@@ -108,25 +120,26 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     string onCommand = Definition.Command.Trim();
                     string[] commandElements = onCommand.Split(',');
 
-                    Type type = TemplateDefinition.MainBindingDefinition.BindingTypeIsGeneric ? TemplateDefinition.MainBindingDefinition.BindingGenericType : TemplateDefinition.MainBindingDefinition.BindingType;
-                    MethodInfo method = TypeHelpers.GetMethod(type, onCommand);
+                    Command =  EventCallbacksManager.RetrieveCallback(TemplateDefinition, onCommand);
 
-                    ParameterInfo[] parameters = method.GetParameters();
-                    if (method.IsStatic)
+                    if(! Command.IsNotDotNet)
                     {
-                        if (parameters.Count() > 2)
-                            throw new EtkException($"Method dataAccessor must be 'void static {method.Name}(object currentObject [, Range <currentObject caller>]'");
+                        ParameterInfo[] parameters = Command.Callback.GetParameters();
+                        if (Command.Callback.IsStatic)
+                        {
+                            if (parameters.Count() > 2)
+                                throw new EtkException($"Method dataAccessor must be 'void static {Command.Callback.Name}(object currentObject [, Range <currentObject caller>]'");
 
-                        OnClickWithRange = parameters.Count() == 2;
-                    }
-                    else
-                    {
-                        if (parameters.Count() > 1 || (parameters.Count() == 1 && parameters[0].ParameterType != typeof(Microsoft.Office.Interop.Excel.Range)))
-                            throw new EtkException($"Method dataAccessor must be 'void {method.Name}([Range <currentObject caller>])'");
+                            OnClickWithRange = parameters.Count() == 2;
+                        }
+                        else
+                        {
+                            if (parameters.Count() > 1 || (parameters.Count() == 1 && parameters[0].ParameterType != typeof(Microsoft.Office.Interop.Excel.Range)))
+                                throw new EtkException($"Method dataAccessor must be 'void {Command.Callback.Name}([Range <currentObject caller>])'");
 
-                        OnClickWithRange = parameters.Count() == 1;
+                            OnClickWithRange = parameters.Count() == 1;
+                        }
                     }
-                    Command = method;
                 }
                 catch (Exception ex)
                 {

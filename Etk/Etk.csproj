@@ -52,11 +52,11 @@
     <Compile Include="BindingTemplates\Context\BindingContextPartType.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\BindingSearchContextItem.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\RootBindingFilter.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallback.cs" />
     <Compile Include="BindingTemplates\Definitions\SortSearchAndFilter\BindingSearchDefinition.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\BindingFilterContextItem.cs" />
     <Compile Include="BindingTemplates\Context\IBindingContextPart.cs" />
     <Compile Include="BindingTemplates\Definitions\SortSearchAndFilter\BindingFilterDefinition.cs" />
-    <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallback.cs" />
     <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallbacksManager.cs" />
     <Compile Include="BindingTemplates\Definitions\Decorators\DecoratorGroup.cs" />
     <Compile Include="BindingTemplates\Definitions\Decorators\DecoratorResult.cs" />

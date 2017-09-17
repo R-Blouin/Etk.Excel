@@ -8,6 +8,7 @@ using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 {
@@ -60,15 +61,15 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 
         public Decorator DecoratorDefinition => NestedBindingDefinition == null ? null : NestedBindingDefinition.DecoratorDefinition;
 
-        public MethodInfo OnSelection => NestedBindingDefinition == null ? null : NestedBindingDefinition.OnSelection;
+        public EventCallback OnSelection => NestedBindingDefinition == null ? null : NestedBindingDefinition.OnSelection;
 
-        public MethodInfo OnClick => NestedBindingDefinition == null ? null : NestedBindingDefinition.OnClick;
+        public EventCallback OnClick => NestedBindingDefinition == null ? null : NestedBindingDefinition.OnClick;
 
         public bool IsMultiLine => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsMultiLine;
 
         public double MultiLineFactor => NestedBindingDefinition == null ? 0 : NestedBindingDefinition.MultiLineFactor;
 
-        public MethodInfo MultiLineFactorResolver => NestedBindingDefinition == null ? null : NestedBindingDefinition.MultiLineFactorResolver;
+        public EventCallback MultiLineFactorResolver => NestedBindingDefinition == null ? null : NestedBindingDefinition.MultiLineFactorResolver;
 
         #endregion
         #endregion

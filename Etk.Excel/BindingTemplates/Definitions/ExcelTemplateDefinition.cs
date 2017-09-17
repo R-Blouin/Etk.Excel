@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
@@ -7,8 +6,6 @@ using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.ContextualMenus;
 using Etk.Tools.Extensions;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
-using System.Reflection;
-using Etk.Tools.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Etk.Excel.BindingTemplates.Definitions
@@ -27,6 +24,17 @@ namespace Etk.Excel.BindingTemplates.Definitions
             }
         }
 
+        private static EventCallbacksManager eventCallbacksManager;
+        private static EventCallbacksManager EventCallbacksManager
+        {
+            get
+            {
+                if (eventCallbacksManager == null)
+                    eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>();
+                return eventCallbacksManager;
+            }
+        }
+
         public int Width
         { get; private set; }
 
@@ -42,18 +50,13 @@ namespace Etk.Excel.BindingTemplates.Definitions
         public IContextualMenu ContextualMenu
         { get; internal set; }
 
-        //public bool IsSelectionChangedCom
-        //{ get; internal set; }
-
-        public MethodInfo OnLeftDoubleClick
-        { get; internal set; }
-
         public ExcelRangeDecorator Decorator
         { get; private set; }
 
-        public MethodInfo SelectionChanged { get; private set; }
+        public EventCallback OnLeftDoubleClick
+        { get; internal set; }
 
-        public string SelectionChangedComFonctionName { get; private set; }
+        public EventCallback SelectionChanged { get; private set; }
         #endregion
 
         #region .ctors and factories
@@ -126,28 +129,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
             {
                 try
                 {
-                    if(selectionChanged.StartsWith("$"))
-                    {
-                        SelectionChanged = TypeHelpers.GetMethod(typeof(EventExcelCallbacksManager), "ComInvoke");
-                        SelectionChangedComFonctionName = selectionChanged.TrimStart('$');
-                    }
-                    else
-                    {
-                        Type type = MainBindingDefinition.BindingTypeIsGeneric ? MainBindingDefinition.BindingGenericType : MainBindingDefinition.BindingType;
-
-                        string[] parts = selectionChanged.Split(',');
-                        if (parts.Count() == 1)
-                        {
-                            EventCallback callback = ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.GetCallback(selectionChanged);
-                            if (callback != null)
-                                SelectionChanged = callback.Callback;
-                        }
-                        if (parts.Count() == 3)
-                            SelectionChanged = TypeHelpers.GetMethod(null, selectionChanged);
-
-                        if (SelectionChanged == null)
-                            throw new Exception($"Cannot find the callback '{selectionChanged}'");
-                    }
+                    SelectionChanged = EventCallbacksManager.RetrieveCallback(this, selectionChanged);
                 }
                 catch (Exception ex)
                 {

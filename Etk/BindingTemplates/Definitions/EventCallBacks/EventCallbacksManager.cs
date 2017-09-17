@@ -6,6 +6,9 @@ using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions;
 using Etk.BindingTemplates.Views;
 using Etk.Tools.Log;
+using Etk.Tools.Reflection;
+using System.Linq;
+using Etk.BindingTemplates.Definitions.Templates;
 
 namespace Etk.BindingTemplates.Definitions.EventCallBacks
 {
@@ -15,6 +18,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         protected readonly ILogger log = Logger.Instance;
         protected readonly Dictionary<string, EventCallback> callbackByIdent = new Dictionary<string, EventCallback>();
 
+        #region public methods
         /// <summary>Register event callbacks from xml definitions</summary>
         /// <param name="xml">The xml that contains the callback definitions </param>
         public void RegisterEventCallbacksFromXml(string xml)
@@ -28,10 +32,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
                 if (xmlCallbacks.Callbacks != null)
                 {
                     foreach (XmlEventCallback xmlcallback in xmlCallbacks.Callbacks)
-                    {
-                        EventCallback callback = EventCallback.CreateInstance(xmlcallback.Ident, xmlcallback.Description, null, xmlcallback.Method);
-                        RegisterCallback(callback);
-                    }
+                        RegisteredCallback(xmlcallback.Ident, xmlcallback.Description, null, xmlcallback.Method);
                 }
             }
             catch (Exception ex)
@@ -41,10 +42,10 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             }
         }
 
-        /// <summary> Return a <see cref="EventCallback"/> given an ident</summary>
+        /// <summary> Return a <see cref="EventCallback"/> given an ident of a callback previously registered</summary>
         /// <param name="ident">the ident of the <see cref="EventCallback"/> to return</param>
         /// <returns>If found, the <see cref="EventCallback"/>, if not: null</returns>
-        public EventCallback GetCallback(string ident)
+        public EventCallback GetRegisteredCallback(string ident)
         {
             EventCallback ret = null;
             if (!String.IsNullOrEmpty(ident))
@@ -72,46 +73,110 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             }
         }
 
-        #region public methods
-        public bool Invoke(MethodInfo callback, object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
+        public EventCallback RetrieveCallback(ITemplateDefinition templateDefinition, string callbackName)
         {
-            object invokeTarget = callback.IsStatic ? null : catchingContextElement.DataSource;
-            int nbrParameters = callback.GetParameters().Length;
+            EventCallback ret = null;
 
-            if(nbrParameters > 4)
-                throw new Exception($"Method info '{callback.Name}' signature is not correct");
-
-            object[] parameters;
-            switch (nbrParameters)
+            if (callbackName.StartsWith("$")) // The callback is not a .Net one
+                ret = new EventCallback(callbackName.TrimStart('$'), null, null);
+            else if (callbackName.StartsWith("*"))  // The callback was registred (from xml)
+                ret = GetRegisteredCallback(callbackName);
+            else
             {
-                case 4:
-                    parameters = new object[] { catchingContextElement, catchingContextElement.DataSource, currentContextItem, currentContextItem.DataSource };
-                    break;
-                case 3:
-                    parameters = new object[] { sender, catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
-                break;
-                case 2:
-                    if(callback.GetParameters()[0].ParameterType == typeof(ITemplateView))
-                        parameters = new object[] { catchingContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
-                    else
-                        parameters = new object[] { catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
-                break;
-                case 1:
-                    parameters = new object[] { catchingContextElement.DataSource };
-                break;
-                default:
-                    parameters = null;
-                break;
+                MethodInfo methodInfo;
+
+                string methodName = callbackName;
+                string[] parts = callbackName.Split(',');
+                if (parts.Count() == 1) // The callback is a member of the 'templateDefinition.MainBindingDefinition.BindingType' class
+                {
+                    Type inType = null;
+                    if (templateDefinition != null && templateDefinition.MainBindingDefinition != null && templateDefinition.MainBindingDefinition.BindingType != null)
+                    {
+                        inType = templateDefinition.MainBindingDefinition.BindingType;
+                        methodInfo = TypeHelpers.GetMethod(inType, parts[0]);
+                        ret = new EventCallback(null, null, methodInfo);
+                    }
+                }
+                if (parts.Count() == 3) // assembly, type and nam are supplied
+                {
+                    methodInfo = TypeHelpers.GetMethod(null, callbackName);
+                    ret = new EventCallback(null, null, methodInfo);
+                }
             }
 
-            callback.Invoke(invokeTarget, parameters);
-            return true;
+            if (ret == null)
+                throw new Exception($"Cannot find the callback '{callbackName}'");
+
+            return ret;
         }
-        #endregion
+
+        public void Invoke(EventCallback callback, object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
+        {
+            if (callback.IsNotDotNet)
+                InvokeNotDotNet(callback, sender, catchingContextElement, currentContextItem);
+            else
+            {
+                MethodInfo methodInfo = callback.Callback;
+                object invokeTarget = methodInfo.IsStatic ? null : catchingContextElement.DataSource;
+                int nbrParameters = methodInfo.GetParameters().Length;
+
+                if (nbrParameters > 3)
+                    throw new Exception($"Method info '{methodInfo.Name}' signature is not correct");
+
+                object[] parameters;
+                switch (nbrParameters)
+                {
+                    //case 4:
+                    //    parameters = new object[] { catchingContextElement, catchingContextElement.DataSource, currentContextItem, currentContextItem.DataSource };
+                    //    break;
+                    case 3:
+                        parameters = new object[] { sender, catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
+                        break;
+                    case 2:
+                        if (methodInfo.GetParameters()[0].ParameterType == typeof(ITemplateView))
+                            parameters = new object[] { catchingContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
+                        else
+                            parameters = new object[] { catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
+                        break;
+                    case 1:
+                        parameters = new object[] { catchingContextElement.DataSource };
+                        break;
+                    default:
+                        parameters = null;
+                        break;
+                }
+                methodInfo.Invoke(invokeTarget, parameters);
+            }
+        }
 
         public void Dispose()
         {
             callbackByIdent.Clear();
+        }
+        #endregion
+
+        protected virtual void InvokeNotDotNet(EventCallback callback, object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
+        {}
+
+        /// <summary></summary>
+        private  void RegisteredCallback(string ident, string description, Type type, string methodName)
+        {
+            try
+            {
+                EventCallback callback;
+                if(callbackByIdent.TryGetValue(ident, out callback))
+                {
+                    MethodInfo toInvoke = null;
+                    if(methodName != null && ! methodName.StartsWith("$"))
+                        toInvoke =  TypeHelpers.GetMethod(type, methodName);
+                    callback = new EventCallback(ident, description, toInvoke);
+                    RegisterCallback(callback);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException($"Method '{methodName??string.Empty}' not resolved:{ex.Message}");
+            }
         }
     }
 }

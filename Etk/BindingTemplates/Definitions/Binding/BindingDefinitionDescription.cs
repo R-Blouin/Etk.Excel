@@ -58,10 +58,10 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public Decorator Decorator
         { get; private set; }
 
-        public MethodInfo OnSelection
+        public EventCallback OnSelection
         { get; private set; }
 
-        public MethodInfo OnLeftDoubleClick
+        public EventCallback OnLeftDoubleClick
         { get; private set; }
 
         public bool IsMultiLine
@@ -70,7 +70,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public double MultiLineFactor
         { get; private set; }
 
-        public MethodInfo MultiLineFactorResolver
+        public EventCallback MultiLineFactorResolver
         { get; private set; }
 
         public ShowHideMode ShowHideMode
@@ -128,18 +128,18 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         // On Selection 
                         if (option.StartsWith("S="))
                         {
-                            string methodInfoIdent = option.Substring(2);
-                            OnSelection = RetrieveMethodInfo(templateDefinition, option, methodInfoIdent);
+                            string methodInfoName = option.Substring(2);
+                            OnSelection = RetrieveMethodInfo(templateDefinition, option, methodInfoName);
                             continue;
                         }
                         // On double left click
                         if (option.StartsWith("LDC="))
                         {
-                            string methodInfoIdent = option.Substring(4);
-                            OnLeftDoubleClick = RetrieveMethodInfo(templateDefinition, option, methodInfoIdent);
+                            string methodInfoName = option.Substring(4);
+                            OnLeftDoubleClick = RetrieveMethodInfo(templateDefinition, option, methodInfoName);
                             continue;
                         }
-                        // MultiLine based on the number of line in the bound property
+                        // MultiLine based on the number of line passed as parameter
                         if (option.StartsWith("M="))
                         {
                             IsMultiLine = true;
@@ -154,19 +154,20 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         // MultiLine where the number of line is determinated by a callback invocation
                         if (option.StartsWith("ME="))
                         {
-                            string multiLineFactorResolver = option.Substring(3);
-                            if (!string.IsNullOrEmpty(multiLineFactorResolver))
+                            string methodInfoName = option.Substring(3);
+                            if (!string.IsNullOrEmpty(methodInfoName))
                             {
                                 try
                                 {
-                                    MultiLineFactorResolver = RetrieveMethodInfo(templateDefinition, null, multiLineFactorResolver);
+                                    MultiLineFactorResolver = RetrieveMethodInfo(templateDefinition, null, methodInfoName);
                                     if (MultiLineFactorResolver != null)
                                     {
-                                        int parametersCpt = MultiLineFactorResolver.GetParameters().Length;
-                                        if (MultiLineFactorResolver.ReturnType != typeof(int) || 
-                                            parametersCpt > 1 ||
-                                            (parametersCpt == 1 && !(MultiLineFactorResolver.GetParameters()[0].ParameterType.IsAssignableFrom(typeof(object)))))
-                                            throw new Exception("The function prototype must be defined as 'int <Function Name>([param]) with 'param' inheriting from 'system.object'");
+                                        if (! MultiLineFactorResolver.IsNotDotNet)
+                                        {
+                                            int parametersCpt = MultiLineFactorResolver.Callback.GetParameters().Length;
+                                            if (MultiLineFactorResolver.Callback.ReturnType != typeof(int) || parametersCpt > 1 || (parametersCpt == 1 && !(MultiLineFactorResolver.Callback.GetParameters()[0].ParameterType.IsAssignableFrom(typeof(object)))))
+                                                throw new Exception("The function prototype must be defined as 'int <Function Name>([param]) with 'param' inheriting from 'system.object'");
+                                        }
                                         IsMultiLine = true;
                                     }
                                 }
@@ -189,7 +190,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             }
                             throw new Exception("The 'Show/Hide' prototype must be defined as 'SV=<int>' whre '<int>' is a integer");
                         }
-                        // On double left click, Show/Hide the x following/preceding colums. Start shown
+                        // On double left click, Show/Hide the x following/preceding colums/rows. Start shown
                         if (option.StartsWith("SH="))
                         {
                             string numberOfConcernedColumns = option.Substring(3);
@@ -200,44 +201,18 @@ namespace Etk.BindingTemplates.Definitions.Binding
                                 ShowHideValue = wrk;
                                 continue;
                             }
-                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SH=<int>' whre '<int>' is a integer");
+                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SH=<int>' where '<int>' is a integer");
                         }
                     }
                 }
             }
         }
 
-        private MethodInfo RetrieveMethodInfo(ITemplateDefinition templateDefinition, string option, string methodInfoIdent)
+        protected EventCallback RetrieveMethodInfo(ITemplateDefinition templateDefinition, string option, string callbackName)
         {
-            MethodInfo methodInfo = null;
             try
             {
-                string[] parts = methodInfoIdent.Split(',');
-                if (parts.Count() == 1)
-                {
-                    EventCallback callBack = EventCallbacksManager.GetCallback(methodInfoIdent);
-                    if (callBack != null)
-                        methodInfo = callBack.Callback;
-                }
-                if (parts.Count() == 3)
-                {
-                    Type inType = null;
-                    string methodInfoName = methodInfoIdent;
-                    if (string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
-                    {
-                        if(templateDefinition != null && templateDefinition.MainBindingDefinition != null && templateDefinition.MainBindingDefinition.BindingType != null)
-                        {
-                            inType = templateDefinition.MainBindingDefinition.BindingType;
-                            methodInfoName = parts[2];
-                        }
-                    }
-                    methodInfo = TypeHelpers.GetMethod(inType, methodInfoName);
-                }
-
-                if (methodInfo == null)
-                    throw new Exception($"Cannot find the callback '{methodInfoIdent}'");
-
-                return methodInfo;
+                return EventCallbacksManager.RetrieveCallback(templateDefinition, callbackName);
             }
             catch (Exception ex)
             {
