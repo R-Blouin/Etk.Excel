@@ -60,6 +60,11 @@ namespace Etk.BindingTemplates.Definitions.Binding
 
             try
             {
+                /// Optional
+                ////////////
+                if (sourceType == null)
+                    return BindingDefinitionOptional.CreateInstance(definitionDescription);
+
                 /// Composite
                 /////////////
                 if (definitionDescription.BindingExpression.StartsWith("{") && definitionDescription.BindingExpression.EndsWith("}"))
@@ -70,8 +75,6 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 if (definitionDescription.BindingExpression.Contains("."))
                     return BindingDefinitionHierarchical.CreateInstance(sourceType, definitionDescription);
 
-                if (sourceType == null)
-                    return BindingDefinitionOptional.CreateInstance(definitionDescription);
 
                 //// keyword
                 ////////////

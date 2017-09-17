@@ -129,7 +129,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 int cpt = -1;
                 foreach (Match match in matches)
                 {
-                    string[] elements = match.Value.Split(':');
+                    string[] elements = match.Value.Split(new[] { "::" }, StringSplitOptions.None);
                     if (string.IsNullOrEmpty(elements[0]))
                         bindingFormat = bindingFormat.Replace($"{{{match.Value}}}", string.Empty);
                     else
@@ -161,10 +161,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
 
                     // If more than one nested definition, then force the Binding definition to be ReadOnly
                     definitionDescription.IsReadOnly = nestedDefinitions.Count > 1 || nestedDefinitions[0].IsReadOnly;
-                    definition = new BindingDefinitionComposite(definitionDescription){nestedDefinitions = nestedDefinitions,
-                                                                                       BindingFormat = bindingFormat,
-                                                                                       BindingType = typeof(string)};
-
+                    definition = new BindingDefinitionComposite(definitionDescription){nestedDefinitions = nestedDefinitions, BindingFormat = bindingFormat, BindingType = typeof(string)};
                     definition.canBeNotifiedNestedDefinitions = definition.nestedDefinitions.Where(d => d.CanNotify).ToList();
                     definition.CanNotify = definition.canBeNotifiedNestedDefinitions.Count > 0;
                 }

@@ -88,19 +88,16 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
                 string methodName = callbackName;
                 string[] parts = callbackName.Split(',');
                 if (parts.Count() == 1) // The callback is a member of the 'templateDefinition.MainBindingDefinition.BindingType' class
-                {
-                    Type inType = null;
-                    if (templateDefinition != null && templateDefinition.MainBindingDefinition != null && templateDefinition.MainBindingDefinition.BindingType != null)
-                    {
-                        inType = templateDefinition.MainBindingDefinition.BindingType;
-                        methodInfo = TypeHelpers.GetMethod(inType, parts[0]);
-                        ret = new EventCallback(null, null, methodInfo);
-                    }
-                }
+                    ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[0]);
                 if (parts.Count() == 3) // assembly, type and nam are supplied
                 {
-                    methodInfo = TypeHelpers.GetMethod(null, callbackName);
-                    ret = new EventCallback(null, null, methodInfo);
+                    if(string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
+                        ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[2]);
+                    else
+                    {
+                        methodInfo = TypeHelpers.GetMethod(null, callbackName);
+                        ret = new EventCallback(null, null, methodInfo);
+                    }
                 }
             }
 
@@ -177,6 +174,20 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             {
                 throw new ArgumentException($"Method '{methodName??string.Empty}' not resolved:{ex.Message}");
             }
+        }
+
+        private EventCallback GetCallBackFromMainBindingDefinition(ITemplateDefinition templateDefinition, string methodName)
+        {
+            MethodInfo methodInfo;
+            EventCallback ret = null;
+            Type inType = null;
+            if (templateDefinition != null && templateDefinition.MainBindingDefinition != null && templateDefinition.MainBindingDefinition.BindingType != null)
+            {
+                inType = templateDefinition.MainBindingDefinition.BindingType;
+                methodInfo = TypeHelpers.GetMethod(inType, methodName);
+                ret = new EventCallback(null, null, methodInfo);
+            }
+            return ret;
         }
     }
 }

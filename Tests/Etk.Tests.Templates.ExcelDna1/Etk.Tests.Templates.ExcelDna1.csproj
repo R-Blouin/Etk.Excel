@@ -31,14 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Etk, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Etk.Excel.1.0.1\lib\net40\Etk.dll</HintPath>
-    </Reference>
-    <Reference Include="Etk.Excel, Version=0.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Etk.Excel.1.0.1\lib\net40\Etk.Excel.dll</HintPath>
-    </Reference>
-    <Reference Include="ExcelDna.Integration">
-      <HintPath>..\..\packages\ExcelDna.Integration.0.33.9\lib\ExcelDna.Integration.dll</HintPath>
+    <Reference Include="ExcelDna.Integration, Version=0.34.6373.42344, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ExcelDna.Integration.0.34.6\lib\ExcelDna.Integration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
@@ -116,15 +110,23 @@
     </EmbeddedResource>
     <None Include="packages.config" />
     <EmbeddedResource Include="Dashboard\DashboardDecoratorDefinitions.xml" />
-    <Content Include="Etk.Tests.Templates.ExcelDna1-AddIn.dna">
+    <None Include="Properties\ExcelDna.Build.props" />
+    <None Include="Etk.Tests.Templates.ExcelDna1-AddIn.dna">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <None Include="Etk.Tests.Templates.ExcelDna1.xlsx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Etk.Excel\Etk.Excel.csproj">
+      <Project>{14413cbb-3028-462c-958d-16e96575a06f}</Project>
+      <Name>Etk.Excel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Etk\Etk.csproj">
+      <Project>{10188a0e-231d-42da-952e-a260402b3ea4}</Project>
+      <Name>Etk</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Etk.Tests.Data\Etk.Tests.Data.csproj">
       <Project>{9c0f98f3-1c09-4b52-b5e4-0907a45c82a8}</Project>
       <Name>Etk.Tests.Data</Name>
@@ -133,9 +135,14 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)\packages\ExcelDna.AddIn.0.33.9\tools\ExcelDna.xll" "$(TargetDir)Etk.Tests.Templates.ExcelDna1-AddIn.xll*" /C /Y
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\..\packages\ExcelDna.AddIn.0.34.6\tools\ExcelDna.AddIn.targets" Condition="Exists('..\..\packages\ExcelDna.AddIn.0.34.6\tools\ExcelDna.AddIn.targets')" />
+  <Target Name="EnsureExcelDnaTargetsImported" BeforeTargets="BeforeBuild" Condition="'$(ExcelDnaTargetsImported)' == ''">
+    <Error Condition="!Exists('..\..\packages\ExcelDna.AddIn.0.34.6\tools\ExcelDna.AddIn.targets') And ('$(RunExcelDnaBuild)' != '' And $(RunExcelDnaBuild))" Text="You are trying to build with ExcelDna, but the NuGet targets file that ExcelDna depends on is not available on this computer. This is probably because the ExcelDna package has not been committed to source control, or NuGet Package Restore is not enabled. Please enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\..\packages\ExcelDna.AddIn.0.34.6\tools\ExcelDna.AddIn.targets') And ('$(RunExcelDnaBuild)' != '' And $(RunExcelDnaBuild))" Text="ExcelDna cannot be run because NuGet packages were restored prior to the build running, and the targets file was unavailable when the build started. Please build the project again to include these packages in the build. You may also need to make sure that your build server does not delete packages prior to each build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -175,10 +175,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             else
             {
                 if (CanNotify)
-                {
-                    BindingContextItemCanNotify contextItem = new BindingContextItemCanNotify(parent, this);
-                    ret = contextItem;
-                }
+                    ret = new BindingContextItemCanNotify(parent, this);
                 else
                     ret = new BindingContextItem(parent, this);
             }

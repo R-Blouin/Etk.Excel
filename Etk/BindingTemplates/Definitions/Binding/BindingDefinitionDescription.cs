@@ -243,7 +243,6 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         {
                             string optionsString = bindingExpression.Substring(0, postSep);
                             string[] optionsArray = optionsString.Split(';');
-                            //string[] optionsArray = optionsString.Split(new string[] { "::" }, StringSplitOptions.None);
                             options = optionsArray.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim()).ToList();
                             bindingExpression = bindingExpression.Substring(postSep + 2);
                         }
@@ -263,7 +262,6 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     {
                         string optionsString = bindingExpression.Substring(0, postSep);
                         string[] optionsArray = optionsString.Split(';');
-                        //string[] optionsArray = optionsString.Split(new string[] { "::" }, StringSplitOptions.None);
                         options = optionsArray.Where(p => !string.IsNullOrEmpty(p)).Select(p => p.Trim()).ToList();
                         bindingExpression = bindingExpression.Substring(postSep + 2);
                     }

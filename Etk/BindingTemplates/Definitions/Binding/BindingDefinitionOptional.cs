@@ -103,14 +103,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 ret = new BindingContextItem(parent, this);
             else
             {
-                if(Marshal.IsComObject(parent.DataSource))
-                    ret = new BindingContextItem(parent, this);
-                else
-                {
-                    IBindingDefinition realBindingDefinition = CreateRealBindingDefinition(parent.DataSource.GetType());
-                    ret = realBindingDefinition.CanNotify ? new BindingContextItemCanNotify(parent, realBindingDefinition) 
-                                                          : new BindingContextItem(parent, realBindingDefinition);
-                }
+                IBindingDefinition realBindingDefinition = CreateRealBindingDefinition(parent.DataSource.GetType());
+                ret = realBindingDefinition.CanNotify ? new BindingContextItemCanNotify(parent, realBindingDefinition) 
+                                                        : new BindingContextItem(parent, realBindingDefinition);
             }
             ret.Init();
             return ret;
