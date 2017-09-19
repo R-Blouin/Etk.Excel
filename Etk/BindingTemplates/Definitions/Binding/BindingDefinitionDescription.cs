@@ -30,15 +30,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
         }
 
         private static EventCallbacksManager eventCallbacksManager;
-        private static EventCallbacksManager EventCallbacksManager
-        {
-            get
-            {
-                if (eventCallbacksManager == null)
-                    eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>();
-                return eventCallbacksManager;
-            }
-        }
+        private static EventCallbacksManager EventCallbacksManager => eventCallbacksManager ??
+                                                                      (eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>());
 
         public string Name
         { get; set; }

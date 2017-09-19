@@ -1,8 +1,6 @@
-﻿using Etk.BindingTemplates.Context;
-using Etk.BindingTemplates.Definitions;
+﻿using Etk.BindingTemplates.Definitions;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
 using System.ComponentModel.Composition;
-using System.Runtime.InteropServices;
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -11,18 +9,9 @@ namespace Etk.Excel.BindingTemplates.Definitions
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class EventExcelCallbacksManager : EventCallbacksManager
     {
-        protected override void InvokeNotDotNet(EventCallback callback, object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
+        protected override object InvokeNotDotNet(EventCallback callback, object[] parameters)
         {
-            ExcelTemplateDefinition templateDefinition = catchingContextElement.ParentPart.ParentContext.TemplateDefinition as ExcelTemplateDefinition;
-            try
-            {
-                ETKExcel.ExcelApplication.ExecuteVbaMAcro(callback.Ident, new[] { catchingContextElement?.DataSource, currentContextItem.BindingDefinition.Name });
-            }
-            catch (COMException ex)
-            {
-                if (ex.ErrorCode != (int) SpecificException.DISP_E_UNKNOWNNAME)
-                    throw;
-            }
+            return ETKExcel.ExcelApplication.ExecuteVbaMAcro(callback.Ident, parameters);
         }
     }
 }

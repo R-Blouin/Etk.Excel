@@ -20,7 +20,7 @@ namespace Etk.BindingTemplates.Definitions.Decorators
         public Decorator GetDecorator(string ident)
         {
             Decorator ret = null;
-            if (!String.IsNullOrEmpty(ident))
+            if (!string.IsNullOrEmpty(ident))
             {
                 lock ((decoratorByIdent as ICollection).SyncRoot)
                 {

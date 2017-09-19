@@ -50,6 +50,6 @@ namespace Etk.Excel.Application
         /// <summary> Indicates whether status remains visible</summary>
         bool KeepStatusVisible { get; set; }
 
-        void ExecuteVbaMAcro(string functionName, object[] parameters);
+        object ExecuteVbaMAcro(string functionName, object[] parameters);
     }
 }

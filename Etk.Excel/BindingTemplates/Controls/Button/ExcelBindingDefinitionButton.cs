@@ -16,15 +16,8 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
     {
         #region attributes and properties
         private static EventCallbacksManager eventCallbacksManager;
-        private static EventCallbacksManager EventCallbacksManager
-        {
-            get
-            {
-                if (eventCallbacksManager == null)
-                    eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>();
-                return eventCallbacksManager;
-            }
-        }
+        private static EventCallbacksManager EventCallbacksManager => eventCallbacksManager ??
+                                                                      (eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>());
 
         public const string BUTTON_TEMPLATE_PREFIX = "<Button";
 
@@ -118,8 +111,6 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 try
                 {
                     string onCommand = Definition.Command.Trim();
-                    string[] commandElements = onCommand.Split(',');
-
                     Command =  EventCallbacksManager.RetrieveCallback(TemplateDefinition, onCommand);
 
                     if(! Command.IsNotDotNet)

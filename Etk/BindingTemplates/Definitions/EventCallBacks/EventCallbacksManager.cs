@@ -83,19 +83,16 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
                 ret = GetRegisteredCallback(callbackName);
             else
             {
-                MethodInfo methodInfo;
-
-                string methodName = callbackName;
                 string[] parts = callbackName.Split(',');
-                if (parts.Count() == 1) // The callback is a member of the 'templateDefinition.MainBindingDefinition.BindingType' class
+                if (parts.Length == 1) // The callback is a member of the 'templateDefinition.MainBindingDefinition.BindingType' class
                     ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[0]);
-                if (parts.Count() == 3) // assembly, type and nam are supplied
+                if (parts.Length == 3) // assembly, type and nam are supplied
                 {
                     if(string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
                         ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[2]);
                     else
                     {
-                        methodInfo = TypeHelpers.GetMethod(null, callbackName);
+                        MethodInfo methodInfo = TypeHelpers.GetMethod(null, callbackName);
                         ret = new EventCallback(null, null, methodInfo);
                     }
                 }
@@ -110,7 +107,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         public void Invoke(EventCallback callback, object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
         {
             if (callback.IsNotDotNet)
-                InvokeNotDotNet(callback, sender, catchingContextElement, currentContextItem);
+                InvokeNotDotNet(callback, new [] { catchingContextElement?.DataSource, currentContextItem?.BindingDefinition?.Name });
             else
             {
                 MethodInfo methodInfo = callback.Callback;
@@ -127,16 +124,16 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
                     //    parameters = new object[] { catchingContextElement, catchingContextElement.DataSource, currentContextItem, currentContextItem.DataSource };
                     //    break;
                     case 3:
-                        parameters = new object[] { sender, catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
+                        parameters = new [] { sender, catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
                         break;
                     case 2:
                         if (methodInfo.GetParameters()[0].ParameterType == typeof(ITemplateView))
-                            parameters = new object[] { catchingContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
+                            parameters = new [] { catchingContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
                         else
-                            parameters = new object[] { catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
+                            parameters = new [] { catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
                         break;
                     case 1:
-                        parameters = new object[] { catchingContextElement.DataSource };
+                        parameters = new [] { catchingContextElement.DataSource };
                         break;
                     default:
                         parameters = null;
@@ -146,14 +143,23 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             }
         }
 
+        public object DecoratorInvoke(EventCallback callback, object sender, object dataSource, string definitionName)
+        {
+            if (callback.IsNotDotNet)
+                return InvokeNotDotNet(callback, new[] { sender, dataSource, definitionName });
+
+            object[] parameters = sender == null ? new[] { dataSource, definitionName } : new [] { sender, dataSource, definitionName };
+            return callback.Callback.Invoke(callback.Callback.IsStatic ? null : dataSource, parameters);
+        }
+
         public void Dispose()
         {
             callbackByIdent.Clear();
         }
         #endregion
 
-        protected virtual void InvokeNotDotNet(EventCallback callback, object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
-        {}
+        protected virtual object InvokeNotDotNet(EventCallback callback, object[] parameters)
+        { return null;}
 
         /// <summary></summary>
         private  void RegisteredCallback(string ident, string description, Type type, string methodName)

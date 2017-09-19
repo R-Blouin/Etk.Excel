@@ -4,18 +4,6 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
 {
     public class EventCallback
     {
-        private static EventCallbacksManager eventCallbacksManager;
-        private static EventCallbacksManager EventCallbacksManager
-        {
-            get
-            {
-                if (eventCallbacksManager == null)
-                    eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>();
-                return eventCallbacksManager;
-            }
-        }
-
-
         #region propertis and attributes
         /// <summary> Ident to use to reference the decorator</summary>
         public string Ident

@@ -206,7 +206,7 @@ namespace Etk.Excel.Application
             }
         }
         
-        public void ExecuteVbaMAcro(string functionName, object[] parameters)
+        public object ExecuteVbaMAcro(string functionName, object[] parameters)
         {
             try
             {
@@ -219,10 +219,21 @@ namespace Etk.Excel.Application
                     lp.AddRange(parameters);
                     p = lp.ToArray();
                 }
-                Application.GetType().InvokeMember("Run", BindingFlags.Default | BindingFlags.InvokeMethod, null, Application, p);
+                return Application.GetType().InvokeMember("Run", BindingFlags.Default | BindingFlags.InvokeMethod, null, Application, p);
+            }
+            catch (COMException ex)
+            {
+                if (ex.ErrorCode != (int) SpecificException.DISP_E_UNKNOWNNAME)
+                {
+                    DisplayException("Execute Excel function failed", $"Excel function '{functionName}' not found", ex);
+                    return null;
+                }
+                throw;
             }
             catch (Exception ex)
             {
+                DisplayException("Execute Excel function failed", ex.Message, ex);
+                return null;
             }
         }
         #endregion

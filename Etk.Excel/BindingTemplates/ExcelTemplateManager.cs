@@ -506,8 +506,6 @@ namespace Etk.Excel.BindingTemplates
                 string message = $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{sheetTemplatePath.EmptyIfNull()}.{templateName.EmptyIfNull()}'";
                 Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
-                //ExcelApplication.DisplayException(null, message, ex);
-                //return null;
             }
             finally
             {

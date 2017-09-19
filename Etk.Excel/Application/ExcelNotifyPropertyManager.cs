@@ -130,8 +130,7 @@ namespace Etk.Excel.Application
                     {
                         ExcelInterop.Range currentSelectedRange = context.View.CurrentSelectedCell;
                         context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
-                        if (currentSelectedRange != null)
-                            currentSelectedRange.Select();
+                        currentSelectedRange?.Select();
                     }
                 }
             }
