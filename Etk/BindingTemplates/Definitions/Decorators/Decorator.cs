@@ -28,7 +28,7 @@ namespace Etk.BindingTemplates.Definitions.Decorators
         #endregion
 
         #region .ctors
-        public Decorator(string ident, string description, EventCallback callback)
+        protected Decorator(string ident, string description, EventCallback callback)
         {
             Ident = ident;
             Description = description;

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
-using Etk.Tools.Reflection;
 using Etk.BindingTemplates.Definitions.Templates;
 
 namespace Etk.BindingTemplates.Definitions.Binding
@@ -116,6 +114,13 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         {
                             string decoratorIdent = option.Substring(4);
                             Decorator = DecoratorsManager.GetDecorator(decoratorIdent);
+                            continue;
+                        }
+                        // Decorator 2
+                        if (option.StartsWith("DEC2="))
+                        {
+                            string decoratorDescription = option.Substring(5);
+                            Decorator = DecoratorsManager.CreateSimpleDecorator(templateDefinition, decoratorDescription);
                             continue;
                         }
                         // On Selection 
