@@ -35,10 +35,10 @@ namespace Etk.Excel.BindingTemplates.Definitions
         { get; private set; }
 
         public ExcelInterop.Range DefinitionFirstCell
-        { get; private set; }
+        { get;  }
 
         public ExcelInterop.Range DefinitionLastCell
-        { get; private set; }
+        { get; }
 
         public IContextualMenu ContextualMenu
         { get; internal set; }

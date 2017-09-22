@@ -1,5 +1,4 @@
-﻿using Etk.BindingTemplates.Definitions;
-using Etk.BindingTemplates.Definitions.EventCallBacks;
+﻿using Etk.BindingTemplates.Definitions.EventCallBacks;
 using System.ComponentModel.Composition;
 
 namespace Etk.Excel.BindingTemplates.Definitions

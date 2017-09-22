@@ -95,7 +95,6 @@
     <Compile Include="BindingTemplates\Decorators\ExcelElementDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelRangeSimpleDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelRangeDecorator.cs" />
-    <Compile Include="BindingTemplates\Decorators\ExcelDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelDecoratorsManager.cs" />
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlDecoratorItem.cs" />
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelRangeDecorator.cs" />

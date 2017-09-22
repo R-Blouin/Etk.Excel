@@ -198,7 +198,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             throw new EtkException("The 'Header' tag must be set on the first column after the beginning of the template declaration'");
                         if (endHeader != null && endHeader.Column < startHeader.Column)
                             throw new EtkException("The '<Header>' tag must be set before '<Header/>' one");
-                        headerSize = endHeader == null ? 1 : endHeader.Column - startHeader.Column + 1;
+                        headerSize = endHeader?.Column - startHeader.Column + 1 ?? 1;
                     }
                     else
                     {
@@ -206,7 +206,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             throw new EtkException("The 'Header' tag must be set on the first dataRow after the beginning of the template declaration'");
                         if (endHeader != null && endHeader.Row < startHeader.Row)
                             throw new EtkException("The '<Header>' tag must be set before '</Header>' one");
-                        headerSize = endHeader == null ? 1 : endHeader.Row - startHeader.Row + 1;
+                        headerSize = endHeader?.Row - startHeader.Row + 1 ?? 1;
                     }
                 }
 
@@ -219,7 +219,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             throw new EtkException("The end of the 'Footer' tag must be set on last column of the template cells declaration'");
                         if (endFooter != null && startFooter.Column > endFooter.Column)
                             throw new EtkException("The '<Footer>' tag must be set before '</Footer>' one");
-                        footerSize = endFooter == null ? 1 : endFooter.Column - startFooter.Column + 1;
+                        footerSize = endFooter?.Column - startFooter.Column + 1 ?? 1;
                     }
                     else
                     {
@@ -228,7 +228,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             throw new EtkException("The end of the 'Footer' must be set on last dataRow of the template cells declaration'");
                         if (endFooter != null && startFooter.Row > endFooter.Row)
                             throw new EtkException("The '<Footer>' tag must be set before '</Footer>' one");
-                        footerSize = endFooter == null ? 1 : endFooter.Row - startFooter.Row + 1;
+                        footerSize = endFooter?.Row - startFooter.Row + 1 ?? 1;
                     }
                 }
                 startHeader = startFooter = endHeader = endFooter = null;

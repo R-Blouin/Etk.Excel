@@ -92,7 +92,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
-            return TargetBindingDefinition == null ? null : TargetBindingDefinition.GetObjectsToNotify(dataSource);
+            return TargetBindingDefinition?.GetObjectsToNotify(dataSource);
         }
 
     }

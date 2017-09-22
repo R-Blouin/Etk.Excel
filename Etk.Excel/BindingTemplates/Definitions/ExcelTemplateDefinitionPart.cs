@@ -9,16 +9,16 @@ namespace Etk.Excel.BindingTemplates.Definitions
     {
         #region attributes and properties
         public int Width
-        { get; private set; }
+        { get;  }
 
         public int Height
-        { get; private set; }
+        { get;  }
 
         public ExcelInterop.Range DefinitionFirstCell
-        { get; private set; }
+        { get;  }
 
         public ExcelInterop.Range DefinitionLastCell
-        { get; private set; }
+        { get;  }
 
         public ExcelInterop.Range DefinitionCells
         { get; private set; }

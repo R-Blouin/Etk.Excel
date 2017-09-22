@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
@@ -60,7 +59,7 @@ namespace Etk.Excel.BindingTemplates.Views
         { get; private set; }
 
         internal List<ExcelBindingSearchContextItem> CellsThatContainSearchValue
-        { get; private set; }
+        { get;  }
 
         //public event Action<object, object> DataChanged;
         public event Action DataChanged;
@@ -100,9 +99,9 @@ namespace Etk.Excel.BindingTemplates.Views
 
         public bool IsRendered => Renderer != null && Renderer.RenderedRange != null;
 
-        public ExcelInterop.Range RenderedRange => Renderer != null ? Renderer.RenderedRange : null;
+        public ExcelInterop.Range RenderedRange => Renderer?.RenderedRange;
 
-        public RenderedArea RenderedArea => Renderer != null ? Renderer.RenderedArea : null;
+        public RenderedArea RenderedArea => Renderer?.RenderedArea;
 
         public AccessorParametersManager AccessorParametersManager
         { get; private set; }
@@ -524,8 +523,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     {
                         using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                         {
-                            if (BeforeRendering != null)
-                                BeforeRendering(false);
+                            BeforeRendering?.Invoke(false);
 
                             // Clear the previous rendering.
                             ////////////////////////////////
@@ -538,8 +536,7 @@ namespace Etk.Excel.BindingTemplates.Views
                             if (log.GetLogLevel() == LogType.Debug)
                                 log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
 
-                            if (AfterRendering != null)
-                                AfterRendering(false);
+                            AfterRendering?.Invoke(false);
                         }
                     }
                     catch (Exception ex)
@@ -579,18 +576,15 @@ namespace Etk.Excel.BindingTemplates.Views
                             {
                                 if (BindingContext != null && BindingContext.Body.ElementsToRender != null)
                                 {
-                                    if (BeforeRendering != null)
-                                        BeforeRendering(true);
+                                    BeforeRendering?.Invoke(true);
 
                                     Renderer.RenderDataOnly();
                                     if (log.GetLogLevel() == LogType.Debug)
                                         log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
 
-                                    if (AfterRendering != null)
-                                        AfterRendering(true);
+                                    AfterRendering?.Invoke(true);
 
-                                    if (CurrentSelectedCell != null)
-                                        CurrentSelectedCell.Select();
+                                    CurrentSelectedCell?.Select();
                                 }
                             }
                         }
@@ -756,12 +750,11 @@ namespace Etk.Excel.BindingTemplates.Views
                     if(renderer.HeaderPartRenderer != null && renderer.HasExpander)
                     {
                         carryOn = renderer.IsExpanded;
-                        ExcelInterop.Range toShowHide = null;
 
                         int toShowHideSize = renderer.RenderedArea.Height - renderer.HeaderPartRenderer.RenderedArea.Height;
                         if (toShowHideSize > 0)
                         {
-                            toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
+                            ExcelInterop.Range toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
                             toShowHide = toShowHide.Resize[toShowHideSize, Type.Missing];
                             toShowHide.EntireRow.Hidden = !renderer.IsExpanded;
                             toShowHide = null;
@@ -782,7 +775,7 @@ namespace Etk.Excel.BindingTemplates.Views
             ExcelInterop.Range viewSelectedRange = null;
             ExcelInterop.Worksheet sheet = RenderedRange.Parent as ExcelInterop.Worksheet;
 
-            if (this.TemplateDefinition.Orientation == Orientation.Vertical)
+            if (TemplateDefinition.Orientation == Orientation.Vertical)
             {
                 viewSelectedRange = sheet.Cells[selectedCell.Row, RenderedRange.Column];
                 viewSelectedRange = viewSelectedRange.Resize[1, RenderedRange.Columns.Count];

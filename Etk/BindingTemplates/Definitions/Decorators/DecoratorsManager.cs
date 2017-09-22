@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Tools.Log;
 

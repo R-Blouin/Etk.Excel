@@ -46,23 +46,19 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 comment?.Delete();
 
                 // Invoke decorator resolver
-                object result = null; //EventCallbacksManager.DecoratorInvoke(Callback, addConcernedRangeParameter ? concernedRange : null, element.DataSource, null);
+                object result = EventCallbacksManager.DecoratorInvoke(Callback, concernedRange, element.DataSource, null);
                 if (result != null)
                 {
-                    DecoratorResult decoratorResult = result as DecoratorResult;
-                    if (decoratorResult?.Item != null)
+                    string commentStr = result as string;
+                    if (!string.IsNullOrEmpty(commentStr))
                     {
-                        if (!string.IsNullOrEmpty(decoratorResult.Comment))
-                        {
-                            concernedRangeFirstCell.AddComment(decoratorResult.Comment);
-                            ExcelInterop.Comment addedComment = concernedRangeFirstCell.Comment;
-                            addedComment.Visible = decoratorResult.CommentAlwaysVisible;
-                            ExcelInterop.Shape shape = addedComment.Shape;
-                            ExcelInterop.TextFrame textFrame = shape.TextFrame;
-                            textFrame.AutoSize = true;
-                        }
+                        concernedRange.AddComment(commentStr);
+                        ExcelInterop.Comment addedComment = concernedRange.Comment;
+                        ExcelInterop.Shape shape = addedComment.Shape;
+                        ExcelInterop.TextFrame textFrame = shape.TextFrame;
+                        textFrame.AutoSize = true;
                     }
-                    return decoratorResult != null;
+                    return commentStr != null;
                 }
                 return false;
             }
@@ -90,28 +86,25 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 comment?.Delete();
 
                 // Invoke decorator resolver
-                object result = null;//EventCallbacksManager.DecoratorInvoke(Callback, addConcernedRangeParameter ? concernedRange : null, contextItem.DataSource, contextItem.BindingDefinition.Name);
-                // addConcernedRangeParameter == false => the method resolver returns a 'DecoratorResult' we manage below 
+                object result = EventCallbacksManager.DecoratorInvoke(Callback, concernedRange, contextItem.DataSource, contextItem.BindingDefinition.Name);
                 if (result != null)
                 {
-                    DecoratorResult decoratorResult = result as DecoratorResult;
-
-                    if (!string.IsNullOrEmpty(decoratorResult.Comment))
+                    string commentStr = result as string;
+                    if (!string.IsNullOrEmpty(commentStr))
                     {
-                        concernedRange.AddComment(decoratorResult.Comment);
+                        concernedRange.AddComment(commentStr);
                         ExcelInterop.Comment addedComment = concernedRange.Comment;
-                        addedComment.Visible = decoratorResult.CommentAlwaysVisible;
                         ExcelInterop.Shape shape = addedComment.Shape;
                         ExcelInterop.TextFrame textFrame = shape.TextFrame;
                         textFrame.AutoSize = true;
                     }
-                    return decoratorResult != null;
+                    return commentStr != null;
                 }
                 return false;
             }
             catch (Exception ex)
             {
-                log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve decorator '{Ident}':{ex.Message}");
+                log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve simple decorator '{Ident}':{ex.Message}");
                 return false;
             }
         }
