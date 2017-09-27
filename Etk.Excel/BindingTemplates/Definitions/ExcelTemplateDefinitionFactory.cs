@@ -105,7 +105,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     else
                         headerLastRange = worksheet.Cells[firstRange.Row + headerSize - 1, lastRange.Column];
                     //string name = string.Format("{0}-{1}", excelTemplateDefinition.Name, "Header");
-                    header = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, firstRange, headerLastRange);
+                    header = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Header, firstRange, headerLastRange);
                     headerLastRange = null;
                 }
 
@@ -119,7 +119,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     else
                         footerFirstRange = worksheet.Cells[lastRange.Row - footerSize + 1, firstRange.Column];
                     //string name = string.Format("{0}-{1}", excelTemplateDefinition.Name, "Footer");
-                    footer = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, footerFirstRange, lastRange);
+                    footer = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Footer, footerFirstRange, lastRange);
                     footerFirstRange = null;
                 }
 
@@ -138,7 +138,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     bodyLastRange = worksheet.Cells[lastRange.Row - footerSize, lastRange.Column];
                 }
 
-                body = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, bodyFirstRange, bodyLastRange);
+                body = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Body, bodyFirstRange, bodyLastRange);
                 bodyFirstRange = bodyLastRange = null;
             }
             catch (Exception ex)

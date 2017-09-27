@@ -657,14 +657,17 @@ namespace Etk.Excel.BindingTemplates.Views
                                 do
                                 {
                                     ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                                    EventCallback callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
-                                    if (callback != null)
+                                    if (currentTemplateDefinition.PartType == TemplateDefinitionPartType.Body)
                                     {
-                                        ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem);
-                                        isResolved = true;
+                                        EventCallback callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
+                                        if (callback != null)
+                                        {
+                                            ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem);
+                                            isResolved = true;
+                                        }
                                     }
                                     if (!isResolved)
-                                        catchingContextElement = catchingContextElement.ParentPart.ParentContext == null ? null : catchingContextElement.ParentPart.ParentContext.Parent;
+                                        catchingContextElement = catchingContextElement.ParentPart.ParentContext?.Parent;
                                 }
                                 while (!isResolved && catchingContextElement != null);
                             }

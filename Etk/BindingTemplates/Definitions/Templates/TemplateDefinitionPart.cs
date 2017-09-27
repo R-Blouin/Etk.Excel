@@ -16,22 +16,27 @@ namespace Etk.BindingTemplates.Definitions.Templates
         { get; protected set; }
 
         public List<IDefinitionPart> BindingParts
-        { get; private set; }
+        { get; }
 
         public List<BindingFilterDefinition> FilterDefinitions
-        { get; private set; }
+        { get; }
         
         public bool HasLinkedTemplates
         { get; protected set; }
 
+        public TemplateDefinitionPartType PartType
+        { get; }
+
         #region .ctors
-        public TemplateDefinitionPart()
+        public TemplateDefinitionPart(TemplateDefinitionPartType partType)
         {
             HasLinkedTemplates = false;
             BindingParts = new List<IDefinitionPart>();
             LinkedTemplates = new List<ILinkedTemplateDefinition>();
             BindingDefinitions = new List<IBindingDefinition>();
             FilterDefinitions = new List<BindingFilterDefinition>();
+
+            PartType = partType;
         }
         #endregion
 

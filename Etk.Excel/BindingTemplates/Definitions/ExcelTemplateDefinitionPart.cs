@@ -38,7 +38,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         #endregion
         
         #region .ctors
-        public ExcelTemplateDefinitionPart(ExcelTemplateDefinition parent, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
+        public ExcelTemplateDefinitionPart(ExcelTemplateDefinition parent, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange) : base(partType)
         {
             Parent = parent;
             DefinitionFirstCell = firstRange;
