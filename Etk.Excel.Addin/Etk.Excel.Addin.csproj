@@ -66,6 +66,7 @@
   <ItemGroup>
     <Compile Include="DnaAddin.cs" />
     <Compile Include="EtkExcelAddin.cs" />
+    <Compile Include="EtkView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

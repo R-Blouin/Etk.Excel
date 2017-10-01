@@ -82,7 +82,7 @@ namespace Etk.Excel.Application
             StringBuilder builder = new StringBuilder(message);
 
             if (string.IsNullOrEmpty(title))
-                title = "ETK";
+                title = "Etk";
 
             Exception currentEx = ex;
             while (currentEx != null)
@@ -210,9 +210,9 @@ namespace Etk.Excel.Application
         {
             try
             {
-                object[] p ; 
+                object[] p;
                 if (parameters == null)
-                    p = new object[] { functionName};
+                    p = new object[] { functionName };
                 else
                 {
                     List<object> lp = new List<object>(new object[] { functionName });
@@ -221,18 +221,9 @@ namespace Etk.Excel.Application
                 }
                 return Application.GetType().InvokeMember("Run", BindingFlags.Default | BindingFlags.InvokeMethod, null, Application, p);
             }
-            catch (COMException ex)
-            {
-                if (ex.ErrorCode != (int) SpecificException.DISP_E_UNKNOWNNAME)
-                {
-                    DisplayException("Execute Excel function failed", $"Excel function '{functionName}' not found", ex);
-                    return null;
-                }
-                throw;
-            }
             catch (Exception ex)
             {
-                DisplayException("Execute Excel function failed", ex.Message, ex);
+                ETKExcel.ExcelApplication.DisplayException(null, $"'Execute macro '{functionName??string.Empty}' failed", ex);
                 return null;
             }
         }

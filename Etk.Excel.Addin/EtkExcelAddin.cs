@@ -1,4 +1,5 @@
 ﻿using Etk.Excel.BindingTemplates.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -13,91 +14,171 @@ namespace Etk.Excel.Addin
         /// <summary> Create a View.</summary>
         public IExcelTemplateView AddView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range destinationRange, ExcelInterop.Range clearingCell = null)
         {
-            return ETKExcel.TemplateManager.AddView(sheetContainer, templateName, sheetDestination, destinationRange, clearingCell);
+            try
+            {
+                return ETKExcel.TemplateManager.AddView(sheetContainer, templateName, sheetDestination, destinationRange, clearingCell);
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Add View' failed", ex);
+                return null;
+            }
         }
 
-        public IExcelTemplateView AddViewFromNames(string sheetTemplatePath, string templateName, string sheetDestinationName, string destinationRange, string clearingCell = null)
+        public EtkView AddViewFromNames(string sheetTemplatePath, string templateName, string sheetDestinationName, string destinationRange, string clearingCell = null)
         {
-            return ETKExcel.TemplateManager.AddView(sheetTemplatePath, templateName, sheetDestinationName, destinationRange, clearingCell);
+            try
+            {
+                IExcelTemplateView view = ETKExcel.TemplateManager.AddView(sheetTemplatePath, templateName, sheetDestinationName, destinationRange, clearingCell);
+                return EtkView.CreateInstance(view);
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Add View from names' failed", ex);
+                return null;
+            }
         }
 
-        public void SetDataSource(IExcelTemplateView viewobject, object dataSource)
+        public void SetDataSource(EtkView view, object dataSource)
         {
-            IExcelTemplateView view = viewobject as IExcelTemplateView;
-            view?.SetDataSource(dataSource);
+            try
+            {
+                if (view != null)
+                    view.DataSource = dataSource;
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Set Data Source' failed", ex);
+            }
         }
         
 
         /// <summary> Remove and dispose a list of View.</summary>
-        public void RemoveViews(IEnumerable<IExcelTemplateView> views)
+        public void RemoveViews(IEnumerable<EtkView> views)
         {
-            ETKExcel.TemplateManager.RemoveViews(views);
+            try
+            {
+                if (views != null)
+                    ETKExcel.TemplateManager.RemoveViews(views.Select(v => v.ExcelView));
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Remove Views' failed", ex);
+            }
         }
 
         /// <summary> Remove a View.</summary>
-        public void RemoveView(IExcelTemplateView viewobject)
+        public void RemoveView(EtkView view)
         {
-            IExcelTemplateView view = viewobject as IExcelTemplateView;
-            if (view != null)
-                ETKExcel.TemplateManager.RemoveView(view);
+            try
+            {
+                ETKExcel.TemplateManager.RemoveView(view?.ExcelView);
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Remove View' failed", ex);
+            }
         }
 
         /// <summary> Get all the views owned by a given sheet.</summary>
-        public IExcelTemplateView[] GetSheetViews(ExcelInterop.Worksheet sheet)
+        public EtkView[] GetSheetViews(ExcelInterop.Worksheet sheet)
         {
-            IEnumerable<IExcelTemplateView>  views = ETKExcel.TemplateManager.GetSheetViews(sheet);
-            return views?.ToArray();
+            IEnumerable<IExcelTemplateView> views = ETKExcel.TemplateManager.GetSheetViews(sheet);
+            if (views == null)
+                return null;
+            return views.Select(v => EtkView.CreateInstance(v)).ToArray();
         }
 
         /// <summary> Get all the views owned by a the current active sheet.</summary>
-        public IExcelTemplateView[] GetActiveSheetViews()
+        public EtkView[] GetActiveSheetViews()
         {
             IEnumerable<IExcelTemplateView> views = ETKExcel.TemplateManager.GetActiveSheetViews();
-            return views?.ToArray();
+            if (views == null)
+                return null;
+            return views.Select(v => EtkView.CreateInstance(v)).ToArray();
         }
 
         /// <summary> Rerender (description, style and data) the View given as parameter.</summary>
-        public void RenderView(IExcelTemplateView viewobject)
+        public void RenderView(EtkView view)
         {
-            IExcelTemplateView view = viewobject as IExcelTemplateView;
-            if (view != null)
-                ETKExcel.TemplateManager.Render(view);
+            try
+            {
+                ETKExcel.TemplateManager.Render(view?.ExcelView);
+            }
+            catch(Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Render View' failed", ex);
+            }
         }
 
         /// <summary> Rerender (description, style and data) all the views given as parameters.</summary>
-        public void RenderViews(IEnumerable<IExcelTemplateView> views)
+        public void RenderViews(IEnumerable<EtkView> views)
         {
-            ETKExcel.TemplateManager.Render(views);
+            try
+            {
+                if (views != null)
+                    ETKExcel.TemplateManager.Render(views.Select(v => v.ExcelView));
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Render Views' failed", ex);
+            }
         }
 
         /// <summary> Rerender only the data of the View given as parameter 
-        public void RenderViewDataOnly(IExcelTemplateView viewobject)
+        public void RenderViewDataOnly(EtkView view)
         {
-            IExcelTemplateView view = viewobject as IExcelTemplateView;
-            if (view != null)
-                ETKExcel.TemplateManager.Render(view);
+            try
+            {
+                ETKExcel.TemplateManager.RenderDataOnly(view?.ExcelView);
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Render View Data Only' failed", ex);
+            }
         }
 
         /// <summary> Rerender only the data of all the views given as parameters 
-        public void RenderViewsDataOnly(IEnumerable<IExcelTemplateView> views)
+        public void RenderViewsDataOnly(IEnumerable<EtkView> views)
         {
-            ETKExcel.TemplateManager.Render(views);
+            try
+            {
+                if (views != null)
+                    ETKExcel.TemplateManager.RenderDataOnly(views.Select(v => v.ExcelView));
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Render Views Data Only' failed", ex);
+            }
         }
 
         /// <summary> Clear the previously rendering View
         /// <param name="View">The View to clear.</param>
-        public void ClearView(IExcelTemplateView viewobject)
+        public void ClearView(EtkView view)
         {
-            IExcelTemplateView view = viewobject as IExcelTemplateView;
-            if (view != null)
-                ETKExcel.TemplateManager.ClearView(view);
+            try
+            {
+                ETKExcel.TemplateManager.ClearView(view?.ExcelView);
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Clear View' failed", ex);
+            }
         }
 
         /// <summary> Clear the previously rendering views
         /// <param name="views">The views to clear.</param>
-        public void ClearViews(IEnumerable<IExcelTemplateView> views)
+        public void ClearViews(IEnumerable<EtkView> views)
         {
-            ETKExcel.TemplateManager.ClearViews(views);
+            try
+            {
+                if (views != null)
+                    ETKExcel.TemplateManager.ClearViews(views.Select(v => v.ExcelView));
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, "'Clear Views' failed", ex);
+            }
         }
 
 

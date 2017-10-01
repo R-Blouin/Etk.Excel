@@ -149,7 +149,6 @@
     <Compile Include="BindingTemplates\Renderer\ExcelRootRenderer.cs" />
     <Compile Include="BindingTemplates\Renderer\ExcelPartVerticalRenderer.cs" />
     <Compile Include="Application\ExcelApplication.cs" />
-    <Compile Include="BindingTemplates\Views\RenderingArea.cs" />
     <Compile Include="ContextualMenus\IContextualPart.cs" />
     <Compile Include="ETKExcel.cs" />
     <Compile Include="Extensions\ApplicationExtension.cs" />

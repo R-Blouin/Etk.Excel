@@ -70,16 +70,8 @@ namespace Etk.Excel.BindingTemplates.Views
         private event Action<IExcelTemplateView> viewSheetIsActivated;
         public event Action<IExcelTemplateView> ViewSheetIsActivated
         {
-            add
-            {
-                viewSheetIsActivated += value;
-                if(ETKExcel.TemplateManager.GetActiveSheetViews().Any(v => this == v))
-                    viewSheetIsActivated(this);
-            }
-            remove
-            {
-                viewSheetIsActivated -= value;
-            }
+            add { viewSheetIsActivated += value;
+			remove { viewSheetIsActivated -= value;}
         }
 
         public AutoFitMode AutoFit
