@@ -181,6 +181,10 @@ namespace Etk.Excel.Addin
             }
         }
 
+        public void ClearRange(ExcelInterop.Range from, ExcelInterop.Range to = null, ExcelInterop.Range with = null)
+        {
+            ETKExcel.ExcelApplication.ClearRange(from, to, with);
+        }
 
         ///// <summary> Register decorator definitions from a xml
         ///// <param name="xmLDefinition">The xml data containing the decorator definitions</param>

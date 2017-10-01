@@ -52,5 +52,8 @@ namespace Etk.Excel.Application
 
         /// <summary> Execute a Vba function</summary>
         object ExecuteVbaMAcro(string functionName, object[] parameters);
+
+        /// <summary> Clear a selection of rows</summary>
+        void ClearRange(ExcelInterop.Range from, ExcelInterop.Range to, ExcelInterop.Range with);
     }
 }

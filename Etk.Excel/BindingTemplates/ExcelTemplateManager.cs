@@ -721,7 +721,7 @@ namespace Etk.Excel.BindingTemplates
                                 {
                                     try
                                     {
-                                        excelTemplateView.ViewSheet.Unprotect(System.Type.Missing);
+                                        excelTemplateView.ViewSheet.Unprotect(Type.Missing);
                                         excelTemplateView.RenderView();
 
                                         if (!string.IsNullOrEmpty(view.SearchValue))

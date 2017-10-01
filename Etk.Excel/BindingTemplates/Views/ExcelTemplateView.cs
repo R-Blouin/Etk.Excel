@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
@@ -70,7 +69,7 @@ namespace Etk.Excel.BindingTemplates.Views
         private event Action<IExcelTemplateView> viewSheetIsActivated;
         public event Action<IExcelTemplateView> ViewSheetIsActivated
         {
-            add { viewSheetIsActivated += value;
+            add { viewSheetIsActivated += value; }
 			remove { viewSheetIsActivated -= value;}
         }
 
@@ -378,7 +377,7 @@ namespace Etk.Excel.BindingTemplates.Views
             }
         }
 
-        private void AutoFitRows(Microsoft.Office.Interop.Excel.Range rows)
+        private void AutoFitRows(ExcelInterop.Range rows)
         {
             double previousSize = -2;
             double currentSize = -1;
@@ -392,7 +391,7 @@ namespace Etk.Excel.BindingTemplates.Views
             }
         }
 
-        private void AutoFitColumns(Microsoft.Office.Interop.Excel.Range columns)
+        private void AutoFitColumns(ExcelInterop.Range columns)
         {
             double previousSize = -2;
             double currentSize = -1;
@@ -408,16 +407,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
         public void ProtectSheet()
         {
-            if (!ViewSheet.ProtectContents)
-            {
-                ViewSheet.Cells.Locked = false;
-                ViewSheet.Protect(System.Type.Missing, false, false, System.Type.Missing, false, true,
-                                  true, true,
-                                  false, false,
-                                  false,
-                                  false, false, false, true,
-                                  true);
-            }
+            ((ExcelApplication) ETKExcel.ExcelApplication).ProtectSheet(ViewSheet);
         }
         #endregion
 
