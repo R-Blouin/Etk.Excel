@@ -30,10 +30,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             return ret;
         }
 
-        /// <summary> Create a list of binding definition for a given list of <see cref="BindingDefinitionDescription"/> owned by a given <see cref="FilterOwner"/> </summary>
-        /// <param name="templateDefinition">The <see cref="FilterOwner"/> that owned the <see cref="BindingDefinitionDescription"/></param>
-        /// <param name="bindingDefinitionDescription">the given list of <see cref="BindingDefinitionDescription"/></param>
-        /// <returns>The newly created Binding definition or an exception is an error occurs</returns>
+        /// <summary> Create a list of binding definition for a given list of <see cref="BindingDefinitionDescription"/> </summary>
         internal static List<IBindingDefinition> CreateInstances(Type type, List<BindingDefinitionDescription> definitionDescriptions)
         {
             List<IBindingDefinition> bindingDefinitions = new List<IBindingDefinition>();
