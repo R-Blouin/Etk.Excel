@@ -229,7 +229,7 @@ namespace Etk.Excel.Application
 
         public void ClearRange(ExcelInterop.Range from, ExcelInterop.Range to, ExcelInterop.Range with)
         {
-            if (from is null)
+            if (from == null)
                 return;
 
             ExcelInterop.Worksheet concernedSheet = null;
@@ -257,7 +257,7 @@ namespace Etk.Excel.Application
                     ExcelInterop.Font font = from.Font;
 
                     font.Color = withFont.Color;
-                    interior.Color = interior.Color;
+                    interior.Color = withInterior.Color;
 
                     Marshal.ReleaseComObject(interior);
                     Marshal.ReleaseComObject(font);

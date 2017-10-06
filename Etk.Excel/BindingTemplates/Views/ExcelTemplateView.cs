@@ -622,7 +622,7 @@ namespace Etk.Excel.BindingTemplates.Views
                         CurrentSelectedCell = target.Cells[1, 1];
 
                         IBindingContextItem currentContextItem = GetConcernedContextItem(target);
-                        if (currentContextItem != null && currentContextItem.BindingDefinition != null)
+                        if (currentContextItem?.BindingDefinition != null)
                         {
                             // If the binding excelBindingDefinition contains a selection callback: invoke it !
                             if (currentContextItem.BindingDefinition.OnSelection != null)
@@ -675,7 +675,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 return false;
 
             IBindingContextItem currentContextItem = GetConcernedContextItem(target);
-            if (currentContextItem != null && currentContextItem.BindingDefinition != null)
+            if (currentContextItem?.BindingDefinition != null)
             {
                 if (currentContextItem.BindingDefinition.IsReadOnly)
                     cancel = true;
@@ -707,7 +707,7 @@ namespace Etk.Excel.BindingTemplates.Views
         #region private methods
         private bool CheckHeaderAsExpander(ExcelRenderer renderer,  ExcelInterop.Range target)
         {
-            if (renderer.HeaderPartRenderer != null && renderer.HeaderPartRenderer.RenderedRange != null && ETKExcel.ExcelApplication.Application.Intersect(renderer.HeaderPartRenderer.RenderedRange, target) != null)
+            if (renderer.HeaderPartRenderer?.RenderedRange != null && ETKExcel.ExcelApplication.Application.Intersect(renderer.HeaderPartRenderer.RenderedRange, target) != null)
             {
                 renderer.IsExpanded = ! renderer.IsExpanded;
                 ManageExpander(renderer);
