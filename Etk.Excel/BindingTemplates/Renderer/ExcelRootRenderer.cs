@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.Templates;
@@ -11,7 +10,6 @@ using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Controls.WithFormula;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Views;
-using Microsoft.Vbe.Interop.Forms;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Renderer
@@ -36,7 +34,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #region .ctors 
         public ExcelRootRenderer(ExcelTemplateView view) : base(null, view.TemplateDefinition, view.BindingContext, view.FirstOutputCell, null)
         {
-            this.View = view;
+            View = view;
             RowDecorators = new List<ExcelElementDecorator>();
             //@@ sortAndFilterButton = new ExcelSortAndFilterButton(View);
         }
@@ -50,8 +48,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             base.Render();
 
-            toOperateOnSheetCalculation = DataRows == null ? null : DataRows.SelectMany(r => r.Where(ci => ci is IFormulaCalculation))
-                                                                            .Select(c =>(IFormulaCalculation) c).ToArray();
+            toOperateOnSheetCalculation = DataRows?.SelectMany(r => r.Where(ci => ci is IFormulaCalculation))
+                                                   .Select(c =>(IFormulaCalculation) c).ToArray();
             RenderDataOnly();
         }
 
@@ -65,7 +63,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>> decorators = new ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>>();
 
             //Parallel.For(0, DataRows.Count, i => // Parrallel problem with Com object
-            for (int i = 0; i <DataRows.Count(); i++)
+            for (int i = 0; i <DataRows.Count; i++)
             {
                 int colId = 0;
                 List<IBindingContextItem> itemsInRow = DataRows[i];

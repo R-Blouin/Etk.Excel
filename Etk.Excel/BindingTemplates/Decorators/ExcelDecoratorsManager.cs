@@ -60,7 +60,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 return;
             try
             {
-                RegisterDecorator(decorator);
+                RegisterDecorator((Decorator) decorator);
             }
             catch (Exception ex)
             {

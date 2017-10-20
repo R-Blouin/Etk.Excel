@@ -736,8 +736,7 @@ namespace Etk.Excel.BindingTemplates
                                 }
                             }
                         }
-                        if (selectedRange != null)
-                            selectedRange.Select();
+                        selectedRange?.Select();
                     }
                 }
             }
@@ -750,21 +749,21 @@ namespace Etk.Excel.BindingTemplates
             }
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.RenderView"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.Render"/> </summary> 
         public void Render(IExcelTemplateView view)
         {
             if (view != null)
                 Render(new [] { view });
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.RenderViewDataOnly"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.RenderDataOnly"/> </summary> 
         public void RenderDataOnly(IExcelTemplateView view)
         {
             if (view != null)
                 RenderDataOnly(new [] { view });
         }
 
-        /// <summary> Implements <see cref="IExcelTemplateManager.RenderViewDataOnly"/> </summary> 
+        /// <summary> Implements <see cref="IExcelTemplateManager.RenderDataOnly"/> </summary> 
         public void RenderDataOnly(IEnumerable<IExcelTemplateView> views)
         {
             if (views == null)
