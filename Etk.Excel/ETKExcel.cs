@@ -129,7 +129,7 @@ namespace Etk.Excel
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("'ETKExcel' initialization failed:{0}", ex.Message), ex);
+                throw new EtkException($"'ETKExcel' initialization failed:{ex.Message}", ex);
             }
         }
 

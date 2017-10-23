@@ -8,8 +8,8 @@ namespace Etk.Tools.Emit
 {
     public class TypeBuilderFactory
     {
-        private AssemblyBuilder assemblyBuilder = null;
-        private ModuleBuilder moduleBuilder = null;
+        private readonly AssemblyBuilder assemblyBuilder = null;
+        private readonly ModuleBuilder moduleBuilder = null;
 
         #region .ctors
         public TypeBuilderFactory(string name)
@@ -25,7 +25,7 @@ namespace Etk.Tools.Emit
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("'TypeBuilderFactory' creation failed:{0}", ex.Message)); 
+                throw new EtkException($"'TypeBuilderFactory' creation failed:{ex.Message}"); 
             }
         }
         #endregion
@@ -38,7 +38,7 @@ namespace Etk.Tools.Emit
                 if (string.IsNullOrEmpty(typeName))
                     throw new ArgumentNullException("'typeName' parameter cannot be null or empty");
 
-                if (properties == null || properties.Count() == 0)
+                if (properties == null || !properties.Any())
                     throw new ArgumentNullException("'properties' parameter cannot be null or empty");
 
                 TypeBuilder typeBuilder = CreateTypeBuilder(typeName);
@@ -51,7 +51,7 @@ namespace Etk.Tools.Emit
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("'TypeBuilderFactory.CreateType' failed:{0}", ex.Message));
+                throw new EtkException($"'TypeBuilderFactory.CreateType' failed:{ex.Message}");
             }
         }
         #endregion

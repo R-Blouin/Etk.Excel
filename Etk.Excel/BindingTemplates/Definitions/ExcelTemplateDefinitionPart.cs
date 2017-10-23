@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Etk.BindingTemplates.Definitions;
-using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Templates;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
@@ -10,16 +9,16 @@ namespace Etk.Excel.BindingTemplates.Definitions
     {
         #region attributes and properties
         public int Width
-        { get; private set; }
+        { get;  }
 
         public int Height
-        { get; private set; }
+        { get;  }
 
         public ExcelInterop.Range DefinitionFirstCell
-        { get; private set; }
+        { get;  }
 
         public ExcelInterop.Range DefinitionLastCell
-        { get; private set; }
+        { get;  }
 
         public ExcelInterop.Range DefinitionCells
         { get; private set; }
@@ -39,7 +38,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         #endregion
         
         #region .ctors
-        public ExcelTemplateDefinitionPart(ExcelTemplateDefinition parent, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
+        public ExcelTemplateDefinitionPart(ExcelTemplateDefinition parent, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange) : base(partType)
         {
             Parent = parent;
             DefinitionFirstCell = firstRange;

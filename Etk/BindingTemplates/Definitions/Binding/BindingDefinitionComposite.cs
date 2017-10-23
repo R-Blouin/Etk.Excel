@@ -12,12 +12,11 @@ namespace Etk.BindingTemplates.Definitions.Binding
     class BindingDefinitionComposite : BindingDefinition
     {
         #region attributes and properties
-        private static string pattern = "(?<={)(.*?)(?=})";
-        private ILogger log = Logger.Instance;
+        private static readonly string pattern = "(?<={)(.*?)(?=})";
+        private readonly ILogger log = Logger.Instance;
 
         private List<IBindingDefinition> nestedDefinitions;
-        public ReadOnlyCollection<IBindingDefinition> NestedDefinitions
-        { get { return new ReadOnlyCollection<IBindingDefinition>(nestedDefinitions); } }
+        public ReadOnlyCollection<IBindingDefinition> NestedDefinitions => new ReadOnlyCollection<IBindingDefinition>(nestedDefinitions);
 
         public string BindingFormat
         { get; private set; }
@@ -51,7 +50,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
-                throw new BindingTemplateException(string.Format("Can't Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
+                throw new BindingTemplateException($"Can't Resolve the 'Binding' for the BindingExpression '{BindingExpression}'. {ex.Message}");
             }
         }
 
@@ -60,7 +59,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         /// If the BindingDefinition to update is readonly, then return the currently loaded value
         /// Else return the value passed as a parameter. 
         /// </summary>
-        /// <param name="contextItem">the data IBindingContextItem to update.</param>
+        /// <param name="dataSource">the data IBindingContextItem to update.</param>
         /// <param name="data">the data to update the datasource.</param>
         /// <returns></returns>
         public override object UpdateDataSource(object dataSource, object data)
@@ -112,7 +111,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 if (string.IsNullOrEmpty(definitionDescription.Name))
                 {
                     definitionDescription.Name = definitionDescription.BindingExpression.Replace('.', '_');
-                    MatchCollection ret = BindingDefinition.ValidCharExtract.Matches(definitionDescription.Name);
+                    MatchCollection ret = ValidCharExtract.Matches(definitionDescription.Name);
                     StringBuilder sb = new StringBuilder();
                     foreach (Match m in ret)
                         sb.Append(m.Value);
@@ -130,9 +129,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 int cpt = -1;
                 foreach (Match match in matches)
                 {
-                    string[] elements = match.Value.Split(':');
+                    string[] elements = match.Value.Split(new[] { "::" }, StringSplitOptions.None);
                     if (string.IsNullOrEmpty(elements[0]))
-                        bindingFormat = bindingFormat.Replace(string.Format("{{{0}}}", match.Value), string.Empty);
+                        bindingFormat = bindingFormat.Replace($"{{{match.Value}}}", string.Empty);
                     else
                     {
                         int pos = results.FindIndex(s => s.Equals(elements[0]));
@@ -143,8 +142,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         }
                         else
                             pos = cpt;
-                        string format = string.Format("{{{0}}}", match.Value);
-                        bindingFormat = bindingFormat.Replace(format, string.Format("{{{0}}}", pos));
+                        string format = $"{{{match.Value}}}";
+                        bindingFormat = bindingFormat.Replace(format, $"{{{pos}}}");
                     }
                 }
                 if (results.Count > 0)
@@ -161,11 +160,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         throw new BindingTemplateException("The nested 'BindingDefinition' of a 'Composite BindingDefinition' cannot be a collection");
 
                     // If more than one nested definition, then force the Binding definition to be ReadOnly
-                    definitionDescription.IsReadOnly = nestedDefinitions.Count > 1 ? true : nestedDefinitions[0].IsReadOnly;
-                    definition = new BindingDefinitionComposite(definitionDescription){nestedDefinitions = nestedDefinitions,
-                                                                                       BindingFormat = bindingFormat,
-                                                                                       BindingType = typeof(string)};
-
+                    definitionDescription.IsReadOnly = nestedDefinitions.Count > 1 || nestedDefinitions[0].IsReadOnly;
+                    definition = new BindingDefinitionComposite(definitionDescription){nestedDefinitions = nestedDefinitions, BindingFormat = bindingFormat, BindingType = typeof(string)};
                     definition.canBeNotifiedNestedDefinitions = definition.nestedDefinitions.Where(d => d.CanNotify).ToList();
                     definition.CanNotify = definition.canBeNotifiedNestedDefinitions.Count > 0;
                 }
@@ -173,7 +169,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
-                throw new BindingTemplateException(string.Format("Cannot create the 'Composite BindingDefinition' '{0}'. {1}", definitionDescription.BindingExpression, ex.Message));
+                throw new BindingTemplateException($"Cannot create the 'Composite BindingDefinition' '{definitionDescription.BindingExpression}'. {ex.Message}");
             }
         }
         #endregion

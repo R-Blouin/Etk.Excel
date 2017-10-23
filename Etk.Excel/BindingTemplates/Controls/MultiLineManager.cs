@@ -23,11 +23,14 @@ namespace Etk.Excel.BindingTemplates.Controls
             int hOffset = 1;
             if (item.BindingDefinition.MultiLineFactorResolver != null)
             {
-                object toInvoke = item.BindingDefinition.MultiLineFactorResolver.IsStatic ? null : item.ParentElement.DataSource;
-                object[] parameters = item.BindingDefinition.MultiLineFactorResolver.GetParameters().Length == 0 ? null : new object[] { item.ParentElement.DataSource };
-                vOffset = (int) item.BindingDefinition.MultiLineFactorResolver.Invoke(toInvoke, parameters);
-                if (vOffset <= 0)
-                    vOffset = 1;
+                if(! item.BindingDefinition.MultiLineFactorResolver.IsNotDotNet)
+                {
+                    object toInvoke = item.BindingDefinition.MultiLineFactorResolver.Callback.IsStatic ? null : item.ParentElement.DataSource;
+                    object[] parameters = item.BindingDefinition.MultiLineFactorResolver.Callback.GetParameters().Length == 0 ? null : new object[] { item.ParentElement.DataSource };
+                    vOffset = (int)item.BindingDefinition.MultiLineFactorResolver.Callback.Invoke(toInvoke, parameters);
+                    if (vOffset <= 0)
+                        vOffset = 1;
+                }
             }
             else
             {

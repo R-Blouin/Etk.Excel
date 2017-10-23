@@ -8,6 +8,7 @@ using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 {
@@ -28,106 +29,48 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         { get; private set; }
 
         #region from IBindingDefinition
-        public string Name
-        { get { return NestedBindingDefinition != null ? NestedBindingDefinition.Name : string.Empty; } }
+        public string Name => NestedBindingDefinition != null ? NestedBindingDefinition.Name : string.Empty;
 
-        public string Description
-        { get { return NestedBindingDefinition != null ? NestedBindingDefinition.Description : string.Empty; } }
+        public string Description => NestedBindingDefinition != null ? NestedBindingDefinition.Description : string.Empty;
 
-        public string BindingExpression
-        {
-            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingExpression; }
-        }
+        public string BindingExpression => NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingExpression;
 
-        public bool IsACollection
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.IsACollection; }
-        }
+        public bool IsACollection => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsACollection;
 
-        public bool IsReadOnly
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.IsReadOnly; }
-        }
+        public bool IsReadOnly => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsReadOnly;
 
-        public bool IsEnum
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.IsEnum; }
-        }
+        public bool IsEnum => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsEnum;
 
-        public bool IsNullable
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.IsNullable; }
-        }
+        public bool IsNullable => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsNullable;
 
-        public bool CanNotify
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.CanNotify; }
-        }
+        public bool CanNotify => NestedBindingDefinition == null ? false : NestedBindingDefinition.CanNotify;
 
-        public bool IsOptional
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.IsOptional; }
-        }
+        public bool IsOptional => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsOptional;
 
-        public bool IsBoundWithData
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.IsBoundWithData; }
-        }
+        public bool IsBoundWithData => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsBoundWithData;
 
-        public Type BindingType
-        {
-            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingType; }
-        }
+        public Type BindingType => NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingType;
 
-        public bool BindingTypeIsGeneric
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.BindingTypeIsGeneric; }
-        }
+        public bool BindingTypeIsGeneric => NestedBindingDefinition == null ? false : NestedBindingDefinition.BindingTypeIsGeneric;
 
-        public Type BindingGenericType
-        {
-            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingGenericType; }
-        }
+        public Type BindingGenericType => NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingGenericType;
 
-        public Type BindingGenericTypeDefinition
-        {
-            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingGenericTypeDefinition; }
-        }
+        public Type BindingGenericTypeDefinition => NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingGenericTypeDefinition;
 
-        public BindingPartType PartType
-        {
-            get { return NestedBindingDefinition == null ? BindingPartType.BindingDefinition : NestedBindingDefinition.PartType; }
-        }
+        public BindingPartType PartType => NestedBindingDefinition == null ? BindingPartType.BindingDefinition : NestedBindingDefinition.PartType;
 
-        public Decorator DecoratorDefinition
-        {
-            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.DecoratorDefinition; }
-        }
+        public Decorator DecoratorDefinition => NestedBindingDefinition == null ? null : NestedBindingDefinition.DecoratorDefinition;
 
-        public MethodInfo OnSelection
-        {
-            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.OnSelection; }
-        }
+        public EventCallback OnSelection => NestedBindingDefinition == null ? null : NestedBindingDefinition.OnSelection;
 
-        public MethodInfo OnClick
-        {
-            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.OnClick; }
-        }
+        public EventCallback OnClick => NestedBindingDefinition == null ? null : NestedBindingDefinition.OnClick;
 
-        public bool IsMultiLine
-        {
-            get { return NestedBindingDefinition == null ? false : NestedBindingDefinition.IsMultiLine; }
-        }
+        public bool IsMultiLine => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsMultiLine;
 
-        public double MultiLineFactor
-        {
-            get { return NestedBindingDefinition == null ? 0 : NestedBindingDefinition.MultiLineFactor; }
-        }
+        public double MultiLineFactor => NestedBindingDefinition == null ? 0 : NestedBindingDefinition.MultiLineFactor;
 
-        public MethodInfo MultiLineFactorResolver
-        {
-            get { return NestedBindingDefinition == null ? null : NestedBindingDefinition.MultiLineFactorResolver; }
-        }
+        public EventCallback MultiLineFactorResolver => NestedBindingDefinition == null ? null : NestedBindingDefinition.MultiLineFactorResolver;
+
         #endregion
         #endregion
 
@@ -163,7 +106,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
                     if(bindingDefinitionDescription != null && ! string.IsNullOrEmpty(bindingDefinitionDescription.BindingExpression))
                     {
                         if(bindingDefinitionDescription.BindingExpression.Contains(ALL_POS_KEYWORD) || bindingDefinitionDescription.BindingExpression.Contains(POS_KEYWORD))
-                            throw new ArgumentException(string.Format("Cannot mixte the keywords '{0}' and '{1}' with binding dataAccessor", POS_KEYWORD, ALL_POS_KEYWORD));
+                            throw new ArgumentException($"Cannot mixte the keywords '{POS_KEYWORD}' and '{ALL_POS_KEYWORD}' with binding dataAccessor");
                         nameBindingDefinition = BindingDefinitionFactory.CreateInstances(templateDefinition.Parent as ExcelTemplateDefinition, bindingDefinitionDescription);
                     }
                 }
@@ -171,7 +114,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot create create the named caller binding dataAccessor '{0}'. {1}", definition.Name, ex.Message);
+                string message = $"Cannot create create the named caller binding dataAccessor '{definition.Name}'. {ex.Message}";
                 throw new EtkException(message);
             }
         }
@@ -187,7 +130,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot retrieve the named caller dataAccessor '{0}'. {1}", definition.EmptyIfNull(), ex.Message);
+                string message = $"Cannot retrieve the named caller dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
                 throw new EtkException(message);
             }
             return ret;

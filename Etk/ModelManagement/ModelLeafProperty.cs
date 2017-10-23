@@ -17,8 +17,7 @@ namespace Etk.ModelManagement
         public string Description
         { get; set; }
 
-        public bool IsACollection
-        { get { return false; } }
+        public bool IsACollection => false;
 
         public ModelLeafProperty(IModelType parent, IBindingDefinition bindingDefinition)
         {

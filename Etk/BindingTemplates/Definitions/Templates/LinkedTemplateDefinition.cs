@@ -8,8 +8,7 @@ namespace Etk.BindingTemplates.Definitions.Templates
 {
     public class LinkedTemplateDefinition : ILinkedTemplateDefinition 
     {
-        public BindingPartType PartType
-        { get { return BindingPartType.LinkedTemplateDefinition; } }
+        public BindingPartType PartType => BindingPartType.LinkedTemplateDefinition;
 
         public ITemplateDefinition Parent
         { get; private set; }
@@ -64,13 +63,13 @@ namespace Etk.BindingTemplates.Definitions.Templates
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception(string.Format("Cannot retrieve the min occurences resolver method:{0}", ex.Message));
+                        throw new Exception($"Cannot retrieve the min occurences resolver method:{ex.Message}");
                     }
                 }
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot resolve linked template definition 'To={0}, With='{1}'", linkDefinition.To, linkDefinition.With);
+                string message = $"Cannot resolve linked template definition 'To={linkDefinition.To}, With='{linkDefinition.With}'";
                 throw new Exception(message, ex);
             }
         }

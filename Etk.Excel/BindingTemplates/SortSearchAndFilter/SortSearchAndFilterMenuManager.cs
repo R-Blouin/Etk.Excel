@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
@@ -12,7 +11,7 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
 {
     class SortSearchAndFilterMenuManager
     {
-        private IContextualMenu sortSearchAndFilersMenu;
+        private readonly IContextualMenu sortSearchAndFilersMenu;
 
         #region .ctors
         public SortSearchAndFilterMenuManager()
@@ -74,14 +73,14 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
             view.SorterDefinition = sortDefinition;
             object currentDataSource = view.GetDataSource();
 
-            ETKExcel.TemplateManager.ClearView(view as ExcelTemplateView);
+            ETKExcel.TemplateManager.ClearView(view);
 
             // We reinject the datasource to force the filtering
             view.CreateBindingContext(currentDataSource);
             //view.SetDataSource(currentDataSource);
 
             // RenderView the view to see the filering application
-            ETKExcel.TemplateManager.Render(view as ExcelTemplateView);
+            ETKExcel.TemplateManager.Render(view);
         }
 
         #endregion

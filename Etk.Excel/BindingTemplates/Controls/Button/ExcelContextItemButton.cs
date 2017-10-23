@@ -11,7 +11,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
     class ExcelContextItemButton : BindingContextItem, IBindingContextItemCanNotify, IExcelControl
     {
         #region attributes and properties
-        private ExcelBindingDefinitionButton excelBindingDefinitionButton;
+        private readonly ExcelBindingDefinitionButton excelBindingDefinitionButton;
         private ExcelButton button;
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
 
@@ -32,7 +32,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         public ExcelContextItemButton(IBindingContextElement parent, IBindingDefinition bindingDefinition)
                                      : base(parent, bindingDefinition)
         {
-            CanNotify = bindingDefinition == null ? false : bindingDefinition.CanNotify;
+            CanNotify = bindingDefinition?.CanNotify ?? false;
             excelBindingDefinitionButton = bindingDefinition as ExcelBindingDefinitionButton;
 
             if (CanNotify)
@@ -80,15 +80,14 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 EnableProperty = null;
             }
 
-            if (button != null)
-                button.Dispose();
+            button?.Dispose();
         }
 
         public void OnPropertyChanged(object source, PropertyChangedEventArgs args)
         {
             if (objectsToNotify != null && OnPropertyChangedAction != null)
             {
-                if (BindingDefinition.MustNotify(this.DataSource, source, args))
+                if (BindingDefinition.MustNotify(DataSource, source, args))
                     OnPropertyChangedAction(this, OnPropertyChangedActionArgs);
             }
 
@@ -106,7 +105,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
             ExcelBindingDefinitionButton definition = (ExcelBindingDefinitionButton)BindingDefinition;
             button = new ExcelButton(range, definition.Definition);
             //bool isStatic = definition.Command == null ? false : definition.Command.IsStatic;
-            button.SetCommand(definition.Command, base.ParentElement.DataSource, definition.OnClickWithRange);
+            button.SetCommand(definition.Command, ParentElement.DataSource, definition.OnClickWithRange);
 
             ResolveBinding();
 
@@ -115,7 +114,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 if (EnablePropertyGet.IsStatic)
                     button.Enable = (bool)EnablePropertyGet.Invoke(null, null);
                 else
-                    button.Enable = (bool)EnablePropertyGet.Invoke(base.ParentElement.DataSource, null);
+                    button.Enable = (bool)EnablePropertyGet.Invoke(ParentElement.DataSource, null);
             }
         }
 

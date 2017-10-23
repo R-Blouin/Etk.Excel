@@ -22,9 +22,9 @@ namespace Etk.Log4NetWrapper
     [Export(typeof(ILogger))]
     public class Logger : ILogger
     {
-        static ILog iLog = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType.Name);
+        static readonly ILog iLog = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType.Name);
 
-        private LogType logLevel;
+        private readonly LogType logLevel;
 
         #region .ctors
         /// <summary>
@@ -77,7 +77,7 @@ namespace Etk.Log4NetWrapper
         /// <param name="o"></param>
         public void LogFormat(LogType logType, string messageFormat, object o)
         {
-            Log4NetLog(logType, null, messageFormat, new object[] {o});
+            Log4NetLog(logType, null, messageFormat, new [] {o});
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Etk.Log4NetWrapper
         /// <param name="o"></param>
         public void LogExceptionFormat(LogType logType, Exception ex, string messageFormat, object o)
         {
-            Log4NetLog(logType, ex, messageFormat, new object[] {o});
+            Log4NetLog(logType, ex, messageFormat, new [] {o});
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace Etk.Log4NetWrapper
             }
             catch (Exception exx)
             {
-                string exceptionMessage = string.Format("Cannot log the message '{0}'.", message ?? string.Empty);
+                string exceptionMessage = $"Cannot log the message '{message ?? string.Empty}'.";
                 iLog.Error(exceptionMessage, exx);
             }
         }
@@ -205,7 +205,7 @@ namespace Etk.Log4NetWrapper
                     {
                         XmlConfigurator.Configure();
                         if(log4net.LogManager.GetRepository().Configured)
-                            this.Log(LogType.Info, "'Log4NetWrapper' initialyzed from the 'Log4Net' 'App.Config' configuration section.");
+                            Log(LogType.Info, "'Log4NetWrapper' initialyzed from the 'Log4Net' 'App.Config' configuration section.");
                         else
                             UseDefaultConfiguration();
                     }
@@ -213,7 +213,7 @@ namespace Etk.Log4NetWrapper
                 catch (Exception ex)
                 {
                     UseDefaultConfiguration();
-                    this.LogException(LogType.Error, ex, "'Log4NetWrapper' initialyzation failed. Its embedded default configuration will be used.");
+                    LogException(LogType.Error, ex, "'Log4NetWrapper' initialyzation failed. Its embedded default configuration will be used.");
                 }
             }
         }

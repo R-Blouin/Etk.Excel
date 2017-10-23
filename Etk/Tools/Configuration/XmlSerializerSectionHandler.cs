@@ -37,7 +37,7 @@ namespace Etk.Tools.Configuration
             {
                 XmlAttribute typeAttribute = section.Attributes["UnderlyingType"];
                 if (typeAttribute == null)
-                    throw new ArgumentException(string.Format("the attribut 'UnderlyingType', section '{0}' is not set", section.Name));
+                    throw new ArgumentException($"the attribut 'UnderlyingType', section '{section.Name}' is not set");
 
                 Type type = Type.GetType(typeAttribute.InnerText);
                 XmlSerializer xmlSerializer = new XmlSerializer(type);
@@ -45,7 +45,7 @@ namespace Etk.Tools.Configuration
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("XmlSerializerSectionHandler failed, section '{0}': {1}", section.Name, ex.Message));
+                throw new EtkException($"XmlSerializerSectionHandler failed, section '{section.Name}': {ex.Message}");
             }
         }
     }

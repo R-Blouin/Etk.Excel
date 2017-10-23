@@ -8,12 +8,17 @@ using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
 using Etk.Tools.Reflection;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.Excel.BindingTemplates.Controls.Button
 {
     class ExcelBindingDefinitionButton : BindingDefinition
     {
         #region attributes and properties
+        private static EventCallbacksManager eventCallbacksManager;
+        private static EventCallbacksManager EventCallbacksManager => eventCallbacksManager ??
+                                                                      (eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>());
+
         public const string BUTTON_TEMPLATE_PREFIX = "<Button";
 
         public IBindingDefinition LabelBindingDefinition
@@ -25,7 +30,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         public ExcelTemplateDefinition TemplateDefinition
         { get; private set; }
 
-        public MethodInfo Command
+        public EventCallback Command
         { get; private set; }
 
         public bool OnClickWithRange
@@ -63,7 +68,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 }
                 catch (Exception ex)
                 {
-                    string message = string.Format("Cannot retrieve the button dataAccessor '{0}'. {1}", definition.EmptyIfNull(), ex.Message);
+                    string message = $"Cannot retrieve the button dataAccessor '{definition.EmptyIfNull()}'. {ex.Message}";
                     throw new EtkException(message);
                 }
             }
@@ -106,31 +111,30 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 try
                 {
                     string onCommand = Definition.Command.Trim();
-                    string[] commandElements = onCommand.Split(',');
+                    Command =  EventCallbacksManager.RetrieveCallback(TemplateDefinition, onCommand);
 
-                    Type type = TemplateDefinition.MainBindingDefinition.BindingTypeIsGeneric ? TemplateDefinition.MainBindingDefinition.BindingGenericType : TemplateDefinition.MainBindingDefinition.BindingType;
-                    MethodInfo method = TypeHelpers.GetMethod(type, onCommand);
-
-                    ParameterInfo[] parameters = method.GetParameters();
-                    if (method.IsStatic)
+                    if(! Command.IsNotDotNet)
                     {
-                        if (parameters.Count() > 2)
-                            throw new EtkException(string.Format("Method dataAccessor must be 'void static {0}(object currentObject [, Range <currentObject caller>]'", method.Name));
+                        ParameterInfo[] parameters = Command.Callback.GetParameters();
+                        if (Command.Callback.IsStatic)
+                        {
+                            if (parameters.Count() > 2)
+                                throw new EtkException($"Method dataAccessor must be 'void static {Command.Callback.Name}(object currentObject [, Range <currentObject caller>]'");
 
-                        OnClickWithRange = parameters.Count() == 2;
-                    }
-                    else
-                    {
-                        if (parameters.Count() > 1 || (parameters.Count() == 1 && parameters[0].ParameterType != typeof(Microsoft.Office.Interop.Excel.Range)))
-                            throw new EtkException(string.Format("Method dataAccessor must be 'void {0}([Range <currentObject caller>])'", method.Name));
+                            OnClickWithRange = parameters.Count() == 2;
+                        }
+                        else
+                        {
+                            if (parameters.Count() > 1 || (parameters.Count() == 1 && parameters[0].ParameterType != typeof(Microsoft.Office.Interop.Excel.Range)))
+                                throw new EtkException($"Method dataAccessor must be 'void {Command.Callback.Name}([Range <currentObject caller>])'");
 
-                        OnClickWithRange = parameters.Count() == 1;
+                            OnClickWithRange = parameters.Count() == 1;
+                        }
                     }
-                    Command = method;
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Get 'Command' methodInfo information failed:{0}", ex.Message));
+                    throw new EtkException($"Get 'Command' methodInfo information failed:{ex.Message}");
                 }
             }
         }
@@ -170,11 +174,11 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
 
                     EnablePropertyInfo = type.GetProperty(enablePropElements[2]);
                     if (EnablePropertyInfo == null)
-                        throw new ArgumentException(string.Format("Property '{0}' not found", enablePropElements[2]));
+                        throw new ArgumentException($"Property '{enablePropElements[2]}' not found");
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Get 'EnableProp' property information failed:{0}", ex.Message));
+                    throw new EtkException($"Get 'EnableProp' property information failed:{ex.Message}");
                 }
             }
         }

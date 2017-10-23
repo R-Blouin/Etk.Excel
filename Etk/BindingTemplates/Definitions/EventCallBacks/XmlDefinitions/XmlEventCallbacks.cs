@@ -28,7 +28,7 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions
                     if (def.Length > 150)
                         def = def.Substring(0, 149) + "...";
 
-                    throw new EtkException(string.Format("Cannot retrieve the Event Callback from '{0}'. {1}", def, ex.Message));
+                    throw new EtkException($"Cannot retrieve the Event Callback from '{def}'. {ex.Message}");
                 }
             }
             return ret;

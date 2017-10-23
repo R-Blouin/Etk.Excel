@@ -104,7 +104,7 @@ namespace Etk.BindingTemplates.Definitions.Templates
                     }
                     catch (Exception ex)
                     {
-                        throw new EtkException(string.Format("Cannot resolve 'BindingWith' '{0}':{1}", bindingWith, ex.Message));
+                        throw new EtkException($"Cannot resolve 'BindingWith' '{bindingWith}':{ex.Message}");
                     }
                 }
 
@@ -120,7 +120,7 @@ namespace Etk.BindingTemplates.Definitions.Templates
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Resolve the template option failed:{0}", ex.Message));
+                throw new EtkException($"Resolve the template option failed:{ex.Message}");
             }
         }
         #endregion

@@ -44,7 +44,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
         #endregion
 
         #region attributes and properties
-        private WizardViewModel parent;
+        private readonly WizardViewModel parent;
 
         private string name;
         /// <summary> View Name</summary>
@@ -55,8 +55,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
             {
                 name = value;
                 OnPropertyChanged("Name");
-                if (canNext != null)
-                    canNext();
+                canNext?.Invoke();
             }
         }
 
@@ -83,7 +82,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
             }
         }
 
-        private ExcelInterop.Range caller;
+        private readonly ExcelInterop.Range caller;
         private ExcelInterop.Range firstOutputRange;
         public ExcelInterop.Range FirstOutputRange
         {
@@ -98,10 +97,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
         }
 
         /// <summary> View first output concernedRange</summary>
-        public string FirstOutputRangeAddress
-        {
-            get { return firstOutputRange == null ? string.Empty : string.Format("'{0}'!{1}", FirstOutputRange.Parent.Name, FirstOutputRange.AddressLocal); }
-        }
+        public string FirstOutputRangeAddress => firstOutputRange == null ? string.Empty : string.Format("'{0}'!{1}", FirstOutputRange.Parent.Name, FirstOutputRange.AddressLocal);
 
         public IEnumerable<IModelAccessor> accessors;
         public IEnumerable<IModelAccessor> Accessors
@@ -148,11 +144,9 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
             }
         }
 
-        public bool HasFilter
-        { get { return !HasNoFilter; } }
+        public bool HasFilter => !HasNoFilter;
 
-        public bool HasNoFilter
-        { get { return string.IsNullOrEmpty(FilterOnAccessors); } }
+        public bool HasNoFilter => string.IsNullOrEmpty(FilterOnAccessors);
 
         private string filterOnAccessors;
         public string FilterOnAccessors
@@ -203,7 +197,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
         {
             if (parent.ViewProperties == null)
             {
-                IModelView modelView = null;
+                IModelView modelView;
                 if (selectedAccessor.ReturnModelType.DefaultViews != null && selectedAccessor.ReturnModelType.DefaultViews.Any())
                     modelView = selectedAccessor.ReturnModelType.DefaultViews.ElementAt(0);
                 else

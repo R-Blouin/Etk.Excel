@@ -14,7 +14,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         private readonly ExcelBindingDefinitionWithFormula excelBindingDefinitionWithFormula;
         private object currentValue;
         private object currentFormula;
-        private bool useFormula;
+        private IBindingContextItem formulaBindingContext = null;
 
         public Microsoft.Office.Interop.Excel.Range Range
         { get; private set; }
@@ -32,7 +32,9 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         {
             excelBindingDefinitionWithFormula = bindingDefinition as ExcelBindingDefinitionWithFormula;
             CanNotify = excelBindingDefinitionWithFormula.CanNotify;
-            useFormula = excelBindingDefinitionWithFormula.FormulaBindingDefinition != null;
+
+            if (excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
+                formulaBindingContext = excelBindingDefinitionWithFormula.FormulaBindingDefinition.ContextItemFactory(parent);
 
             if (CanNotify)
             {
@@ -65,44 +67,38 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override object ResolveBinding()
         {
-            if (useFormula)
-            {
-                if(excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
-                    return "=" + excelBindingDefinitionWithFormula.FormulaBindingDefinition.ResolveBinding(DataSource);
-                return Range.HasFormula ? Range.Formula : null;
-            }
-
-            if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
+            if(excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
+                return $"={formulaBindingContext.ResolveBinding()}";
+            else if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
                 return excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
+
+            //if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
+            //    return excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
             return null;
         }
 
         public override bool UpdateDataSource(object data, out object retValue)
         {
-            retValue = data;
+            if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
+                excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, data);
+
             if (data == null) // If null enter => ResolveBinding the binding
-            {
-                useFormula = excelBindingDefinitionWithFormula.FormulaBindingDefinition != null;
-                if (excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
-                    retValue = "=" + excelBindingDefinitionWithFormula.FormulaBindingDefinition.ResolveBinding(DataSource);
-                else if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
-                    retValue = excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
-            }
+                retValue = ResolveBinding();
             else
             {
-                useFormula = data.ToString().Trim().StartsWith("=");
-                if (useFormula)
+                if (data.ToString().Trim().StartsWith("="))
                 {
-                    try
-                    {
-                        Range.Formula = data.ToString();
-                        retValue = Range.Formula;
-                    }
-                    catch
-                    { }
+                    //try
+                    //{
+                    //Range.Formula = data.ToString();
+                    //retValue = Range.Formula;
+                    retValue = data.ToString();
+                    //}
+                    //catch
+                    //{ }
                 }
-                else if(excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
-                    retValue = excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, data);
+                else
+                    retValue = data;
             }
             return true;
         }

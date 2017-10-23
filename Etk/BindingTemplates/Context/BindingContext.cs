@@ -83,8 +83,7 @@ namespace Etk.BindingTemplates.Context
                         CheckType(TemplateDefinition.MainBindingDefinition, dataSourceType);
 
                     ISortersAndFilters externalSortersAndFilters = null;
-                    if (owner.ExternalSortersAndFilters != null)
-                        owner.ExternalSortersAndFilters.TryGetValue(TemplateDefinition, out externalSortersAndFilters);
+                    owner.ExternalSortersAndFilters?.TryGetValue(TemplateDefinition, out externalSortersAndFilters);
 
                     //Occurrences = dataSourceAsList.Count;
                     if (TemplateDefinition.Body != null)
@@ -115,7 +114,7 @@ namespace Etk.BindingTemplates.Context
             }
             catch (Exception ex)
             {
-                string message = string.Format("Create the 'BindingContext' for template '{0}' failed . {1}", templateDefinition == null ? string.Empty : templateDefinition.Name, ex.Message);
+                string message = $"Create the 'BindingContext' for template '{(templateDefinition == null ? string.Empty : templateDefinition.Name)}' failed . {ex.Message}";
                 throw new EtkException(message);
             }
         }
@@ -135,7 +134,7 @@ namespace Etk.BindingTemplates.Context
             {
                 Type expected = mainBindingDef.BindingType;
                 Type got = dataSourceType.BindingType;
-                throw new BindingTemplateException(string.Format("DataSource has not got the right UnderlyingType. '{0}' (or a UnderlyingType derivated from) was expected, got '{1}'", expected.Name, got.Name));
+                throw new BindingTemplateException($"DataSource has not got the right UnderlyingType. '{expected.Name}' (or a UnderlyingType derivated from) was expected, got '{got.Name}'");
             }
         }
         #endregion

@@ -3,7 +3,9 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
-using ExcelInterop = Microsoft.Office.Interop.Excel; 
+using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
+using Etk.BindingTemplates.Definitions;
 
 namespace Etk.Excel.BindingTemplates.Controls.Button
 {
@@ -30,8 +32,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         public ExcelInterop.Range OwnerRange
         { get; protected set; }
 
-        public ExcelForms.Font Font
-        { get { return commandButton == null ? null : commandButton.Font; } }
+        public ExcelForms.Font Font => commandButton == null ? null : commandButton.Font;
 
         public ExcelInterop.XlPlacement Placement
         {
@@ -79,7 +80,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
             try
             {
                 worksheet = OwnerRange.Worksheet;
-                Name = string.Format("ExcelBtn{0}", Interlocked.Increment(ref cpt));
+                Name = $"ExcelBtn{Interlocked.Increment(ref cpt)}";
 
                 ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
 
@@ -96,7 +97,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     definition.H == 0 ? OwnerRange.Height : definition.H);
 
                 obj.Name = Name;
-                object s = worksheet.GetType().InvokeMember(Name, BindingFlags.GetProperty, null, worksheet, null);
+                object s = worksheet.GetType().InvokeMember(Name, BindingFlags.Default | BindingFlags.GetProperty, null, worksheet, null);
                 commandButton = s as ExcelForms.CommandButton;
                 commandButton.FontName = "Arial";
                 commandButton.Font.Size = 8;
@@ -137,38 +138,53 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
             }
         }
 
-        public void SetCommand(MethodInfo methodInfo, object obj, bool useRange)
+        public void SetCommand(EventCallback callback, object obj, bool useRange)
         {
             if (CurrentCommand != null)
                 commandButton.Click -= CurrentCommand;
 
-            if (methodInfo != null)
+            if (callback != null)
             {
-                if (methodInfo.IsStatic)
+                if(callback.IsNotDotNet)
                 {
-                    CurrentCommand = () => {
-                                                if(Enable)
-                                                {  
-                                                    if(useRange)
-                                                       methodInfo.Invoke(null, new object[] {obj, OwnerRange });
-                                                    else
-                                                       methodInfo.Invoke(null, new object[] {obj} ); 
-                                                }
-                                            };
+                    try
+                    {
+                        ETKExcel.ExcelApplication.ExecuteVbaMAcro(callback.Ident, new[] { obj, OwnerRange });
+                    }
+                    catch (COMException ex)
+                    {
+                        if (ex.ErrorCode != (int) SpecificException.DISP_E_UNKNOWNNAME)
+                            throw;
+                    }
                 }
-                else 
+                else
                 {
-                    CurrentCommand = () => { 
-                                                if(Enable)
-                                                {
-                                                    if(useRange)
-                                                        methodInfo.Invoke(obj, new object[] { OwnerRange });
-                                                    else
-                                                        methodInfo.Invoke(obj, null); 
-                                                }
-                                           };
+                    if (callback.Callback.IsStatic)
+                    {
+                        CurrentCommand = () => {
+                            if (Enable)
+                            {
+                                if (useRange)
+                                    callback.Callback.Invoke(null, new object[] { obj, OwnerRange });
+                                else
+                                    callback.Callback.Invoke(null, new object[] { obj });
+                            }
+                        };
+                    }
+                    else
+                    {
+                        CurrentCommand = () => {
+                            if (Enable)
+                            {
+                                if (useRange)
+                                    callback.Callback.Invoke(obj, new object[] { OwnerRange });
+                                else
+                                    callback.Callback.Invoke(obj, null);
+                            }
+                        };
+                    }
+                    commandButton.Click += CurrentCommand;
                 }
-                commandButton.Click += CurrentCommand;
             }
         }
         #endregion

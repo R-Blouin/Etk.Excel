@@ -11,7 +11,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
     public class ViewPropertiesViewModel : ViewModelBase, IWizardStep
     {
         private WizardViewModel parent;
-        private IModelType returnModelType;
+        private readonly IModelType returnModelType;
 
         public ModelView ModelView
         { get; private set; }

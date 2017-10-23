@@ -55,7 +55,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 worksheet = templateDeclarationFirstCell.Worksheet;
                 ExcelInterop.Range templateDeclarationLastRange = worksheet.Cells.Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                 if (templateDeclarationLastRange == null)
-                    throw new EtkException(string.Format("Cannot find the end of template '{0}' in sheet '{1}'", templateName.EmptyIfNull(), worksheet.Name.EmptyIfNull()));
+                    throw new EtkException($"Cannot find the end of template '{templateName.EmptyIfNull()}' in sheet '{worksheet.Name.EmptyIfNull()}'");
 
                 ExcelTemplateDefinition excelTemplateDefinition = new ExcelTemplateDefinition(templateDeclarationFirstCell, templateDeclarationLastRange, templateOption);
                 ExcelTemplateDefinitionPart header, body, footer;
@@ -66,7 +66,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot create the template '{0}'. {1}", templateName.EmptyIfNull(), ex.Message));
+                throw new EtkException($"Cannot create the template '{templateName.EmptyIfNull()}'. {ex.Message}");
             }
             finally
             {
@@ -105,7 +105,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     else
                         headerLastRange = worksheet.Cells[firstRange.Row + headerSize - 1, lastRange.Column];
                     //string name = string.Format("{0}-{1}", excelTemplateDefinition.Name, "Header");
-                    header = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, firstRange, headerLastRange);
+                    header = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Header, firstRange, headerLastRange);
                     headerLastRange = null;
                 }
 
@@ -119,7 +119,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     else
                         footerFirstRange = worksheet.Cells[lastRange.Row - footerSize + 1, firstRange.Column];
                     //string name = string.Format("{0}-{1}", excelTemplateDefinition.Name, "Footer");
-                    footer = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, footerFirstRange, lastRange);
+                    footer = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Footer, footerFirstRange, lastRange);
                     footerFirstRange = null;
                 }
 
@@ -138,12 +138,12 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     bodyLastRange = worksheet.Cells[lastRange.Row - footerSize, lastRange.Column];
                 }
 
-                body = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, bodyFirstRange, bodyLastRange);
+                body = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Body, bodyFirstRange, bodyLastRange);
                 bodyFirstRange = bodyLastRange = null;
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("The parsing of template '{0}' in sheet '{1}' failed: {2}", excelTemplateDefinition.Name, worksheet.Name.EmptyIfNull(), ex.Message));
+                throw new EtkException($"The parsing of template '{excelTemplateDefinition.Name}' in sheet '{worksheet.Name.EmptyIfNull()}' failed: {ex.Message}");
             }
         }
 
@@ -198,7 +198,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             throw new EtkException("The 'Header' tag must be set on the first column after the beginning of the template declaration'");
                         if (endHeader != null && endHeader.Column < startHeader.Column)
                             throw new EtkException("The '<Header>' tag must be set before '<Header/>' one");
-                        headerSize = endHeader == null ? 1 : endHeader.Column - startHeader.Column + 1;
+                        headerSize = endHeader?.Column - startHeader.Column + 1 ?? 1;
                     }
                     else
                     {
@@ -206,7 +206,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             throw new EtkException("The 'Header' tag must be set on the first dataRow after the beginning of the template declaration'");
                         if (endHeader != null && endHeader.Row < startHeader.Row)
                             throw new EtkException("The '<Header>' tag must be set before '</Header>' one");
-                        headerSize = endHeader == null ? 1 : endHeader.Row - startHeader.Row + 1;
+                        headerSize = endHeader?.Row - startHeader.Row + 1 ?? 1;
                     }
                 }
 
@@ -219,7 +219,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             throw new EtkException("The end of the 'Footer' tag must be set on last column of the template cells declaration'");
                         if (endFooter != null && startFooter.Column > endFooter.Column)
                             throw new EtkException("The '<Footer>' tag must be set before '</Footer>' one");
-                        footerSize = endFooter == null ? 1 : endFooter.Column - startFooter.Column + 1;
+                        footerSize = endFooter?.Column - startFooter.Column + 1 ?? 1;
                     }
                     else
                     {
@@ -228,7 +228,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             throw new EtkException("The end of the 'Footer' must be set on last dataRow of the template cells declaration'");
                         if (endFooter != null && startFooter.Row > endFooter.Row)
                             throw new EtkException("The '<Footer>' tag must be set before '</Footer>' one");
-                        footerSize = endFooter == null ? 1 : endFooter.Row - startFooter.Row + 1;
+                        footerSize = endFooter?.Row - startFooter.Row + 1 ?? 1;
                     }
                 }
                 startHeader = startFooter = endHeader = endFooter = null;

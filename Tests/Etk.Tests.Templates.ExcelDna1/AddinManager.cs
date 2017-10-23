@@ -16,7 +16,8 @@
 
             // To avoid the Excel 'Save message' on Exit
             Excel.Workbook currentWorkbook = ExcelApplication.ActiveWorkbook;
-            currentWorkbook.BeforeClose += (ref bool cancel) => currentWorkbook.Saved = true;
+            if(currentWorkbook != null)
+                currentWorkbook.BeforeClose += (ref bool cancel) => currentWorkbook.Saved = true;
 
             // Init the ETK Framework : mandatory before any uses of the framework
             ETKExcel.Init(ExcelApplication);

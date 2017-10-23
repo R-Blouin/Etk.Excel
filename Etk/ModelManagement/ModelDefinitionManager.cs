@@ -51,7 +51,7 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Retrieve model configuration from file '{0}' failed: {1}", configurationFilePath.EmptyIfNull(), ex.Message), ex);
+                throw new EtkException($"Retrieve model configuration from file '{configurationFilePath.EmptyIfNull()}' failed: {ex.Message}", ex);
             }
             finally
             {
@@ -74,7 +74,7 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Retrieve model configuration from xml '{0}' failed: {1}", configName, ex.Message), ex);
+                throw new EtkException($"Retrieve model configuration from xml '{configName}' failed: {ex.Message}", ex);
             }
             finally
             {

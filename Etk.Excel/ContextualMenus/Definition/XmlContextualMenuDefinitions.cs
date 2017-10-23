@@ -24,7 +24,7 @@ namespace Etk.Excel.ContextualMenus.Definition
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Cannot retrieve the contextual menus. {0}", ex.Message));
+                    throw new EtkException($"Cannot retrieve the contextual menus. {ex.Message}");
                 }
             }
             return ret;

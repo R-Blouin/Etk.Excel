@@ -1,6 +1,7 @@
 ﻿using System;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.ModelManagement.DataAccessors;
+using System.Reflection;
 
 namespace Etk.BindingTemplates.Definitions.Templates
 {
@@ -15,24 +16,20 @@ namespace Etk.BindingTemplates.Definitions.Templates
         { get; protected set; }
 
         /// <summary> Implements <see cref="ITemplateDefinition.Name"/> </summary> 
-        public string Name
-        { get { return TemplateOption.Name; } }
+        public string Name => TemplateOption.Name;
 
         /// <summary> Implements <see cref="ITemplateDefinition.Description"/> </summary> 
-        public string Description
-        { get { return !string.IsNullOrEmpty(TemplateOption.Description) ? TemplateOption.Description : Name; } }
+        public string Description => !string.IsNullOrEmpty(TemplateOption.Description) ? TemplateOption.Description : Name;
 
         /// <summary> Implements <see cref="ITemplateDefinition.Orientation"/> </summary> 
-        public Orientation Orientation
-        { get { return TemplateOption.Orientation; } }
+        public Orientation Orientation => TemplateOption.Orientation;
 
         /// <summary> Implements <see cref="ITemplateDefinition.MainBindingDefinition"/> </summary> 
         public IBindingDefinition MainBindingDefinition
-        { get; private set; }
+        { get; }
 
         /// <summary> Implements <see cref="ITemplateDefinition.DataAccessor"/> </summary> 
-        public IDataAccessor DataAccessor
-        { get { return TemplateOption.DataAccessor; } }
+        public IDataAccessor DataAccessor => TemplateOption.DataAccessor;
 
         /// <summary> Implements <see cref="ITemplateDefinition.Header"/> </summary> 
         public ITemplateDefinitionPart Header
@@ -50,11 +47,9 @@ namespace Etk.BindingTemplates.Definitions.Templates
         public BindingType BindingType
         { get; protected set; }
 
-        public bool CanSort
-        { get { return TemplateOption.CanSort;} }
+        public bool CanSort => TemplateOption.CanSort;
 
-        public bool AddBorder
-        { get { return TemplateOption.AddBorder; } }
+        public bool AddBorder => TemplateOption.AddBorder;
         #endregion
 
         #region .ctors
@@ -93,14 +88,11 @@ namespace Etk.BindingTemplates.Definitions.Templates
             Body = body;
             Footer = footer;
 
-            BindingType = Etk.BindingTemplates.Definitions.Binding.BindingType.CreateInstance(this);
+            BindingType = BindingType.CreateInstance(this);
 
-            if (Header != null)
-                ((TemplateDefinitionPart) Header).Init();
-            if (Body != null)
-                ((TemplateDefinitionPart) Body).Init();
-            if (Footer != null)
-                ((TemplateDefinitionPart) Footer).Init();
+            ((TemplateDefinitionPart) Header)?.Init();
+            ((TemplateDefinitionPart) Body)?.Init();
+            ((TemplateDefinitionPart) Footer)?.Init();
         }
         #endregion
     }

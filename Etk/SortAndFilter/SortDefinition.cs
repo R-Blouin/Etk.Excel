@@ -11,23 +11,23 @@ namespace Etk.SortAndFilter
 	{
 		#region attributes and properties
         public ITemplateDefinition TemplateDefinition
-        { get; private set; }
+        { get; }
         
         public IBindingDefinition BindingDefinition
-		{ get; private set; }
+		{ get;  }
 
 		public bool Descending
-		{ get; private set; }
+		{ get;  }
 
 		public bool CaseSensitive
-		{ get; private set; }
+		{ get; }
 
 		public Func<T, TT> SortMethod
 		{ get; private set; }
 
-		public Type ResultType
-		{ get { return typeof(T); } }
-		#endregion
+		public Type ResultType => typeof(T);
+
+	    #endregion
 
 		#region .ctors and factory
         public SortDefinition(ITemplateDefinition templateDefinition, IBindingDefinition bindingDefinition, bool descending, bool caseSensitive)

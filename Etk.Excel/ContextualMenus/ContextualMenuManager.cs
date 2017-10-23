@@ -14,15 +14,15 @@ namespace Etk.Excel.ContextualMenus
     class ContextualMenuManager : IContextualMenuManager, IDisposable
     {
         #region attributes and properties
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
 
         private readonly object syncObj = new object();
         private bool isDisposed = false;
 
-        private List<ContextualMenusRequestedHandler> contextualMenusManagers = new List<ContextualMenusRequestedHandler>();
-        private List<ExcelInterop.Workbook> manageWorkbooks = new List<ExcelInterop.Workbook>();
+        private readonly List<ContextualMenusRequestedHandler> contextualMenusManagers = new List<ContextualMenusRequestedHandler>();
+        private readonly List<ExcelInterop.Workbook> manageWorkbooks = new List<ExcelInterop.Workbook>();
 
-        private Dictionary<string, IContextualMenu> contextualMenuByIdent = new Dictionary<string, IContextualMenu>();
+        private readonly Dictionary<string, IContextualMenu> contextualMenuByIdent = new Dictionary<string, IContextualMenu>();
 
         public event ContextualMenusRequestedHandler OnContextualMenusRequested
         {
@@ -105,7 +105,7 @@ namespace Etk.Excel.ContextualMenus
             catch (Exception ex)
             {
                 string message = xml.Length > 350 ? xml.Substring(0, 350) + "..." : xml;
-                throw new EtkException(string.Format("Cannot create contextual menus from xml '{0}':{1}", message, ex.Message));
+                throw new EtkException($"Cannot create contextual menus from xml '{message}':{ex.Message}");
             }
         }
 
@@ -128,7 +128,7 @@ namespace Etk.Excel.ContextualMenus
             catch (Exception ex)
             {
                 string message = xml.Length > 350 ? xml.Substring(0, 350) + "..." : xml;
-                throw new EtkException(string.Format("Cannot create contextual menu from xml '{0}':{1}", message, ex.Message));
+                throw new EtkException($"Cannot create contextual menu from xml '{message}':{ex.Message}");
             }
         }
 
@@ -190,7 +190,7 @@ namespace Etk.Excel.ContextualMenus
                 catch (Exception ex)
                 { 
                     string methodName = manager.Method == null ? string.Empty : manager.Method.Name.EmptyIfNull();
-                    throw new EtkException(string.Format("Contextual menu manager: '{0}' invocation failed: {1}.", methodName, ex.Message));
+                    throw new EtkException($"Contextual menu manager: '{methodName}' invocation failed: {ex.Message}.");
                 }
             }
             realRange = null;
@@ -236,7 +236,7 @@ namespace Etk.Excel.ContextualMenus
                                                           catch (Exception ex)
                                                           {
                                                             string methodName = contextualMenuItem.MethodInfo == null ? string.Empty : contextualMenuItem.MethodInfo.Name; 
-                                                            throw new EtkException(string.Format("Contextual menu: '{0}' invocation failed: {1}.", methodName, ex.Message));
+                                                            throw new EtkException($"Contextual menu: '{methodName}' invocation failed: {ex.Message}.");
                                                           }
                                                       };
                         }

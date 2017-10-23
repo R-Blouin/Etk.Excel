@@ -37,7 +37,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
         /// <summary> Multiplicator to apply to the number of lines of a multi lines value</summary>
         double MultiLineFactor { get; }
         /// <summary> Return the number of lines of a multi lines value </summary>
-        MethodInfo MultiLineFactorResolver { get; }
+        EventCallback MultiLineFactorResolver { get; }
 
         /// <summary> True if the binding definition is read only </summary>
         bool IsReadOnly { get; }
@@ -69,9 +69,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
         Decorator DecoratorDefinition { get; }
 
         /// <summary> Contains the callback to invoke when the bound object is selected</summary>
-        MethodInfo OnSelection { get; }
+        EventCallback OnSelection { get; }
 
         /// <summary> Contains the callback to invoke when the bound object is clicked (left double click in Excel)</summary>
-        MethodInfo OnClick { get; }
+        EventCallback OnClick { get; }
     }
 }

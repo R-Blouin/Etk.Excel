@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using Etk.BindingTemplates.Views;
-using Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels;
+using Etk.Excel.UI.Windows.SortAndFilter.ViewModels;
 
 namespace Etk.Excel.UI.Windows.SortAndFilter
 {

@@ -5,78 +5,40 @@ using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.BindingTemplates.Views;
 using Etk.Excel.BindingTemplates.Views;
+using Etk.Excel.MvvmBase;
 using Etk.Excel.UI.MvvmBase;
 using Etk.SortAndFilter;
-using Etk.Excel.MvvmBase;
 
-namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
+namespace Etk.Excel.UI.Windows.SortAndFilter.ViewModels
 {
     class SortAndFilterViewModel : ViewModelBase, IDisposable
     {
         #region command
         RelayCommand filterSelectAllCommand;
-        public ICommand FilterSelectAllCommand
-        { 
-            get 
-            { 
-                return filterSelectAllCommand ?? (filterSelectAllCommand = new RelayCommand(param => { if(selectedDefinition != null && selectedDefinition.ValueSelectionList != null)
-                                                                                                            selectedDefinition.ValueSelectionList.ForEach(v => v.IsSelected = true); 
-                                                                                                     })); 
-            }
-        }
+        public ICommand FilterSelectAllCommand => filterSelectAllCommand ?? (filterSelectAllCommand = new RelayCommand(param => selectedDefinition?.ValueSelectionList?.ForEach(v => v.IsSelected = true))); 
 
         RelayCommand filterUnSelectAllCommand;
-        public ICommand FilterUnSelectAllCommand
-        {
-            get
-            {
-                return filterUnSelectAllCommand ?? (filterUnSelectAllCommand = new RelayCommand(param => { if (selectedDefinition != null && selectedDefinition.ValueSelectionList != null)
-                                                                                                                selectedDefinition.ValueSelectionList.ForEach(v => v.IsSelected = false);
-                                                                                                         }));
-            }
-        }
+        public ICommand FilterUnSelectAllCommand => filterUnSelectAllCommand ?? (filterUnSelectAllCommand = new RelayCommand(param =>selectedDefinition?.ValueSelectionList?.ForEach(v => v.IsSelected = false)));
 
         RelayCommand applySortAndFilterCommand;
-        public ICommand ApplySortAndFilterCommand
-        {
-            get { return applySortAndFilterCommand ?? (applySortAndFilterCommand = new RelayCommand(param => ApplyExternalSortAndFilter()));}
-        }
+
+        public ICommand ApplySortAndFilterCommand => applySortAndFilterCommand ?? (applySortAndFilterCommand = new RelayCommand(param => ApplyExternalSortAndFilter()));
 
         RelayCommand resetAllCommand;
-        public ICommand ResetAllCommand
-        {
-            get
-            {
-                return resetAllCommand ?? (resetAllCommand = new RelayCommand(param => { ResetAllFiltersCommand.Execute(null);
-                                                                                         ResetAllSortersCommand.Execute(null);}));
-            }        
-        }
+        public ICommand ResetAllCommand => resetAllCommand ?? (resetAllCommand = new RelayCommand(param => { ResetAllFiltersCommand.Execute(null);
+                                                                                                             ResetAllSortersCommand.Execute(null);}));        
 
         RelayCommand resetAllFiltersCommand;
-        public ICommand ResetAllFiltersCommand
-        {
-            get
-            {
-                return resetAllFiltersCommand ?? (resetAllFiltersCommand = new RelayCommand(param => { TemplateViewModels.ForEach(t => t.BindingDefinitions.ForEach(b => { b.IsFilterWithConditions = false;
-                                                                                                                                                                           b.IsFilterOnValues = false;}));
-                                                                                                     }));
-            }        
-        }
+        public ICommand ResetAllFiltersCommand => resetAllFiltersCommand ?? (resetAllFiltersCommand = new RelayCommand(param => { TemplateViewModels.ForEach(t => t.BindingDefinitions.ForEach(b => { b.IsFilterWithConditions = false;
+                                                                                                                                                                  b.IsFilterOnValues = false;}));}));
 
         RelayCommand resetAllSortersCommand;
-        public ICommand ResetAllSortersCommand
-        {
-            get
-            {
-                return resetAllSortersCommand ?? (resetAllSortersCommand = new RelayCommand(param => { TemplateViewModels.ForEach(t => t.BindingDefinitions.ForEach(b => { b.IsSortAscending = false;
-                                                                                                                                                                           b.IsSortDescending = false;}));
-                                                                                                     }));
-            }        
-        }
+        public ICommand ResetAllSortersCommand => resetAllSortersCommand ?? (resetAllSortersCommand = new RelayCommand(param => { TemplateViewModels.ForEach(t => t.BindingDefinitions.ForEach(b => { b.IsSortAscending = false;
+                                                                                                                                                                  b.IsSortDescending = false;}));}));
         #endregion
 
         #region properties and attributes
-        private ITemplateView rootTemplateView;
+        private readonly ITemplateView rootTemplateView;
         //private ISorterAndFilter sorterAndFilterer;
 
         private TemplateViewModel selectedTemplate;
@@ -105,20 +67,12 @@ namespace Etk.Excel.UI.Windows.BindingTemplate.SortAndFilter.ViewModels
             }
         }
 
-        public bool SelectedDefinitionFilterOnValueEnabled
-        {
-            get { return selectedDefinition != null && selectedDefinition.IsFilterOnValues; }
-        }
+        public bool SelectedDefinitionFilterOnValueEnabled => selectedDefinition != null && selectedDefinition.IsFilterOnValues;
 
-        public bool SelectedDefinitionHasFilterOnValue
-        {
-            get { return ! SelectedDefinitionHasFilterOnCondition; }
-        }
+        public bool SelectedDefinitionHasFilterOnValue => ! SelectedDefinitionHasFilterOnCondition;
 
-        public bool SelectedDefinitionHasFilterOnCondition
-        {
-            get { return selectedDefinition != null && selectedDefinition.IsFilterWithConditions; }
-        }
+        public bool SelectedDefinitionHasFilterOnCondition => selectedDefinition != null && selectedDefinition.IsFilterWithConditions;
+
         #endregion
 
         #region .ctors 

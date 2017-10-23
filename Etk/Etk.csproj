@@ -52,11 +52,11 @@
     <Compile Include="BindingTemplates\Context\BindingContextPartType.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\BindingSearchContextItem.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\RootBindingFilter.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallback.cs" />
     <Compile Include="BindingTemplates\Definitions\SortSearchAndFilter\BindingSearchDefinition.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\BindingFilterContextItem.cs" />
     <Compile Include="BindingTemplates\Context\IBindingContextPart.cs" />
     <Compile Include="BindingTemplates\Definitions\SortSearchAndFilter\BindingFilterDefinition.cs" />
-    <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallback.cs" />
     <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallbacksManager.cs" />
     <Compile Include="BindingTemplates\Definitions\Decorators\DecoratorGroup.cs" />
     <Compile Include="BindingTemplates\Definitions\Decorators\DecoratorResult.cs" />
@@ -89,10 +89,12 @@
     <Compile Include="BindingTemplates\Definitions\Binding\IBindingDefinition.cs" />
     <Compile Include="BindingTemplates\Definitions\EventCallBacks\XmlDefinitions\XmlEventCallback.cs" />
     <Compile Include="BindingTemplates\Definitions\EventCallBacks\XmlDefinitions\XmlEventCallbacks.cs" />
+    <Compile Include="BindingTemplates\Definitions\SpecificException.cs" />
     <Compile Include="BindingTemplates\Definitions\Templates\ExpanderType.cs" />
     <Compile Include="BindingTemplates\Definitions\Templates\HeaderAsExpander.cs" />
     <Compile Include="BindingTemplates\Definitions\Templates\ITemplateDefinitionPart.cs" />
     <Compile Include="BindingTemplates\Definitions\Templates\TemplateDefinitionPart.cs" />
+    <Compile Include="BindingTemplates\Definitions\Templates\TemplateDefinitionPartType.cs" />
     <Compile Include="BindingTemplates\Definitions\Templates\TemplateLink.cs" />
     <Compile Include="BindingTemplates\Definitions\TemplateDefinitionFromModelView.cs" />
     <Compile Include="BindingTemplates\Definitions\Templates\TemplateOption.cs" />

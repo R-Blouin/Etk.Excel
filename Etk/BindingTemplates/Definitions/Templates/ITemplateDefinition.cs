@@ -1,5 +1,6 @@
 ﻿using Etk.BindingTemplates.Definitions.Binding;
 using Etk.ModelManagement.DataAccessors;
+using System.Reflection;
 
 namespace Etk.BindingTemplates.Definitions.Templates
 {

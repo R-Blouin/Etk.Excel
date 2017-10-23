@@ -7,7 +7,7 @@ namespace Etk
     [Serializable]
     public class EtkException : Exception
     {
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
 
         public EtkException() : base() { }
 

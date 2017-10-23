@@ -7,7 +7,7 @@ namespace Etk.Excel.UI.Windows.ViewsAndtemplates
     /// </summary>
     public partial class TemplateManagementWindow
     {
-        private TemplateManagementViewModel viewModel;
+        private readonly TemplateManagementViewModel viewModel;
 
         public TemplateManagementWindow(TemplateManagementViewModel viewModel)
         {

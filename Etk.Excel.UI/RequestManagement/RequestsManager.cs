@@ -22,7 +22,7 @@ namespace Etk.Excel.UI.RequestManagement
     class RequestsManager : IRequestManager, IDisposable
     {
         #region attributes and properties
-        private IContextualMenu RequestManagementMenu;
+        private readonly IContextualMenu RequestManagementMenu;
 
         ExcelRequestDefinition test;
         int xOffset = 0;
@@ -47,7 +47,7 @@ namespace Etk.Excel.UI.RequestManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("UDF manager initialization failed:{0}", ex.Message), ex);
+                throw new EtkException($"UDF manager initialization failed:{ex.Message}", ex);
             }
         }
         #endregion
@@ -143,7 +143,7 @@ namespace Etk.Excel.UI.RequestManagement
                                 }
                                 catch (Exception ex)
                                 {
-                                    string errorMessage = string.Format("#ERR:{0}.{1}", ex.Message, ex.InnerException == null ? string.Empty : ex.InnerException.Message);
+                                    string errorMessage = $"#ERR:{ex.Message}.{(ex.InnerException == null ? string.Empty : ex.InnerException.Message)}";
                                     application.PostAsynchronousAction(() => (test.View as ExcelTemplateView).FirstOutputCell.Value2 = errorMessage);
                                 }
                                                          
@@ -152,7 +152,7 @@ namespace Etk.Excel.UI.RequestManagement
             }
             catch (Exception ex)
             {
-                return string.Format("#ERR: {0}", ex.Message);
+                return $"#ERR: {ex.Message}";
             }                
         }
         #endregion

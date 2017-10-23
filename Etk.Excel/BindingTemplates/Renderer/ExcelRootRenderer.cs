@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.Templates;
@@ -35,7 +34,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #region .ctors 
         public ExcelRootRenderer(ExcelTemplateView view) : base(null, view.TemplateDefinition, view.BindingContext, view.FirstOutputCell, null)
         {
-            this.View = view;
+            View = view;
             RowDecorators = new List<ExcelElementDecorator>();
             //@@ sortAndFilterButton = new ExcelSortAndFilterButton(View);
         }
@@ -49,8 +48,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             base.Render();
 
-            toOperateOnSheetCalculation = DataRows == null ? null : DataRows.SelectMany(r => r.Where(ci => ci is IFormulaCalculation))
-                                                                            .Select(c =>(IFormulaCalculation) c).ToArray();
+            toOperateOnSheetCalculation = DataRows?.SelectMany(r => r.Where(ci => ci is IFormulaCalculation))
+                                                   .Select(c =>(IFormulaCalculation) c).ToArray();
             RenderDataOnly();
         }
 
@@ -63,10 +62,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
             cells = new object[RenderedArea.Height, RenderedArea.Width];
             ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>> decorators = new ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>>();
 
-            Parallel.For(0, DataRows.Count, i =>
+            //Parallel.For(0, DataRows.Count, i => // Parrallel problem with Com object
+            for (int i = 0; i <DataRows.Count; i++)
             {
-                List<IBindingContextItem> itemsInRow = DataRows[i];
                 int colId = 0;
+                List<IBindingContextItem> itemsInRow = DataRows[i];
                 foreach (IBindingContextItem item in itemsInRow)
                 {
                     if (item != null)
@@ -81,12 +81,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             ((IBindingContextItemCanNotify)item).OnPropertyChangedActionArgs = new KeyValuePair<int, int>(i, colId);
                         }
                         object value = item.ResolveBinding();
-                        cells[i, colId++] = value != null && value is Enum ? ((Enum) value).ToString() : value;
+                        cells[i, colId++] = (value as Enum)?.ToString() ?? value;
                     }
                     else
                         cells[i, colId++] = null;
                 }
-            });
+            }
+            //);
             RenderedRange.Value2 = cells;
 
             // Element decorators managements

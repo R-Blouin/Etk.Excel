@@ -4,8 +4,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
 {
     class BindingDefinitionRoot : BindingDefinition
     {
-        public override string Name
-        { get { return null; } }
+        public override string Name => null;
 
         public override object UpdateDataSource(object dataSource, object data)
         { 

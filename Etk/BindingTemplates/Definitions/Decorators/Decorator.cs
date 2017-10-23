@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.BindingTemplates.Definitions.Decorators
 {
@@ -16,8 +17,8 @@ namespace Etk.BindingTemplates.Definitions.Decorators
         public string Description
         { get; private set; }
 
-        /// <summary> Method info to invoke to resolbe the decorator</summary>
-        public MethodInfo ToInvoke
+        /// <summary> Call back to resolve the decorator</summary>
+        public EventCallback Callback
         { get; private set; }
 
         //private IDecoratorProperty[] properties;
@@ -27,11 +28,11 @@ namespace Etk.BindingTemplates.Definitions.Decorators
         #endregion
 
         #region .ctors
-        public Decorator(string ident, string description, MethodInfo toInvoke)
+        protected Decorator(string ident, string description, EventCallback callback)
         {
             Ident = ident;
             Description = description;
-            ToInvoke = toInvoke;
+            Callback = callback;
         }
         #endregion
 

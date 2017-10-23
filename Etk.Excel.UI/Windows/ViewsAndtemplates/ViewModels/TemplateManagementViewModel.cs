@@ -8,7 +8,7 @@ namespace Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels
     public class TemplateManagementViewModel : ViewModelBase
     {
         #region attributes and properties
-        private ExcelTemplateDefinition templateDefinition;
+        private readonly ExcelTemplateDefinition templateDefinition;
 
         /// <summary>Template Name</summary>
         public string Name
@@ -54,7 +54,7 @@ namespace Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels
             } 
         }
 
-        private string dataAccessorString;
+        private readonly string dataAccessorString;
         /// <summary>Template Description</summary>
         public string DataAccessorString
         {
@@ -66,7 +66,7 @@ namespace Etk.Excel.UI.Windows.ViewsAndtemplates.ViewModels
             }
         }
 
-        private string mainBindingDefinitionString;
+        private readonly string mainBindingDefinitionString;
         /// <summary>Template Description</summary>
         public string MainBindingDefinitionString
         {

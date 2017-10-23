@@ -4,20 +4,21 @@ using System.Linq;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Decorators;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
 using Etk.Tools.Log;
-using Etk.Tools.Reflection;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
 namespace Etk.Excel.BindingTemplates.Decorators
 {
     class DecoratorProperty
     {
         public double FrontColor
-        { get; private set; }
+        { get; }
 
         public double BackColor
-        { get; private set; }
+        { get;  }
 
         public DecoratorProperty(double frontColor, double backColor)
         {
@@ -29,20 +30,24 @@ namespace Etk.Excel.BindingTemplates.Decorators
     /// <summary>Excel concernedRange decorator. The decorator styles or colors come from a Excel concernedRange</summary>
     public class ExcelRangeDecorator : Decorator
     {
+        private static EventCallbacksManager eventCallbacksManager;
+        private static EventCallbacksManager EventCallbacksManager => eventCallbacksManager ??
+                                                                      (eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>());
+
         //private bool useOnlyColors;
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
         //private bool isRangedName;
-        private string rangeId ;
+        private readonly string rangeId ;
         private ExcelInterop.Range decoratorRange;
-        private ExcelInterop.Application excelApplication;
+        private readonly ExcelInterop.Application excelApplication;
         private bool addConcernedRangeParameter;
-        private bool notOnlyColor;
-        private List<DecoratorProperty> decoratorProperties = null;
+        private readonly bool notOnlyColor;
+        private List<DecoratorProperty> decoratorProperties;
 
         #region .ctors and factories
         /// <summary> Constructor</summary>
-        private ExcelRangeDecorator(ExcelInterop.Application excelApplication, string ident, string description, MethodInfo toInvoke, string rangeId, bool notOnlyColor)//, bool useOnlyColors)
-                                  : base(ident, description, toInvoke)    
+        private ExcelRangeDecorator(ExcelInterop.Application excelApplication, string ident, string description, EventCallback callback, string rangeId, bool notOnlyColor)//, bool useOnlyColors)
+                                  : base(ident, description, callback)    
         {
             this.notOnlyColor = notOnlyColor;
             this.rangeId = rangeId;
@@ -51,12 +56,12 @@ namespace Etk.Excel.BindingTemplates.Decorators
             // We try to initialyze the concernedRange used to decorate. But, maybe, not all the workbooks are loaded yet
             try
             {
-                CheckParameters(toInvoke);
+                CheckParameters(callback);
                 RevolveDecoratorRange(); 
             }
             catch(Exception ex)
             {
-                log.LogFormat(LogType.Warn, string.Format("'ExcelRangeDecorator' constructor:{0}", ex.Message));
+                log.LogFormat(LogType.Warn, $"'ExcelRangeDecorator' constructor:{ex.Message}");
             }
         }
 
@@ -76,14 +81,13 @@ namespace Etk.Excel.BindingTemplates.Decorators
 
                 if (string.IsNullOrEmpty(xmlDecorator.Range))
                     throw new Exception("The range ident of a decorator cannot be null or empty");
-
-                MethodInfo methodInfo = TypeHelpers.GetMethod(null, xmlDecorator.Method);
-                ExcelRangeDecorator ret = new ExcelRangeDecorator(excelApplication, xmlDecorator.Ident, xmlDecorator.Description, methodInfo, xmlDecorator.Range, xmlDecorator.NotOnlyColor);//, xmlDecorator.UseOnlyColors);
+                EventCallback callback = EventCallbacksManager.RetrieveCallback(null, xmlDecorator.Method);
+                ExcelRangeDecorator ret = new ExcelRangeDecorator(excelApplication, xmlDecorator.Ident, xmlDecorator.Description, callback, xmlDecorator.Range, xmlDecorator.NotOnlyColor);//, xmlDecorator.UseOnlyColors);
                 return ret;
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Cannot create decorator '{0}':{1}", xmlDecorator.Ident ?? string.Empty, ex.Message));
+                throw new Exception($"Cannot create decorator '{xmlDecorator.Ident ?? string.Empty}':{ex.Message}");
             }
         }
         #endregion
@@ -104,22 +108,14 @@ namespace Etk.Excel.BindingTemplates.Decorators
 
                 // We delete the previous concernedRange comment 
                 ExcelInterop.Comment comment = concernedRangeFirstCell.Comment;
-                if (comment != null)
-                    comment.Delete();
-
-                // Prepare parameters
-                object[] parameters;
-                if (addConcernedRangeParameter)
-                    parameters = new object[] { concernedRange, element.DataSource, null };
-                else
-                    parameters = new object[] { element.DataSource, null };
+                comment?.Delete();
 
                 // Invoke decorator resolver
-                object result = ToInvoke.Invoke(ToInvoke.IsStatic ? null : element.DataSource, parameters);
+                object result = EventCallbacksManager.DecoratorInvoke(Callback, addConcernedRangeParameter ? concernedRange : null, element.DataSource, null);
                 if (result != null)
                 {
                     DecoratorResult decoratorResult = result as DecoratorResult;
-                    if (decoratorResult.Item.HasValue)
+                    if (decoratorResult?.Item != null)
                     {
                         if (!string.IsNullOrEmpty(decoratorResult.Comment))
                         {
@@ -145,6 +141,9 @@ namespace Etk.Excel.BindingTemplates.Decorators
 
                                 font.Color = decoratorProperties[decoratorResult.Item.Value].FrontColor;
                                 interior.Color = decoratorProperties[decoratorResult.Item.Value].BackColor;
+
+                                Marshal.ReleaseComObject(interior);
+                                Marshal.ReleaseComObject(font);
                             }
                         }
                     }
@@ -154,7 +153,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch (Exception ex)
             {
-                log.LogExceptionFormat(LogType.Error, ex, string.Format("Cannot resolve decorator '{0}':{1}", Ident, ex.Message));
+                log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve decorator '{Ident}':{ex.Message}");
                 return false;
             }
         }
@@ -173,26 +172,13 @@ namespace Etk.Excel.BindingTemplates.Decorators
             {
                 // We delete the previous concernedRange comment 
                 ExcelInterop.Comment comment = concernedRange.Comment;
-                if (comment != null)
-                    comment.Delete();
+                comment?.Delete();
 
                 if (decoratorRange == null)
                     RevolveDecoratorRange();
 
-                // Prepare parameters
-                object[] parameters;
-                if(addConcernedRangeParameter)
-                    parameters = new object[] { concernedRange, contextItem.DataSource, contextItem.BindingDefinition.Name };
-                else
-                    parameters = new object[] { contextItem.DataSource, contextItem.BindingDefinition.Name };
-
                 // Invoke decorator resolver
-                object result = ToInvoke.Invoke(ToInvoke.IsStatic ? null : contextItem.DataSource, parameters);
-
-                // addConcernedRangeParameter == true => the method resolver managed the style of the concerned targetRange 
-                // if (addConcernedRangeParameter)
-                //    return (bool) result;
-
+                object result = EventCallbacksManager.DecoratorInvoke(Callback, addConcernedRangeParameter ? concernedRange : null, contextItem.DataSource, contextItem.BindingDefinition.Name);
                 // addConcernedRangeParameter == false => the method resolver returns a 'DecoratorResult' we manage below 
                 if (result != null)
                 {
@@ -232,52 +218,57 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch (Exception ex)
             {
-                log.LogExceptionFormat(LogType.Error, ex, string.Format("Cannot resolve decorator '{0}':{1}", Ident, ex.Message));
+                log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve decorator '{Ident}':{ex.Message}");
                 return false;
             }
         }
         #endregion
 
         #region private methods
-        private bool CheckParameters(MethodInfo methodInfo)
+        private void CheckParameters(EventCallback callback)
         {
             addConcernedRangeParameter = false;
             bool error = false;
-            ParameterInfo[] parametersInfo = methodInfo.GetParameters();
-            if (parametersInfo == null || parametersInfo.Count() > 3 || parametersInfo.Count() < 2)
-                error = true;
 
-            if (!error && parametersInfo.Count() == 2)
-            {
-                if (methodInfo.ReturnType != typeof(DecoratorResult))
-                    error = true;
-
-                //if (parametersInfo[0].ParameterType != typeof(object))
-                //    error = true;
-                if (parametersInfo[1].ParameterType != typeof(string))
-                    error = true;
-            }
-            if (!error && parametersInfo.Count() == 3)
-            {
+            if (callback.IsNotDotNet)
                 addConcernedRangeParameter = true;
-
-                if (methodInfo.ReturnType != typeof(DecoratorResult))
-                    error = true;
-
-                if (! parametersInfo[0].ParameterType.Name.Equals("Range"))
-                    error = true;
-                //if (parametersInfo[1].ParameterType != typeof(object))
-                //    error = true;
-                if (parametersInfo[2].ParameterType != typeof(string))
-                    error = true;
-            }
-
-            if (error)
+            else
             {
-                throw new Exception("MethodInfo must be 'DecoratorResult MethodName(Range <range to decorate>, object <object bound with the range to decorate>, string <expression bound with the range to decorate>)'"
-                                     + "\r\n'DecoratorResult MethodName(object <object bound with the range to decorate>, string <expression bound with the range to decorate>)'");
+                ParameterInfo[] parametersInfo = callback.Callback.GetParameters();
+                if (parametersInfo == null || parametersInfo.Count() > 3 || parametersInfo.Count() < 2)
+                    error = true;
+
+                if (!error && parametersInfo.Count() == 2)
+                {
+                    if (callback.Callback.ReturnType != typeof(DecoratorResult))
+                        error = true;
+
+                    //if (parametersInfo[0].ParameterType != typeof(object))
+                    //    error = true;
+                    if (parametersInfo[1].ParameterType != typeof(string))
+                        error = true;
+                }
+                if (!error && parametersInfo.Count() == 3)
+                {
+                    addConcernedRangeParameter = true;
+
+                    if (callback.Callback.ReturnType != typeof(DecoratorResult))
+                        error = true;
+
+                    if (!parametersInfo[0].ParameterType.Name.Equals("Range"))
+                        error = true;
+                    //if (parametersInfo[1].ParameterType != typeof(object))
+                    //    error = true;
+                    if (parametersInfo[2].ParameterType != typeof(string))
+                        error = true;
+                }
+
+                if (error)
+                {
+                    throw new Exception("MethodInfo must be 'DecoratorResult MethodName(Range <range to decorate>, object <object bound with the range to decorate>, string <expression bound with the range to decorate>)'"
+                                         + "\r\n'DecoratorResult MethodName(object <object bound with the range to decorate>, string <expression bound with the range to decorate>)'");
+                }
             }
-            return addConcernedRangeParameter;
         }
 
         private void RevolveDecoratorRange()
@@ -298,7 +289,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
             }
             catch (Exception ex)
             { 
-                throw new Exception(string.Format("Cannot resolve Decorator range '{0}':{1}", rangeId ?? string.Empty, ex.Message));
+                throw new Exception($"Cannot resolve Decorator range '{rangeId ?? string.Empty}':{ex.Message}");
             }
         }
         #endregion

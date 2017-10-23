@@ -7,7 +7,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
 {
     class BindingDefinitionField : BindingDefinition
     {
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
 
         private FieldInfo FieldInfo
         { get; set; }
@@ -28,7 +28,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
-                throw new BindingTemplateException(string.Format("Can't Resolve the 'Binding' for the BindingExpression '{0}'. {1}", BindingExpression, ex.Message));
+                throw new BindingTemplateException($"Can't Resolve the 'Binding' for the BindingExpression '{BindingExpression}'. {ex.Message}");
             }
         }
 
@@ -49,7 +49,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 {
                     Type type = BindingType;
                     if (data == null)
-                        FieldInfo.SetValue(FieldInfo.IsStatic ? null : dataSource, data == null ? (type.IsValueType ? Activator.CreateInstance(type) : null) : data);
+                        FieldInfo.SetValue(FieldInfo.IsStatic ? null : dataSource, type.IsValueType ? Activator.CreateInstance(type) : null);
                     else
                     {
                         data = SpecificConvertors.TryConvert(this, data);
@@ -60,7 +60,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             }
             catch (Exception ex)
             {
-                log.LogFormat(LogType.Warn, "'UpdateDataSource' failed for BindingExpression '{0}', value '{1}': {2}", BindingExpression, data == null ? string.Empty : data.ToString(), ex.Message);
+                log.LogFormat(LogType.Warn, "'UpdateDataSource' failed for BindingExpression '{0}', value '{1}': {2}", BindingExpression, data?.ToString() ?? string.Empty, ex.Message);
                 return ResolveBinding(dataSource);
             }
         }

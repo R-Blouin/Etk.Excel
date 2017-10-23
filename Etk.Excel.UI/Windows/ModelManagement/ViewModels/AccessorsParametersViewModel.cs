@@ -5,7 +5,7 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
 {
     public class AccessorsParametersViewModel : IWizardStep
     {
-        private WizardViewModel parent;
+        private readonly WizardViewModel parent;
 
         #region .ctors
         public AccessorsParametersViewModel(WizardViewModel parent)

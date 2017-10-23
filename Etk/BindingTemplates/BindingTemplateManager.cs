@@ -69,7 +69,7 @@ namespace Etk.BindingTemplates
                     }
                     catch (Exception ex)
                     {
-                        throw new BindingTemplateException(string.Format("Cannot add view '{0}'.{1}", view.Ident, ex.Message), ex);
+                        throw new BindingTemplateException($"Cannot add view '{view.Ident}'.{ex.Message}", ex);
                     }
                 }
             }
@@ -111,7 +111,7 @@ namespace Etk.BindingTemplates
                     }
                     catch (Exception ex)
                     {
-                        string message = string.Format("Remove view '{0}' failed. {1}", view.Ident, ex.Message);
+                        string message = $"Remove view '{view.Ident}' failed. {ex.Message}";
                         throw new BindingTemplateException(message);
                     }
                 }
@@ -138,7 +138,7 @@ namespace Etk.BindingTemplates
                 }
                 catch (Exception ex)
                 {
-                    string message = string.Format("Remove views failed. {0}", ex.Message);
+                    string message = $"Remove views failed. {ex.Message}";
                     throw new BindingTemplateException(message);
                 }
             }

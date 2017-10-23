@@ -13,7 +13,7 @@ namespace Etk.ModelManagement
     public class ModelType : IModelType
     {
         #region properties and attributes
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
 
         private readonly object syncObj = new object();
         private bool dependenciesResolved;
@@ -41,10 +41,8 @@ namespace Etk.ModelManagement
         { get; private set; }
 
         private List<ModelView> defaultViews;
-        public IEnumerable<IModelView> DefaultViews
-        { 
-            get { return defaultViews; } 
-        }
+        public IEnumerable<IModelView> DefaultViews => defaultViews;
+
         #endregion
 
         #region .ctors and factories
@@ -79,7 +77,7 @@ namespace Etk.ModelManagement
                     {
                         ret.UnderlyingType = TypeHelpers.GetType(typeName);
                         if (ret.UnderlyingType == null)
-                            throw new Exception(string.Format("Cannot retrieve Underlying type '{0}'", typeName));
+                            throw new Exception($"Cannot retrieve Underlying type '{typeName}'");
                         ret.RetrieveProperties(ret.UnderlyingType, definition.PropertiesToIgnore);
                     }
 
@@ -89,7 +87,7 @@ namespace Etk.ModelManagement
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Cannot create 'ModelType' '{0}': {1}", definition.Name.EmptyIfNull(), ex.Message));
+                    throw new EtkException($"Cannot create 'ModelType' '{definition.Name.EmptyIfNull()}': {ex.Message}");
                 }
             }
             return ret;
@@ -117,7 +115,7 @@ namespace Etk.ModelManagement
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Cannot create 'ModelType' '{0}': {1}", type.Name, ex.Message));
+                    throw new EtkException($"Cannot create 'ModelType' '{type.Name}': {ex.Message}");
                 }
             }
             return ret;
@@ -184,7 +182,7 @@ namespace Etk.ModelManagement
                     }
                     catch (Exception ex)
                     {
-                        throw new EtkException(string.Format("Cannot resolve the dependencies of the ModelType '{0}': {1}", Name.EmptyIfNull(), ex.Message));
+                        throw new EtkException($"Cannot resolve the dependencies of the ModelType '{Name.EmptyIfNull()}': {ex.Message}");
                     }
                 }            
             }
@@ -205,7 +203,7 @@ namespace Etk.ModelManagement
                 }
                 catch (Exception ex)
                 {
-                    throw new EtkException(string.Format("Cannot resolve the views of the ModelType '{0}': {1}", Name.EmptyIfNull(), ex.Message));
+                    throw new EtkException($"Cannot resolve the views of the ModelType '{Name.EmptyIfNull()}': {ex.Message}");
                 }
             }
         }
@@ -254,7 +252,7 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot retrieve properties for UnderlyingType '{0}': {1}", Name.EmptyIfNull(), ex.Message));
+                throw new EtkException($"Cannot retrieve properties for UnderlyingType '{Name.EmptyIfNull()}': {ex.Message}");
             }
         }
 

@@ -16,11 +16,11 @@ namespace Etk.Tools.Reflection
                 if (value == null)
                     return null;
 
-                if(type.Equals(value.GetType()) || type == typeof(object))
+                if(type == value.GetType() || type == typeof(object))
                     return value;
                 if (type.IsGenericType && type.GetGenericArguments()[0].Equals(value.GetType()))
                     return value;
-                if (value.GetType() == typeof(string))
+                if (value is string)
                     return Convert.ChangeType(value, type);
 
                 if (type.Equals(typeof(DateTime)))
@@ -34,7 +34,7 @@ namespace Etk.Tools.Reflection
                     }
                 }
 
-                bool isValueACollection = ! value.GetType().Equals(typeof(string))
+                bool isValueACollection = value.GetType() != typeof(string)
                                           && value.GetType().GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>));
                 if (isValueACollection)
                 {
@@ -49,7 +49,7 @@ namespace Etk.Tools.Reflection
                     {
                         Type genericType = type.GetGenericArguments()[0];
                         MethodInfo convertToCollection = typeof(TypeConvertor).GetMethod("ConvertToCollection").MakeGenericMethod(genericType);
-                        return convertToCollection.Invoke(null, new object[] { genericType, value });
+                        return convertToCollection.Invoke(null, new [] { genericType, value });
                     }
                     else
                         return Convert.ChangeType(value, type);
@@ -57,7 +57,7 @@ namespace Etk.Tools.Reflection
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("'ConvertObject' failed. Can't convert '{0}' to UnderlyingType '{1}'. {2}", value == null ? string.Empty : value.ToString(), type.ToString(), ex.Message));
+                throw new EtkException($"'ConvertObject' failed. Can't convert '{value?.ToString() ?? string.Empty}' to UnderlyingType '{type.ToString()}'. {ex.Message}");
             }
         }
 

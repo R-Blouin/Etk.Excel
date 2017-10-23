@@ -23,11 +23,10 @@ namespace Etk.Excel.UI.Windows.ModelManagement.ViewModels
         public ModelProperty ModelProperty
         { get; set; }
 
-        public string Name
-        { get { return ModelProperty.Name; } }
+        public string Name => ModelProperty.Name;
 
-        public string Description
-        { get { return ModelProperty.Description; } }
+        public string Description => ModelProperty.Description;
+
         #endregion
 
         #region .ctors

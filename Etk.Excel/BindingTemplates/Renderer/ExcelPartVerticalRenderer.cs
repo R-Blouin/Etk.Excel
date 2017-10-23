@@ -148,10 +148,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         int vOffset = 1;
                         ManageTemplatePart(renderingContext, ref bindingContextItemsCpt, ref vOffset, 0, partToRenderDefinition.Width);
                         currentRenderingTo = worksheetTo.Cells[currentRenderingTo.Row + vOffset, currentRenderingTo.Column];
-                        Height += vOffset;
+                        elementHeight += vOffset;
                     }
                     else
                     {
+                        int currentRowHeight = 0;
                         renderingContext.RefRow = Parent.DataRows.Count > 0 ? Parent.DataRows.Count : 0;
                         renderingContext.PosPreviousLink = 0;
                         int lastPosLink = posLinks.Count - 1;
@@ -178,14 +179,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                             if (renderingContext.CurrentRowWidth > elementWidth)
                                 elementWidth = renderingContext.CurrentRowWidth;
-                            if (renderingContext.CurrentRowHeight > elementHeight)
-                                elementHeight = renderingContext.CurrentRowHeight;
+                            if (renderingContext.CurrentRowHeight > currentRowHeight)
+                                currentRowHeight = renderingContext.CurrentRowHeight;
                             renderingContext.PosPreviousLink = renderingContext.PosCurrentLink;
                         }
+                        elementHeight += currentRowHeight;
                         if (elementWidth > Width)
                             Width = elementWidth;
-                        Height += elementHeight;
-                        currentRenderingTo = worksheetTo.Cells[firstRangeTo.Row + Height, firstRangeTo.Column];
+                        currentRenderingTo = worksheetTo.Cells[firstElementCell.Row + elementHeight, firstRangeTo.Column];
                     }
                 }
 
@@ -194,6 +195,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     ExcelInterop.Range elementRange = firstElementCell.Resize[elementHeight, elementWidth];
                     Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
                 }
+                Height += elementHeight;
             }
             Marshal.ReleaseComObject(worksheetTo);
             worksheetTo = null;
@@ -244,7 +246,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         private void RenderLink(RenderingContext renderingContext, IBindingContext linkedBindingContext, ExcelInterop.Worksheet worksheetTo)
         {
             ExcelRenderer linkedRenderer = new ExcelRenderer(Parent, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo,
-                                                                renderingContext.LinkedTemplateDefinition.MinOccurencesMethod);
+                                                             renderingContext.LinkedTemplateDefinition.MinOccurencesMethod);
             Parent.RegisterNestedRenderer(linkedRenderer);
 
             linkedRenderer.Render();
@@ -259,7 +261,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
 
                 renderingContext.DataRow.AddRange(linkedRenderer.DataRows[0]);
-                for (int i = 1; i < linkedRenderer.Height; i++) //for (int i = 1; i < linkedRenderer.DataRow.Count; i++)
+                //for (int i = 1; i < linkedRenderer.DataRows.Count; i++)
+                for (int i = 1; i < linkedRenderer.Height; i++) 
                 {
                     List<IBindingContextItem> rowToUse;
                     if (i >= renderingContext.CurrentRowHeight)

@@ -15,17 +15,15 @@ namespace Etk.BindingTemplates.Context.SortSearchAndFilter
         private readonly IBindingContextElement bindingContextElement;
         private readonly BindingFilterDefinition bindingFilterDefinition;
 
-        public ITemplateDefinition TemplateDefinition
-        { get { return bindingFilterDefinition.FilterOwner.Parent; } }
+        public ITemplateDefinition TemplateDefinition => bindingFilterDefinition.FilterOwner.Parent;
 
-        public string FilterExpression
-        { get { return bindingFilterDefinition.GetFilterExpression(FilterValue); } }
+        public string FilterExpression => bindingFilterDefinition.GetFilterExpression(FilterValue);
 
         public string FilterValue
         { get; private set; }
 
-        public IBindingDefinition DefinitionToFilter
-        { get { return bindingFilterDefinition.DefinitionToFilter; } }
+        public IBindingDefinition DefinitionToFilter => bindingFilterDefinition.DefinitionToFilter;
+
         #endregion
 
         #region .ctors

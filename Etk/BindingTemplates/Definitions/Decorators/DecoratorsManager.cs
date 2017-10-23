@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Tools.Log;
 
 namespace Etk.BindingTemplates.Definitions.Decorators
 {
     /// <summary> Manage the <see cref="Decorator"/> used in the current application</summary>
-    [Export]
-    [PartCreationPolicy(CreationPolicy.Shared)]
-    public class DecoratorsManager : IDisposable
+    public abstract class DecoratorsManager : IDisposable
     {
-        private ILogger log = Logger.Instance;
-        private Dictionary<string, Decorator> decoratorByIdent = new Dictionary<string, Decorator>();
+        protected readonly ILogger log = Logger.Instance;
+        protected readonly Dictionary<string, Decorator> decoratorByIdent = new Dictionary<string, Decorator>();
 
         /// <summary> Return a <see cref="Decorator"/> given an ident</summary>
         /// <param name="ident">the ident of the <see cref="Decorator"/> to return</param>
@@ -20,12 +18,12 @@ namespace Etk.BindingTemplates.Definitions.Decorators
         public Decorator GetDecorator(string ident)
         {
             Decorator ret = null;
-            if (!String.IsNullOrEmpty(ident))
+            if (!string.IsNullOrEmpty(ident))
             {
                 lock ((decoratorByIdent as ICollection).SyncRoot)
                 {
                     if (!decoratorByIdent.TryGetValue(ident, out ret))
-                        throw new Exception(string.Format("Cannot find Decorator '{0}'", ident ));
+                        throw new Exception($"Cannot find Decorator '{ident}'");
                 }
             }
             return ret;
@@ -45,6 +43,8 @@ namespace Etk.BindingTemplates.Definitions.Decorators
                 }
             }
         }
+
+        public abstract Decorator CreateSimpleDecorator(ITemplateDefinition templateDefinition, string callbackName);
 
         public void Dispose()
         {

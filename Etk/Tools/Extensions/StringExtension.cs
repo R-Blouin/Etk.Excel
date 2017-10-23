@@ -35,7 +35,7 @@ namespace Etk.Tools.Extensions
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Deserialize from xml '{0}' to UnderlyingType '{1}' failed: {2} {3}", input, typeof(T).Name, ex.Message, ex.InnerException == null ? string.Empty : ex.InnerException.Message));
+                throw new EtkException($"Deserialize from xml '{input}' to UnderlyingType '{typeof(T).Name}' failed: {ex.Message} {(ex.InnerException == null ? string.Empty : ex.InnerException.Message)}");
             }
         }
     }

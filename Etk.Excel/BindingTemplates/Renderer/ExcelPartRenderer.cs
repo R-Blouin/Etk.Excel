@@ -45,8 +45,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #region .ctors and factories
         protected ExcelPartRenderer(ExcelRenderer parent, ExcelTemplateDefinitionPart part, IBindingContextPart bindingContextPart, ExcelInterop.Range firstOutputCell, bool useDecorator)
         {
-            this.Parent = parent;
-            this.partToRenderDefinition = part;
+            Parent = parent;
+            partToRenderDefinition = part;
             this.bindingContextPart = bindingContextPart;
             this.useDecorator = useDecorator;
 

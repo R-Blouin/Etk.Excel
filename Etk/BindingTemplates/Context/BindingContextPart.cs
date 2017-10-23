@@ -8,13 +8,13 @@ namespace Etk.BindingTemplates.Context
     class BindingContextPart : IBindingContextPart
     {
         public IBindingContext ParentContext
-        { get; private set; }
+        { get; }
         
         public ISortersAndFilters ExternalSorterAndFilter
         { get; private set; }
 
         public ITemplateDefinitionPart TemplateDefinitionPart
-        { get; private set; }
+        { get;  }
 
         public IEnumerable<IBindingContextElement> Elements
         { get; private set; }
@@ -23,7 +23,7 @@ namespace Etk.BindingTemplates.Context
         { get; private set; }
 
         public BindingContextPartType PartType 
-        { get; private set; }
+        { get; }
 
         #region .ctors and factories
         private BindingContextPart(IBindingContext parent, ITemplateDefinitionPart templateDefinitionPart, BindingContextPartType partType)

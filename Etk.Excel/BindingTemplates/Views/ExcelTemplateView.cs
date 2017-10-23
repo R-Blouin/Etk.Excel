@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
@@ -12,6 +10,7 @@ using Etk.Excel.BindingTemplates.Renderer;
 using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.Excel.BindingTemplates.Views
 {
@@ -51,7 +50,7 @@ namespace Etk.Excel.BindingTemplates.Views
     {
         #region attributes and properties
         private const int AutoFitMaxIterationCount = 10;
-        private ILogger log = Logger.Instance;
+        private readonly ILogger log = Logger.Instance;
         private ExcelInterop.Range currentSelectedRange;
         private readonly List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
 
@@ -59,7 +58,7 @@ namespace Etk.Excel.BindingTemplates.Views
         { get; private set; }
 
         internal List<ExcelBindingSearchContextItem> CellsThatContainSearchValue
-        { get; private set; }
+        { get;  }
 
         //public event Action<object, object> DataChanged;
         public event Action DataChanged;
@@ -70,16 +69,8 @@ namespace Etk.Excel.BindingTemplates.Views
         private event Action<IExcelTemplateView> viewSheetIsActivated;
         public event Action<IExcelTemplateView> ViewSheetIsActivated
         {
-            add
-            {
-                viewSheetIsActivated += value;
-                if(ETKExcel.TemplateManager.GetActiveSheetViews().Any(v => this == v))
-                    viewSheetIsActivated(this);
-            }
-            remove
-            {
-                viewSheetIsActivated -= value;
-            }
+            add { viewSheetIsActivated += value; }
+			remove { viewSheetIsActivated -= value;}
         }
 
         public AutoFitMode AutoFit
@@ -97,14 +88,11 @@ namespace Etk.Excel.BindingTemplates.Views
         public ExcelRootRenderer Renderer
         { get; private set; }
 
-        public bool IsRendered
-        { get { return Renderer != null && Renderer.RenderedRange != null; } }
+        public bool IsRendered => Renderer != null && Renderer.RenderedRange != null;
 
-        public ExcelInterop.Range RenderedRange
-        { get { return Renderer != null ? Renderer.RenderedRange : null; } }
+        public ExcelInterop.Range RenderedRange => Renderer?.RenderedRange;
 
-        public RenderedArea RenderedArea
-        { get { return Renderer != null ? Renderer.RenderedArea : null; } }
+        public RenderedArea RenderedArea => Renderer?.RenderedArea;
 
         public AccessorParametersManager AccessorParametersManager
         { get; private set; }
@@ -188,7 +176,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
                     catch (Exception ex)
                     {
-                        string message = string.Format("Sheet '{0}', View '{1}' from '{2}' Set data source failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                        string message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' Set data source failed.";
                         throw new EtkException(message, ex, false);
                     }
                 }
@@ -389,7 +377,7 @@ namespace Etk.Excel.BindingTemplates.Views
             }
         }
 
-        private void AutoFitRows(Microsoft.Office.Interop.Excel.Range rows)
+        private void AutoFitRows(ExcelInterop.Range rows)
         {
             double previousSize = -2;
             double currentSize = -1;
@@ -403,7 +391,7 @@ namespace Etk.Excel.BindingTemplates.Views
             }
         }
 
-        private void AutoFitColumns(Microsoft.Office.Interop.Excel.Range columns)
+        private void AutoFitColumns(ExcelInterop.Range columns)
         {
             double previousSize = -2;
             double currentSize = -1;
@@ -419,16 +407,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
         public void ProtectSheet()
         {
-            if (!ViewSheet.ProtectContents)
-            {
-                ViewSheet.Cells.Locked = false;
-                ViewSheet.Protect(System.Type.Missing, false, false, System.Type.Missing, false, true,
-                                  true, true,
-                                  false, false,
-                                  false,
-                                  false, false, false, true,
-                                  true);
-            }
+            ((ExcelApplication) ETKExcel.ExcelApplication).ProtectSheet(ViewSheet);
         }
         #endregion
 
@@ -489,8 +468,7 @@ namespace Etk.Excel.BindingTemplates.Views
             }
             catch (Exception ex)
             {
-                string message = string.Format("Sheet '{0}', Template '{1}'. 'ViewSheetIsActivated' failed: '{2}'",
-                                                ViewSheet.Name, TemplateDefinition.Name, ex.Message);
+                string message = $"Sheet '{ViewSheet.Name}', Template '{TemplateDefinition.Name}'. 'ViewSheetIsActivated' failed: '{ex.Message}'";
                 log.LogException(LogType.Error, ex, message);
             }
         }
@@ -506,8 +484,7 @@ namespace Etk.Excel.BindingTemplates.Views
             }
             catch (Exception ex)
             {
-                string message = string.Format("Sheet '{0}', Template '{1}'. 'ViewSheetIsDeactivated' failed: '{2}'",
-                                                ViewSheet.Name, TemplateDefinition.Name, ex.Message);
+                string message = $"Sheet '{ViewSheet.Name}', Template '{TemplateDefinition.Name}'. 'ViewSheetIsDeactivated' failed: '{ex.Message}'";
                 log.LogException(LogType.Error, ex, message);
             }
         }
@@ -528,8 +505,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     {
                         using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                         {
-                            if (BeforeRendering != null)
-                                BeforeRendering(false);
+                            BeforeRendering?.Invoke(false);
 
                             // Clear the previous rendering.
                             ////////////////////////////////
@@ -542,13 +518,12 @@ namespace Etk.Excel.BindingTemplates.Views
                             if (log.GetLogLevel() == LogType.Debug)
                                 log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
 
-                            if (AfterRendering != null)
-                                AfterRendering(false);
+                            AfterRendering?.Invoke(false);
                         }
                     }
                     catch (Exception ex)
                     {
-                        string message = string.Format("Sheet '{0}', View '{1}' from '{2}' render failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                        string message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' render failed.";
                         throw new EtkException(message, ex, false);
                     }
                 }
@@ -583,25 +558,22 @@ namespace Etk.Excel.BindingTemplates.Views
                             {
                                 if (BindingContext != null && BindingContext.Body.ElementsToRender != null)
                                 {
-                                    if (BeforeRendering != null)
-                                        BeforeRendering(true);
+                                    BeforeRendering?.Invoke(true);
 
                                     Renderer.RenderDataOnly();
                                     if (log.GetLogLevel() == LogType.Debug)
                                         log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
 
-                                    if (AfterRendering != null)
-                                        AfterRendering(true);
+                                    AfterRendering?.Invoke(true);
 
-                                    if (CurrentSelectedCell != null)
-                                        CurrentSelectedCell.Select();
+                                    CurrentSelectedCell?.Select();
                                 }
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        var message = string.Format("Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                        var message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' render data only failed.";
                         throw new EtkException(message, ex, false);
                     }
                 }
@@ -650,13 +622,13 @@ namespace Etk.Excel.BindingTemplates.Views
                         CurrentSelectedCell = target.Cells[1, 1];
 
                         IBindingContextItem currentContextItem = GetConcernedContextItem(target);
-                        if (currentContextItem != null && currentContextItem.BindingDefinition != null)
+                        if (currentContextItem?.BindingDefinition != null)
                         {
                             // If the binding excelBindingDefinition contains a selection callback: invoke it !
                             if (currentContextItem.BindingDefinition.OnSelection != null)
                             {
                                 ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(currentContextItem.BindingDefinition.OnSelection, 
-                                                                                                         target, currentContextItem.ParentElement, currentContextItem.ParentElement);
+                                                                                                         target, currentContextItem.ParentElement, currentContextItem);
                             }
                             else
                             {
@@ -667,14 +639,17 @@ namespace Etk.Excel.BindingTemplates.Views
                                 do
                                 {
                                     ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                                    MethodInfo callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
-                                    if (callback != null)
+                                    if (currentTemplateDefinition.PartType == TemplateDefinitionPartType.Body)
                                     {
-                                        ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem.ParentElement);
-                                        isResolved = true;
+                                        EventCallback callback = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).SelectionChanged;
+                                        if (callback != null)
+                                        {
+                                            ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(callback, target, catchingContextElement, currentContextItem);
+                                            isResolved = true;
+                                        }
                                     }
                                     if (!isResolved)
-                                        catchingContextElement = catchingContextElement.ParentPart.ParentContext == null ? null : catchingContextElement.ParentPart.ParentContext.Parent;
+                                        catchingContextElement = catchingContextElement.ParentPart.ParentContext?.Parent;
                                 }
                                 while (!isResolved && catchingContextElement != null);
                             }
@@ -687,7 +662,7 @@ namespace Etk.Excel.BindingTemplates.Views
             }
             catch (Exception ex)
             {
-                string message = string.Format("Sheet '{0}', Template '{1}' 'OnSelectionChange' failed: '{2}'", target.Worksheet.Name, TemplateDefinition.Name, ex.Message);
+                string message = $"Sheet '{target.Worksheet.Name}', Template '{TemplateDefinition.Name}' 'OnSelectionChange' failed: '{ex.Message}'";
                 log.LogException(LogType.Error, ex, message);
             }
             return CurrentSelectedCell != null;
@@ -700,7 +675,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 return false;
 
             IBindingContextItem currentContextItem = GetConcernedContextItem(target);
-            if (currentContextItem != null && currentContextItem.BindingDefinition != null)
+            if (currentContextItem?.BindingDefinition != null)
             {
                 if (currentContextItem.BindingDefinition.IsReadOnly)
                     cancel = true;
@@ -709,7 +684,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 if (currentContextItem.BindingDefinition.OnClick != null)
                 {
                     ((ExcelTemplateManager)ETKExcel.TemplateManager).CallbacksManager.Invoke(currentContextItem.BindingDefinition.OnClick, 
-                                                                                             target, currentContextItem.ParentElement, currentContextItem.ParentElement);
+                                                                                             target, currentContextItem.ParentElement, currentContextItem);
                     cancel = true;
                 }
                 else
@@ -732,7 +707,7 @@ namespace Etk.Excel.BindingTemplates.Views
         #region private methods
         private bool CheckHeaderAsExpander(ExcelRenderer renderer,  ExcelInterop.Range target)
         {
-            if (renderer.HeaderPartRenderer != null && renderer.HeaderPartRenderer.RenderedRange != null && ETKExcel.ExcelApplication.Application.Intersect(renderer.HeaderPartRenderer.RenderedRange, target) != null)
+            if (renderer.HeaderPartRenderer?.RenderedRange != null && ETKExcel.ExcelApplication.Application.Intersect(renderer.HeaderPartRenderer.RenderedRange, target) != null)
             {
                 renderer.IsExpanded = ! renderer.IsExpanded;
                 ManageExpander(renderer);
@@ -760,12 +735,11 @@ namespace Etk.Excel.BindingTemplates.Views
                     if(renderer.HeaderPartRenderer != null && renderer.HasExpander)
                     {
                         carryOn = renderer.IsExpanded;
-                        ExcelInterop.Range toShowHide = null;
 
                         int toShowHideSize = renderer.RenderedArea.Height - renderer.HeaderPartRenderer.RenderedArea.Height;
                         if (toShowHideSize > 0)
                         {
-                            toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
+                            ExcelInterop.Range toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
                             toShowHide = toShowHide.Resize[toShowHideSize, Type.Missing];
                             toShowHide.EntireRow.Hidden = !renderer.IsExpanded;
                             toShowHide = null;
@@ -786,7 +760,7 @@ namespace Etk.Excel.BindingTemplates.Views
             ExcelInterop.Range viewSelectedRange = null;
             ExcelInterop.Worksheet sheet = RenderedRange.Parent as ExcelInterop.Worksheet;
 
-            if (this.TemplateDefinition.Orientation == Orientation.Vertical)
+            if (TemplateDefinition.Orientation == Orientation.Vertical)
             {
                 viewSelectedRange = sheet.Cells[selectedCell.Row, RenderedRange.Column];
                 viewSelectedRange = viewSelectedRange.Resize[1, RenderedRange.Columns.Count];

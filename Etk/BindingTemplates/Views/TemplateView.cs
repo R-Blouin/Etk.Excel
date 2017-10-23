@@ -97,7 +97,7 @@ namespace Etk.BindingTemplates.Views
             }
             catch (Exception ex)
             {
-                string message = string.Format("Binding template '{0}', 'SetDataSource' failed. {1}", TemplateDefinition.Name, ex.Message);
+                string message = $"Binding template '{TemplateDefinition.Name}', 'SetDataSource' failed. {ex.Message}";
                 throw new EtkException(message);
             }
         }

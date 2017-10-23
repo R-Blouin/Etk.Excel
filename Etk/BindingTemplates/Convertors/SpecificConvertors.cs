@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Etk.BindingTemplates.Definitions.Binding;
 
 namespace Etk.BindingTemplates.Convertors

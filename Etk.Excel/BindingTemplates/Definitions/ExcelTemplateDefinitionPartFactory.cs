@@ -27,16 +27,16 @@ namespace Etk.Excel.BindingTemplates.Definitions
         #endregion
 
         #region public method
-        public static ExcelTemplateDefinitionPart CreateInstance(ExcelTemplateDefinition excelTemplateDefinition, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
+        public static ExcelTemplateDefinitionPart CreateInstance(ExcelTemplateDefinition excelTemplateDefinition, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
         {
             ExcelTemplateDefinitionPartFactory factory = new ExcelTemplateDefinitionPartFactory();
-            return factory.Execute(excelTemplateDefinition, firstRange, lastRange);
+            return factory.Execute(excelTemplateDefinition, partType, firstRange, lastRange);
         }
         #endregion
 
-        private ExcelTemplateDefinitionPart Execute(ExcelTemplateDefinition excelTemplateDefinition, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
+        private ExcelTemplateDefinitionPart Execute(ExcelTemplateDefinition excelTemplateDefinition, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
         {
-            ExcelTemplateDefinitionPart part = new ExcelTemplateDefinitionPart(excelTemplateDefinition, firstRange, lastRange);
+            ExcelTemplateDefinitionPart part = new ExcelTemplateDefinitionPart(excelTemplateDefinition, partType, firstRange, lastRange);
             for (int rowId = 0; rowId < part.DefinitionCells.Rows.Count; rowId++)
             {
                 List<int> posLinks = null;
@@ -88,7 +88,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         }
                         catch (Exception ex)
                         {
-                            string message = string.Format("Cannot create the linked template dataAccessor '{0}'. {1}", trimmedValue, ex.Message);
+                            string message = $"Cannot create the linked template dataAccessor '{trimmedValue}'. {ex.Message}";
                             throw new EtkException(message, false);
                         }
                     }
@@ -116,7 +116,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             }
                             catch (Exception ex)
                             {
-                                string message = string.Format("Cannot create the binding definition for '{0}'. {1}", trimmedValue, ex.Message);
+                                string message = $"Cannot create the binding definition for '{trimmedValue}'. {ex.Message}";
                                 throw new EtkException(message, false);
                             }
                         }

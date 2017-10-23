@@ -42,24 +42,24 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\packages\Etk.Excel.Interop.1.0.0\lib\net40\Interop\Microsoft.Office.Interop.Excel.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Vbe.Interop, Version=12.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\packages\Etk.Excel.Interop.1.0.0\lib\net40\Interop\Microsoft.Vbe.Interop.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Vbe.Interop.Forms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\packages\Etk.Excel.Interop.1.0.0\lib\net40\Microsoft.Vbe.Interop.Forms.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Office, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
-      <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\packages\Etk.Excel.Interop.1.0.0\lib\net40\Office.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
@@ -93,13 +93,14 @@
     <Compile Include="BindingTemplates\Controls\Picture\ExcelPictureDefinition.cs" />
     <Compile Include="BindingTemplates\Controls\Picture\ExcelContextItemPicture.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelElementDecorator.cs" />
+    <Compile Include="BindingTemplates\Decorators\ExcelRangeSimpleDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelRangeDecorator.cs" />
-    <Compile Include="BindingTemplates\Decorators\ExcelDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\ExcelDecoratorsManager.cs" />
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlDecoratorItem.cs" />
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelRangeDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelDecorator.cs" />
     <Compile Include="BindingTemplates\Decorators\XmlDefinitions\XmlExcelDecorators.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventExcelCallbacksManager.cs" />
     <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionFactory.cs" />
     <Compile Include="BindingTemplates\Definitions\ExcelTemplateDefinitionPartFactory.cs" />
     <Compile Include="BindingTemplates\Renderer\ExcelPartHorizontalRenderer.cs" />
@@ -148,7 +149,6 @@
     <Compile Include="BindingTemplates\Renderer\ExcelRootRenderer.cs" />
     <Compile Include="BindingTemplates\Renderer\ExcelPartVerticalRenderer.cs" />
     <Compile Include="Application\ExcelApplication.cs" />
-    <Compile Include="BindingTemplates\Views\RenderingArea.cs" />
     <Compile Include="ContextualMenus\IContextualPart.cs" />
     <Compile Include="ETKExcel.cs" />
     <Compile Include="Extensions\ApplicationExtension.cs" />

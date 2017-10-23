@@ -8,19 +8,20 @@ using Etk.Excel.Extensions;
 using Microsoft.Office.Core;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Etk.Excel.Application
 {
     /// <summary> Implements <see cref="IExcelApplication"/> </summary> 
     [Export]
     [PartCreationPolicy(CreationPolicy.Shared)]
-    class ExcelApplication : IExcelApplication,  IDisposable
+    class ExcelApplication : IExcelApplication, IDisposable
     {
         #region attribute and properties
         private bool isDisposed;
         private readonly object syncObj = new object();
-        private CommandBarControl newMenu;
-        private ExcelPostAsynchronousManager postAsynchronousManager;
+        private readonly CommandBarControl newMenu;
+        private readonly ExcelPostAsynchronousManager postAsynchronousManager;
 
         /// <summary> Implements <see cref="IExcelApplication.Application"/> </summary> 
         public ExcelInterop.Application Application
@@ -55,7 +56,7 @@ namespace Etk.Excel.Application
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("ExcelApplication initialization failed:{0}", ex.Message));
+                throw new EtkException($"ExcelApplication initialization failed:{ex.Message}");
             }
         }
 
@@ -71,7 +72,7 @@ namespace Etk.Excel.Application
         {
             if (Application != null && newMenu == null)
                 return false;
-            return ! newMenu.Enabled;
+            return !newMenu.Enabled;
         }
 
         /// <summary> Implements <see cref="IExcelApplication.DisplayException"/> </summary> 
@@ -80,7 +81,7 @@ namespace Etk.Excel.Application
             StringBuilder builder = new StringBuilder(message);
 
             if (string.IsNullOrEmpty(title))
-                title = "ETK";
+                title = "Etk";
 
             Exception currentEx = ex;
             while (currentEx != null)
@@ -126,7 +127,7 @@ namespace Etk.Excel.Application
         /// <summary> Implements <see cref="IExcelApplication.PostAsynchronousActions"/> </summary> 
         public void PostAsynchronousActions(IEnumerable<Action> actions, Action postExecutionAction)
         {
-            if(postExecutionAction == null)
+            if (postExecutionAction == null)
                 postAsynchronousManager.PostActions(actions);
             else
             {
@@ -142,7 +143,7 @@ namespace Etk.Excel.Application
             if (string.IsNullOrEmpty(title))
                 title = "Select a Range";
 
-            object obj = Application.InputBox(title, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, System.Type.Missing, 8);
+            object obj = Application.InputBox(title, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, 8);
             if (obj is ExcelInterop.Range)
                 selectedRange = obj as ExcelInterop.Range;
             return selectedRange;
@@ -153,14 +154,14 @@ namespace Etk.Excel.Application
         {
             ExcelInterop.Worksheet ret = null;
             if (Application != null)
-                ret = Application.ActiveSheet; 
+                ret = Application.ActiveSheet;
             return ret;
         }
 
         /// <summary> Implements <see cref="IExcelApplication.GetWorkSheetFromName"/> </summary> 
         public ExcelInterop.Worksheet GetWorkSheetFromName(ExcelInterop.Workbook workbook, string name)
         {
-            if(workbook != null && ! string.IsNullOrEmpty(name))
+            if (workbook != null && !string.IsNullOrEmpty(name))
             {
                 foreach (ExcelInterop.Worksheet sheet in workbook.Worksheets)
                 {
@@ -200,7 +201,93 @@ namespace Etk.Excel.Application
                     workkingRange = targetedRange.Offset[Type.Missing, 1];
 
                 workkingRange = workkingRange.Resize[Type.Missing, numberOfCells];
-                workkingRange.EntireColumn.Hidden = ! (bool) workkingRange.EntireColumn.Hidden;
+                workkingRange.EntireColumn.Hidden = !(bool)workkingRange.EntireColumn.Hidden;
+            }
+        }
+
+        public object ExecuteVbaMAcro(string functionName, object[] parameters)
+        {
+            try
+            {
+                object[] p;
+                if (parameters == null)
+                    p = new object[] { functionName };
+                else
+                {
+                    List<object> lp = new List<object>(new object[] { functionName });
+                    lp.AddRange(parameters);
+                    p = lp.ToArray();
+                }
+                return Application.GetType().InvokeMember("Run", BindingFlags.Default | BindingFlags.InvokeMethod, null, Application, p);
+            }
+            catch (Exception ex)
+            {
+                ETKExcel.ExcelApplication.DisplayException(null, $"'Execute macro '{functionName ?? string.Empty}' failed", ex);
+                return null;
+            }
+        }
+
+        public void ClearRange(ExcelInterop.Range from, ExcelInterop.Range to, ExcelInterop.Range with)
+        {
+            if (from == null)
+                return;
+
+            ExcelInterop.Worksheet concernedSheet = null;
+            bool isProtected = false;
+            try
+            {
+                concernedSheet = from.Worksheet;
+
+                isProtected = concernedSheet.ProtectContents;
+                if (isProtected)
+                    concernedSheet.Unprotect(Type.Missing);
+
+                if (to == null)
+                    to = concernedSheet.UsedRange;
+
+                from = from.Resize[to.Rows.Count - from.Rows.Count - 1, to.Columns.Count - from.Columns.Count - 1];
+                from.Clear();
+
+                if(with != null)
+                {
+                    ExcelInterop.Interior withInterior = with.Interior;
+                    ExcelInterop.Font withFont = with.Font;
+
+                    ExcelInterop.Interior interior = from.Interior;
+                    ExcelInterop.Font font = from.Font;
+
+                    font.Color = withFont.Color;
+                    interior.Color = withInterior.Color;
+
+                    Marshal.ReleaseComObject(interior);
+                    Marshal.ReleaseComObject(font);
+                    Marshal.ReleaseComObject(withInterior);
+                    Marshal.ReleaseComObject(withFont);
+                }
+            }
+            catch
+            {
+                if(concernedSheet != null)
+                    Marshal.ReleaseComObject(concernedSheet);
+            }
+            finally
+            {
+                if (concernedSheet != null && isProtected)
+                    ProtectSheet(concernedSheet);
+            }
+        }
+
+        public void ProtectSheet(ExcelInterop.Worksheet concernedSheet)
+        {
+            if (concernedSheet != null && !concernedSheet.ProtectContents)
+            {
+                concernedSheet.Cells.Locked = false;
+                concernedSheet.Protect(Type.Missing, false, false, Type.Missing, false, true,
+                                       true, true,
+                                       false, false,
+                                       false,
+                                       false, false, false, true,
+                                       true);
             }
         }
         #endregion

@@ -15,7 +15,7 @@ namespace Etk.Excel.UI.TemplateManagement
     {
         #region attributes and properties
         private IContextualMenu addTemplateMenu;
-        private IContextualMenu manageTemplateMenu;
+        private readonly IContextualMenu manageTemplateMenu;
         private ContextualMenuManager contextualMenuManager;
         #endregion
 

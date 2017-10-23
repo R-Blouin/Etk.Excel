@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
-using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
@@ -42,7 +41,7 @@ namespace Etk.Excel.ContextualMenus
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Cannot create contextual menu '{0}': {1}", caption.EmptyIfNull(), ex.Message));
+                throw new EtkException($"Cannot create contextual menu '{caption.EmptyIfNull()}': {ex.Message}");
             }
         }
         #endregion

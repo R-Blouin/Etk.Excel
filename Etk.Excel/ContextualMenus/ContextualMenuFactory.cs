@@ -58,7 +58,7 @@ namespace Etk.Excel.ContextualMenus
             catch (Exception ex)
             {
                 string message = xmlValue.Length > 350 ? xmlValue.Substring(0, 350) + "..." : xmlValue;
-                throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message));
+                throw new EtkException($"Cannot create Event Callbacks from xml '{message}':{ex.Message}");
             }
             return ret;
         }
@@ -102,7 +102,7 @@ namespace Etk.Excel.ContextualMenus
             catch (Exception ex)
             {
                 string message = xmlValue.Length > 350 ? xmlValue.Substring(0, 350) + "..." : xmlValue;
-                throw new EtkException(string.Format("Cannot create Event Callbacks from xml '{0}':{1}", message, ex.Message));
+                throw new EtkException($"Cannot create Event Callbacks from xml '{message}':{ex.Message}");
             }
             return ret;
         }

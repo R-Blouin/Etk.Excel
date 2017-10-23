@@ -46,7 +46,7 @@ namespace Etk.ModelManagement
                     throw new EtkException("'Accessor' cannot be null or empty");
                 IModelAccessor accessor = Parent.Parent.GetAccessor(accessorName);
                 if (accessor == null)
-                    throw new EtkException(string.Format("Cannot find the 'Accessor' '{0}'", accessorName));
+                    throw new EtkException($"Cannot find the 'Accessor' '{accessorName}'");
 
                 LinkedModelAccessor = accessor;
                 IsACollection = LinkedModelAccessor.ReturnTypeIsACollection;
@@ -57,7 +57,7 @@ namespace Etk.ModelManagement
             }
             catch (Exception ex)
             {
-                throw new EtkException(string.Format("Linked Property '{0}' creation failed: {1}", Name.EmptyIfNull(), ex.Message));
+                throw new EtkException($"Linked Property '{Name.EmptyIfNull()}' creation failed: {ex.Message}");
             }
         }
         #endregion

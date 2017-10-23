@@ -18,11 +18,10 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         public IBindingDefinition TargetBindingDefinition
         { get; private set; }
 
-        public override string Name
-        { get { return TargetBindingDefinition != null ? TargetBindingDefinition.Name : string.Empty; } }
+        public override string Name => TargetBindingDefinition != null ? TargetBindingDefinition.Name : string.Empty;
 
-        public override string Description
-        { get { return TargetBindingDefinition != null ? TargetBindingDefinition.Description : string.Empty; } }
+        public override string Description => TargetBindingDefinition != null ? TargetBindingDefinition.Description : string.Empty;
+
         #endregion
 
         #region .ctors and factories
@@ -52,7 +51,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
                 if (!string.IsNullOrEmpty(definition.BindingExpression))
                 {
-                    string bindingExpression = string.Format("{{{0}}}", definition.BindingExpression);
+                    string bindingExpression = $"{{{definition.BindingExpression}}}";
                     BindingDefinitionDescription targetBindingDefinitionDescription = BindingDefinitionDescription.CreateBindingDescription(templateDefinition, bindingExpression, bindingExpression);
                     targetBindingDefinition = BindingDefinitionFactory.CreateInstances(templateDefinition, targetBindingDefinitionDescription);
                 }
@@ -62,7 +61,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
             }
             catch (Exception ex)
             {
-                string message = string.Format("Cannot create the 'ExcelBindingDefinitionWithFormula' from '{0}'. {1}", definition.BindingExpression ?? string.Empty, ex.Message);
+                string message = $"Cannot create the 'ExcelBindingDefinitionWithFormula' from '{definition.BindingExpression ?? string.Empty}'. {ex.Message}";
                 throw new EtkException(message);
             }
         }
@@ -93,7 +92,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
-            return TargetBindingDefinition == null ? null : TargetBindingDefinition.GetObjectsToNotify(dataSource);
+            return TargetBindingDefinition?.GetObjectsToNotify(dataSource);
         }
 
     }

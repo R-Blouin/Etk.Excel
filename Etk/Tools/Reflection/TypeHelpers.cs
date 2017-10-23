@@ -10,7 +10,7 @@ namespace Etk.Tools.Reflection
     public static class TypeHelpers
     {
         private static readonly object syncObj = new object();
-        private static Dictionary<Type, FieldInfo[]> fieldsByType = new Dictionary<Type, FieldInfo[]>();
+        private static readonly Dictionary<Type, FieldInfo[]> fieldsByType = new Dictionary<Type, FieldInfo[]>();
 
         /// <summary>Return a type given a string having 'Type,Assembly' as pattern</summary>
         /// <param name="typeName">The string containing the type definition</param>
@@ -86,7 +86,7 @@ namespace Etk.Tools.Reflection
             else
             {
                 methodName = methodNameElements[2].EmptyIfNull().Trim();
-                type = TypeHelpers.GetType(methodNameElements[1], methodNameElements[0]);
+                type = GetType(methodNameElements[1], methodNameElements[0]);
             }
 
             MethodInfo ret = type.GetMethod(methodName);
