@@ -118,13 +118,12 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         IsClearing = true;
 
                         RenderedRange.Clear();
-                        if (this.View.TemplateDefinition.Orientation == Orientation.Horizontal)
+                        if (View.TemplateDefinition.Orientation == Orientation.Horizontal)
                             RenderedRange.EntireColumn.Hidden = false;
                         else
                             RenderedRange.EntireRow.Hidden = false;
 
-                        if (View.ClearingCell != null)
-                            View.ClearingCell.Copy(RenderedRange);
+                        View.ClearingCell?.Copy(RenderedRange);
 
                         RowDecorators.Clear();
                         ClearRenderingData();

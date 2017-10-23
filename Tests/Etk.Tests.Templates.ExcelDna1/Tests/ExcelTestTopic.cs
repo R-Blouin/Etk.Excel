@@ -67,7 +67,7 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         {
             try
             {
-                viewsOwnerSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, DestinationSheetName);
+                //viewsOwnerSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, DestinationSheetName);
 
                 // Create the destination sheet
                 ExcelInterop.Workbook workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;

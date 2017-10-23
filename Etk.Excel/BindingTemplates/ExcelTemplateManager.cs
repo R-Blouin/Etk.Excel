@@ -37,15 +37,15 @@ namespace Etk.Excel.BindingTemplates
         { get; private set; }
 
         internal ExcelApplication ExcelApplication
-        { get; private set; }
+        { get; }
 
         internal EventExcelCallbacksManager CallbacksManager
-        { get; private set; }
+        { get;  }
 
         private readonly ILogger log = Logger.Instance;
         private readonly Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>> viewsBySheet = new Dictionary<ExcelInterop.Worksheet, List<ExcelTemplateView>>();
 
-        private readonly  ContextualMenuManager contextualMenuManager;
+        private readonly ContextualMenuManager contextualMenuManager;
         private readonly ExcelDecoratorsManager excelDecoratorsManager;
         private readonly BindingTemplateManager bindingTemplateManager;
 
@@ -247,6 +247,7 @@ namespace Etk.Excel.BindingTemplates
                         }
                     }
                 }
+                Marshal.ReleaseComObject(targetRange);
                 targetRange = null;
             }
             return menus;
@@ -272,11 +273,7 @@ namespace Etk.Excel.BindingTemplates
             }
             finally
             {
-                //if (worksheet != null)
-                {
-                    //Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
+                worksheet = null;
             }
         }
 
@@ -371,6 +368,8 @@ namespace Etk.Excel.BindingTemplates
             {
                 Marshal.ReleaseComObject(worksheet);
                 worksheet = null;
+                Marshal.ReleaseComObject(realTarget);
+                realTarget = null;
             }
         }
         #endregion

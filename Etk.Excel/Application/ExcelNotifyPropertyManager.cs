@@ -128,13 +128,12 @@ namespace Etk.Excel.Application
                     }
                     if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
                     {
-                        ExcelInterop.Range currentSelectedRange = context.View.CurrentSelectedCell;
                         context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
-                        currentSelectedRange?.Select();
+                        context.View.CurrentSelectedCell?.Select();
                     }
                 }
             }
-            catch (COMException comeEx)
+            catch (COMException comEx)
             {
                 waitExcelBusy = true;
                 NotifyPropertyChanged(context);
@@ -151,14 +150,18 @@ namespace Etk.Excel.Application
                     Marshal.ReleaseComObject(worksheet);
                     worksheet = null;
                 }
-
+                if (range != null)
+                {
+                    Marshal.ReleaseComObject(range);
+                    range = null;
+                }
                 try
                 {
 
                     if (ExcelApplication.Application.EnableEvents != enableEvent)
                         ExcelApplication.Application.EnableEvents = enableEvent;
                 }
-                catch (COMException comeEx)
+                catch (COMException comEx)
                 { }
             }
             range = null;
