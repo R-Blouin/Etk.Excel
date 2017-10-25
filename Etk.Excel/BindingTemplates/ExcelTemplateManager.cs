@@ -157,7 +157,8 @@ namespace Etk.Excel.BindingTemplates
                         book.SheetDeactivate -= OnSheetDeactivation;
                         book.SheetDeactivate += OnSheetDeactivation;
 
-                        Marshal.ReleaseComObject(book);
+                        ExcelApplication.ReleaseComObject(book);
+                        book = null;
                     }
                 }
                 viewsBySheet[view.ViewSheet].Add(view);
@@ -182,14 +183,14 @@ namespace Etk.Excel.BindingTemplates
                         break;
                 }
             }
-            Marshal.ReleaseComObject(realTarget);
+            //ExcelApplication.ReleaseComObject(realTarget);
             realTarget = null;
         }
 
         private void OnSheetCalculate(object sheet)
         {
             List<ExcelTemplateView> views;
-            viewsBySheet.TryGetValue(sheet as ExcelInterop.Worksheet, out views);
+            viewsBySheet.TryGetValue((ExcelInterop.Worksheet) sheet, out views);
             if (views != null)
             {
                 foreach (ExcelTemplateView view in views)
@@ -247,7 +248,7 @@ namespace Etk.Excel.BindingTemplates
                         }
                     }
                 }
-                Marshal.ReleaseComObject(targetRange);
+                //ExcelApplication.ReleaseComObject(targetRange);
                 targetRange = null;
             }
             return menus;
@@ -335,7 +336,7 @@ namespace Etk.Excel.BindingTemplates
                 ExcelInterop.Worksheet worksheet = target.Worksheet;
                 string message = $"Sheet '{worksheet.Name}', At least one sheet change failed. Please, checked the log";
 
-                Marshal.ReleaseComObject(worksheet);
+                ExcelApplication.ReleaseComObject(worksheet);
                 worksheet = null;
                 throw new EtkException(message);
             }
@@ -366,9 +367,9 @@ namespace Etk.Excel.BindingTemplates
             }
             finally
             {
-                Marshal.ReleaseComObject(worksheet);
+                ExcelApplication.ReleaseComObject(worksheet);
                 worksheet = null;
-                Marshal.ReleaseComObject(realTarget);
+                //ExcelApplication.ReleaseComObject(realTarget);
                 realTarget = null;
             }
         }
@@ -402,7 +403,7 @@ namespace Etk.Excel.BindingTemplates
                     if (sheetContainer == null)
                         throw new EtkException($"Cannot find the sheet '{worksheetContainerName}' in the current workbook", false);
 
-                    Marshal.ReleaseComObject(workbook);
+                    ExcelApplication.ReleaseComObject(workbook);
                     workbook = null;
                 }
 
@@ -419,7 +420,7 @@ namespace Etk.Excel.BindingTemplates
                     range = null;
                 }
 
-                Marshal.ReleaseComObject(sheetContainer);
+                ExcelApplication.ReleaseComObject(sheetContainer);
                 sheetContainer = null;
                 return templateDefinition;
             }
@@ -510,17 +511,17 @@ namespace Etk.Excel.BindingTemplates
             {
                 if (sheetContainer != null)
                 {
-                    Marshal.ReleaseComObject(sheetContainer);
+                    ExcelApplication.ReleaseComObject(sheetContainer);
                     sheetContainer = null;
                 }
                 if (workbook != null)
                 {
-                    Marshal.ReleaseComObject(workbook);
+                    ExcelApplication.ReleaseComObject(workbook);
                     workbook = null;
                 }
                 if (workbooks != null)
                 {
-                    Marshal.ReleaseComObject(workbooks);
+                    ExcelApplication.ReleaseComObject(workbooks);
                     workbooks = null;
                 }
             }
@@ -692,7 +693,10 @@ namespace Etk.Excel.BindingTemplates
             finally
             {
                 if (activeSheet != null)
-                    Marshal.ReleaseComObject(activeSheet);
+                {
+                    ExcelApplication.ReleaseComObject(activeSheet);
+                    activeSheet = null;
+                }
             }
             return iViews;
         }
@@ -735,7 +739,12 @@ namespace Etk.Excel.BindingTemplates
                                 }
                             }
                         }
-                        selectedRange?.Select();
+                        if(selectedRange != null)
+                        {
+                            selectedRange.Select();
+                            //ExcelApplication.ReleaseComObject(selectedRange);
+                            selectedRange = null;
+                        }
                     }
                 }
             }

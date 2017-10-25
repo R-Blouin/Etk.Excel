@@ -226,7 +226,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             borders[ExcelInterop.XlBordersIndex.xlEdgeRight].Weight = Weight;
 
             ////borders.Color = color;
-            Marshal.ReleaseComObject(borders);
+            ExcelApplication.ReleaseComObject(borders);
             borders = null;
         }
         #endregion

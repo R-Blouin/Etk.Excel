@@ -142,7 +142,7 @@ namespace Etk.Excel.ContextualMenus
                         if (sheetContainer == null)
                             throw new EtkException(string.Format("Cannot find the sheet '{0}' in the current workbook", worksheetContainerName), false);
 
-                        Marshal.ReleaseComObject(workbook);
+                        ExcelApplication.ReleaseComObject(workbook);
                         workbook = null;
                     }
 
@@ -150,9 +150,9 @@ namespace Etk.Excel.ContextualMenus
                     if (menuRange == null)
                         throw new EtkException("Cannot find the ContextualMenu");
 
-                    Marshal.ReleaseComObject(sheetContainer);
+                    ExcelApplication.ReleaseComObject(sheetContainer);
                     sheetContainer = null;
-                    Marshal.ReleaseComObject(currentWorkSheet);
+                    ExcelApplication.ReleaseComObject(currentWorkSheet);
                     currentWorkSheet = null;
 
                     string xmlValue = menuRange.Value2;

@@ -45,7 +45,8 @@ namespace Etk.Excel.BindingTemplates
                 {
                     ExcelInterop.Worksheet sheet = View.ViewSheet;
                     sheet.Change += OnParametersChanged;
-                    Marshal.ReleaseComObject(sheet);
+                    ExcelApplication.ReleaseComObject(sheet);
+                    sheet = null;
                 }
             }
         }
@@ -100,13 +101,14 @@ namespace Etk.Excel.BindingTemplates
             if (rangesToListen != null)
             {
                 foreach (ExcelInterop.Range range in rangesToListen)
-                    Marshal.ReleaseComObject(range);
+                    ExcelApplication.ReleaseComObject(range);
+
                 rangesToListen.Clear();
                 rangesToListen = null;
             }
             ExcelInterop.Worksheet sheet = View.ViewSheet;
             sheet.Change -= OnParametersChanged;
-            Marshal.ReleaseComObject(sheet);
+            ExcelApplication.ReleaseComObject(sheet);
         }
     }
 }

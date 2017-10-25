@@ -4,6 +4,7 @@ using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.BindingTemplates.Controls.WithFormula;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 {
@@ -76,7 +77,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
                     try
                     {
                         names = workSheet.Names;
-                        rangeName = names.Add(name, this.Range);
+                        rangeName = names.Add(name, Range);
                     }
                     catch (COMException ex)
                     {
@@ -85,7 +86,10 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
                     finally
                     {
                         if (names != null)
-                            Marshal.ReleaseComObject(names);
+                        {
+                            ExcelApplication.ReleaseComObject(names);
+                            names = null;
+                        }
                     }
                 }
 
@@ -96,7 +100,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             {
                 if (workSheet != null)
                 {
-                    Marshal.ReleaseComObject(workSheet);
+                    ExcelApplication.ReleaseComObject(workSheet);
                     workSheet = null;
                 }
             }
@@ -110,6 +114,10 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             if (NestedContextItem != null)
                 NestedContextItem.Dispose();
 
+            ExcelApplication.ReleaseComObject(rangeName);
+            ExcelApplication.ReleaseComObject(Range);
+
+            rangeName = null;
             Range = null;
         }
 

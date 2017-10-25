@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Controls;
@@ -8,6 +7,7 @@ using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -103,11 +103,12 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     }
                     cptElements++;
                 }
-                Marshal.ReleaseComObject(workingRange);
+                //ExcelApplication.ReleaseComObject(workingRange);
+                workingRange = null;
             }
 
             // To take into account the min number of elements to render.
-            if( Parent.MinOccurencesMethod != null)
+            if ( Parent.MinOccurencesMethod != null)
             {
                 IBindingContextElement parentElement = null;
                 if (bindingContextPart.ParentContext != null)
@@ -122,8 +123,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (Width < localWidth)
                 Width = localWidth;
 
-            Marshal.ReleaseComObject(worksheetTo);
             firstCell = null;
+            ExcelApplication.ReleaseComObject(worksheetTo);
+            worksheetTo = null;
         }
 
         protected override void ManageTemplateWithLinkedTemplates()
@@ -197,7 +199,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
                 Height += elementHeight;
             }
-            Marshal.ReleaseComObject(worksheetTo);
+            ExcelApplication.ReleaseComObject(worksheetTo);
             worksheetTo = null;
         }
 
@@ -413,14 +415,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 renderingContext.DataRow.Add(item);
             }
 
-            Marshal.ReleaseComObject(worksheetFrom);
-            Marshal.ReleaseComObject(worksheetTo);
-            Marshal.ReleaseComObject(source);
-            Marshal.ReleaseComObject(workingRange);
-            worksheetFrom = null;
-            worksheetTo = null;
             source = null;
             workingRange = null;
+
+            ExcelApplication.ReleaseComObject(worksheetFrom);
+            ExcelApplication.ReleaseComObject(worksheetTo);
+            worksheetFrom = null;
+            worksheetTo = null;
         }
         #endregion
     }

@@ -7,6 +7,7 @@ using Etk.Excel.ContextualMenus;
 using Etk.Tools.Extensions;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -102,7 +103,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     {
                         if (worksheet != null)
                         {
-                            Marshal.ReleaseComObject(worksheet);
+                            ExcelApplication.ReleaseComObject(worksheet);
                             worksheet = null;
                         }
                         menuRange = null;

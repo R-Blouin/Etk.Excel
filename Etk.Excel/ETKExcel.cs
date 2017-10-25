@@ -139,10 +139,6 @@ namespace Etk.Excel
         }
         #endregion
 
-        #region internal methods
-
-        #endregion
-
         #region private methods
         private void AddManagedWorkbook(ExcelInterop.Workbook workbook)
         {

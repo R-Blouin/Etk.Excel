@@ -6,6 +6,7 @@ using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Controls.Button
 {
@@ -76,15 +77,16 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
             OwnerRange = range;
             OwnerRange.Value2 = null;
             ExcelInterop.Worksheet worksheet = null;
+            ExcelInterop.OLEObjects oleObjects = null;
+            ExcelInterop.OLEObject obj = null;
 
             try
             {
                 worksheet = OwnerRange.Worksheet;
                 Name = $"ExcelBtn{Interlocked.Increment(ref cpt)}";
 
-                ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
-
-                ExcelInterop.OLEObject obj = oleObjects.Add("Forms.CommandButton.1",
+                oleObjects = worksheet.OLEObjects();
+                obj = oleObjects.Add("Forms.CommandButton.1",
                     Type.Missing,
                     false,
                     false,
@@ -108,11 +110,15 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
             }
             finally
             {
+                if (obj != null)
+                    ExcelApplication.ReleaseComObject(obj);
+                if (oleObjects != null)
+                    ExcelApplication.ReleaseComObject(oleObjects);
                 if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
+                    ExcelApplication.ReleaseComObject(worksheet);
+                obj = null;
+                oleObjects = null;
+                worksheet = null;
             }
         }
         #endregion
@@ -129,12 +135,19 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
 
                 ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
 
-                worksheet.OLEObjects(Name).Delete();
-                Marshal.ReleaseComObject(worksheet);
+                ExcelInterop.OLEObject obj  = worksheet.OLEObjects(Name);
+                obj.Delete();
 
-                worksheet = null;
+                ExcelApplication.ReleaseComObject(obj);
+                ExcelApplication.ReleaseComObject(commandButton);
+                ExcelApplication.ReleaseComObject(OwnerRange);
+                ExcelApplication.ReleaseComObject(worksheet);
+
+                obj = null;
                 commandButton = null;
                 OwnerRange = null;
+                worksheet = null;
+
             }
         }
 

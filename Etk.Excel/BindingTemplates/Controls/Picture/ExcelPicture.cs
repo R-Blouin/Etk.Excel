@@ -3,7 +3,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
-using ExcelInterop = Microsoft.Office.Interop.Excel; 
+using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Controls.Picture
 {
@@ -68,8 +69,12 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
             oleObject.Interior.ColorIndex = -4142;
             CheckBox.AutoSize = false;
 
+            ExcelApplication.ReleaseComObject(oleObject);
+            ExcelApplication.ReleaseComObject(oleObjects);
+            ExcelApplication.ReleaseComObject(worksheet);
+
             oleObject = null;
-            Marshal.ReleaseComObject(worksheet);
+            oleObjects = null;
             worksheet = null;
         }
 
@@ -96,12 +101,17 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
                     CheckBox.Click -= CurrentOnClick;
 
                 ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
-                worksheet.OLEObjects(Name).Delete();
-                Marshal.ReleaseComObject(worksheet);
+                ExcelInterop.OLEObject oleObject = worksheet.OLEObjects(Name);
+                oleObject.Delete();
 
+                ExcelApplication.ReleaseComObject(oleObject);
+                ExcelApplication.ReleaseComObject(OwnerRange);
+                ExcelApplication.ReleaseComObject(worksheet);
+                ExcelApplication.ReleaseComObject(CheckBox);
+                oleObject = null;
+                OwnerRange = null;
                 worksheet = null;
                 CheckBox = null;
-                OwnerRange = null;
             }
         }
         #endregion

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 {
@@ -140,7 +141,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
                 if (worksheetFunction != null)
                 {
-                    Marshal.ReleaseComObject(worksheetFunction);
+                    ExcelApplication.ReleaseComObject(worksheetFunction);
                     worksheetFunction = null;
                 }
             }

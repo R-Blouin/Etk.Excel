@@ -9,6 +9,7 @@ using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Decorators
 {
@@ -142,8 +143,10 @@ namespace Etk.Excel.BindingTemplates.Decorators
                                 font.Color = decoratorProperties[decoratorResult.Item.Value].FrontColor;
                                 interior.Color = decoratorProperties[decoratorResult.Item.Value].BackColor;
 
-                                Marshal.ReleaseComObject(interior);
-                                Marshal.ReleaseComObject(font);
+                                ExcelApplication.ReleaseComObject(interior);
+                                ExcelApplication.ReleaseComObject(font);
+                                interior = null;
+                                font = null;
                             }
                         }
                     }

@@ -180,7 +180,7 @@ namespace Etk.Excel.Application
                 {
                     isDisposed = true;
                     postAsynchronousManager.Dispose();
-                    Marshal.ReleaseComObject(Application);
+                    ExcelApplication.ReleaseComObject(Application);
                     Application = null;
                     ExcelDispatcher = null;
                 }
@@ -259,16 +259,20 @@ namespace Etk.Excel.Application
                     font.Color = withFont.Color;
                     interior.Color = withInterior.Color;
 
-                    Marshal.ReleaseComObject(interior);
-                    Marshal.ReleaseComObject(font);
-                    Marshal.ReleaseComObject(withInterior);
-                    Marshal.ReleaseComObject(withFont);
+                    ExcelApplication.ReleaseComObject(interior);
+                    ExcelApplication.ReleaseComObject(font);
+                    ExcelApplication.ReleaseComObject(withInterior);
+                    ExcelApplication.ReleaseComObject(withFont);
+                    interior = null;
+                    font = null;
+                    withInterior = null;
+                    withFont = null;
                 }
             }
             catch
             {
                 if(concernedSheet != null)
-                    Marshal.ReleaseComObject(concernedSheet);
+                    ExcelApplication.ReleaseComObject(concernedSheet);
             }
             finally
             {
@@ -291,5 +295,12 @@ namespace Etk.Excel.Application
             }
         }
         #endregion
+
+        public static void ReleaseComObject(object obj)
+        {
+            int refCpt = Marshal.ReleaseComObject(obj);
+            if (refCpt < 0)
+                MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
     }
 }

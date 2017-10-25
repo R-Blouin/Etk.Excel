@@ -147,13 +147,8 @@ namespace Etk.Excel.Application
             {
                 if(worksheet != null)
                 {
-                    Marshal.ReleaseComObject(worksheet);
+                    ExcelApplication.ReleaseComObject(worksheet);
                     worksheet = null;
-                }
-                if (range != null)
-                {
-                    Marshal.ReleaseComObject(range);
-                    range = null;
                 }
                 try
                 {
