@@ -79,21 +79,23 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
 
             if (callbackName.StartsWith("$")) // The callback is not a .Net one
                 ret = new EventCallback(callbackName.TrimStart('$'), null, null);
-            else if (callbackName.StartsWith("*"))  // The callback was registred (from xml)
-                ret = GetRegisteredCallback(callbackName);
             else
             {
-                string[] parts = callbackName.Split(',');
-                if (parts.Length == 1) // The callback is a member of the 'templateDefinition.MainBindingDefinition.BindingType' class
-                    ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[0]);
-                if (parts.Length == 3) // assembly, type and nam are supplied
+                ret = GetRegisteredCallback(callbackName); // Is the callback registred (from xml) 
+                if (ret == null)
                 {
-                    if(string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
-                        ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[2]);
-                    else
+                    string[] parts = callbackName.Split(',');
+                    if (parts.Length == 1) // The callback is a member of the 'templateDefinition.MainBindingDefinition.BindingType' class
+                        ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[0]);
+                    if (parts.Length == 3) // assembly, type and nam are supplied
                     {
-                        MethodInfo methodInfo = TypeHelpers.GetMethod(null, callbackName);
-                        ret = new EventCallback(null, null, methodInfo);
+                        if (string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
+                            ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[2]);
+                        else
+                        {
+                            MethodInfo methodInfo = TypeHelpers.GetMethod(null, callbackName);
+                            ret = new EventCallback(null, null, methodInfo);
+                        }
                     }
                 }
             }
@@ -166,13 +168,12 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         {
             try
             {
-                EventCallback callback;
-                if(callbackByIdent.TryGetValue(ident, out callback))
+                if (!callbackByIdent.ContainsKey(ident))
                 {
                     MethodInfo toInvoke = null;
-                    if(methodName != null && ! methodName.StartsWith("$"))
-                        toInvoke =  TypeHelpers.GetMethod(type, methodName);
-                    callback = new EventCallback(ident, description, toInvoke);
+                    if (methodName != null && !methodName.StartsWith("$"))
+                        toInvoke = TypeHelpers.GetMethod(type, methodName);
+                    EventCallback callback = new EventCallback(ident, description, toInvoke);
                     RegisterCallback(callback);
                 }
             }

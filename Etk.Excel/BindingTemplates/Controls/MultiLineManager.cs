@@ -20,44 +20,54 @@ namespace Etk.Excel.BindingTemplates.Controls
     {
         public void CreateControl(IBindingContextItem item, ref ExcelInterop.Range range, ref ExcelInterop.Range source, ref int vOffset)
         {
-            int hOffset = 1;
-            if (item.BindingDefinition.MultiLineFactorResolver != null)
+            try
             {
-                if(! item.BindingDefinition.MultiLineFactorResolver.IsNotDotNet)
+                int hOffset = 1;
+                if (item.BindingDefinition.MultiLineFactorResolver != null)
                 {
-                    object toInvoke = item.BindingDefinition.MultiLineFactorResolver.Callback.IsStatic ? null : item.ParentElement.DataSource;
-                    object[] parameters = item.BindingDefinition.MultiLineFactorResolver.Callback.GetParameters().Length == 0 ? null : new object[] { item.ParentElement.DataSource };
-                    vOffset = (int)item.BindingDefinition.MultiLineFactorResolver.Callback.Invoke(toInvoke, parameters);
-                    if (vOffset <= 0)
-                        vOffset = 1;
+                    if (!item.BindingDefinition.MultiLineFactorResolver.IsNotDotNet)
+                    {
+                        object toInvoke = item.BindingDefinition.MultiLineFactorResolver.Callback.IsStatic ? null : item.ParentElement.DataSource;
+                        if (toInvoke != null)
+                        {
+                            object[] parameters = item.BindingDefinition.MultiLineFactorResolver.Callback.GetParameters().Length == 0 ? null : new [] {item.ParentElement.DataSource};
+                            vOffset = (int)  item.BindingDefinition.MultiLineFactorResolver.Callback.Invoke(toInvoke, parameters);
+                            if (vOffset <= 0)
+                                vOffset = 1;
+                        }
+                    }
+                }
+                else
+                {
+                    object objValue = item.ResolveBinding();
+                    if (objValue is string)
+                    {
+                        string value = objValue as string;
+                        int nbrLine = value.Count(c => c.Equals('\n'));
+                        if (nbrLine > 0)
+                            vOffset = (int) ((nbrLine + 1)*item.BindingDefinition.MultiLineFactor);
+                    }
+                }
+
+                if (range.MergeCells)
+                    hOffset = range.MergeArea.Columns.Count;
+
+                IEnumerable<BorderStyle> bordersStyle = RetrieveBorders(source.MergeCells ? source.MergeArea : source);
+                ExcelInterop.Range toMerge = range.Resize[vOffset, hOffset];
+                toMerge.Merge();
+
+                foreach (BorderStyle borderStyle in bordersStyle)
+                {
+                    toMerge.Borders[borderStyle.Index].ColorIndex = borderStyle.ColorIndex;
+                    toMerge.Borders[borderStyle.Index].Weight = borderStyle.Weight;
+                    toMerge.Borders[borderStyle.Index].LineStyle = borderStyle.LineStyle;
+                    toMerge.Borders[borderStyle.Index].Color = borderStyle.Color;
+                    toMerge.Borders[borderStyle.Index].TintAndShade = borderStyle.TintAndShade;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                object objValue = item.ResolveBinding();
-                if (objValue is string)
-                {
-                    string value = objValue as string;
-                    int nbrLine = value.Count(c => c.Equals('\n'));
-                    if (nbrLine > 0)
-                        vOffset = (int)((nbrLine + 1) * item.BindingDefinition.MultiLineFactor);
-                }
-            }
-
-            if (range.MergeCells)
-                hOffset = range.MergeArea.Columns.Count;
-
-            IEnumerable<BorderStyle> bordersStyle = RetrieveBorders(source.MergeCells ? source.MergeArea : source);
-            ExcelInterop.Range toMerge = range.Resize[vOffset, hOffset];
-            toMerge.Merge();
-
-            foreach (BorderStyle borderStyle in bordersStyle)
-            {
-                toMerge.Borders[borderStyle.Index].ColorIndex = borderStyle.ColorIndex;
-                toMerge.Borders[borderStyle.Index].Weight = borderStyle.Weight;
-                toMerge.Borders[borderStyle.Index].LineStyle = borderStyle.LineStyle;
-                toMerge.Borders[borderStyle.Index].Color = borderStyle.Color;
-                toMerge.Borders[borderStyle.Index].TintAndShade = borderStyle.TintAndShade;
+                throw new EtkException($"MultiLine manager failed (option 'ME=' of the cell '{item.BindingDefinition.BindingExpression}': {ex.Message}");
             }
         }
 
