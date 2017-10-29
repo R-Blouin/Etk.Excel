@@ -11,6 +11,7 @@ namespace Etk.Excel.Application
 {
     class ExcelNotifyPropertyManager : IDisposable
     {
+        private int sleepTime = 0;
         private volatile bool waitExcelBusy;
         private bool isDisposed;
         private readonly object syncObj = new object();
@@ -73,18 +74,13 @@ namespace Etk.Excel.Application
                 {
                     if (waitExcelBusy)
                     {
-                        Thread.Sleep(50);
+                        Thread.Sleep(sleepTime);
                         waitExcelBusy = false;
-                        //try
-                        //{
-                        //    ExcelApplication.Application.EnableEvents = true;
-                        //}
-                        //catch { }
                     }
 
                     ExcelNotityPropertyContext context = contextItems.Take(cancellationTokenSource.Token);
                     if (context != null)
-                        (ETKExcel.ExcelApplication as ExcelApplication).ExcelDispatcher.BeginInvoke(new System.Action(() => ExecuteNotity(context)));
+                        (ETKExcel.ExcelApplication as ExcelApplication).ExcelDispatcher.BeginInvoke(new Action(() => ExecuteNotity(context)));
                 }
             }
             catch (Exception ex)
@@ -125,18 +121,22 @@ namespace Etk.Excel.Application
                         if (enableEvent)
                             ExcelApplication.Application.EnableEvents = false;
                         range.Value2 = value;
-                    }
-                    if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
-                    {
-                        context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
-                        context.View.CurrentSelectedCell?.Select();
+
+                        if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
+                        {
+                            context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
+                            context.View.CurrentSelectedCell?.Select();
+                        }
                     }
                 }
+                sleepTime = 0;
             }
             catch (COMException comEx)
             {
                 waitExcelBusy = true;
                 NotifyPropertyChanged(context);
+                if (sleepTime < 1000)
+                    sleepTime += 10;
             }
             catch (Exception ex)
             {

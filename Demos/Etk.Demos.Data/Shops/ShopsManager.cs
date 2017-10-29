@@ -1,18 +1,17 @@
 ﻿using Etk.Demos.Data.Shops.DataType;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Xml.Serialization;
 
 namespace Etk.Demos.Data.Shops
 {
-    public static class ShopManager
+    public class ShopsManager
     {       
         #region attributes and properties
         static private ShopList shopList;
 
-        public static IEnumerable<Shop> Shops
+        public IEnumerable<Shop> Shops
         {
             get
             {
@@ -24,18 +23,9 @@ namespace Etk.Demos.Data.Shops
         #endregion
 
         #region .ctors
-        static ShopManager()
+        public ShopsManager()
         {
-            CreateDefaultData();
-        }
-        #endregion
-
-        #region private methods
-        /// <summary>
-        /// It's ugly but it's JUST to have some test data.
-        /// </summary>
-        static private void CreateDefaultData()
-        {
+            // Create data
             XmlSerializer xs = new XmlSerializer(typeof(ShopList));
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Etk.Demos.Data.Shops.Data.Shops.xml"))
             {

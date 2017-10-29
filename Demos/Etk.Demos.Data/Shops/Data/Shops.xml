@@ -3,7 +3,7 @@
   <Shop Id="1" Name="First Shop" ReceptionPhone="First Shop Reception Phone number">
     <Address Street="1 Shops Road" City="ShopCity"/>
     <CustomerId>1</CustomerId>
-    <!--<CustomerId>2</CustomerId>
+    <CustomerId>2</CustomerId>
     <CustomerId>3</CustomerId>
     <CustomerId>4</CustomerId>
     <CustomerId>5</CustomerId>
@@ -12,9 +12,9 @@
     <CustomerId>8</CustomerId>
     <CustomerId>9</CustomerId>
     <CustomerId>10</CustomerId>
-    <CustomerId>20</CustomerId>-->
+    <CustomerId>20</CustomerId>
   </Shop>
-  <!--<Shop Id="2" Name="Second Shop" ReceptionPhone="Second Shop Reception Phone number">
+  <Shop Id="2" Name="Second Shop" ReceptionPhone="Second Shop Reception Phone number">
     <Address Street="2 Shops Road" City="ShopCity"/>
     <CustomerId>11</CustomerId>
     <CustomerId>12</CustomerId>
@@ -37,5 +37,5 @@
   </Shop>
   <Shop Id="4" Name="Fourth Shop" ReceptionPhone="Fourth Shop Reception Phone number">
     <Address Street="4 No Customer Shops Road" City="ShopCity"/>
-  </Shop>-->
+  </Shop>
 </Shops>
