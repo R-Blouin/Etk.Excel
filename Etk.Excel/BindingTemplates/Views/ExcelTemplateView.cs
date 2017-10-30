@@ -64,10 +64,10 @@ namespace Etk.Excel.BindingTemplates.Views
         public event Action DataChanged;
         public event Action<bool> BeforeRendering;
         public event Action<bool> AfterRendering;
-        public event Action<IExcelTemplateView> ViewSheetIsDeactivated;
+        public event Action ViewSheetIsDeactivated;
 
-        private event Action<IExcelTemplateView> viewSheetIsActivated;
-        public event Action<IExcelTemplateView> ViewSheetIsActivated
+        private event Action viewSheetIsActivated;
+        public event Action ViewSheetIsActivated
         {
             add { viewSheetIsActivated += value; }
 			remove { viewSheetIsActivated -= value;}
@@ -460,12 +460,12 @@ namespace Etk.Excel.BindingTemplates.Views
 
         internal void OnViewSheetIsActivated()
         {
-            if (viewSheetIsActivated == null || IsDisposed || Renderer == null || Renderer.RenderedRange == null)
+            if (viewSheetIsActivated == null || IsDisposed || Renderer?.RenderedRange == null)
                 return;
 
             try
             {
-                viewSheetIsActivated(this);
+                viewSheetIsActivated();
             }
             catch (Exception ex)
             {
@@ -476,12 +476,12 @@ namespace Etk.Excel.BindingTemplates.Views
 
         internal void OnViewSheetIsDeactivated()
         {
-            if (ViewSheetIsDeactivated == null || IsDisposed || Renderer == null || Renderer.RenderedRange == null)
+            if (ViewSheetIsDeactivated == null || IsDisposed || Renderer?.RenderedRange == null)
                 return;
 
             try
             {
-                ViewSheetIsDeactivated(this);
+                ViewSheetIsDeactivated();
             }
             catch (Exception ex)
             {

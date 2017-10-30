@@ -15,9 +15,9 @@ namespace Etk.Demos.Data.Shares
     {
         #region attributes and properties
         private static readonly Lazy<BasketManager> instance = new Lazy<BasketManager>(() => Activator.CreateInstance(typeof(BasketManager), true) as BasketManager);
-        public static BasketManager Instance { get { return instance.Value; } }
+        public static BasketManager Instance => instance.Value;
 
-        private Random random = new Random();
+        private readonly Random random = new Random();
         public Basket Basket
         {
             get; set;
@@ -37,23 +37,9 @@ namespace Etk.Demos.Data.Shares
             }
         }
 
-        public bool IsNotRunning
-        { get { return !isRunning; } }
+        public bool IsNotRunning => !isRunning;
 
-        public string CommandRunningLabel
-        {
-            get { return isRunning ? "Stop" : "Start"; }
-        }
-
-        //public Share[] Shares
-        //{
-        //    get { return Basket == null ? null : Basket.Shares; }
-        //}
-
-        //public Forex[] Forexes
-        //{
-        //    get { return Basket == null ? null : Basket.Forexes; }
-        //}
+        public string CommandRunningLabel => isRunning ? "Stop" : "Start";
         #endregion
 
         #region .ctors
@@ -90,18 +76,18 @@ namespace Etk.Demos.Data.Shares
             {
                 if (!isRunning)
                 {
-                    Task task = new Task(() => ChangeShares());
+                    Task task = new Task(ChangeShares);
                     task.Start();
                 }
             }
         }
 
-        public static void StopChanging(BasketManager manager)
+        public void StopChanging()
         {
-            if (manager != null && manager.Basket.Shares != null)
+            if (Basket.Shares != null)
             {
-                if(manager.IsRunning)
-                    manager.IsRunning = false;
+                if(IsRunning)
+                    IsRunning = false;
             }
         }
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Etk.BindingTemplates;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
@@ -19,7 +18,6 @@ using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Drawing;
 using System.Text.RegularExpressions;
-// ReSharper disable NotResolvedInText
 
 namespace Etk.Excel.BindingTemplates
 {
@@ -804,8 +802,7 @@ namespace Etk.Excel.BindingTemplates
                                 }
                             }
                         }
-                        if (selectedRange != null)
-                            selectedRange.Select();
+                        selectedRange?.Select();
                     }
                 }
             }
@@ -848,7 +845,7 @@ namespace Etk.Excel.BindingTemplates
                             foreach (IExcelTemplateView view in views)
                             {
                                 ExcelTemplateView excelView = view as ExcelTemplateView;
-                                if (excelView != null && excelView.ViewSheet != null)
+                                if (excelView?.ViewSheet != null)
                                 {
                                     try
                                     {
@@ -908,20 +905,16 @@ namespace Etk.Excel.BindingTemplates
                 if (!disposed)
                 {
                     disposed = true;
-
-                    if (viewsBySheet != null)
-                    {
-                        viewsBySheet.Values.Where(l => l != null)
-                                           .SelectMany(v => v)
-                                           .Where(v => v != null)
-                                           .ToList()
-                                           .ForEach(v => {
-                                                            v.ViewSheet.Change -= OnSheetChange;
-                                                            v.ViewSheet.SelectionChange -= OnSelectionChange;
-                                                            v.ViewSheet.BeforeDoubleClick -= OnBeforeBoubleClick;
-                                                            //v.Dispose();
-                                                         });
-                    }
+                    viewsBySheet?.Values.Where(l => l != null)
+                                        .SelectMany(v => v)
+                                        .Where(v => v != null)
+                                        .ToList()
+                                        .ForEach(v => {
+                                                        v.ViewSheet.Change -= OnSheetChange;
+                                                        v.ViewSheet.SelectionChange -= OnSelectionChange;
+                                                        v.ViewSheet.BeforeDoubleClick -= OnBeforeBoubleClick;
+                                                        //v.Dispose();
+                                                        });
 
                     contextualMenuManager.OnContextualMenusRequested -= ManageViewsContextualMenu;
 

@@ -66,8 +66,12 @@ namespace Etk.Demo.ExcelDna1
             ExcelInterop.Range viewFirstOutputRange = worksheetDestination.Range["B2"];
             IExcelTemplateView mainview = ETKExcel.TemplateManager.AddView("TemplatesShares", "Main", "Shares", "B2");
 
-            mainview.SetDataSource(new BasketManager());
+            BasketManager basketManager = new BasketManager();
+            mainview.SetDataSource(basketManager);
             mainview.Render();
+            mainview.ViewSheetIsActivated += () => basketManager.StartChanging();
+            mainview.ViewSheetIsDeactivated += () => basketManager.StopChanging();
+
 
             Marshal.ReleaseComObject(currentWorkbook);
             Marshal.ReleaseComObject(worksheetDestination);
