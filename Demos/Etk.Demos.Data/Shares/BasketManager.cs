@@ -19,10 +19,7 @@ namespace Etk.Demos.Data.Shares
 
         private readonly Random random = new Random();
         public Basket Basket
-        {
-            get; set;
-        }
-
+        { get; set; }
 
         private volatile bool isRunning;
         public bool IsRunning
@@ -86,14 +83,9 @@ namespace Etk.Demos.Data.Shares
         {
             if (Basket.Shares != null)
             {
-                if(IsRunning)
+                if (IsRunning)
                     IsRunning = false;
             }
-        }
-
-        public void ToogleAllCanChange()
-        {
-            Basket.Shares.ToList().ForEach(s => s.CanChange = ! s.CanChange);
         }
         #endregion
 

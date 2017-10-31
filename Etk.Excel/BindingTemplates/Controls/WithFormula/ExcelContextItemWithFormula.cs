@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.Application;
@@ -39,7 +38,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
             if (CanNotify)
             {
-                objectsToNotify = bindingDefinition.GetObjectsToNotify(DataSource);
+                objectsToNotify = excelBindingDefinitionWithFormula.GetObjectsToNotify(DataSource);
                 if (objectsToNotify != null)
                 {
                     foreach (INotifyPropertyChanged obj in objectsToNotify)
@@ -69,7 +68,11 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         public override object ResolveBinding()
         {
             if(excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
-                return $"={formulaBindingContext.ResolveBinding()}";
+            {
+                string ret = $"={formulaBindingContext.ResolveBinding()}";
+                return ret;
+
+            }
             else if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
                 return excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
 
@@ -108,7 +111,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         {
             if (CanNotify && objectsToNotify != null && OnPropertyChangedAction != null)
             {
-                if (BindingDefinition.MustNotify(DataSource, source, args))
+                if (excelBindingDefinitionWithFormula.MustNotify(DataSource, source, args))
                     OnPropertyChangedAction(this, OnPropertyChangedActionArgs);
             }
         }

@@ -45,7 +45,7 @@
     <Compile Include="Shares\DataType\Share.cs" />
     <Compile Include="Shares\DataType\Basket.cs" />
     <Compile Include="Shares\BasketManager.cs" />
-    <Compile Include="Shops\CustomerManager.cs" />
+    <Compile Include="Shops\CustomersManager.cs" />
     <Compile Include="Shops\DataType\Address.cs" />
     <Compile Include="Shops\DataType\Customer.cs" />
     <Compile Include="Shops\DataType\CustomerList.cs" />
@@ -54,11 +54,8 @@
     <Compile Include="Shops\DataType\OrderList.cs" />
     <Compile Include="Shops\DataType\Product.cs" />
     <Compile Include="Shops\DataType\ProductList.cs" />
-    <Compile Include="Shops\DataType\Shop.cs" />
-    <Compile Include="Shops\DataType\ShopList.cs" />
     <Compile Include="Shops\OrdersManager.cs" />
     <Compile Include="Shops\ProductsManager.cs" />
-    <Compile Include="Shops\ShopsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Shops\Data\Customers.xml">
@@ -75,11 +72,6 @@
     <EmbeddedResource Include="Shops\Data\Shops.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Etk.Demo.Templates.xlsx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

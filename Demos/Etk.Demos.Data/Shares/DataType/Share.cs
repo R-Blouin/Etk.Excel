@@ -61,9 +61,11 @@
 
         [XmlIgnore]
         public double Amount
-        {
-            get { return last * quantity; }
-        }
+        { get { return last * quantity; } }
+
+        [XmlIgnore]
+        public double AmountRoundedToHundred
+        { get; set;}
 
 
         #region .ctors

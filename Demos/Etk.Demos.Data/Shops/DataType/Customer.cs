@@ -91,10 +91,12 @@ namespace Etk.Demos.Data.Shops.DataType
         { get; set; }
 
         [XmlIgnore]
+        public int NumberOfOrders
+        { get { return OrderIds.Count; } }
+
+        [XmlIgnore]
         public IEnumerable<Order> Orders
-        {
-            get { return OrdersManager.GetOrders(OrderIds); }
-        }
+        { get { return OrdersManager.GetOrders(OrderIds); }}
 
         [XmlIgnore]
         public string Name

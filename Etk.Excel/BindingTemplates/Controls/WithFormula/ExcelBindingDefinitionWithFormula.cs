@@ -87,12 +87,12 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
         {
-            return TargetBindingDefinition != null && TargetBindingDefinition.MustNotify(dataSource, source, args);
+            return FormulaBindingDefinition != null && FormulaBindingDefinition.MustNotify(dataSource, source, args);
         }
 
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
-            return TargetBindingDefinition?.GetObjectsToNotify(dataSource);
+            return FormulaBindingDefinition?.GetObjectsToNotify(dataSource);
         }
 
     }
