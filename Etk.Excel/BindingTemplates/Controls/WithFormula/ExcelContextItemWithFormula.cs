@@ -83,24 +83,14 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override bool UpdateDataSource(object data, out object retValue)
         {
-            if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
-                excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, data);
+            excelBindingDefinitionWithFormula.TargetBindingDefinition?.UpdateDataSource(DataSource, data);
 
             if (data == null) // If null enter => ResolveBinding the binding
                 retValue = ResolveBinding();
             else
             {
                 if (data.ToString().Trim().StartsWith("="))
-                {
-                    //try
-                    //{
-                    //Range.Formula = data.ToString();
-                    //retValue = Range.Formula;
                     retValue = data.ToString();
-                    //}
-                    //catch
-                    //{ }
-                }
                 else
                     retValue = data;
             }

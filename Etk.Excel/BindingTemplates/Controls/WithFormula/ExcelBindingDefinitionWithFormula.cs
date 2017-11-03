@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.BindingTemplates.Definitions;
@@ -13,10 +14,10 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         public const string FORMULA_RESULT_PREFIX = "{>";
 
         public IBindingDefinition FormulaBindingDefinition
-        { get; private set; }
+        { get; }
 
         public IBindingDefinition TargetBindingDefinition
-        { get; private set; }
+        { get; }
 
         public override string Name => TargetBindingDefinition != null ? TargetBindingDefinition.Name : string.Empty;
 
@@ -87,13 +88,19 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
         {
-            return FormulaBindingDefinition != null && FormulaBindingDefinition.MustNotify(dataSource, source, args);
+            return (FormulaBindingDefinition != null && FormulaBindingDefinition.MustNotify(dataSource, source, args)) ||
+                   (TargetBindingDefinition != null && TargetBindingDefinition.MustNotify(dataSource, source, args));
         }
 
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
-            return FormulaBindingDefinition?.GetObjectsToNotify(dataSource);
-        }
+            List<INotifyPropertyChanged> toNotifiy = new List<INotifyPropertyChanged>();
+            if(FormulaBindingDefinition != null)
+                toNotifiy.AddRange(FormulaBindingDefinition.GetObjectsToNotify(dataSource));
 
+            if (TargetBindingDefinition != null)
+                toNotifiy.AddRange(TargetBindingDefinition.GetObjectsToNotify(dataSource));
+            return toNotifiy.Any() ? toNotifiy : null;
+        }
     }
 }

@@ -60,12 +60,19 @@
 
 
         [XmlIgnore]
-        public double Amount
-        { get { return last * quantity; } }
+        public double Amount => last * quantity;
 
+        private double amountRoundedToHundred;
         [XmlIgnore]
         public double AmountRoundedToHundred
-        { get; set;}
+        {
+            get { return amountRoundedToHundred; }
+            set
+            {
+                amountRoundedToHundred = value;
+                OnPropertyChanged("AmountRoundedToHundred");
+            }
+        }
 
 
         #region .ctors

@@ -95,14 +95,14 @@ namespace Etk.Excel.Addin
             set
             {
                 viewSheetIsActivated = value;
-                if (viewSheetIsActivatedAction != null)
-                    ExcelView.ViewSheetIsActivated -= viewSheetIsActivatedAction;
+                //if (viewSheetIsActivatedAction != null)
+                //    ExcelView.ViewSheetIsActivated -= viewSheetIsActivatedAction;
 
-                if (!string.IsNullOrEmpty(value))
-                {
-                    viewSheetIsActivatedAction = ExcelView => ETKExcel.ExcelApplication.ExecuteVbaMAcro(viewSheetIsActivated, new object[] { this });
-                    ExcelView.ViewSheetIsActivated += viewSheetIsActivatedAction;
-                }
+                //if (!string.IsNullOrEmpty(value))
+                //{
+                //    viewSheetIsActivatedAction = ExcelView => ETKExcel.ExcelApplication.ExecuteVbaMAcro(viewSheetIsActivated, new object[] { this });
+                //    ExcelView.ViewSheetIsActivated += viewSheetIsActivatedAction;
+                //}
             }
         }
 
@@ -114,14 +114,14 @@ namespace Etk.Excel.Addin
             set
             {
                 viewSheetIsDeActivated = value;
-                if (viewSheetIsDeactivatedAction != null)
-                    ExcelView.ViewSheetIsActivated -= viewSheetIsDeactivatedAction;
+                //if (viewSheetIsDeactivatedAction != null)
+                //    ExcelView.ViewSheetIsActivated -= viewSheetIsDeactivatedAction;
 
-                if (!string.IsNullOrEmpty(value))
-                {
-                    viewSheetIsDeactivatedAction = ExcelView => ETKExcel.ExcelApplication.ExecuteVbaMAcro(viewSheetIsDeActivated, new object[] { this });
-                    ExcelView.ViewSheetIsDeactivated += viewSheetIsDeactivatedAction;
-                }
+                //if (!string.IsNullOrEmpty(value))
+                //{
+                //    viewSheetIsDeactivatedAction = ExcelView => ETKExcel.ExcelApplication.ExecuteVbaMAcro(viewSheetIsDeActivated, new object[] { this });
+                //    ExcelView.ViewSheetIsDeactivated += viewSheetIsDeactivatedAction;
+                //}
             }
         }
         #endregion
