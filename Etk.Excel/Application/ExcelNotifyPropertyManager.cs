@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.BindingTemplates.Controls.WithFormula;
 
 namespace Etk.Excel.Application
 {
@@ -121,6 +122,11 @@ namespace Etk.Excel.Application
                         if (enableEvent)
                             ExcelApplication.Application.EnableEvents = false;
                         range.Value2 = value;
+                        if (context.ContextItem is ExcelContextItemWithFormula)
+                        {
+                            range.Calculate();
+                            ((ExcelContextItemWithFormula)context.ContextItem).UpdateTarget(range.Value2);
+                        }
 
                         if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
                         {

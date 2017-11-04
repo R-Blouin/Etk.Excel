@@ -88,8 +88,8 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
         {
-            return (FormulaBindingDefinition != null && FormulaBindingDefinition.MustNotify(dataSource, source, args)) ||
-                   (TargetBindingDefinition != null && TargetBindingDefinition.MustNotify(dataSource, source, args));
+            return (FormulaBindingDefinition != null && FormulaBindingDefinition.MustNotify(dataSource, source, args))
+                   ;//||(TargetBindingDefinition != null && TargetBindingDefinition.MustNotify(dataSource, source, args));
         }
 
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
@@ -98,8 +98,8 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
             if(FormulaBindingDefinition != null)
                 toNotifiy.AddRange(FormulaBindingDefinition.GetObjectsToNotify(dataSource));
 
-            if (TargetBindingDefinition != null)
-                toNotifiy.AddRange(TargetBindingDefinition.GetObjectsToNotify(dataSource));
+            //if (TargetBindingDefinition != null)
+            //    toNotifiy.AddRange(TargetBindingDefinition.GetObjectsToNotify(dataSource));
             return toNotifiy.Any() ? toNotifiy : null;
         }
     }

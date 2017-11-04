@@ -141,27 +141,40 @@ namespace Etk.Excel.BindingTemplates.Renderer
             bool ret = false;
             if (!IsDisposed && !IsClearing && contextItems != null)
             {
-                foreach (ExcelInterop.Range cell in target.Cells)
+                FreezeExcel freezeExcel = null;
+                try
                 {
-                    IBindingContextItem contextItem = null;
-                    // Because of the merge cells ...
-                    try
-                    { contextItem = contextItems[cell.Row - View.FirstOutputCell.Row, cell.Column - View.FirstOutputCell.Column]; }
-                    catch
-                    { }
-
-                    if (contextItem != null)
+                    foreach (ExcelInterop.Range cell in target.Cells)
                     {
-                        object retValue;
-                        bool update = contextItem.UpdateDataSource(cell.Value2, out retValue);
-                        if (update)
+                        IBindingContextItem contextItem = null;
+                        // Because of the merge cells ...
+                        try
+                        { contextItem = contextItems[cell.Row - View.FirstOutputCell.Row, cell.Column - View.FirstOutputCell.Column]; }
+                        catch
+                        { }
+
+                        if (contextItem != null)
                         {
-                            if (!object.Equals(cell.Value2, retValue))
+                            object retValue;
+                            bool mustUpdate = contextItem.UpdateDataSource(cell.Value2, out retValue);
+                            if (mustUpdate)
+                            {
+                                if (freezeExcel == null)
+                                    freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible);
+
+                                //if (!object.Equals(cell.Value2, retValue))
                                 cell.Value2 = retValue;
-                            if (!(contextItem is BindingFilterContextItem))
+                            }
+
+                            if (! (contextItem is BindingFilterContextItem))
                                 ret = true;
                         }
                     }
+                }
+                finally
+                {
+                    if(freezeExcel != null)
+                        freezeExcel.Dispose();
                 }
             }
             return ret;

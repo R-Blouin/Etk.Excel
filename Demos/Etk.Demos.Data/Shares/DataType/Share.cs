@@ -1,22 +1,10 @@
-﻿namespace Etk.Demos.Data.Shares.DataType
-{
-    using System.ComponentModel;
-    using System.Xml.Serialization;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
 
+namespace Etk.Demos.Data.Shares.DataType
+{
     public class Share : INotifyPropertyChanged
     {
-        private bool canChange;
-        [XmlIgnore]
-        public bool CanChange
-        {
-            get { return canChange; }
-            set
-            {
-                canChange = value;
-                OnPropertyChanged("CanChange");
-            }
-        }
-
         [XmlAttribute]
         public string Code
         { get; set; }
@@ -49,12 +37,9 @@
             get { return last; }
             set
             {
-                if (CanChange)
-                {
-                    last = value;
-                    OnPropertyChanged("Last");
-                    OnPropertyChanged("Amount");
-                }
+                last = value;
+                OnPropertyChanged("Last");
+                OnPropertyChanged("Amount");
             }
         }
 
@@ -76,17 +61,7 @@
 
 
         #region .ctors
-        public Share()
-        {
-            CanChange = true;
-        }
-        #endregion
-
-        #region public medthod
-        public void ToogleCanChange()
-        {
-            CanChange = ! CanChange;    
-        }
+        public Share() {}
         #endregion
 
         #region INotifyPropertyChanged

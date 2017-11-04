@@ -590,11 +590,8 @@ namespace Etk.Excel.BindingTemplates.Views
                 ExcelInterop.Range intersect = excelApplication.Application.Intersect(Renderer.RenderedRange, target);
                 if (intersect != null)
                 {
-                    using (var freeze = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
-                    {
-                        if (Renderer.OnDataChanged(intersect) && DataChanged != null)
-                            DataChanged();// null, null);
-                    }
+                    if (Renderer.OnDataChanged(intersect) && DataChanged != null)
+                        DataChanged();
                     intersect = null;
                     return true;
                 }

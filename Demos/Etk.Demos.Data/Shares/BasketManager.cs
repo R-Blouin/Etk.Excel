@@ -97,15 +97,12 @@ namespace Etk.Demos.Data.Shares
             {
                 int index = random.Next(Basket.Shares.Count());
                 Share share = Basket.Shares[index];
-                if (share.CanChange)
-                {
-                    int percent = random.Next(11) - 5;
-                    double value = share.Last + share.Last * percent / 100;
-                    share.Last = value <= 0 ? 0.1 : value;
+                int percent = random.Next(11) - 5;
+                double value = share.Last + share.Last * percent / 100;
+                share.Last = value <= 0 ? 0.1 : value;
 
-                    if (Basket.WaitingTime != -1)
-                        Thread.Sleep(Basket.WaitingTime);
-                }
+                if (Basket.WaitingTime != -1)
+                    Thread.Sleep(Basket.WaitingTime);
             }
         }
         #endregion
