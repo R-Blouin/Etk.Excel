@@ -54,6 +54,18 @@ namespace Etk.Excel.BindingTemplates.Views
         private readonly List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
         private ExcelInterop.Range currentSelectedRange;
 
+        private bool useHighlightSelection = true;
+        public bool UseHighlightSelection
+        {
+            get { return useHighlightSelection; }
+            set
+            {
+                useHighlightSelection = value;
+                if (!useHighlightSelection)
+                    UnhighlightSelection();
+            }
+        }
+
         internal ExcelInterop.Range CurrentSelectedCell
         { get; private set; }
 
@@ -378,34 +390,6 @@ namespace Etk.Excel.BindingTemplates.Views
             range = null;
         }
 
-        private void AutoFitRows(ExcelInterop.Range rows)
-        {
-            double previousSize = -2;
-            double currentSize = -1;
-            var iteration = 0;
-            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
-            {
-                iteration++;
-                previousSize = rows.Height;
-                rows.Rows.AutoFit();
-                currentSize = rows.Height;
-            }
-        }
-
-        private void AutoFitColumns(ExcelInterop.Range columns)
-        {
-            double previousSize = -2;
-            double currentSize = -1;
-            var iteration = 0;
-            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
-            {
-                iteration++;
-                previousSize = columns.Width;
-                columns.Columns.AutoFit();
-                currentSize = columns.Width;
-            }
-        }
-
         public void ProtectSheet()
         {
             ((ExcelApplication) ETKExcel.ExcelApplication).ProtectSheet(ViewSheet);
@@ -612,7 +596,8 @@ namespace Etk.Excel.BindingTemplates.Views
             try
             {
                 CurrentSelectedCell = null;
-                UnhighlightSelection();
+                if (UseHighlightSelection)
+                    UnhighlightSelection();
 
                 if (IsRendered)
                 {
@@ -655,7 +640,8 @@ namespace Etk.Excel.BindingTemplates.Views
                             }
                         }
                         intersect = null;
-                        HighlightSelection(target);
+                        if(UseHighlightSelection)
+                            HighlightSelection(target);
                     }
                 }
             }
@@ -844,6 +830,34 @@ namespace Etk.Excel.BindingTemplates.Views
                 }
                 currentSelectedRangePattern.Clear();
                 currentSelectedRange = null;
+            }
+        }
+
+        private void AutoFitRows(ExcelInterop.Range rows)
+        {
+            double previousSize = -2;
+            double currentSize = -1;
+            var iteration = 0;
+            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
+            {
+                iteration++;
+                previousSize = rows.Height;
+                rows.Rows.AutoFit();
+                currentSize = rows.Height;
+            }
+        }
+
+        private void AutoFitColumns(ExcelInterop.Range columns)
+        {
+            double previousSize = -2;
+            double currentSize = -1;
+            var iteration = 0;
+            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
+            {
+                iteration++;
+                previousSize = columns.Width;
+                columns.Columns.AutoFit();
+                currentSize = columns.Width;
             }
         }
         #endregion

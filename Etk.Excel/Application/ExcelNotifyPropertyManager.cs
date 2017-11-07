@@ -127,13 +127,9 @@ namespace Etk.Excel.Application
                             range.Calculate();
                             ((ExcelContextItemWithFormula)context.ContextItem).UpdateTarget(range.Value2);
                         }
-
-                        if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
-                        {
-                            context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
-                            context.View.CurrentSelectedCell?.Select();
-                        }
+                        context.View.CurrentSelectedCell?.Select();
                     }
+                    context.ContextItem.BindingDefinition.DecoratorDefinition?.Resolve(range, context.ContextItem);
                 }
                 sleepTime = 0;
             }

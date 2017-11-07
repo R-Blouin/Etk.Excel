@@ -41,6 +41,6 @@ namespace Etk.Excel.BindingTemplates.Views
         /// <summary>Event calls when the sheet that contains the view is desactivated. The Parameter is the concerned View</summary>
         event Action ViewSheetIsDeactivated;
 
-        void SetAccessorParameters(IEnumerable<object> parameters);
+        bool UseHighlightSelection { get; set; }
     }
 }
