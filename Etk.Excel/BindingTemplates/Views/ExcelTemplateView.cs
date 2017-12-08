@@ -117,17 +117,20 @@ namespace Etk.Excel.BindingTemplates.Views
             get { return searchValue; } 
             set 
             {
-                searchValue = value;
-                foreach (ExcelBindingSearchContextItem ctrl in CellsThatContainSearchValue)
+                if (searchValue != value)
                 {
-                    try
+                    searchValue = value;
+                    foreach (ExcelBindingSearchContextItem ctrl in CellsThatContainSearchValue)
                     {
-                        ctrl.ExecuteSearch = false;
-                        ctrl.DestinationRange.Value = searchValue;
-                    }
-                    finally
-                    {
-                        ctrl.ExecuteSearch = true;
+                        try
+                        {
+                            ctrl.ExecuteSearch = false;
+                            ctrl.DestinationRange.Value = searchValue;
+                        }
+                        finally
+                        {
+                            ctrl.ExecuteSearch = true;
+                        }
                     }
                 }
             }
@@ -444,7 +447,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
         internal void OnViewSheetIsActivated()
         {
-            if (viewSheetIsActivated == null || IsDisposed || Renderer?.RenderedRange == null)
+            if (viewSheetIsActivated == null || IsDisposed)// || Renderer?.RenderedRange == null)
                 return;
 
             try
@@ -460,7 +463,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
         internal void OnViewSheetIsDeactivated()
         {
-            if (ViewSheetIsDeactivated == null || IsDisposed || Renderer?.RenderedRange == null)
+            if (ViewSheetIsDeactivated == null || IsDisposed)// || Renderer?.RenderedRange == null)
                 return;
 
             try
@@ -505,7 +508,8 @@ namespace Etk.Excel.BindingTemplates.Views
                             if (log.GetLogLevel() == LogType.Debug)
                                 log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
 
-                            AfterRendering?.Invoke(false);
+                            AfterRendering?.Invoke(true);
+                            Renderer.AfterRendering();
                         }
                     }
                     catch (Exception ex)
@@ -549,9 +553,9 @@ namespace Etk.Excel.BindingTemplates.Views
 
                                     Renderer.RenderDataOnly();
                                     if (log.GetLogLevel() == LogType.Debug)
-                                        log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                                        log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, Ident, TemplateDefinition.Name);
 
-                                    AfterRendering?.Invoke(true);
+                                    AfterRendering?.Invoke(true); ;
 
                                     CurrentSelectedCell?.Select();
                                 }

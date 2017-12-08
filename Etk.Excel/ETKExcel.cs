@@ -27,14 +27,14 @@ namespace Etk.Excel
         private readonly List<ExcelInterop.Workbook> managedWorkbooks = new List<ExcelInterop.Workbook>();
 
         [Import(AllowDefault = false)]
-        private ExcelApplication excelApplication = null;
+        private ExcelApplication excelApplication;
         [Import(AllowDefault = false)]
-        private ExcelTemplateManager templateManager = null;
+        private ExcelTemplateManager templateManager;
         [Import(AllowDefault = false)]
-        private ContextualMenuManager contextualMenuManager = null;
+        private ContextualMenuManager contextualMenuManager;
 
         [Import(AllowDefault = false)]
-        private ModelDefinitionManager modelDefinitionManager = null;
+        private ModelDefinitionManager modelDefinitionManager;
         //[Import(AllowDefault = false)]
         //private RequestsManager RequestsManager = null;
 

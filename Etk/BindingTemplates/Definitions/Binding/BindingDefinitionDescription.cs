@@ -7,13 +7,6 @@ using Etk.BindingTemplates.Definitions.Templates;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
-    public enum ShowHideMode
-    {
-        None,
-        StartShown,
-        StartHidden    
-    }
-
     public class BindingDefinitionDescription
     {
         private static DecoratorsManager decoratorsManager;
@@ -55,6 +48,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
         public EventCallback OnLeftDoubleClick
         { get; private set; }
 
+        public SpecificEventCallback OnAfterRendering
+        { get; private set; }
+
         public bool IsMultiLine
         { get; private set; }
 
@@ -62,12 +58,6 @@ namespace Etk.BindingTemplates.Definitions.Binding
         { get; private set; }
 
         public EventCallback MultiLineFactorResolver
-        { get; private set; }
-
-        public ShowHideMode ShowHideMode
-        { get; private set; }
-
-        public int ShowHideValue
         { get; private set; }
 
         public string Formula
@@ -176,30 +166,37 @@ namespace Etk.BindingTemplates.Definitions.Binding
                             }
                         }
                         // On double left click, Show/Hide the x following/preceding colums/rows. Start hidden  
-                        if (option.StartsWith("SV="))
+                        if (option.StartsWith("SH_COL_S="))
                         {
-                            string numberOfConcernedColumns = option.Substring(3);
+                            string numberOfConcernedColumns = option.Substring(9);
                             int wrk; 
-                            if (string.IsNullOrEmpty(numberOfConcernedColumns) && int.TryParse(numberOfConcernedColumns, out wrk))
+                            if (! string.IsNullOrEmpty(numberOfConcernedColumns) && int.TryParse(numberOfConcernedColumns, out wrk))
                             {
-                                ShowHideMode = ShowHideMode.StartShown;
-                                ShowHideValue = wrk;
+                                SpecificEventCallback callback = EventCallbacksManager.GetRegisteredCallback("ETK_ShowHideColumns") as SpecificEventCallback;
+                                SpecificEventCallback callbackToUse = new SpecificEventCallback(callback);
+                                callbackToUse.Parameters = new[] { new SpecificEventCallbackParameter {IsSender = true},
+                                                                   new SpecificEventCallbackParameter {ParameterValue = wrk}};
+                                OnLeftDoubleClick = callbackToUse;
                                 continue;
                             }
-                            throw new Exception("The 'Show/Hide' prototype must be defined as 'SV=<int>' whre '<int>' is a integer");
+                            throw new Exception("The 'Show/Hide' prototype must be defined as 'SH_COL_S=<int>' where '<int>' is a integer");
                         }
                         // On double left click, Show/Hide the x following/preceding colums/rows. Start shown
-                        if (option.StartsWith("SH="))
+                        if (option.StartsWith("SH_COL_H="))
                         {
-                            string numberOfConcernedColumns = option.Substring(3);
+                            string numberOfConcernedColumns = option.Substring(9);
                             int wrk;
-                            if (string.IsNullOrEmpty(numberOfConcernedColumns) && int.TryParse(numberOfConcernedColumns, out wrk))
+                            if (! string.IsNullOrEmpty(numberOfConcernedColumns) && int.TryParse(numberOfConcernedColumns, out wrk))
                             {
-                                ShowHideMode = ShowHideMode.StartHidden;
-                                ShowHideValue = wrk;
+                                SpecificEventCallback callback = EventCallbacksManager.GetRegisteredCallback("ETK_ShowHideColumns") as SpecificEventCallback;
+                                SpecificEventCallback callbackToUse = new SpecificEventCallback(callback);
+                                callbackToUse.Parameters = new[] { new SpecificEventCallbackParameter {IsSender = true},
+                                                                   new SpecificEventCallbackParameter {ParameterValue = wrk}};
+                                OnLeftDoubleClick = callbackToUse;
+                                OnAfterRendering = callbackToUse;
                                 continue;
                             }
-                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SH=<int>' where '<int>' is a integer");
+                            throw new Exception("The 'Show/Hide' columns prototype must be defined as 'SH_COL_H==<int>' where '<int>' is a integer");
                         }
                     }
                 }

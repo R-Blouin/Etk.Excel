@@ -6,9 +6,9 @@ using System.Windows.Forms;
 using System.Windows.Threading;
 using Etk.Excel.Extensions;
 using Microsoft.Office.Core;
-using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Collections.Generic;
 using System.Reflection;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.Application
 {
@@ -172,37 +172,9 @@ namespace Etk.Excel.Application
             return null;
         }
 
-        public void Dispose()
+        public void ShowHideColumns(ExcelInterop.Range targetedRange, int numberOfColumns)
         {
-            lock (syncObj)
-            {
-                if (!isDisposed)
-                {
-                    isDisposed = true;
-                    postAsynchronousManager.Dispose();
-                    ExcelApplication.ReleaseComObject(Application);
-                    Application = null;
-                    ExcelDispatcher = null;
-                }
-            }
-        }
-
-        public void HideUnhideColumns(ExcelInterop.Range targetedRange, int numberOfCells)
-        {
-            if (numberOfCells == 0)
-                return;
-
-            if (targetedRange != null)
-            {
-                ExcelInterop.Range workkingRange = null;
-                if (numberOfCells < 0)
-                    workkingRange = targetedRange.Offset[Type.Missing, numberOfCells];
-                else
-                    workkingRange = targetedRange.Offset[Type.Missing, 1];
-
-                workkingRange = workkingRange.Resize[Type.Missing, numberOfCells];
-                workkingRange.EntireColumn.Hidden = !(bool)workkingRange.EntireColumn.Hidden;
-            }
+            StaticShowHideColumns(targetedRange, numberOfColumns);
         }
 
         public object ExecuteVbaMAcro(string functionName, object[] parameters)
@@ -294,13 +266,51 @@ namespace Etk.Excel.Application
                                        true);
             }
         }
+
+        public void Dispose()
+        {
+            lock (syncObj)
+            {
+                if (!isDisposed)
+                {
+                    isDisposed = true;
+                    postAsynchronousManager.Dispose();
+                    ExcelApplication.ReleaseComObject(Application);
+                    Application = null;
+                    ExcelDispatcher = null;
+                }
+            }
+        }
         #endregion
 
+        #region static public methods
         public static void ReleaseComObject(object obj)
         {
             int refCpt = Marshal.ReleaseComObject(obj);
             if (refCpt < 0)
                 MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
+
+
+        public static void StaticShowHideColumns(ExcelInterop.Range targetedRange, int numberOfColumns)
+        {
+            if (targetedRange != null && numberOfColumns != 0)
+            {
+                ExcelInterop.Range workingRange;
+                if (numberOfColumns < 0)
+                    workingRange = targetedRange.Offset[Type.Missing, numberOfColumns];
+                else
+                    workingRange = targetedRange.Offset[Type.Missing, 1];
+
+                workingRange = workingRange.Resize[Type.Missing, Math.Abs(numberOfColumns)];
+
+                ExcelInterop.Range columns = workingRange.EntireColumn;
+                columns.Hidden = !(bool)columns.Hidden;
+
+                columns = null;
+                workingRange = null;
+            }
+        }
+        #endregion
     }
 }

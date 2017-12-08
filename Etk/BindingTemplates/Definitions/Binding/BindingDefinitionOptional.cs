@@ -72,7 +72,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     {
                         //lock (syncObj) // we need to synchro Com exec
                         //{
-                            return type.InvokeMember(Name, BindingFlags.Default | BindingFlags.GetProperty, null, dataSource, null, null);
+                        object ret = type.InvokeMember(Name, BindingFlags.Default | BindingFlags.GetProperty, null, dataSource, null, null);
                         //}
                     }
                     catch (COMException ex)

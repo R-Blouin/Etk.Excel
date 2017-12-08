@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 using System.Text;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
@@ -19,8 +18,8 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         private const string POS_KEYWORD = "[POS]";
         private const string ALL_POS_KEYWORD = "[ALLPOS]";
 
-        private readonly bool usePos = false;
-        private readonly bool useAllPos = false;
+        private readonly bool usePos;
+        private readonly bool useAllPos;
         private readonly string rootName;
         private readonly ExcelNamedRangeDefinition definition;
         private readonly IBindingDefinition nameBindingDefinition;
@@ -33,43 +32,44 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 
         public string Description => NestedBindingDefinition != null ? NestedBindingDefinition.Description : string.Empty;
 
-        public string BindingExpression => NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingExpression;
+        public string BindingExpression => NestedBindingDefinition?.BindingExpression;
 
-        public bool IsACollection => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsACollection;
+        public bool IsACollection => NestedBindingDefinition?.IsACollection ?? false;
 
-        public bool IsReadOnly => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsReadOnly;
+        public bool IsReadOnly => NestedBindingDefinition?.IsReadOnly ?? false;
 
-        public bool IsEnum => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsEnum;
+        public bool IsEnum => NestedBindingDefinition?.IsEnum ?? false;
 
-        public bool IsNullable => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsNullable;
+        public bool IsNullable => NestedBindingDefinition?.IsNullable ?? false;
 
-        public bool CanNotify => NestedBindingDefinition == null ? false : NestedBindingDefinition.CanNotify;
+        public bool CanNotify => NestedBindingDefinition?.CanNotify ?? false;
 
-        public bool IsOptional => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsOptional;
+        public bool IsOptional => NestedBindingDefinition?.IsOptional ?? false;
 
-        public bool IsBoundWithData => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsBoundWithData;
+        public bool IsBoundWithData => NestedBindingDefinition?.IsBoundWithData ?? false;
 
-        public Type BindingType => NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingType;
+        public Type BindingType => NestedBindingDefinition?.BindingType;
 
-        public bool BindingTypeIsGeneric => NestedBindingDefinition == null ? false : NestedBindingDefinition.BindingTypeIsGeneric;
+        public bool BindingTypeIsGeneric => NestedBindingDefinition?.BindingTypeIsGeneric ?? false;
 
-        public Type BindingGenericType => NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingGenericType;
+        public Type BindingGenericType => NestedBindingDefinition?.BindingGenericType;
 
-        public Type BindingGenericTypeDefinition => NestedBindingDefinition == null ? null : NestedBindingDefinition.BindingGenericTypeDefinition;
+        public Type BindingGenericTypeDefinition => NestedBindingDefinition?.BindingGenericTypeDefinition;
 
-        public BindingPartType PartType => NestedBindingDefinition == null ? BindingPartType.BindingDefinition : NestedBindingDefinition.PartType;
+        public BindingPartType PartType => NestedBindingDefinition?.PartType ?? BindingPartType.BindingDefinition;
 
-        public Decorator DecoratorDefinition => NestedBindingDefinition == null ? null : NestedBindingDefinition.DecoratorDefinition;
+        public Decorator DecoratorDefinition => NestedBindingDefinition?.DecoratorDefinition;
 
-        public EventCallback OnSelection => NestedBindingDefinition == null ? null : NestedBindingDefinition.OnSelection;
+        public EventCallback OnSelection => NestedBindingDefinition?.OnSelection;
 
-        public EventCallback OnClick => NestedBindingDefinition == null ? null : NestedBindingDefinition.OnClick;
+        public EventCallback OnClick => NestedBindingDefinition?.OnClick;
 
-        public bool IsMultiLine => NestedBindingDefinition == null ? false : NestedBindingDefinition.IsMultiLine;
+        public bool IsMultiLine => NestedBindingDefinition?.IsMultiLine ?? false;
 
-        public double MultiLineFactor => NestedBindingDefinition == null ? 0 : NestedBindingDefinition.MultiLineFactor;
+        public double MultiLineFactor => NestedBindingDefinition?.MultiLineFactor ?? 0;
 
-        public EventCallback MultiLineFactorResolver => NestedBindingDefinition == null ? null : NestedBindingDefinition.MultiLineFactorResolver;
+        public EventCallback MultiLineFactorResolver => NestedBindingDefinition?.MultiLineFactorResolver;
+        public SpecificEventCallback OnAfterRendering => NestedBindingDefinition?.OnAfterRendering;
 
         #endregion
         #endregion
@@ -139,12 +139,12 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 
         public IBindingContextItem ContextItemFactory(IBindingContextElement owner)
         {
-            string name = null;
-            IBindingContextItem nestedContextItem = NestedBindingDefinition == null ? null : NestedBindingDefinition.ContextItemFactory(owner);
+            string name;
+            IBindingContextItem nestedContextItem = NestedBindingDefinition?.ContextItemFactory(owner);
             if (nameBindingDefinition != null)
             {
                 object obj = nameBindingDefinition.ResolveBinding(owner.DataSource);
-                name = rootName.EmptyIfNull() + (obj == null ? string.Empty : obj.ToString());
+                name = rootName.EmptyIfNull() + (obj?.ToString() ?? string.Empty);
             }
             else
             {
@@ -170,12 +170,12 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 
         public object UpdateDataSource(object dataSource, object data)
         {
-            return NestedBindingDefinition == null ? null : NestedBindingDefinition.UpdateDataSource(dataSource, data);
+            return NestedBindingDefinition?.UpdateDataSource(dataSource, data);
         }
 
         public object ResolveBinding(object dataSource)
         {
-            return NestedBindingDefinition == null ? null : NestedBindingDefinition.ResolveBinding(dataSource);
+            return NestedBindingDefinition?.ResolveBinding(dataSource);
         }
 
         public bool MustNotify(object dataSource, object source, PropertyChangedEventArgs args)
@@ -185,7 +185,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 
         public IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
-            return NestedBindingDefinition == null ? null : NestedBindingDefinition.GetObjectsToNotify(dataSource);
+            return NestedBindingDefinition?.GetObjectsToNotify(dataSource);
         }
 
         public bool IsSelected()

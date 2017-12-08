@@ -84,11 +84,20 @@ namespace Etk.Excel.BindingTemplates.Renderer
                                     ((IExcelControl)item).CreateControl(range);
                                     range = null;
                                 }
-                                else if (item.BindingDefinition != null && !item.BindingDefinition.IsReadOnly && item.BindingDefinition.IsEnum)
+                                else if (item.BindingDefinition != null)
                                 {
-                                    ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
-                                    enumManager.CreateControl(item, ref range);
-                                    range = null;
+                                    if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
+                                    {
+                                        ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
+                                        enumManager.CreateControl(item, ref range);
+                                        range = null;
+                                    }
+                                    if (item.BindingDefinition.OnAfterRendering != null)
+                                    {
+                                        ExcelInterop.Range range = worksheetTo.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
+                                        AddAfterRenderingAction(item.BindingDefinition, range);
+                                        range = null;
+                                    }
                                 }
                             }
                             row.Add(item);
@@ -407,6 +416,12 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             ExcelInterop.Range localSource = source[1, 1 + colId - startPos];
                             multiLineManager.CreateControl(item, ref range, ref localSource, ref vOffset);
+                            range = null;
+                        }
+                        if (item.BindingDefinition.OnAfterRendering != null)
+                        {
+                            ExcelInterop.Range range = worksheetTo.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
+                            AddAfterRenderingAction(item.BindingDefinition, range);
                             range = null;
                         }
                     }

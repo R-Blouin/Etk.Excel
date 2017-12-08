@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
+using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Views;
 
 namespace Etk.BindingTemplates.Definitions.EventCallBacks
 {
@@ -40,5 +43,38 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
             IsNotDotNet = toInvoke == null;
         }
         #endregion
+
+        public virtual void Invoke(object sender, IBindingContextElement catchingContextElement, IBindingContextItem currentContextItem)
+        {
+            object invokeTarget = Callback.IsStatic ? null : catchingContextElement.DataSource;
+            int nbrParameters = Callback.GetParameters().Length;
+
+            if (nbrParameters > 3)
+                throw new Exception($"Method info '{Callback.Name}' signature is not correct");
+
+            object[] parameters;
+            switch (nbrParameters)
+            {
+                //case 4:
+                //    parameters = new object[] { catchingContextElement, catchingContextElement.DataSource, currentContextItem, currentContextItem.DataSource };
+                //    break;
+                case 3:
+                    parameters = new[] { sender, catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
+                    break;
+                case 2:
+                    if (Callback.GetParameters()[0].ParameterType == typeof(ITemplateView))
+                        parameters = new[] { catchingContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
+                    else
+                        parameters = new[] { catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
+                    break;
+                case 1:
+                    parameters = new[] { catchingContextElement.DataSource };
+                    break;
+                default:
+                    parameters = null;
+                    break;
+            }
+            Callback.Invoke(invokeTarget, parameters);
+        }
     }
 }

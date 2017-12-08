@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Controls;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using Etk.Excel.Application;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -112,10 +115,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected abstract void ManageTemplateWithoutLinkedTemplates();
         protected abstract void ManageTemplateWithLinkedTemplates();
 
-        //protected void ManageControls(IBindingContextItem item, ref ExcelInterop.Range range)
-        //{
-        //    if (item is IExcelControl)
-        //        ((IExcelControl)item).CreateControl(range);
-        //}
+        protected void AddAfterRenderingAction(IBindingDefinition bindingDefinition, ExcelInterop.Range concernedRange)
+        {
+            if (bindingDefinition.OnAfterRendering?.Parameters != null)
+            {
+                foreach (SpecificEventCallbackParameter param in bindingDefinition.OnAfterRendering.Parameters.Where(p => p.IsSender))
+                    param.ParameterValue = concernedRange;
+            }
+            Parent.AddAfterRenderingAction(bindingDefinition.OnAfterRendering);
+        }
     }
 }

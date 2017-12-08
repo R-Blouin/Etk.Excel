@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Views;
@@ -154,10 +155,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 Height = height;
             }
         }
-
         public void RegisterNestedRenderer(ExcelRenderer nestedRenderer)
         {
             NestedRenderer.Add(nestedRenderer);
+        }
+
+        public virtual void AddAfterRenderingAction(SpecificEventCallback callBack)
+        {
+            RootRenderer.AddAfterRenderingAction(callBack);
         }
 
         public void Dispose()

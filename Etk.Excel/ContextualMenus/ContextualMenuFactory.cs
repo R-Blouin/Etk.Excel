@@ -42,12 +42,10 @@ namespace Etk.Excel.ContextualMenus
                                     MethodInfo methodInfo = ConstextualMethodRetriever.RetrieveContextualMethodInfo(xmlItem.Action);
                                     IContextualMenuItem menuItem = new ContextualMenuItem(xmlItem.Caption, xmlItem.BeginGroup, methodInfo, xmlItem.FaceId);
 
-                                    items.Add((IContextualPart)menuItem);
+                                    items.Add(menuItem);
                                 }
-                                if (xmlPart is XmlContextualMenuDefinition)
-                                {
-                                    //items.Add((IContextualPart)menuItem);
-                                }
+                                //if (xmlPart is XmlContextualMenuDefinition)
+                                //    items.Add((IContextualPart)menuItem);
                             }
                             if (items.Count > 0)
                                 ret.Add(new ContextualMenu(definition.Name, definition.Caption, definition.BeginGroup, items));

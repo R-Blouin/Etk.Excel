@@ -81,7 +81,7 @@ namespace Etk.Excel.Application
 
                     ExcelNotityPropertyContext context = contextItems.Take(cancellationTokenSource.Token);
                     if (context != null)
-                        (ETKExcel.ExcelApplication as ExcelApplication).ExcelDispatcher.BeginInvoke(new Action(() => ExecuteNotity(context)));
+                        (ETKExcel.ExcelApplication as ExcelApplication).ExcelDispatcher.BeginInvoke(new Action(() => ExecuteNotify(context)));
                 }
             }
             catch (Exception ex)
@@ -98,7 +98,7 @@ namespace Etk.Excel.Application
             }
         }
 
-        private void ExecuteNotity(ExcelNotityPropertyContext context)
+        private void ExecuteNotify(ExcelNotityPropertyContext context)
         {
             if (isDisposed || context.ContextItem.IsDisposed || !context.View.IsRendered)
                 return;
@@ -114,7 +114,7 @@ namespace Etk.Excel.Application
                 if (range != null)
                 {
                     object value = context.ContextItem.ResolveBinding();
-                    if (value != null && value is Enum)
+                    if (value is Enum)
                         value = ((Enum)value).ToString();
 
                     if (! object.Equals(range.Value2, value))
@@ -142,7 +142,7 @@ namespace Etk.Excel.Application
             }
             catch (Exception ex)
             {
-                string message = $"'ExecuteNotity' failed.{ex.Message}";
+                string message = $"'ExecuteNotify' failed.{ex.Message}";
                 Logger.Instance.LogException(LogType.Error, ex, message);
             }
             finally

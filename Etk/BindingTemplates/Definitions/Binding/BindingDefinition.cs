@@ -110,8 +110,9 @@ namespace Etk.BindingTemplates.Definitions.Binding
 
         public EventCallback MultiLineFactorResolver => DefinitionDescription.MultiLineFactorResolver;
 
-        public string Formula => DefinitionDescription.Formula;
+        public SpecificEventCallback OnAfterRendering => DefinitionDescription.OnAfterRendering;
 
+        public string Formula => DefinitionDescription.Formula;
         #endregion
 
         #region .ctors
@@ -147,7 +148,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
 
         protected void ManageEnumAndNullable()
         {
-            IsNullable = BindingType.IsGenericType && BindingType.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
+            IsNullable = BindingType.IsGenericType && BindingType.GetGenericTypeDefinition() == typeof(Nullable<>);
             IsEnum = BindingType.IsGenericType ? BindingType.GetGenericArguments()[0].IsEnum : BindingType.IsEnum;
         }
 
@@ -173,12 +174,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
             if (parent.DataSource == null)
                 ret = new BindingContextItem(parent, this);
             else
-            {
-                if (CanNotify)
-                    ret = new BindingContextItemCanNotify(parent, this);
-                else
-                    ret = new BindingContextItem(parent, this);
-            }
+                ret = CanNotify ? new BindingContextItemCanNotify(parent, this) : new BindingContextItem(parent, this);
             ret.Init();
             return ret;
         }

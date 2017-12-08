@@ -76,6 +76,8 @@ namespace Etk.Excel.BindingTemplates
             contextualMenuManager.OnContextualMenusRequested += ManageViewsContextualMenu;
 
             sortSearchAndFilterMenuManager = new SortSearchAndFilterMenuManager();
+
+            eventCallbacksManager.RegisterSpecificCallBack();
         }
 
         ~ExcelTemplateManager()
@@ -257,16 +259,13 @@ namespace Etk.Excel.BindingTemplates
             ExcelInterop.Worksheet worksheet = sheet as ExcelInterop.Worksheet;
             try
             {
-                lock (syncRoot)
+                List<ExcelTemplateView> views;
+                if (viewsBySheet.TryGetValue(worksheet, out views))
                 {
-                    List<ExcelTemplateView> views;
-                    if (viewsBySheet.TryGetValue(worksheet, out views))
+                    if (views != null)
                     {
-                        if (views != null)
-                        {
-                            foreach (ExcelTemplateView view in views)
-                                view.OnViewSheetIsActivated();
-                        }
+                        foreach (ExcelTemplateView view in views.ToArray())
+                            view.OnViewSheetIsActivated();
                     }
                 }
             }
@@ -281,16 +280,13 @@ namespace Etk.Excel.BindingTemplates
             ExcelInterop.Worksheet worksheet = sheet as ExcelInterop.Worksheet;
             try
             {
-                lock (syncRoot)
+                List<ExcelTemplateView> views;
+                if (viewsBySheet.TryGetValue(worksheet, out views))
                 {
-                    List<ExcelTemplateView> views;
-                    if (viewsBySheet.TryGetValue(worksheet, out views))
+                    if (views != null)
                     {
-                        if (views != null)
-                        {
-                            foreach (ExcelTemplateView view in views)
-                                view.OnViewSheetIsDeactivated();
-                        }
+                        foreach (ExcelTemplateView view in views.ToArray())
+                            view.OnViewSheetIsDeactivated();
                     }
                 }
             }
@@ -300,13 +296,13 @@ namespace Etk.Excel.BindingTemplates
             }
         }
 
-        /// <summary>Manege the change done on the sheet</summary>
+        /// <summary>Manage the change done on the sheet</summary>
         private void OnSheetChange(ExcelInterop.Range target)
         {
-            List<ExcelTemplateView> views;
             bool inError = false;
             lock (syncRoot)
             {
+                List<ExcelTemplateView> views;
                 if (viewsBySheet.TryGetValue(target.Worksheet, out views))
                 {
                     if (views != null)

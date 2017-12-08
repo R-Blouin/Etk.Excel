@@ -19,11 +19,11 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\debug\</OutputPath>
+    <OutputPath>bin\debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\debug\Etk.xml</DocumentationFile>
+    <DocumentationFile>bin\debug\Etk.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,6 +52,7 @@
     <Compile Include="BindingTemplates\Context\BindingContextPartType.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\BindingSearchContextItem.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\RootBindingFilter.cs" />
+    <Compile Include="BindingTemplates\Definitions\EventCallBacks\SpecificEventCallback.cs" />
     <Compile Include="BindingTemplates\Definitions\EventCallBacks\EventCallback.cs" />
     <Compile Include="BindingTemplates\Definitions\SortSearchAndFilter\BindingSearchDefinition.cs" />
     <Compile Include="BindingTemplates\Context\SortSearchAndFilter\BindingFilterContextItem.cs" />

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Controls.WithFormula;
@@ -29,6 +30,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
         { get; private set; }
 
         public IEnumerable<IFormulaCalculation> toOperateOnSheetCalculation;
+
+        public List<SpecificEventCallback> AfterRenderingActions;
         #endregion
 
         #region .ctors 
@@ -197,6 +200,22 @@ namespace Etk.Excel.BindingTemplates.Renderer
             {
                 foreach (IFormulaCalculation item in toOperateOnSheetCalculation)
                     item.OnSheetCalculate();
+            }
+        }
+
+        public override void AddAfterRenderingAction(SpecificEventCallback callBack)
+        {
+            if(AfterRenderingActions == null)
+                AfterRenderingActions = new List<SpecificEventCallback>();
+            AfterRenderingActions.Add(callBack);
+        }
+
+        public void AfterRendering()
+        {
+            if (AfterRenderingActions != null)
+            {
+                foreach(SpecificEventCallback callback in AfterRenderingActions)
+                    callback.Invoke();
             }
         }
 
