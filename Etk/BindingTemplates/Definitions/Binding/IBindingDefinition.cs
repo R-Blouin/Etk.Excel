@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
@@ -73,5 +72,8 @@ namespace Etk.BindingTemplates.Definitions.Binding
 
         /// <summary> Contains the callback to invoke when the bound object is clicked (left double click in Excel)</summary>
         EventCallback OnClick { get; }
+
+        /// <summary> Contains a callback to invoke when the vieww is fully rendered</summary>
+        SpecificEventCallback OnAfterRendering { get; }
     }
 }

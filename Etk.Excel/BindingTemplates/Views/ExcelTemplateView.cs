@@ -51,8 +51,20 @@ namespace Etk.Excel.BindingTemplates.Views
         #region attributes and properties
         private const int AutoFitMaxIterationCount = 10;
         private readonly ILogger log = Logger.Instance;
-        private ExcelInterop.Range currentSelectedRange;
         private readonly List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
+        private ExcelInterop.Range currentSelectedRange;
+
+        private bool useHighlightSelection = true;
+        public bool UseHighlightSelection
+        {
+            get { return useHighlightSelection; }
+            set
+            {
+                useHighlightSelection = value;
+                if (!useHighlightSelection)
+                    UnhighlightSelection();
+            }
+        }
 
         internal ExcelInterop.Range CurrentSelectedCell
         { get; private set; }
@@ -64,10 +76,10 @@ namespace Etk.Excel.BindingTemplates.Views
         public event Action DataChanged;
         public event Action<bool> BeforeRendering;
         public event Action<bool> AfterRendering;
-        public event Action<IExcelTemplateView> ViewSheetIsDeactivated;
+        public event Action ViewSheetIsDeactivated;
 
-        private event Action<IExcelTemplateView> viewSheetIsActivated;
-        public event Action<IExcelTemplateView> ViewSheetIsActivated
+        private event Action viewSheetIsActivated;
+        public event Action ViewSheetIsActivated
         {
             add { viewSheetIsActivated += value; }
 			remove { viewSheetIsActivated -= value;}
@@ -105,17 +117,20 @@ namespace Etk.Excel.BindingTemplates.Views
             get { return searchValue; } 
             set 
             {
-                searchValue = value;
-                foreach (ExcelBindingSearchContextItem ctrl in CellsThatContainSearchValue)
+                if (searchValue != value)
                 {
-                    try
+                    searchValue = value;
+                    foreach (ExcelBindingSearchContextItem ctrl in CellsThatContainSearchValue)
                     {
-                        ctrl.ExecuteSearch = false;
-                        ctrl.DestinationRange.Value = searchValue;
-                    }
-                    finally
-                    {
-                        ctrl.ExecuteSearch = true;
+                        try
+                        {
+                            ctrl.ExecuteSearch = false;
+                            ctrl.DestinationRange.Value = searchValue;
+                        }
+                        finally
+                        {
+                            ctrl.ExecuteSearch = true;
+                        }
                     }
                 }
             }
@@ -141,9 +156,9 @@ namespace Etk.Excel.BindingTemplates.Views
             lock (syncRoot)
             {
                 currentSelectedRangePattern.Clear();
+
                 currentSelectedRange = null;
                 CurrentSelectedCell = null;
-
                 CellsThatContainSearchValue.Clear();
                 //@@ searchValue = null;
 
@@ -219,11 +234,14 @@ namespace Etk.Excel.BindingTemplates.Views
                     CellsThatContainSearchValue.Clear();
                     if (ViewSheet != null)
                     {
-                        Marshal.ReleaseComObject(ViewSheet);
+                        ExcelApplication.ReleaseComObject(ViewSheet);
                         ViewSheet = null;
                     }
+
                     FirstOutputCell = null;
+                    currentSelectedRange = null;
                     ClearingCell = null;
+
                     base.Dispose();
                 }
             }
@@ -244,7 +262,7 @@ namespace Etk.Excel.BindingTemplates.Views
         {
             using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
             {
-                if (Renderer == null || Renderer.BodyPartRenderer == null || Renderer.BodyPartRenderer.RenderedArea == null)
+                if (Renderer?.BodyPartRenderer?.RenderedArea == null)
                     return;
 
                 var toShowOrHide = new List<KeyValuePair<ExcelInterop.Range, bool>>();
@@ -294,6 +312,11 @@ namespace Etk.Excel.BindingTemplates.Views
 
                 if (string.IsNullOrEmpty(SearchValue))
                     ManageExpander();
+
+                firstRange = null;
+                lastRange = null;
+                renderedRange = null;
+                rowsOrColumns = null;
             }
         }
 
@@ -302,7 +325,7 @@ namespace Etk.Excel.BindingTemplates.Views
             try
             {
                 if(ViewSheet.ProtectContents)
-                    ViewSheet.Unprotect(System.Type.Missing);
+                    ViewSheet.Unprotect(Type.Missing);
 
                 //searchValue = null;
                 CellsThatContainSearchValue.Clear();
@@ -331,78 +354,43 @@ namespace Etk.Excel.BindingTemplates.Views
 
         public void ExecuteAutoFit()
         {
-            switch (this.AutoFit)
+            ExcelInterop.Range range = null;
+            switch (AutoFit)
             {
                 case AutoFitMode.Width:
                 case AutoFitMode.WidthHeight:
                     {
-                        var range = null != this.ViewSheet && null != this.ViewSheet.Columns
-                                        ? this.ViewSheet.Columns
-                                        : (null != this.Renderer.RenderedRange && null != this.ViewSheet.Columns
-                                            ? this.Renderer.RenderedRange.Columns
-                                            : null);
+                        range = ViewSheet?.Columns ?? (null != Renderer.RenderedRange && null != ViewSheet.Columns
+                                                       ? Renderer.RenderedRange.Columns
+                                                       : null);
                         if (null != range)
                         {
-                            this.AutoFitColumns(range);
-                            if (this.AutoFit == AutoFitMode.WidthHeight)
-                            {
-                                this.AutoFitRows(range);
-                            }
+                            AutoFitColumns(range);
+                            if (AutoFit == AutoFitMode.WidthHeight)
+                                AutoFitRows(range);
                         }
                     }
-                    break;
+                 break;
 
                 case AutoFitMode.Height:
                 case AutoFitMode.HeightWidth:
                     {
-                        var range = null != this.ViewSheet && null != this.ViewSheet.Rows
-                                        ? this.ViewSheet.Rows
-                                        : (null != this.Renderer.RenderedRange && null != this.ViewSheet.Rows
-                                            ? this.Renderer.RenderedRange.Rows
+                        range = null != ViewSheet && null != ViewSheet.Rows
+                                        ? ViewSheet.Rows
+                                        : (null != Renderer.RenderedRange && null != ViewSheet.Rows
+                                            ? Renderer.RenderedRange.Rows
                                             : null);
                         if (null != range)
                         {
-                            this.AutoFitRows(range);
-                            if (this.AutoFit == AutoFitMode.HeightWidth)
-                            {
-                                this.AutoFitColumns(range);
-                            }
+                            AutoFitRows(range);
+                            if (AutoFit == AutoFitMode.HeightWidth)
+                                AutoFitColumns(range);
                         }
                     }
-                    break;
-
-                case AutoFitMode.None:
-                default:
-                    return;
+               break;
             }
-        }
 
-        private void AutoFitRows(ExcelInterop.Range rows)
-        {
-            double previousSize = -2;
-            double currentSize = -1;
-            var iteration = 0;
-            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
-            {
-                iteration++;
-                previousSize = rows.Height;
-                rows.Rows.AutoFit();
-                currentSize = rows.Height;
-            }
-        }
-
-        private void AutoFitColumns(ExcelInterop.Range columns)
-        {
-            double previousSize = -2;
-            double currentSize = -1;
-            var iteration = 0;
-            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
-            {
-                iteration++;
-                previousSize = columns.Width;
-                columns.Columns.AutoFit();
-                currentSize = columns.Width;
-            }
+            range = null;
         }
 
         public void ProtectSheet()
@@ -440,7 +428,7 @@ namespace Etk.Excel.BindingTemplates.Views
         //    //    }
         //    //    finally
         //    //    {
-        //    //        Marshal.ReleaseComObject(worksheet);
+        //    //        ExcelApplication.ReleaseComObject(worksheet);
         //    //        worksheet = null;
         //    //        toShowHide = null;
         //    //    }
@@ -459,12 +447,12 @@ namespace Etk.Excel.BindingTemplates.Views
 
         internal void OnViewSheetIsActivated()
         {
-            if (viewSheetIsActivated == null || IsDisposed || Renderer == null || Renderer.RenderedRange == null)
+            if (viewSheetIsActivated == null || IsDisposed)// || Renderer?.RenderedRange == null)
                 return;
 
             try
             {
-                viewSheetIsActivated(this);
+                viewSheetIsActivated();
             }
             catch (Exception ex)
             {
@@ -475,12 +463,12 @@ namespace Etk.Excel.BindingTemplates.Views
 
         internal void OnViewSheetIsDeactivated()
         {
-            if (ViewSheetIsDeactivated == null || IsDisposed || Renderer == null || Renderer.RenderedRange == null)
+            if (ViewSheetIsDeactivated == null || IsDisposed)// || Renderer?.RenderedRange == null)
                 return;
 
             try
             {
-                ViewSheetIsDeactivated(this);
+                ViewSheetIsDeactivated();
             }
             catch (Exception ex)
             {
@@ -509,6 +497,8 @@ namespace Etk.Excel.BindingTemplates.Views
 
                             // Clear the previous rendering.
                             ////////////////////////////////
+                            CurrentSelectedCell = null;
+                            currentSelectedRange = null;
                             Renderer.Clear();
 
                             Renderer.Render();
@@ -518,7 +508,8 @@ namespace Etk.Excel.BindingTemplates.Views
                             if (log.GetLogLevel() == LogType.Debug)
                                 log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
 
-                            AfterRendering?.Invoke(false);
+                            AfterRendering?.Invoke(true);
+                            Renderer.AfterRendering();
                         }
                     }
                     catch (Exception ex)
@@ -562,9 +553,9 @@ namespace Etk.Excel.BindingTemplates.Views
 
                                     Renderer.RenderDataOnly();
                                     if (log.GetLogLevel() == LogType.Debug)
-                                        log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                                        log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, Ident, TemplateDefinition.Name);
 
-                                    AfterRendering?.Invoke(true);
+                                    AfterRendering?.Invoke(true); ;
 
                                     CurrentSelectedCell?.Select();
                                 }
@@ -587,11 +578,8 @@ namespace Etk.Excel.BindingTemplates.Views
                 ExcelInterop.Range intersect = excelApplication.Application.Intersect(Renderer.RenderedRange, target);
                 if (intersect != null)
                 {
-                    using (var freeze = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
-                    {
-                        if (Renderer.OnDataChanged(intersect) && DataChanged != null)
-                            DataChanged();// null, null);
-                    }
+                    if (Renderer.OnDataChanged(intersect) && DataChanged != null)
+                        DataChanged();
                     intersect = null;
                     return true;
                 }
@@ -612,7 +600,8 @@ namespace Etk.Excel.BindingTemplates.Views
             try
             {
                 CurrentSelectedCell = null;
-                UnhighlightSelection();
+                if (UseHighlightSelection)
+                    UnhighlightSelection();
 
                 if (IsRendered)
                 {
@@ -655,8 +644,8 @@ namespace Etk.Excel.BindingTemplates.Views
                             }
                         }
                         intersect = null;
-
-                        HighlightSelection(target);
+                        if(UseHighlightSelection)
+                            HighlightSelection(target);
                     }
                 }
             }
@@ -742,6 +731,8 @@ namespace Etk.Excel.BindingTemplates.Views
                             ExcelInterop.Range toShowHide = renderer.RenderedRange.Offset[renderer.HeaderPartRenderer.RenderedArea.Height, Type.Missing];
                             toShowHide = toShowHide.Resize[toShowHideSize, Type.Missing];
                             toShowHide.EntireRow.Hidden = !renderer.IsExpanded;
+
+                            // ExcelApplication.ReleaseComObject(toShowHide);
                             toShowHide = null;
                         }
                     }
@@ -758,7 +749,7 @@ namespace Etk.Excel.BindingTemplates.Views
         private void HighlightSelection(ExcelInterop.Range selectedCell)
         {
             ExcelInterop.Range viewSelectedRange = null;
-            ExcelInterop.Worksheet sheet = RenderedRange.Parent as ExcelInterop.Worksheet;
+            ExcelInterop.Worksheet sheet = (ExcelInterop.Worksheet) RenderedRange.Parent;
 
             if (TemplateDefinition.Orientation == Orientation.Vertical)
             {
@@ -794,7 +785,8 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
                     catch
                     { }
-                    Marshal.ReleaseComObject(interior);
+                    ExcelApplication.ReleaseComObject(interior);
+                    interior = null;
                 }
                 else
                     currentSelectedRangePattern.Add(null);
@@ -803,7 +795,10 @@ namespace Etk.Excel.BindingTemplates.Views
             // Redraw the borders of the current selection
             if (((TemplateDefinition) TemplateDefinition).AddBorder)
                 Renderer.BorderAround(currentSelectedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlThin, 1);
-            Marshal.ReleaseComObject(sheet);
+
+            viewSelectedRange = null;
+            ExcelApplication.ReleaseComObject(sheet);
+            sheet = null;
         }
 
         private void UnhighlightSelection()
@@ -829,7 +824,9 @@ namespace Etk.Excel.BindingTemplates.Views
                             if (selectionPattern.PatternThemeColor != 0)
                                 cell.Interior.PatternThemeColor = selectionPattern.PatternThemeColor;
                             cell.Interior.PatternTintAndShade = selectionPattern.PatternTintAndShade;
-                            Marshal.ReleaseComObject(interior);
+
+                            ExcelApplication.ReleaseComObject(interior);
+                            interior = null;
                         }
                     }
                     catch
@@ -837,6 +834,34 @@ namespace Etk.Excel.BindingTemplates.Views
                 }
                 currentSelectedRangePattern.Clear();
                 currentSelectedRange = null;
+            }
+        }
+
+        private void AutoFitRows(ExcelInterop.Range rows)
+        {
+            double previousSize = -2;
+            double currentSize = -1;
+            var iteration = 0;
+            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
+            {
+                iteration++;
+                previousSize = rows.Height;
+                rows.Rows.AutoFit();
+                currentSize = rows.Height;
+            }
+        }
+
+        private void AutoFitColumns(ExcelInterop.Range columns)
+        {
+            double previousSize = -2;
+            double currentSize = -1;
+            var iteration = 0;
+            while (AutoFitMaxIterationCount > iteration && currentSize != previousSize)
+            {
+                iteration++;
+                previousSize = columns.Width;
+                columns.Columns.AutoFit();
+                currentSize = columns.Width;
             }
         }
         #endregion

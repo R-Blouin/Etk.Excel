@@ -42,12 +42,10 @@ namespace Etk.Excel.ContextualMenus
                                     MethodInfo methodInfo = ConstextualMethodRetriever.RetrieveContextualMethodInfo(xmlItem.Action);
                                     IContextualMenuItem menuItem = new ContextualMenuItem(xmlItem.Caption, xmlItem.BeginGroup, methodInfo, xmlItem.FaceId);
 
-                                    items.Add((IContextualPart)menuItem);
+                                    items.Add(menuItem);
                                 }
-                                if (xmlPart is XmlContextualMenuDefinition)
-                                {
-                                    //items.Add((IContextualPart)menuItem);
-                                }
+                                //if (xmlPart is XmlContextualMenuDefinition)
+                                //    items.Add((IContextualPart)menuItem);
                             }
                             if (items.Count > 0)
                                 ret.Add(new ContextualMenu(definition.Name, definition.Caption, definition.BeginGroup, items));
@@ -142,7 +140,7 @@ namespace Etk.Excel.ContextualMenus
                         if (sheetContainer == null)
                             throw new EtkException(string.Format("Cannot find the sheet '{0}' in the current workbook", worksheetContainerName), false);
 
-                        Marshal.ReleaseComObject(workbook);
+                        ExcelApplication.ReleaseComObject(workbook);
                         workbook = null;
                     }
 
@@ -150,9 +148,9 @@ namespace Etk.Excel.ContextualMenus
                     if (menuRange == null)
                         throw new EtkException("Cannot find the ContextualMenu");
 
-                    Marshal.ReleaseComObject(sheetContainer);
+                    ExcelApplication.ReleaseComObject(sheetContainer);
                     sheetContainer = null;
-                    Marshal.ReleaseComObject(currentWorkSheet);
+                    ExcelApplication.ReleaseComObject(currentWorkSheet);
                     currentWorkSheet = null;
 
                     string xmlValue = menuRange.Value2;

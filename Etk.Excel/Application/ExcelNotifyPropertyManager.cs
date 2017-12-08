@@ -6,11 +6,13 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.BindingTemplates.Controls.WithFormula;
 
 namespace Etk.Excel.Application
 {
     class ExcelNotifyPropertyManager : IDisposable
     {
+        private int sleepTime = 0;
         private volatile bool waitExcelBusy;
         private bool isDisposed;
         private readonly object syncObj = new object();
@@ -73,18 +75,13 @@ namespace Etk.Excel.Application
                 {
                     if (waitExcelBusy)
                     {
-                        Thread.Sleep(50);
+                        Thread.Sleep(sleepTime);
                         waitExcelBusy = false;
-                        //try
-                        //{
-                        //    ExcelApplication.Application.EnableEvents = true;
-                        //}
-                        //catch { }
                     }
 
                     ExcelNotityPropertyContext context = contextItems.Take(cancellationTokenSource.Token);
                     if (context != null)
-                        (ETKExcel.ExcelApplication as ExcelApplication).ExcelDispatcher.BeginInvoke(new System.Action(() => ExecuteNotity(context)));
+                        (ETKExcel.ExcelApplication as ExcelApplication).ExcelDispatcher.BeginInvoke(new Action(() => ExecuteNotify(context)));
                 }
             }
             catch (Exception ex)
@@ -101,7 +98,7 @@ namespace Etk.Excel.Application
             }
         }
 
-        private void ExecuteNotity(ExcelNotityPropertyContext context)
+        private void ExecuteNotify(ExcelNotityPropertyContext context)
         {
             if (isDisposed || context.ContextItem.IsDisposed || !context.View.IsRendered)
                 return;
@@ -117,7 +114,7 @@ namespace Etk.Excel.Application
                 if (range != null)
                 {
                     object value = context.ContextItem.ResolveBinding();
-                    if (value != null && value is Enum)
+                    if (value is Enum)
                         value = ((Enum)value).ToString();
 
                     if (! object.Equals(range.Value2, value))
@@ -125,40 +122,43 @@ namespace Etk.Excel.Application
                         if (enableEvent)
                             ExcelApplication.Application.EnableEvents = false;
                         range.Value2 = value;
+                        if (context.ContextItem is ExcelContextItemWithFormula)
+                        {
+                            range.Calculate();
+                            ((ExcelContextItemWithFormula)context.ContextItem).UpdateTarget(range.Value2);
+                        }
+                        context.View.CurrentSelectedCell?.Select();
                     }
-                    if (context.ContextItem.BindingDefinition.DecoratorDefinition != null)
-                    {
-                        ExcelInterop.Range currentSelectedRange = context.View.CurrentSelectedCell;
-                        context.ContextItem.BindingDefinition.DecoratorDefinition.Resolve(range, context.ContextItem);
-                        currentSelectedRange?.Select();
-                    }
+                    context.ContextItem.BindingDefinition.DecoratorDefinition?.Resolve(range, context.ContextItem);
                 }
+                sleepTime = 0;
             }
-            catch (COMException comeEx)
+            catch (COMException comEx)
             {
                 waitExcelBusy = true;
                 NotifyPropertyChanged(context);
+                if (sleepTime < 1000)
+                    sleepTime += 10;
             }
             catch (Exception ex)
             {
-                string message = $"'ExecuteNotity' failed.{ex.Message}";
+                string message = $"'ExecuteNotify' failed.{ex.Message}";
                 Logger.Instance.LogException(LogType.Error, ex, message);
             }
             finally
             {
                 if(worksheet != null)
                 {
-                    Marshal.ReleaseComObject(worksheet);
+                    ExcelApplication.ReleaseComObject(worksheet);
                     worksheet = null;
                 }
-
                 try
                 {
 
                     if (ExcelApplication.Application.EnableEvents != enableEvent)
                         ExcelApplication.Application.EnableEvents = enableEvent;
                 }
-                catch (COMException comeEx)
+                catch (COMException comEx)
                 { }
             }
             range = null;

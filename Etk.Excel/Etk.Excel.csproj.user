@@ -4,10 +4,8 @@
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartAction>Project</StartAction>
-    <StartProgram>
-    </StartProgram>
-    <StartArguments>
-    </StartArguments>
+    <StartAction>Program</StartAction>
+    <StartProgram>C:\Program Files %28x86%29\Microsoft Office\Office12\EXCEL.EXE</StartProgram>
+    <StartArguments>D:\rblouin051512\USERS\Projects\GI-git\gi-ui\Lyx.GlobalIndiciel.Excel\bin\Debug\Lyx.GlobalIndiciel.xlsm</StartArguments>
   </PropertyGroup>
 </Project>

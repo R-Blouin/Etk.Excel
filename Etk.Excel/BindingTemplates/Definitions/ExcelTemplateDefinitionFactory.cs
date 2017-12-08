@@ -3,7 +3,8 @@ using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Definitions.Xml;
 using Etk.Tools.Extensions;
-using ExcelInterop = Microsoft.Office.Interop.Excel; 
+using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -72,7 +73,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
             {
                 if (worksheet != null)
                 {
-                    Marshal.ReleaseComObject(worksheet);
+                    ExcelApplication.ReleaseComObject(worksheet);
                     worksheet = null;
                 }
             }

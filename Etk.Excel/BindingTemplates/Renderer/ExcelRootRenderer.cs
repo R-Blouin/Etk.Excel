@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Controls.WithFormula;
@@ -29,6 +30,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
         { get; private set; }
 
         public IEnumerable<IFormulaCalculation> toOperateOnSheetCalculation;
+
+        public List<SpecificEventCallback> AfterRenderingActions;
         #endregion
 
         #region .ctors 
@@ -118,13 +121,12 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         IsClearing = true;
 
                         RenderedRange.Clear();
-                        if (this.View.TemplateDefinition.Orientation == Orientation.Horizontal)
+                        if (View.TemplateDefinition.Orientation == Orientation.Horizontal)
                             RenderedRange.EntireColumn.Hidden = false;
                         else
                             RenderedRange.EntireRow.Hidden = false;
 
-                        if (View.ClearingCell != null)
-                            View.ClearingCell.Copy(RenderedRange);
+                        View.ClearingCell?.Copy(RenderedRange);
 
                         RowDecorators.Clear();
                         ClearRenderingData();
@@ -142,27 +144,40 @@ namespace Etk.Excel.BindingTemplates.Renderer
             bool ret = false;
             if (!IsDisposed && !IsClearing && contextItems != null)
             {
-                foreach (ExcelInterop.Range cell in target.Cells)
+                FreezeExcel freezeExcel = null;
+                try
                 {
-                    IBindingContextItem contextItem = null;
-                    // Because of the merge cells ...
-                    try
-                    { contextItem = contextItems[cell.Row - View.FirstOutputCell.Row, cell.Column - View.FirstOutputCell.Column]; }
-                    catch
-                    { }
-
-                    if (contextItem != null)
+                    foreach (ExcelInterop.Range cell in target.Cells)
                     {
-                        object retValue;
-                        bool update = contextItem.UpdateDataSource(cell.Value2, out retValue);
-                        if (update)
+                        IBindingContextItem contextItem = null;
+                        // Because of the merge cells ...
+                        try
+                        { contextItem = contextItems[cell.Row - View.FirstOutputCell.Row, cell.Column - View.FirstOutputCell.Column]; }
+                        catch
+                        { }
+
+                        if (contextItem != null)
                         {
-                            if (!object.Equals(cell.Value2, retValue))
+                            object retValue;
+                            bool mustUpdate = contextItem.UpdateDataSource(cell.Value2, out retValue);
+                            if (mustUpdate)
+                            {
+                                if (freezeExcel == null)
+                                    freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible);
+
+                                //if (!object.Equals(cell.Value2, retValue))
                                 cell.Value2 = retValue;
-                            if (!(contextItem is BindingFilterContextItem))
+                            }
+
+                            if (! (contextItem is BindingFilterContextItem))
                                 ret = true;
                         }
                     }
+                }
+                finally
+                {
+                    if(freezeExcel != null)
+                        freezeExcel.Dispose();
                 }
             }
             return ret;
@@ -185,6 +200,22 @@ namespace Etk.Excel.BindingTemplates.Renderer
             {
                 foreach (IFormulaCalculation item in toOperateOnSheetCalculation)
                     item.OnSheetCalculate();
+            }
+        }
+
+        public override void AddAfterRenderingAction(SpecificEventCallback callBack)
+        {
+            if(AfterRenderingActions == null)
+                AfterRenderingActions = new List<SpecificEventCallback>();
+            AfterRenderingActions.Add(callBack);
+        }
+
+        public void AfterRendering()
+        {
+            if (AfterRenderingActions != null)
+            {
+                foreach(SpecificEventCallback callback in AfterRenderingActions)
+                    callback.Invoke();
             }
         }
 
@@ -227,7 +258,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             borders[ExcelInterop.XlBordersIndex.xlEdgeRight].Weight = Weight;
 
             ////borders.Color = color;
-            Marshal.ReleaseComObject(borders);
+            ExcelApplication.ReleaseComObject(borders);
             borders = null;
         }
         #endregion

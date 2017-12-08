@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Etk.BindingTemplates.Definitions;
 using Etk.BindingTemplates.Definitions.Binding;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.BindingTemplates.Definitions.Templates.Xml;
 using Etk.Excel.BindingTemplates.Controls.Button;
@@ -55,8 +56,18 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         posLinks.Add(cellId);
                     }
 
-                    if (definitionPart is IBindingDefinition && ((IBindingDefinition)definitionPart).IsMultiLine)
-                        part.ContainMultiLinesCells = true;
+                    if (definitionPart is IBindingDefinition)
+                    {
+                        if(((IBindingDefinition)definitionPart).IsMultiLine)
+                            part.ContainMultiLinesCells = true;
+
+                        if (((IBindingDefinition) definitionPart).OnAfterRendering != null)
+                        {
+                            if(part.OnAfterRendering == null)
+                                part.OnAfterRendering = new List<EventCallback>();
+                            part.OnAfterRendering.Add(((IBindingDefinition)definitionPart).OnAfterRendering);
+                        }
+                    }
                 }
                 part.PositionLinkedTemplates.Add(posLinks);
             }

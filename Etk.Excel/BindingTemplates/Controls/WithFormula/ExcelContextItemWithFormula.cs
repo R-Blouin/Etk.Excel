@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
+using Etk.Excel.Application;
+using Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 {
@@ -38,7 +39,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
             if (CanNotify)
             {
-                objectsToNotify = bindingDefinition.GetObjectsToNotify(DataSource);
+                objectsToNotify = excelBindingDefinitionWithFormula.GetObjectsToNotify(DataSource);
                 if (objectsToNotify != null)
                 {
                     foreach (INotifyPropertyChanged obj in objectsToNotify)
@@ -67,36 +68,51 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override object ResolveBinding()
         {
-            if(excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
-                return $"={formulaBindingContext.ResolveBinding()}";
-            else if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
-                return excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
-
             //if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
-            //    return excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
+            //    excelBindingDefinitionWithFormula.TargetBindingDefinition.ResolveBinding(DataSource);
+
+            if (excelBindingDefinitionWithFormula.FormulaBindingDefinition != null)
+            {
+                string ret = $"={formulaBindingContext.ResolveBinding()}";
+                //if(formulaValue == null)
+                //    formulaValue = ret;
+                //else if (formulaValue != ret)
+                //{
+                //    formulaValue = ret;
+
+                //    //using (FreezeExcel freeze = new FreezeExcel(true, true, false, false))
+                //    {
+                //        XlCalculation calculationMode = ETKExcel.ExcelApplication.Application.Calculation;
+
+                //        //Range.Formula = formulaValue;
+                //        //ETKExcel.ExcelApplication.Application.Calculation = XlCalculation.xlCalculationManual;
+                //        //(Range.Parent as Worksheet).Calculate();
+                //        Range.Calculate();
+
+                //        ETKExcel.ExcelApplication.Application.Calculation = calculationMode;
+                //    }
+
+                //}
+                return ret;
+            }
             return null;
+        }
+
+        public void UpdateTarget(object data)
+        {
+            excelBindingDefinitionWithFormula.TargetBindingDefinition?.UpdateDataSource(DataSource, data);
         }
 
         public override bool UpdateDataSource(object data, out object retValue)
         {
-            if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
-                excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, data);
+            UpdateTarget(data);
 
             if (data == null) // If null enter => ResolveBinding the binding
                 retValue = ResolveBinding();
             else
             {
                 if (data.ToString().Trim().StartsWith("="))
-                {
-                    //try
-                    //{
-                    //Range.Formula = data.ToString();
-                    //retValue = Range.Formula;
                     retValue = data.ToString();
-                    //}
-                    //catch
-                    //{ }
-                }
                 else
                     retValue = data;
             }
@@ -107,7 +123,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         {
             if (CanNotify && objectsToNotify != null && OnPropertyChangedAction != null)
             {
-                if (BindingDefinition.MustNotify(DataSource, source, args))
+                if (excelBindingDefinitionWithFormula.MustNotify(DataSource, source, args))
                     OnPropertyChangedAction(this, OnPropertyChangedActionArgs);
             }
         }
@@ -140,7 +156,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
                 if (worksheetFunction != null)
                 {
-                    Marshal.ReleaseComObject(worksheetFunction);
+                    ExcelApplication.ReleaseComObject(worksheetFunction);
                     worksheetFunction = null;
                 }
             }

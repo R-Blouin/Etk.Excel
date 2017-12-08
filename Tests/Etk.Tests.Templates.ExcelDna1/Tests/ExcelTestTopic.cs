@@ -67,7 +67,7 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         {
             try
             {
-                viewsOwnerSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, DestinationSheetName);
+                //viewsOwnerSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, DestinationSheetName);
 
                 // Create the destination sheet
                 ExcelInterop.Workbook workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
@@ -81,10 +81,10 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
 
                 firstSheet.Activate();
 
-                Marshal.ReleaseComObject(firstSheet);
-                Marshal.ReleaseComObject(lastSheet);
-                Marshal.ReleaseComObject(sheets);
-                Marshal.ReleaseComObject(workbook);
+                int i = Marshal.ReleaseComObject(firstSheet);
+                i = Marshal.ReleaseComObject(lastSheet);
+                i = Marshal.ReleaseComObject(sheets);
+                i = Marshal.ReleaseComObject(workbook);
                 // End create the destination sheet
 
                 // Create the 'GoBackToDashboard' view

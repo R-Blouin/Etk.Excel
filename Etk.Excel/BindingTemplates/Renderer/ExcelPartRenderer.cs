@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
+using Etk.BindingTemplates.Definitions.Binding;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Controls;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -51,7 +55,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
             this.useDecorator = useDecorator;
 
             currentRenderingFrom = partToRenderDefinition.DefinitionFirstCell;
-            firstRangeTo = elementFirstRangeTo = currentRenderingTo = firstOutputCell;
+            firstRangeTo = firstOutputCell;
+            elementFirstRangeTo = firstOutputCell;
+            currentRenderingTo = firstOutputCell;
 
             Height = Width = 0;
         }
@@ -82,7 +88,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 RenderedArea = new RenderedArea(firstRangeTo.Column, firstRangeTo.Row, Width, Height);
                 RenderedRange = firstRangeTo.Resize[Height, Width];
             }
-            Marshal.ReleaseComObject(worksheetTo);
+
+            ExcelApplication.ReleaseComObject(worksheetTo);
+            worksheetTo = null;
 
             elementFirstRangeTo = null;
             currentRenderingFrom = null;
@@ -91,10 +99,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         public void Dispose()
         {
-            //Marshal.ReleaseComObject(firstRangeTo);
-            //Marshal.ReleaseComObject(elementFirstRangeTo);
-            //Marshal.ReleaseComObject(currentRenderingFrom);
-            //Marshal.ReleaseComObject(currentRenderingTo);
+            //ExcelApplication.ReleaseComObject(firstRangeTo);
+            //ExcelApplication.ReleaseComObject(elementFirstRangeTo);
+            //ExcelApplication.ReleaseComObject(currentRenderingFrom);
+            //ExcelApplication.ReleaseComObject(currentRenderingTo);
+            elementFirstRangeTo = null;
+            currentRenderingFrom = null;
+            currentRenderingTo = null;
 
             firstRangeTo = null;
             RenderedRange = null;
@@ -104,10 +115,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected abstract void ManageTemplateWithoutLinkedTemplates();
         protected abstract void ManageTemplateWithLinkedTemplates();
 
-        //protected void ManageControls(IBindingContextItem item, ref ExcelInterop.Range range)
-        //{
-        //    if (item is IExcelControl)
-        //        ((IExcelControl)item).CreateControl(range);
-        //}
+        protected void AddAfterRenderingAction(IBindingDefinition bindingDefinition, ExcelInterop.Range concernedRange)
+        {
+            if (bindingDefinition.OnAfterRendering?.Parameters != null)
+            {
+                foreach (SpecificEventCallbackParameter param in bindingDefinition.OnAfterRendering.Parameters.Where(p => p.IsSender))
+                    param.ParameterValue = concernedRange;
+            }
+            Parent.AddAfterRenderingAction(bindingDefinition.OnAfterRendering);
+        }
     }
 }

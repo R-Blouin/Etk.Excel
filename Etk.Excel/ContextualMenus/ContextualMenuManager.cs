@@ -180,7 +180,7 @@ namespace Etk.Excel.ContextualMenus
             {
                 try
                 {
-                    IEnumerable<IContextualMenu> menus = manager(sheet as ExcelInterop.Worksheet, realRange);
+                    IEnumerable<IContextualMenu> menus = manager((ExcelInterop.Worksheet) sheet, realRange);
                     if (menus != null)
                     {
                         foreach (IContextualMenu menu in menus)

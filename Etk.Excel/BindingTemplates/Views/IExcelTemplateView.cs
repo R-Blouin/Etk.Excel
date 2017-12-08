@@ -37,10 +37,10 @@ namespace Etk.Excel.BindingTemplates.Views
         /// <summary>Event calls after the rendering of the View (When the rendering is done with 'RenderView' function, the parameter is set to false. When the rendering is done with 'RenderViewDataOnly' function, the parameter is set to true</summary>
         event Action<bool> AfterRendering;
         /// <summary>Event calls when the sheet that contains the view is activated. The Parameter is the concerned View</summary>
-        event Action<IExcelTemplateView> ViewSheetIsActivated;
+        event Action ViewSheetIsActivated;
         /// <summary>Event calls when the sheet that contains the view is desactivated. The Parameter is the concerned View</summary>
-        event Action<IExcelTemplateView> ViewSheetIsDeactivated;
+        event Action ViewSheetIsDeactivated;
 
-        void SetAccessorParameters(IEnumerable<object> parameters);
+        bool UseHighlightSelection { get; set; }
     }
 }

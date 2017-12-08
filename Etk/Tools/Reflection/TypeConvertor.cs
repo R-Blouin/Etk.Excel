@@ -23,15 +23,10 @@ namespace Etk.Tools.Reflection
                 if (value is string)
                     return Convert.ChangeType(value, type);
 
-                if (type.Equals(typeof(DateTime)))
+                if (type.Equals(typeof(DateTime)) )
                 {
                     if (value is double)
                         return DateTime.FromOADate((double)value);
-                    else if (value is string)
-                    {
-                        //@@ Gérer local
-                        return DateTime.Parse(value as string);
-                    }
                 }
 
                 bool isValueACollection = value.GetType() != typeof(string)
@@ -42,18 +37,15 @@ namespace Etk.Tools.Reflection
                     MethodInfo convertCollection = typeof(TypeConvertor).GetMethod("ConvertCollection").MakeGenericMethod(genericType);
                     return convertCollection.Invoke(null, new object[] { genericType, value });
                 }
-                else
+
+                bool isTypeACollection = type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)                                                                                               || i == typeof(System.Collections.IEnumerable));
+                if (isTypeACollection)
                 {
-                    bool isTypeACollection = type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)                                                                                               || i == typeof(System.Collections.IEnumerable));
-                    if (isTypeACollection)
-                    {
-                        Type genericType = type.GetGenericArguments()[0];
-                        MethodInfo convertToCollection = typeof(TypeConvertor).GetMethod("ConvertToCollection").MakeGenericMethod(genericType);
-                        return convertToCollection.Invoke(null, new [] { genericType, value });
-                    }
-                    else
-                        return Convert.ChangeType(value, type);
+                    Type genericType = type.GetGenericArguments()[0];
+                    MethodInfo convertToCollection = typeof(TypeConvertor).GetMethod("ConvertToCollection").MakeGenericMethod(genericType);
+                    return convertToCollection.Invoke(null, new [] { genericType, value });
                 }
+                return Convert.ChangeType(value, type);
             }
             catch (Exception ex)
             {

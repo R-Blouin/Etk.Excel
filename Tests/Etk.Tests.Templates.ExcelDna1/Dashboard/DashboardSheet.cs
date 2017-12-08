@@ -1,13 +1,13 @@
-﻿namespace Etk.Tests.Templates.ExcelDna1.Dashboard
-{
-    using EEtk.Tests.Templates.ExcelDna1.Dashboard;
-    using Etk.Excel;
-    using Excel.Application;
-    using Etk.Excel.BindingTemplates.Views;
-    using ExcelDna.Integration.CustomUI;
-    using System.IO;
-    using System.Reflection;
+﻿using EEtk.Tests.Templates.ExcelDna1.Dashboard;
+using Etk.Excel;
+using Etk.Excel.BindingTemplates.Views;
+using ExcelDna.Integration.CustomUI;
+using System.IO;
+using System.Reflection;
+using Etk.Excel.Application;
 
+namespace Etk.Tests.Templates.ExcelDna1.Dashboard
+{
     class DashboardSheet
     {
         private IExcelTemplateView view;
@@ -35,7 +35,7 @@
         #endregion
 
         #region 
-        private void OnSheetIsActivated(IExcelTemplateView notUsedParameter)
+        private void OnSheetIsActivated()
         {
             using (FreezeExcel freeExcel = new FreezeExcel())
             {
@@ -43,7 +43,7 @@
             }
         }
 
-        private void OnSheetIsDeactivated(IExcelTemplateView notUsedParameter)
+        private void OnSheetIsDeactivated()
         {
             using (FreezeExcel freeExcel = new FreezeExcel())
             {

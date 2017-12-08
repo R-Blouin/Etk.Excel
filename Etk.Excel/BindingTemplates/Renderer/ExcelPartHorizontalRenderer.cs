@@ -8,6 +8,7 @@ using Etk.Excel.BindingTemplates.Controls;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Definitions;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -68,7 +69,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     }
                     cptElements++;
                 }
-                Marshal.ReleaseComObject(workingRange);
+                workingRange = null;
+                //ExcelApplication.ReleaseComObject(workingRange);
             }
 
             // To take into account the min number of elements to render.
@@ -98,7 +100,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (Height < localHeight)
                 Height = localHeight;
 
-            Marshal.ReleaseComObject(worksheetTo);
+            ExcelApplication.ReleaseComObject(worksheetTo);
             firstCell = null;
         }
 
@@ -143,12 +145,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 col.Add(item);
             }
 
-            Marshal.ReleaseComObject(worksheetFrom);
-            Marshal.ReleaseComObject(worksheetTo);
-            Marshal.ReleaseComObject(source);
-            Marshal.ReleaseComObject(workingRange);
+            ExcelApplication.ReleaseComObject(worksheetFrom);
+            ExcelApplication.ReleaseComObject(worksheetTo);
             worksheetFrom = null;
             worksheetTo = null;
+
+            //ExcelApplication.ReleaseComObject(source);
+            //ExcelApplication.ReleaseComObject(workingRange);
             source = null;
             workingRange = null;
         }

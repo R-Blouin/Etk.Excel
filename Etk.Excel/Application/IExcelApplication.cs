@@ -53,7 +53,10 @@ namespace Etk.Excel.Application
         /// <summary> Execute a Vba function</summary>
         object ExecuteVbaMAcro(string functionName, object[] parameters);
 
-        /// <summary> Clear a selection of rows</summary>
+        /// <summary> Clear a selection of cells</summary>
         void ClearRange(ExcelInterop.Range from, ExcelInterop.Range to, ExcelInterop.Range with);
+
+        /// <summary> Show/Hide 'numberOfColumns' columns 'before' (if 'numberOfColumns' &lt 0) or 'after' (if 'numberOfColumns' &gt 0)</summary>
+        void ShowHideColumns(ExcelInterop.Range targetedRange, int numberOfColumns);
     }
 }

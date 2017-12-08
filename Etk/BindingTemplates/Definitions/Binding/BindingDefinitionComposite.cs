@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Etk.Tools.Log;
+using System.Globalization;
 
 namespace Etk.BindingTemplates.Definitions.Binding
 {
@@ -44,7 +45,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                         results[cpt] = obj ?? string.Empty;
                     }
 
-                    return string.Format(BindingFormat, results);
+                    return string.Format(CultureInfo.InvariantCulture, BindingFormat, results);
                 }
                 return null;
             }

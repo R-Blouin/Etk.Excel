@@ -104,7 +104,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
-            return NestedBindingDefinition == null ? null : NestedBindingDefinition.GetObjectsToNotify(dataSource);
+            return NestedBindingDefinition?.GetObjectsToNotify(dataSource);
         }
     }
 }

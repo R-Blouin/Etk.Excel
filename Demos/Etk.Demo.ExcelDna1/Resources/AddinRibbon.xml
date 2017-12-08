@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<customUI xmlns='http://schemas.microsoft.com/office/2006/01/customui' loadImage='LoadImage'>
+  <ribbon>
+    <tabs>
+      <tab id='Etk' label='Etk framework Demo'>
+        <group id='ViewsManagemnt' label='Views Management'>
+          <button id='btnRenderAll' label='Render Views' showImage="true" imageMso='AccessRelinkLists' size='normal' onAction='OnRenderAll' tag='Render all the views of the active sheet' />
+          <button id='btnClearViews' label='Clear Views' showImage="true" imageMso='TableStyleClear' size='normal' onAction='OnClearViews' tag='Clear all the rendered views of the active sheet' supertip='Clear all the previously rendered data from all the views'/>
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>

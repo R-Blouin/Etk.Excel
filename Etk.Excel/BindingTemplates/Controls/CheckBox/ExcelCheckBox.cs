@@ -3,7 +3,8 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
-using ExcelInterop = Microsoft.Office.Interop.Excel; 
+using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Controls.CheckBox
 {
@@ -41,13 +42,15 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
             OwnerRange = range;
             OwnerRange.Value2 = null;
             ExcelInterop.Worksheet worksheet = null;
+            ExcelInterop.OLEObjects oleObjects = null;
+            ExcelInterop.OLEObject oleObject = null;
             try
             {
                 worksheet = OwnerRange.Worksheet;
                 Name = $"ExcelCB{Interlocked.Increment(ref cpt)}";
 
-                ExcelInterop.OLEObjects oleObjects = worksheet.OLEObjects();
-                ExcelInterop.OLEObject oleObject = oleObjects.Add("Forms.CheckBox.1",
+                oleObjects = worksheet.OLEObjects();
+                oleObject = oleObjects.Add("Forms.CheckBox.1",
                                             Type.Missing,
                                             true,
                                             false,
@@ -75,11 +78,16 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
             }
             finally
             {
+                if (oleObject != null)
+                    ExcelApplication.ReleaseComObject(oleObject);
+                if (oleObjects != null)
+                    ExcelApplication.ReleaseComObject(oleObjects);
                 if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
+                    ExcelApplication.ReleaseComObject(worksheet);
+
+                oleObject = null;
+                oleObjects = null;
+                worksheet = null;
             }
         }
 
@@ -106,17 +114,24 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
                     CheckBox.Click -= CurrentOnClick;
 
                 ExcelInterop.Worksheet worksheet = null;
+                ExcelInterop.OLEObject oleObject = null;
                 try
                 {
                     worksheet = OwnerRange.Worksheet;
-                    worksheet.OLEObjects(Name).Delete();
+                    oleObject = worksheet.OLEObjects(Name);
+                    oleObject.Delete();
                 }
                 finally
                 {
                     if (worksheet != null)
                     {
-                        Marshal.ReleaseComObject(worksheet);
+                        ExcelApplication.ReleaseComObject(worksheet);
                         worksheet = null;
+                    }
+                    if (oleObject != null)
+                    {
+                        ExcelApplication.ReleaseComObject(oleObject);
+                        oleObject = null;
                     }
                 }
 

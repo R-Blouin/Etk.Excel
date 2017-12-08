@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.EventCallBacks.XmlDefinitions;
-using Etk.BindingTemplates.Views;
 using Etk.Tools.Log;
 using Etk.Tools.Reflection;
-using System.Linq;
 using Etk.BindingTemplates.Definitions.Templates;
 
 namespace Etk.BindingTemplates.Definitions.EventCallBacks
@@ -79,21 +77,23 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
 
             if (callbackName.StartsWith("$")) // The callback is not a .Net one
                 ret = new EventCallback(callbackName.TrimStart('$'), null, null);
-            else if (callbackName.StartsWith("*"))  // The callback was registred (from xml)
-                ret = GetRegisteredCallback(callbackName);
             else
             {
-                string[] parts = callbackName.Split(',');
-                if (parts.Length == 1) // The callback is a member of the 'templateDefinition.MainBindingDefinition.BindingType' class
-                    ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[0]);
-                if (parts.Length == 3) // assembly, type and nam are supplied
+                ret = GetRegisteredCallback(callbackName); // Is the callback registred (from xml) 
+                if (ret == null)
                 {
-                    if(string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
-                        ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[2]);
-                    else
+                    string[] parts = callbackName.Split(',');
+                    if (parts.Length == 1) // The callback is a member of the 'templateDefinition.MainBindingDefinition.BindingType' class
+                        ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[0]);
+                    if (parts.Length == 3) // assembly, type and nam are supplied
                     {
-                        MethodInfo methodInfo = TypeHelpers.GetMethod(null, callbackName);
-                        ret = new EventCallback(null, null, methodInfo);
+                        if (string.IsNullOrEmpty(parts[0]) && string.IsNullOrEmpty(parts[1]))
+                            ret = GetCallBackFromMainBindingDefinition(templateDefinition, parts[2]);
+                        else
+                        {
+                            MethodInfo methodInfo = TypeHelpers.GetMethod(null, callbackName);
+                            ret = new EventCallback(null, null, methodInfo);
+                        }
                     }
                 }
             }
@@ -108,39 +108,8 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         {
             if (callback.IsNotDotNet)
                 InvokeNotDotNet(callback, new [] { catchingContextElement?.DataSource, currentContextItem?.BindingDefinition?.Name });
-            else
-            {
-                MethodInfo methodInfo = callback.Callback;
-                object invokeTarget = methodInfo.IsStatic ? null : catchingContextElement.DataSource;
-                int nbrParameters = methodInfo.GetParameters().Length;
 
-                if (nbrParameters > 3)
-                    throw new Exception($"Method info '{methodInfo.Name}' signature is not correct");
-
-                object[] parameters;
-                switch (nbrParameters)
-                {
-                    //case 4:
-                    //    parameters = new object[] { catchingContextElement, catchingContextElement.DataSource, currentContextItem, currentContextItem.DataSource };
-                    //    break;
-                    case 3:
-                        parameters = new [] { sender, catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
-                        break;
-                    case 2:
-                        if (methodInfo.GetParameters()[0].ParameterType == typeof(ITemplateView))
-                            parameters = new [] { catchingContextElement.ParentPart.ParentContext.Owner, catchingContextElement.DataSource };
-                        else
-                            parameters = new [] { catchingContextElement.DataSource, currentContextItem.ParentElement.DataSource };
-                        break;
-                    case 1:
-                        parameters = new [] { catchingContextElement.DataSource };
-                        break;
-                    default:
-                        parameters = null;
-                        break;
-                }
-                methodInfo.Invoke(invokeTarget, parameters);
-            }
+            callback.Invoke(sender, catchingContextElement, currentContextItem);
         }
 
         public object DecoratorInvoke(EventCallback callback, object sender, object dataSource, string definitionName)
@@ -166,13 +135,12 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
         {
             try
             {
-                EventCallback callback;
-                if(callbackByIdent.TryGetValue(ident, out callback))
+                if (!callbackByIdent.ContainsKey(ident))
                 {
                     MethodInfo toInvoke = null;
-                    if(methodName != null && ! methodName.StartsWith("$"))
-                        toInvoke =  TypeHelpers.GetMethod(type, methodName);
-                    callback = new EventCallback(ident, description, toInvoke);
+                    if (methodName != null && !methodName.StartsWith("$"))
+                        toInvoke = TypeHelpers.GetMethod(type, methodName);
+                    EventCallback callback = new EventCallback(ident, description, toInvoke);
                     RegisterCallback(callback);
                 }
             }
@@ -184,13 +152,11 @@ namespace Etk.BindingTemplates.Definitions.EventCallBacks
 
         private EventCallback GetCallBackFromMainBindingDefinition(ITemplateDefinition templateDefinition, string methodName)
         {
-            MethodInfo methodInfo;
             EventCallback ret = null;
-            Type inType = null;
-            if (templateDefinition != null && templateDefinition.MainBindingDefinition != null && templateDefinition.MainBindingDefinition.BindingType != null)
+            if (templateDefinition?.MainBindingDefinition != null && templateDefinition.MainBindingDefinition.BindingType != null)
             {
-                inType = templateDefinition.MainBindingDefinition.BindingType;
-                methodInfo = TypeHelpers.GetMethod(inType, methodName);
+                var inType = templateDefinition.MainBindingDefinition.BindingType;
+                var methodInfo = TypeHelpers.GetMethod(inType, methodName);
                 ret = new EventCallback(null, null, methodInfo);
             }
             return ret;

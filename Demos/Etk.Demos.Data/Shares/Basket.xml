@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Basket Currency="EUR" WaitingTime="50">
+  <Shares>
+    <Share Code="AC.PA" Name="Accor S.A." Currency="EUR" Quantity="1000" Last="37.65"/>
+    <Share Code="ACA.PA" Name="Credit Agricole S.A." Currency="EUR" Quantity="1000" Last="11.22"/>
+    <Share Code="AI.PA" Name="L'Air Liquide SA" Currency="EUR" Quantity="1000" Last="97.60"/>
+    <Share Code="AIR.PA" Name="AIRBUS GROUP" Currency="EUR" Quantity="1000" Last="51.90"/>
+    <Share Code="ALO.PA" Name="Alstom SA" Currency="EUR" Quantity="1000" Last="20.15"/>
+    <Share Code="ALU.PA" Name="Alcatel-Lucent" Currency="EUR" Quantity="1000" Last="2.87"/>
+    <Share Code="BN.PA" Name="Danone" Currency="EUR" Quantity="1000" Last="49.42"/>
+    <Share Code="BNP.PA" Name="BNP Paribas SA" Currency="EUR" Quantity="1000" Last="56.98"/>
+    <Share Code="CA.PA" Name="Carrefour SA" Currency="EUR" Quantity="1000" Last="27.56"/>
+    <Share Code="CAP.PA" Name="Cap Gemini S.A." Currency="EUR" Quantity="1000" Last="54.01"/>
+    <Share Code="CS.PA" Name="AXA Group" Currency="EUR" Quantity="1000" Last="18.89"/>
+    <Share Code="DG.PA" Name="VINCI S.A." Currency="EUR" Quantity="1000" Last="53.06"/>
+    <Share Code="EDF.PA" Name="Electricite de France SA" Currency="EUR" Quantity="1000" Last="28.54"/>
+    <Share Code="EI.PA" Name="Essilor International SA" Currency="EUR" Quantity="1000" Last="73.90"/>
+    <Share Code="EN.PA" Name="Bouygues SA" Currency="EUR" Quantity="1000" Last="29.85"/>
+    <Share Code="FP.PA" Name="Total SA" Currency="EUR" Quantity="1000" Last="47.56"/>
+    <Share Code="GLE.PA" Name="Societe Generale Group" Currency="EUR" Quantity="1000" Last="44.71"/>
+    <Share Code="GSZ.PA" Name="GDF SUEZ S.A." Currency="EUR" Quantity="1000" Last="19.51"/>
+    <Share Code="GTO.PA" Name="Gemalto NV" Currency="EUR" Quantity="1000" Last="82.73"/>
+    <Share Code="KER.PA" Name="KERING" Currency="EUR" Quantity="1000" Last="140.40"/>
+    <Share Code="LG.PA" Name="Lafarge S.A." Currency="EUR" Quantity="1000" Last="54.51"/>
+    <Share Code="LR.PA" Name="Legrand SA" Currency="EUR" Quantity="1000" Last="44.38"/>
+    <Share Code="MC.PA" Name="LVMH Moet Hennessy Louis Vuitton SA" Currency="EUR" Quantity="1000" Last="128.95"/>
+    <Share Code="ML.PA" Name="Compagnie Generale Des Etablissements Michelin SCA" Currency="EUR" Quantity="1000" Last="89.50"/>
+    <Share Code="MT.PA" Name="ARCELORMITTAL REG" Currency="EUR" Quantity="1000" Last="11.38"/>
+    <Share Code="OR.PA" Name="L'Oreal SA" Currency="EUR" Quantity="1000" Last="115.40"/>
+    <Share Code="ORA.PA" Name="ORANGE" Currency="EUR" Quantity="1000" Last="10.23"/>
+    <Share Code="PUB.PA" Name="Publicis Groupe SA" Currency="EUR" Quantity="1000" Last="64.75"/>
+    <Share Code="RI.PA" Name="Pernod-Ricard SA" Currency="EUR" Quantity="1000" Last="80.93"/>
+    <Share Code="RNO.PA" Name="Renault Soci" Currency="EUR" Quantity="1000" Last="67.65"/>
+    <Share Code="SAF.PA" Name="Safran SA" Currency="EUR" Quantity="1000" Last="50.37"/>
+    <Share Code="SAN.PA" Name="Sanofi" Currency="EUR" Quantity="1000" Last="74.51"/>
+    <Share Code="SGO.PA" Name="Compagnie de Saint-Gobain" Currency="EUR" Quantity="1000" Last="41.99"/>
+    <Share Code="SOLB.PA" Name="SOLVAY" Currency="EUR" Quantity="1000" Last="112.20"/>
+    <Share Code="SU.PA" Name="Schneider Electric S.A." Currency="EUR" Quantity="1000" Last="64.46"/>
+    <Share Code="TEC.PA" Name="Technip" Currency="EUR" Quantity="1000" Last="73.36"/>
+    <Share Code="UL.PA" Name="Unibail-Rodamco SE" Currency="EUR" Quantity="1000" Last="188.70"/>
+    <Share Code="VIE.PA" Name="Veolia Environnement S.A." Currency="EUR" Quantity="1000" Last="14.23"/>
+    <Share Code="VIV.PA" Name="Vivendi Soci" Currency="EUR" Quantity="1000" Last="19.67"/>
+    <Share Code="VK.PA" Name="Vallourec SA" Currency="EUR" Quantity="1000" Last="37.04"/>
+  </Shares>
+  <Forexes>
+    <Forex BaseCurrency="EUR" QuoteCurrency="USD" Last="1.15"/>
+  </Forexes>
+</Basket>

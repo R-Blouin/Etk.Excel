@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Etk.BindingTemplates.Definitions;
+using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
@@ -32,11 +33,14 @@ namespace Etk.Excel.BindingTemplates.Definitions
         public bool ContainMultiLinesCells
         { get; set; }
 
+        public List<EventCallback> OnAfterRendering
+        { get; set; }
+
         //@@/// <summary> If a expandable header is defined, contains the binding excelTemplateDefinition used to manage the 'Expand' property of the template (needs a header defined on the template.</summary>
         //public IBindingDefinition ExpanderBindingDefinition
         //{ get; set; }
         #endregion
-        
+
         #region .ctors
         public ExcelTemplateDefinitionPart(ExcelTemplateDefinition parent, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange) : base(partType)
         {

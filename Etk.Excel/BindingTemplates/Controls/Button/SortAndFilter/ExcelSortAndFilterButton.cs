@@ -4,7 +4,8 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
 using Etk.Excel.Extensions;
-using ExcelInterop = Microsoft.Office.Interop.Excel; 
+using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
 {
@@ -40,13 +41,16 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
         {
             this.View = templateView;
             ExcelInterop.Worksheet worksheet = null;
+            ExcelInterop.Shapes shapes = null;
+            ExcelInterop.Shape shape = null;
             try
             {
                 worksheet = View.ViewSheet;
                 OwnerRange = View.FirstOutputCell;
                 Name = $"ExcelBtn{Interlocked.Increment(ref cpt)}";
+                shapes = worksheet.Shapes;
 
-                ExcelInterop.Shape shape = (ExcelInterop.Shape) worksheet.Shapes.AddOLEObject("Forms.CommandButton.1",
+                shape = (ExcelInterop.Shape) shapes.AddOLEObject("Forms.CommandButton.1",
                     Type.Missing,
                     false,
                     false,
@@ -78,11 +82,16 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
             }
             finally
             {
+                if (shape != null)
+                    ExcelApplication.ReleaseComObject(shape);
+                if (shapes != null)
+                    ExcelApplication.ReleaseComObject(shapes);
                 if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
+                    ExcelApplication.ReleaseComObject(worksheet);
+
+                shape = null;
+                shapes = null;
+                worksheet = null;
             }
         }
         #endregion
