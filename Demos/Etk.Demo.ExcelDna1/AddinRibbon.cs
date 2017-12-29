@@ -23,8 +23,8 @@ namespace Etk.Demo.ExcelDna1
         /// <returns></returns>
         public override string GetCustomUI(string RibbonID)
         {
-            ShowCustomers();
-            ShowShares();
+            //ShowCustomers();
+            //ShowShares();
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (TextReader textReader = new StreamReader(assembly.GetManifestResourceStream("Etk.Demo.ExcelDna1.Resources.AddinRibbon.xml")))
@@ -51,6 +51,7 @@ namespace Etk.Demo.ExcelDna1
                     break;
                 }
             }
+
             Marshal.ReleaseComObject(activeSheet);
         }
 

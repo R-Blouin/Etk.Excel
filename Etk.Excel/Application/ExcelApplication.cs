@@ -275,7 +275,7 @@ namespace Etk.Excel.Application
                 {
                     isDisposed = true;
                     postAsynchronousManager.Dispose();
-                    ExcelApplication.ReleaseComObject(Application);
+                    ReleaseComObject(Application);
                     Application = null;
                     ExcelDispatcher = null;
                 }
@@ -287,8 +287,8 @@ namespace Etk.Excel.Application
         public static void ReleaseComObject(object obj)
         {
             int refCpt = Marshal.ReleaseComObject(obj);
-            if (refCpt < 0)
-                MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            //if (refCpt < 0)
+            //    MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
 

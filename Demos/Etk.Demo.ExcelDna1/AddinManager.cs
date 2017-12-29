@@ -1,9 +1,6 @@
-﻿using Etk.Demos.Data.Shops;
-using Etk.Excel;
+﻿using Etk.Excel;
 using ExcelDna.Integration;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
-using Etk.Excel.BindingTemplates.Views;
-using Etk.Demos.Data.Shares;
 
 namespace Etk.Demo.ExcelDna1
 {
@@ -18,7 +15,11 @@ namespace Etk.Demo.ExcelDna1
 
             // To avoid the Excel 'Save message' on Exit
             ExcelInterop.Workbook currentWorkbook = ExcelApplication.ActiveWorkbook;
-            currentWorkbook.BeforeClose += (ref bool cancel) => currentWorkbook.Saved = true;
+            currentWorkbook.BeforeClose += (ref bool cancel) =>
+            {
+                //int ii = System.Runtime.InteropServices.Marshal.ReleaseComObject(ETKExcel.ExcelApplication.Application);
+                currentWorkbook.Saved = true;
+            };
 
             // Init the ETK Framework : mandatory before any uses of the framework
             ETKExcel.Init(ExcelApplication);

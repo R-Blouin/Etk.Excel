@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates;
 using Etk.Excel.ContextualMenus;
@@ -88,6 +89,7 @@ namespace Etk.Excel
         #endregion
 
         #region .ctors
+
         private ETKExcel()
         {}
 
@@ -111,12 +113,10 @@ namespace Etk.Excel
                 {
                     if (Instance == null)
                     {
-                        // Init ETKExcel
-                        ////////////////
-                        Instance = new ETKExcel();
-
                         // Inject the Excel application reference
                         CompositionManager.Instance.ComposeExportedValue(application);
+
+                        Instance = new ETKExcel();
                         // Compose the current instance
                         CompositionManager.Instance.ComposeParts(Instance);
 
@@ -149,7 +149,11 @@ namespace Etk.Excel
                 contextualMenuManager.RegisterWorkbook(workbook);
                 //workbook.SheetActivate += OnActivateSheetViewsManagement;
             }
-            managedWorkbook = null;
+            else
+            {
+                Marshal.ReleaseComObject(managedWorkbook);
+                managedWorkbook = null;
+            }
         }
 
         private void OnWorkbookBeforeClose(ExcelInterop.Workbook workbook, ref bool cancel)
@@ -164,12 +168,9 @@ namespace Etk.Excel
             {
                 if (!isDisposed)
                 {
-                    if (templateManager != null)
-                        templateManager.Dispose();
-                    //@@if (RequestsManager != null)
-                    //    RequestsManager.Dispose();
-                    if (contextualMenuManager != null)
-                        contextualMenuManager.Dispose();
+                    templateManager?.Dispose();
+                    //  RequestsManager?.Dispose();
+                    contextualMenuManager?.Dispose();
 
                     managedWorkbooks.Clear();
 

@@ -184,8 +184,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     {
                         base.CreateBindingContext(dataSource);
 
-                        if (Renderer != null)
-                            Renderer.Dispose();
+                        Renderer?.Dispose();
                         if (dataSource != null)
                             Renderer = new ExcelRootRenderer(this);
                     }
@@ -204,9 +203,7 @@ namespace Etk.Excel.BindingTemplates.Views
             {
                 if (!IsDisposed)
                 {
-                    if (AccessorParametersManager != null)
-                        AccessorParametersManager.Dispose();
-
+                    AccessorParametersManager?.Dispose();
                     AccessorParametersManager = new AccessorParametersManager(this, parameters);
                 }
             }
@@ -578,8 +575,8 @@ namespace Etk.Excel.BindingTemplates.Views
                 ExcelInterop.Range intersect = excelApplication.Application.Intersect(Renderer.RenderedRange, target);
                 if (intersect != null)
                 {
-                    if (Renderer.OnDataChanged(intersect) && DataChanged != null)
-                        DataChanged();
+                    if (Renderer.OnDataChanged(intersect))
+                        DataChanged?.Invoke();
                     intersect = null;
                     return true;
                 }

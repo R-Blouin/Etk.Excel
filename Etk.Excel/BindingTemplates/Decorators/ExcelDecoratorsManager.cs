@@ -3,7 +3,6 @@ using System.ComponentModel.Composition;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
-using ExcelInterop = Microsoft.Office.Interop.Excel;
 using Etk.BindingTemplates.Definitions.Templates;
 
 namespace Etk.Excel.BindingTemplates.Decorators
@@ -14,17 +13,12 @@ namespace Etk.Excel.BindingTemplates.Decorators
     [PartCreationPolicy(CreationPolicy.Shared)]
     public class ExcelDecoratorsManager : DecoratorsManager
     {
-        private readonly ExcelInterop.Application excelApplication;
-
         private static EventCallbacksManager eventCallbacksManager;
         private static EventCallbacksManager EventCallbacksManager => eventCallbacksManager ??
                                                                       (eventCallbacksManager = CompositionManager.Instance.GetExportedValue<EventCallbacksManager>());
 
-        [ImportingConstructor]
-        public ExcelDecoratorsManager([Import] ExcelInterop.Application application)
-        {
-            excelApplication = application;
-        }
+        public ExcelDecoratorsManager()
+        {}
 
         /// <summary>Register decorators from xml definitions</summary>
         /// <param name="xml">The xml that contains the decorators definitions </param>
@@ -40,7 +34,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 {
                     foreach (XmlExcelRangeDecorator xmlDecorator in xmlDecorators.RangeDecorators)
                     {
-                        ExcelRangeDecorator rangeDecorator = ExcelRangeDecorator.CreateInstance(excelApplication, xmlDecorator);
+                        ExcelRangeDecorator rangeDecorator = ExcelRangeDecorator.CreateInstance( xmlDecorator);
                         RegisterDecorator(rangeDecorator); 
                     }                
                 }

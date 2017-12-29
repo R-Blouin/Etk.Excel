@@ -74,7 +74,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button.SortAndFilter
 
                 commandButton.Click += () =>
                 {
-                    using (ExcelMainWindow excelWindow = new ExcelMainWindow(View.ViewSheet.Application.Hwnd))
+                    using (ExcelMainWindow excelWindow = new ExcelMainWindow(ETKExcel.ExcelApplication.Application.Hwnd))
                     {
                         //@@SortAndFilterManagement.DisplaySortAndFilterWindow(excelWindow, View);
                     }

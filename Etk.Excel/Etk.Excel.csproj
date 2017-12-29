@@ -153,6 +153,7 @@
     <Compile Include="ETKExcel.cs" />
     <Compile Include="Extensions\ApplicationExtension.cs" />
     <Compile Include="Application\FreezeExcel.cs" />
+    <Compile Include="Extensions\RangeExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

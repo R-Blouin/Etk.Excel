@@ -40,19 +40,18 @@ namespace Etk.Excel.BindingTemplates.Decorators
         //private bool isRangedName;
         private readonly string rangeId ;
         private ExcelInterop.Range decoratorRange;
-        private readonly ExcelInterop.Application excelApplication;
+        //private readonly ExcelInterop.Application excelApplication;
         private bool addConcernedRangeParameter;
         private readonly bool notOnlyColor;
         private List<DecoratorProperty> decoratorProperties;
 
         #region .ctors and factories
         /// <summary> Constructor</summary>
-        private ExcelRangeDecorator(ExcelInterop.Application excelApplication, string ident, string description, EventCallback callback, string rangeId, bool notOnlyColor)//, bool useOnlyColors)
+        private ExcelRangeDecorator(string ident, string description, EventCallback callback, string rangeId, bool notOnlyColor)//, bool useOnlyColors)
                                   : base(ident, description, callback)    
         {
             this.notOnlyColor = notOnlyColor;
             this.rangeId = rangeId;
-            this.excelApplication = excelApplication;
             //this.useOnlyColors = useOnlyColors;
             // We try to initialyze the concernedRange used to decorate. But, maybe, not all the workbooks are loaded yet
             try
@@ -67,7 +66,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
         }
 
         /// <summary> Factory</summary>
-        public static ExcelRangeDecorator CreateInstance(ExcelInterop.Application excelApplication, XmlExcelRangeDecorator xmlDecorator)
+        public static ExcelRangeDecorator CreateInstance(XmlExcelRangeDecorator xmlDecorator)
         {
             if (xmlDecorator == null)
                 return null;
@@ -83,7 +82,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 if (string.IsNullOrEmpty(xmlDecorator.Range))
                     throw new Exception("The range ident of a decorator cannot be null or empty");
                 EventCallback callback = EventCallbacksManager.RetrieveCallback(null, xmlDecorator.Method);
-                ExcelRangeDecorator ret = new ExcelRangeDecorator(excelApplication, xmlDecorator.Ident, xmlDecorator.Description, callback, xmlDecorator.Range, xmlDecorator.NotOnlyColor);//, xmlDecorator.UseOnlyColors);
+                ExcelRangeDecorator ret = new ExcelRangeDecorator(xmlDecorator.Ident, xmlDecorator.Description, callback, xmlDecorator.Range, xmlDecorator.NotOnlyColor);//, xmlDecorator.UseOnlyColors);
                 return ret;
             }
             catch (Exception ex)
@@ -278,7 +277,7 @@ namespace Etk.Excel.BindingTemplates.Decorators
         {
             try
             {
-                decoratorRange = excelApplication.get_Range(rangeId);
+                decoratorRange = ETKExcel.ExcelApplication.Application.get_Range(rangeId);
                 if (decoratorRange != null)
                 {
                     decoratorProperties = new List<DecoratorProperty>();

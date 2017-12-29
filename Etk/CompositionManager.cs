@@ -52,7 +52,7 @@ namespace Etk
             AggregateCatalog aggregateCatalog = new AggregateCatalog();
             // Add a catalog from the 'Etk.Excel' assembly
             aggregateCatalog.Catalogs.Add(new AssemblyCatalog(Assembly.Load("Etk.Excel")));
-            // Add a catalog from the 'Etk.Excel' assembly
+            // Add a catalog from the 'Etk' assembly
             aggregateCatalog.Catalogs.Add(new AssemblyCatalog(Assembly.Load("Etk")));
 
             // Creation container
