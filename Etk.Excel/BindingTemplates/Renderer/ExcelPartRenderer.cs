@@ -73,7 +73,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #region public methods
         public void Render()
         {
-            ExcelInterop.Worksheet worksheetTo = currentRenderingTo.Worksheet;
             if (bindingContextPart != null )
 //                && ((bindingContextPart is LinkedTemplateDefinition && ((LinkedTemplateDefinition) bindingContextPart).MinOccurencesMethod != null || bindingContextPart.ElementsToRender.ElementsToRender != null && bindingContextPart.ElementsToRender.ElementsToRender.Any())
             {
@@ -88,10 +87,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 RenderedArea = new RenderedArea(firstRangeTo.Column, firstRangeTo.Row, Width, Height);
                 RenderedRange = firstRangeTo.Resize[Height, Width];
             }
-
-            ExcelApplication.ReleaseComObject(worksheetTo);
-            worksheetTo = null;
-
             elementFirstRangeTo = null;
             currentRenderingFrom = null;
             currentRenderingTo = null;

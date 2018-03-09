@@ -106,6 +106,7 @@
     <Compile Include="BindingTemplates\Renderer\ExcelPartHorizontalRenderer.cs" />
     <Compile Include="BindingTemplates\Renderer\ExcelPartRenderer.cs" />
     <Compile Include="BindingTemplates\Renderer\ExcelRenderer.cs" />
+    <Compile Include="BindingTemplates\Renderer\RenderingContext.cs" />
     <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingSearchDefinition.cs" />
     <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingSearchContextItem.cs" />
     <Compile Include="BindingTemplates\SortSearchAndFilter\ExcelBindingFilterContextItem.cs" />

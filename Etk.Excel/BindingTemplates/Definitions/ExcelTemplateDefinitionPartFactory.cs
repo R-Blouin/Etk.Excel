@@ -31,11 +31,13 @@ namespace Etk.Excel.BindingTemplates.Definitions
         public static ExcelTemplateDefinitionPart CreateInstance(ExcelTemplateDefinition excelTemplateDefinition, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
         {
             ExcelTemplateDefinitionPartFactory factory = new ExcelTemplateDefinitionPartFactory();
-            return factory.Execute(excelTemplateDefinition, partType, firstRange, lastRange);
+            if(excelTemplateDefinition.Orientation == Orientation.Vertical)
+                return factory.CreatePartForVerticalTemplate(excelTemplateDefinition, partType, firstRange, lastRange);
+            return factory.CreatePartForHorizontalTemplate(excelTemplateDefinition, partType, firstRange, lastRange);
         }
         #endregion
 
-        private ExcelTemplateDefinitionPart Execute(ExcelTemplateDefinition excelTemplateDefinition, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
+        private ExcelTemplateDefinitionPart CreatePartForVerticalTemplate(ExcelTemplateDefinition excelTemplateDefinition, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
         {
             ExcelTemplateDefinitionPart part = new ExcelTemplateDefinitionPart(excelTemplateDefinition, partType, firstRange, lastRange);
             for (int rowId = 0; rowId < part.DefinitionCells.Rows.Count; rowId++)
@@ -66,6 +68,46 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             if(part.OnAfterRendering == null)
                                 part.OnAfterRendering = new List<EventCallback>();
                             part.OnAfterRendering.Add(((IBindingDefinition)definitionPart).OnAfterRendering);
+                        }
+                    }
+                }
+                part.PositionLinkedTemplates.Add(posLinks);
+            }
+
+            return part;
+        }
+
+        private ExcelTemplateDefinitionPart CreatePartForHorizontalTemplate(ExcelTemplateDefinition excelTemplateDefinition, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange)
+        {
+            ExcelTemplateDefinitionPart part = new ExcelTemplateDefinitionPart(excelTemplateDefinition, partType, firstRange, lastRange);
+            for (int colId = 0; colId < part.DefinitionCells.Columns.Count; colId++)
+            {
+                List<int> posLinks = null;
+                ExcelInterop.Range col = part.DefinitionCells.Columns[colId + 1];
+
+                for (int rowId = 0; rowId < col.Cells.Count; rowId++)
+                {
+                    ExcelInterop.Range cell = col.Cells[rowId + 1];
+                    IDefinitionPart definitionPart = AnalyzeCell(part, cell);
+                    part.DefinitionParts[rowId, colId] = definitionPart;
+
+                    if (definitionPart is LinkedTemplateDefinition)
+                    {
+                        if (posLinks == null)
+                            posLinks = new List<int>();
+                        posLinks.Add(rowId);
+                    }
+
+                    if (definitionPart is IBindingDefinition)
+                    {
+                        if (((IBindingDefinition)definitionPart).IsMultiLine)
+                            part.ContainMultiLinesCells = true;
+
+                        if (((IBindingDefinition) definitionPart).OnAfterRendering != null)
+                        {
+                            if (part.OnAfterRendering == null)
+                                part.OnAfterRendering = new List<EventCallback>();
+                            part.OnAfterRendering.Add(((IBindingDefinition) definitionPart).OnAfterRendering);
                         }
                     }
                 }

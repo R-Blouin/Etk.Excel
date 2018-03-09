@@ -43,7 +43,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         public MethodInfo MinOccurencesMethod
         { get; private set; }
 
-        public List<List<IBindingContextItem>> DataRows
+        public List<List<IBindingContextItem>> ContextItems
         { get; private set; }
 
         public ExcelInterop.Range RenderedRange
@@ -93,7 +93,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             this.bindingContext = bindingContext;
             this.firstOutputCell = firstOutputCell;
             MinOccurencesMethod = minOccurencesMethod;
-            DataRows = new List<List<IBindingContextItem>>();
+            ContextItems = new List<List<IBindingContextItem>>();
         }
         #endregion
 
@@ -199,7 +199,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 nestedRenderer.ClearRenderingData();
 
             NestedRenderer.Clear();
-            DataRows.Clear();
+            ContextItems.Clear();
             RenderedRange = null;
             contextItems = null;
             cells = null;

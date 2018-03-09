@@ -2,7 +2,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
@@ -51,7 +50,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             base.Render();
 
-            toOperateOnSheetCalculation = DataRows?.SelectMany(r => r.Where(ci => ci is IFormulaCalculation))
+            toOperateOnSheetCalculation = ContextItems?.SelectMany(r => r.Where(ci => ci is IFormulaCalculation))
                                                    .Select(c =>(IFormulaCalculation) c).ToArray();
             RenderDataOnly();
         }
@@ -66,10 +65,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
             ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>> decorators = new ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>>();
 
             //Parallel.For(0, DataRows.Count, i => // Parrallel problem with Com object
-            for (int i = 0; i <DataRows.Count; i++)
+            for (int i = 0; i <ContextItems.Count; i++)
             {
                 int colId = 0;
-                List<IBindingContextItem> itemsInRow = DataRows[i];
+                List<IBindingContextItem> itemsInRow = ContextItems[i];
                 foreach (IBindingContextItem item in itemsInRow)
                 {
                     if (item != null)

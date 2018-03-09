@@ -91,6 +91,9 @@ namespace Etk.Excel.BindingTemplates.Views
         public ExcelInterop.Worksheet ViewSheet
         { get; private set; }
 
+        public ExcelInterop.Worksheet TemplateSheet
+        { get; private set; }
+
         public ExcelInterop.Range FirstOutputCell
         { get; set; }
 
@@ -138,10 +141,12 @@ namespace Etk.Excel.BindingTemplates.Views
         #endregion
 
         #region .ctors
-        public ExcelTemplateView(ITemplateDefinition templateDefinition, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range firstOutputCell, ExcelInterop.Range clearingCell)
-            : base(templateDefinition)
+        public ExcelTemplateView(ITemplateDefinition templateDefinition, ExcelInterop.Worksheet templateSheet, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range firstOutputCell, ExcelInterop.Range clearingCell)
+               : base(templateDefinition)
         {
             ViewSheet = sheetDestination;
+            TemplateSheet = templateSheet;
+
             FirstOutputCell = firstOutputCell;
             ClearingCell = clearingCell;
             AutoFit = AutoFitMode.WidthHeight;
@@ -233,6 +238,11 @@ namespace Etk.Excel.BindingTemplates.Views
                     {
                         ExcelApplication.ReleaseComObject(ViewSheet);
                         ViewSheet = null;
+                    }
+                    if(TemplateSheet != null)
+                    {
+                        ExcelApplication.ReleaseComObject(TemplateSheet);
+                        TemplateSheet = null;
                     }
 
                     FirstOutputCell = null;
@@ -505,7 +515,7 @@ namespace Etk.Excel.BindingTemplates.Views
                             if (log.GetLogLevel() == LogType.Debug)
                                 log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
 
-                            AfterRendering?.Invoke(true);
+                            AfterRendering?.Invoke(false);
                             Renderer.AfterRendering();
                         }
                     }
@@ -746,18 +756,17 @@ namespace Etk.Excel.BindingTemplates.Views
         private void HighlightSelection(ExcelInterop.Range selectedCell)
         {
             ExcelInterop.Range viewSelectedRange = null;
-            ExcelInterop.Worksheet sheet = (ExcelInterop.Worksheet) RenderedRange.Parent;
 
             if (TemplateDefinition.Orientation == Orientation.Vertical)
             {
-                viewSelectedRange = sheet.Cells[selectedCell.Row, RenderedRange.Column];
+                viewSelectedRange = ViewSheet.Cells[selectedCell.Row, RenderedRange.Column];
                 viewSelectedRange = viewSelectedRange.Resize[1, RenderedRange.Columns.Count];
 
                 currentSelectedRange = viewSelectedRange;
             }
             else
             {
-                viewSelectedRange = sheet.Cells[RenderedRange.Row, selectedCell.Column];
+                viewSelectedRange = ViewSheet.Cells[RenderedRange.Row, selectedCell.Column];
                 viewSelectedRange = viewSelectedRange.Resize[RenderedRange.Rows.Count, 1];
 
                 currentSelectedRange = viewSelectedRange;
@@ -794,8 +803,6 @@ namespace Etk.Excel.BindingTemplates.Views
                 Renderer.BorderAround(currentSelectedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlThin, 1);
 
             viewSelectedRange = null;
-            ExcelApplication.ReleaseComObject(sheet);
-            sheet = null;
         }
 
         private void UnhighlightSelection()

@@ -67,6 +67,7 @@ namespace Etk.Demo.ExcelDna1
                 ETKExcel.TemplateManager.RemoveView(mainCustomersView);
 
             mainCustomersView = ETKExcel.TemplateManager.AddView("TemplatesCustomers", "Main", "Customers", "B2");
+            //mainCustomersView = ETKExcel.TemplateManager.AddView("TemplatesCustomers", "MainHorizontal", "Customers", "B2");
 
             mainCustomersView.SetDataSource(CustomersManager.Customers);
             mainCustomersView.Render();

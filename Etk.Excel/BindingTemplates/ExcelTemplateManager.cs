@@ -122,7 +122,7 @@ namespace Etk.Excel.BindingTemplates
                 bindingTemplateManager.RegisterTemplateDefinition(templateDefinition);
             }
 
-            ExcelTemplateView view = new ExcelTemplateView(templateDefinition, sheetDestination, firstOutputCell, clearingCell);
+            ExcelTemplateView view = new ExcelTemplateView(templateDefinition, sheetContainer, sheetDestination, firstOutputCell, clearingCell);
             bindingTemplateManager.AddView(view);
             log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}'.'{2}' created.", sheetDestination.Name.EmptyIfNull(), sheetContainer.Name.EmptyIfNull(), templateName.EmptyIfNull());
             range = null;
@@ -441,7 +441,7 @@ namespace Etk.Excel.BindingTemplates
             }
             catch (Exception ex)
             {
-                string message = $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{(sheetContainer != null ? sheetContainer.Name.EmptyIfNull() : string.Empty)}.{templateName.EmptyIfNull()}'"; Logger.Instance.LogException(LogType.Error, ex, message);
+                string message = $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{templateName.EmptyIfNull()}'"; Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
             }
         }
@@ -503,11 +503,6 @@ namespace Etk.Excel.BindingTemplates
             }
             finally
             {
-                if (sheetContainer != null)
-                {
-                    ExcelApplication.ReleaseComObject(sheetContainer);
-                    sheetContainer = null;
-                }
                 if (workbook != null)
                 {
                     ExcelApplication.ReleaseComObject(workbook);
@@ -517,6 +512,16 @@ namespace Etk.Excel.BindingTemplates
                 {
                     ExcelApplication.ReleaseComObject(workbooks);
                     workbooks = null;
+                }
+                if (sheetContainer != null)
+                {
+                    ExcelApplication.ReleaseComObject(sheetContainer);
+                    sheetContainer = null;
+                }
+                if (sheetDestination != null)
+                {
+                    ExcelApplication.ReleaseComObject(sheetDestination);
+                    sheetDestination = null;
                 }
             }
         }

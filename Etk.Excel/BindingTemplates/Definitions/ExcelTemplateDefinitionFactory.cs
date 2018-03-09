@@ -101,7 +101,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 if (headerSize != 0)
                 {
                     ExcelInterop.Range headerLastRange;
-                    if (excelTemplateDefinition.Orientation == Etk.BindingTemplates.Definitions.Templates.Orientation.Horizontal)
+                    if (excelTemplateDefinition.Orientation == Orientation.Horizontal)
                         headerLastRange = worksheet.Cells[firstRange.Row + height - 1, firstRange.Column + headerSize - 1];
                     else
                         headerLastRange = worksheet.Cells[firstRange.Row + headerSize - 1, lastRange.Column];
