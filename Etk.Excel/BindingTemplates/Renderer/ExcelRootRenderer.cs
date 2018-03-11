@@ -62,10 +62,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             contextItems = new IBindingContextItem[RenderedArea.Height, RenderedArea.Width];
             cells = new object[RenderedArea.Height, RenderedArea.Width];
-            ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>> decorators = new ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>>();
 
             //Parallel.For(0, DataRows.Count, i => // Parrallel problem with Com object
-            for (int i = 0; i <ContextItems.Count; i++)
+            //ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>> decorators = new ConcurrentStack<KeyValuePair<IBindingContextItem, System.Drawing.Point>>();
+            Stack<KeyValuePair<IBindingContextItem, System.Drawing.Point>> decorators = new Stack<KeyValuePair<IBindingContextItem, System.Drawing.Point>>();
+            for (int i = 0; i < ContextItems.Count; i++)
             {
                 int colId = 0;
                 List<IBindingContextItem> itemsInRow = ContextItems[i];

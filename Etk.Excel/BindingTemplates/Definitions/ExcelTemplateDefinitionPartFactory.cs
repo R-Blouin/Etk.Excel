@@ -113,7 +113,6 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 }
                 part.PositionLinkedTemplates.Add(posLinks);
             }
-
             return part;
         }
 

@@ -104,9 +104,9 @@ namespace Etk.Excel.BindingTemplates
                 {
                     clearingCell = sheetContainer.Cells[1, 1];
                 }
-                catch
+                catch(Exception ex)
                 {
-                    throw new ArgumentException("The clearing cell value");
+                    throw new ArgumentException($"Cannot get the clearing cell: {0}", ex);
                 }
             }
 
@@ -430,11 +430,27 @@ namespace Etk.Excel.BindingTemplates
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
         public IExcelTemplateView AddView(ExcelInterop.Worksheet sheetContainer, string templateName, ExcelInterop.Worksheet sheetDestination, ExcelInterop.Range destinationRange, ExcelInterop.Range clearingCell)
         {
+            if (sheetContainer == null || sheetDestination == null || string.IsNullOrEmpty(templateName) || destinationRange == null)
+                throw new ArgumentNullException("Cannot create the requested view: the parameters 'sheetContainer', 'sheetDestination', 'templateName' and 'destinationRange' are mandatory");
+
+            ExcelInterop.Workbook sheetContainerWorkbook = null;
+            ExcelInterop.Workbook sheetDestinationWorkbook = null;
             try
             {
                 lock (syncRoot)
                 {
-                    ExcelTemplateView view = CreateView(sheetContainer, templateName, sheetDestination, destinationRange, clearingCell);
+                    sheetContainerWorkbook = sheetContainer.Parent;
+                    sheetDestinationWorkbook = sheetDestination.Parent;
+
+                    ExcelInterop.Worksheet sheetContainerToUse = ExcelApplication.GetWorkSheetFromName(sheetContainerWorkbook, sheetContainer.Name);
+                    ExcelInterop.Worksheet sheetDestinationToUse = ExcelApplication.GetWorkSheetFromName(sheetDestinationWorkbook, sheetDestination.Name);
+
+                    ExcelInterop.Range destinationRangeToUse = destinationRange.Cells[1,1];
+                    ExcelInterop.Range clearingCellToUse = null;
+                    if (clearingCell != null)
+                        clearingCellToUse = clearingCell.Cells[1, 1];
+
+                    ExcelTemplateView view = CreateView(sheetContainerToUse, templateName, sheetDestinationToUse, destinationRangeToUse, clearingCellToUse);
                     RegisterView(view);
                     return view;
                 }
@@ -444,11 +460,28 @@ namespace Etk.Excel.BindingTemplates
                 string message = $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{templateName.EmptyIfNull()}'"; Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
             }
+            finally
+            {
+                if (sheetContainerWorkbook != null)
+                {
+                    ExcelApplication.ReleaseComObject(sheetContainerWorkbook);
+                    sheetContainerWorkbook = null;
+                }
+                if (sheetDestinationWorkbook != null)
+                {
+                    ExcelApplication.ReleaseComObject(sheetDestinationWorkbook);
+                    sheetDestinationWorkbook = null;
+
+                }
+            }
         }
 
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
         public IExcelTemplateView AddView(string sheetTemplatePath, string templateName, string sheetDestinationName, string destinationRange, string clearingCellName)
         {
+            if (string.IsNullOrEmpty(sheetTemplatePath) || string.IsNullOrEmpty(sheetDestinationName) || string.IsNullOrEmpty(templateName) || destinationRange == null)
+                throw new ArgumentNullException("Cannot create the requested view: the parameters 'sheetTemplatePath', 'sheetDestinationName', 'templateName' and 'destinationRange' are mandatory");
+
             ExcelInterop.Workbooks workbooks = null;
             ExcelInterop.Workbook workbook = null;
             ExcelInterop.Worksheet sheetContainer = null;
@@ -474,7 +507,6 @@ namespace Etk.Excel.BindingTemplates
                     sheetTemplateName = sheetTemplatePath;
                     workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
                 }
-
 
                 sheetContainer = ETKExcel.ExcelApplication.GetWorkSheetFromName(workbook, sheetTemplateName);
                 if (sheetContainer == null)
@@ -503,16 +535,6 @@ namespace Etk.Excel.BindingTemplates
             }
             finally
             {
-                if (workbook != null)
-                {
-                    ExcelApplication.ReleaseComObject(workbook);
-                    workbook = null;
-                }
-                if (workbooks != null)
-                {
-                    ExcelApplication.ReleaseComObject(workbooks);
-                    workbooks = null;
-                }
                 if (sheetContainer != null)
                 {
                     ExcelApplication.ReleaseComObject(sheetContainer);
@@ -523,9 +545,18 @@ namespace Etk.Excel.BindingTemplates
                     ExcelApplication.ReleaseComObject(sheetDestination);
                     sheetDestination = null;
                 }
+                if (workbook != null)
+                {
+                    ExcelApplication.ReleaseComObject(workbook);
+                    workbook = null;
+                }
+                if (workbooks != null)
+                {
+                    ExcelApplication.ReleaseComObject(workbooks);
+                    workbooks = null;
+                }
             }
         }
-
 
         public IEnumerable<IExcelTemplateDetails> GetTemplateDetails(string sheetName)
         {
@@ -553,14 +584,14 @@ namespace Etk.Excel.BindingTemplates
                         var templateName = match.Groups[1].Value;
                         var startRowIndex = range.Row;
                         var startColIndex = range.Column;
-                        var endCell =
-                            sheetContainer.Cells
-                                          .Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
+                        var endCell = sheetContainer.Cells
+                                                    .Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                         if (null != endCell)
                         {
                             var endRowIndex = endCell.Row;
                             var endColIndex = endCell.Column;
-                            if (result.Any(_ => _.Name == templateName)) break;
+                            if (result.Any(t => t.Name == templateName))
+                                break;
                             var details = new ExcelTemplateDetails
                             {
                                 Name = templateName,

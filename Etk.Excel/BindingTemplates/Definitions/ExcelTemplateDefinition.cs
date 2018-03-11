@@ -6,7 +6,6 @@ using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.ContextualMenus;
 using Etk.Tools.Extensions;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
-using System.Runtime.InteropServices;
 using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Definitions

@@ -161,12 +161,31 @@ namespace Etk.Excel.Application
         /// <summary> Implements <see cref="IExcelApplication.GetWorkSheetFromName"/> </summary> 
         public ExcelInterop.Worksheet GetWorkSheetFromName(ExcelInterop.Workbook workbook, string name)
         {
-            if (workbook != null && !string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name))
             {
-                foreach (ExcelInterop.Worksheet sheet in workbook.Worksheets)
+                bool getActiveWorkbook = false;
+                try
                 {
-                    if (string.Equals(sheet.Name, name))
-                        return sheet;
+                    if(workbook == null)
+                    {
+                        workbook = Application.ActiveWorkbook;
+                        getActiveWorkbook = true;
+                    }
+
+                    foreach (ExcelInterop.Worksheet sheet in workbook.Worksheets)
+                    {
+                        if (string.Equals(sheet.Name, name))
+                            return sheet;
+                        Marshal.ReleaseComObject(sheet);
+                    }
+                }
+                finally
+                {
+                    if(getActiveWorkbook)
+                    {
+                        Marshal.ReleaseComObject(workbook);
+                        workbook = null;
+                    }
                 }
             }
             return null;

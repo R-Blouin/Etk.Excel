@@ -234,21 +234,20 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (linkedRenderer.RenderedArea != null)
             {
                 renderingContext.LinkedViewRenderedOffset = linkedRenderer.Width;
-                if (! renderingContext.RowColAdded)
+                if (!renderingContext.RowColAdded)
                 {
                     AddRow(renderingContext);
                     renderingContext.RowColAdded = true;
                 }
 
                 renderingContext.ContextItems.AddRange(linkedRenderer.ContextItems[0]);
-                //for (int i = 1; i < linkedRenderer.DataRows.Count; i++)
-                for (int i = 1; i < linkedRenderer.Height; i++) 
+                for (int i = 1; i < linkedRenderer.Height; i++)
                 {
                     List<IBindingContextItem> toUse;
                     if (i >= renderingContext.CurrentHeight)
                     {
                         toUse = renderingContext.CurrentWidth > 0 ? new List<IBindingContextItem>(new IBindingContextItem[renderingContext.CurrentWidth])
-                                                                        : new List<IBindingContextItem>();
+                                                                  : new List<IBindingContextItem>();
                         Parent.ContextItems.Add(toUse);
                     }
                     else
@@ -270,7 +269,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         if (cpt >= renderingContext.CurrentHeight)
                         {
                             toUse = renderingContext.CurrentWidth > 0 ? new List<IBindingContextItem>(new IBindingContextItem[renderingContext.CurrentWidth])
-                                                                            : new List<IBindingContextItem>();
+                                                                      : new List<IBindingContextItem>();
                             Parent.ContextItems.Add(toUse);
                         }
                         else
@@ -354,7 +353,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 IBindingContextItem item = partToRenderDefinition.DefinitionParts[renderingContext.InitPos, colId] == null || bindingContextItemsCount <= currentBindingContextItemId 
                                            ? null 
                                            : renderingContext.ContextElement.BindingContextItems[currentBindingContextItemId++];
-
                 if (item != null)
                 {
                     if (item is ExcelBindingSearchContextItem)

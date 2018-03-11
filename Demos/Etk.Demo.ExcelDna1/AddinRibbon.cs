@@ -25,7 +25,6 @@ namespace Etk.Demo.ExcelDna1
         {
             //ShowCustomers();
             //ShowShares();
-
             Assembly assembly = Assembly.GetExecutingAssembly();
             using (TextReader textReader = new StreamReader(assembly.GetManifestResourceStream("Etk.Demo.ExcelDna1.Resources.AddinRibbon.xml")))
             {
@@ -66,8 +65,8 @@ namespace Etk.Demo.ExcelDna1
             if(mainCustomersView != null)
                 ETKExcel.TemplateManager.RemoveView(mainCustomersView);
 
-            mainCustomersView = ETKExcel.TemplateManager.AddView("TemplatesCustomers", "Main", "Customers", "B2");
-            //mainCustomersView = ETKExcel.TemplateManager.AddView("TemplatesCustomers", "MainHorizontal", "Customers", "B2");
+            //mainCustomersView = ETKExcel.TemplateManager.AddView("TemplatesCustomers", "Main", "Customers", "B2");
+            mainCustomersView = ETKExcel.TemplateManager.AddView("TemplatesCustomers", "MainHorizontal", "Customers", "B2");
 
             mainCustomersView.SetDataSource(CustomersManager.Customers);
             mainCustomersView.Render();

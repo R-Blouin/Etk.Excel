@@ -66,7 +66,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         {
             if (part.Parent.Orientation == Orientation.Vertical)
                 return new ExcelPartVerticalRenderer(parent, part, bindingContextPart, firstOutputCell, useDecorator);
-            return new ExcelPartHorozontalRenderer(parent, part, bindingContextPart, firstOutputCell, useDecorator);
+            return new ExcelPartHorizontalRenderer(parent, part, bindingContextPart, firstOutputCell, useDecorator);
         }
         #endregion
 
@@ -83,7 +83,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
             }
             if (Width > 0 && Height > 0)
             {
-                //RenderedArea = new RenderedArea(firstRangeTo.Column, firstRangeTo.Row, Width, Height);
                 RenderedArea = new RenderedArea(firstRangeTo.Column, firstRangeTo.Row, Width, Height);
                 RenderedRange = firstRangeTo.Resize[Height, Width];
             }
@@ -107,6 +106,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         }
         #endregion
 
+        #region protected method
         protected abstract void ManageTemplateWithoutLinkedTemplates();
         protected abstract void ManageTemplateWithLinkedTemplates();
 
@@ -119,5 +119,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
             }
             Parent.AddAfterRenderingAction(bindingDefinition.OnAfterRendering);
         }
+        #endregion
     }
 }

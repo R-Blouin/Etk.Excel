@@ -44,7 +44,11 @@ namespace Etk.Excel.Application
         /// <summary> Return the Excel application active sheet</summary>
         ExcelInterop.Worksheet GetActiveSheet();
 
+
         /// <summary> Return the sheet having 'name' as name owned by the given workbook</summary>
+        /// <param name="workbook">workbook containing the sheet to retrieve. If null is given, then use the current active workbook</param>
+        /// <param name="name">Name of the sheet to retrieve</param>
+        /// <returns>The sheet if found or null</returns>
         ExcelInterop.Worksheet GetWorkSheetFromName(ExcelInterop.Workbook workbook, string name);
 
         /// <summary> Indicates whether status remains visible</summary>

@@ -115,7 +115,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 if (footerSize != 0)
                 {
                     ExcelInterop.Range footerFirstRange;
-                    if (excelTemplateDefinition.Orientation == Etk.BindingTemplates.Definitions.Templates.Orientation.Horizontal)
+                    if (excelTemplateDefinition.Orientation == Orientation.Horizontal)
                         footerFirstRange = worksheet.Cells[lastRange.Row - height + 1, lastRange.Column - footerSize + 1];
                     else
                         footerFirstRange = worksheet.Cells[lastRange.Row - footerSize + 1, firstRange.Column];
