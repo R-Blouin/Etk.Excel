@@ -15,7 +15,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
     {
         protected ITemplateDefinition templateDefinition;
         protected IBindingContext bindingContext;
-        protected ExcelInterop.Range firstOutputCell;
         protected IBindingContextItem[,] contextItems;
         protected object[,] cells;
 
@@ -44,6 +43,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
         { get; private set; }
 
         public List<List<IBindingContextItem>> ContextItems
+        { get; }
+
+        public ExcelInterop.Range FirstOutputCell
         { get; private set; }
 
         public ExcelInterop.Range RenderedRange
@@ -91,7 +93,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             this.templateDefinition = templateDefinition;
             this.bindingContext = bindingContext;
-            this.firstOutputCell = firstOutputCell;
+            this.FirstOutputCell = firstOutputCell;
             MinOccurencesMethod = minOccurencesMethod;
             ContextItems = new List<List<IBindingContextItem>>();
         }
@@ -106,7 +108,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         //    ExcelInterop.Range nextFirstOutputCell = null;
         //    if (templateDefinition.Header != null)
         //    {
-        //        HeaderPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Header, bindingContext.Header, firstOutputCell, false);
+        //        HeaderPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Header, bindingContext.Header, FirstOutputCell, false);
         //        HeaderPartRenderer.Render();
         //        if (HeaderPartRenderer.RenderedArea != null && HeaderPartRenderer.RenderedArea.Width != 0)
         //        {
@@ -115,13 +117,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         //            int xOffset = templateDefinition.Orientation == Orientation.Horizontal ? xs[0] : 0;
         //            int yOffset = templateDefinition.Orientation == Orientation.Horizontal ? 0 : ys[0];
-        //            nextFirstOutputCell = firstOutputCell.Offset[yOffset, xOffset];
+        //            nextFirstOutputCell = FirstOutputCell.Offset[yOffset, xOffset];
         //        }
         //    }
 
         //    if (templateDefinition.Body != null)
         //    {
-        //        BodyPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Body, bindingContext.Body, nextFirstOutputCell ?? firstOutputCell, true);
+        //        BodyPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Body, bindingContext.Body, nextFirstOutputCell ?? FirstOutputCell, true);
         //        BodyPartRenderer.Render();
         //        if (BodyPartRenderer.RenderedArea != null && BodyPartRenderer.RenderedArea.Width != 0)
         //        {
@@ -130,13 +132,13 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         //            int xOffset = templateDefinition.Orientation == Orientation.Horizontal ? xs[1] : 0;
         //            int yOffset = templateDefinition.Orientation == Orientation.Horizontal ? 0 : ys[1];
-        //            nextFirstOutputCell = (nextFirstOutputCell ?? firstOutputCell).Offset[yOffset, xOffset];
+        //            nextFirstOutputCell = (nextFirstOutputCell ?? FirstOutputCell).Offset[yOffset, xOffset];
         //        }
         //    }
 
         //    if (templateDefinition.Footer != null)
         //    {
-        //        FooterPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Footer, bindingContext.Footer, nextFirstOutputCell ?? firstOutputCell, false);
+        //        FooterPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart)templateDefinition.Footer, bindingContext.Footer, nextFirstOutputCell ?? FirstOutputCell, false);
         //        FooterPartRenderer.Render();
         //        if (FooterPartRenderer.RenderedArea != null && FooterPartRenderer.RenderedArea.Width != 0)
         //        {
@@ -149,8 +151,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
         //    int height = templateDefinition.Orientation == Orientation.Vertical ? ys.Sum() : ys.Max();
         //    if (width > 0 && height > 0)
         //    {
-        //        RenderedArea = new RenderedArea(firstOutputCell.Column, firstOutputCell.Row, width, height);
-        //        RenderedRange = firstOutputCell.Resize[height, width];
+        //        RenderedArea = new RenderedArea(FirstOutputCell.Column, FirstOutputCell.Row, width, height);
+        //        RenderedRange = FirstOutputCell.Resize[height, width];
         //        Width = width;
         //        Height = height;
         //    }
@@ -162,20 +164,20 @@ namespace Etk.Excel.BindingTemplates.Renderer
             ExcelInterop.Range nextFirstOutputCell = null;
             if (templateDefinition.Header != null)
             {
-                HeaderPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Header, bindingContext.Header, firstOutputCell, false);
+                HeaderPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Header, bindingContext.Header, FirstOutputCell, false);
                 HeaderPartRenderer.Render();
                 if (HeaderPartRenderer.RenderedArea != null && HeaderPartRenderer.RenderedArea.Width != 0)
                 {
                     Width = HeaderPartRenderer.RenderedArea.Width;
                     Height = HeaderPartRenderer.RenderedArea.Height;
-                    nextFirstOutputCell = firstOutputCell.Offset[templateDefinition.Orientation == Orientation.Horizontal ? 0 : HeaderPartRenderer.RenderedArea.Height,
+                    nextFirstOutputCell = FirstOutputCell.Offset[templateDefinition.Orientation == Orientation.Horizontal ? 0 : HeaderPartRenderer.RenderedArea.Height,
                                                                  templateDefinition.Orientation == Orientation.Horizontal ? HeaderPartRenderer.RenderedArea.Width : 0];
                 }
             }
 
             if (templateDefinition.Body != null)
             {
-                BodyPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Body, bindingContext.Body, nextFirstOutputCell ?? firstOutputCell, true);
+                BodyPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Body, bindingContext.Body, nextFirstOutputCell ?? FirstOutputCell, true);
                 BodyPartRenderer.Render();
                 if (BodyPartRenderer.RenderedArea != null && BodyPartRenderer.RenderedArea.Width != 0)
                 {
@@ -184,14 +186,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     Height = templateDefinition.Orientation == Orientation.Vertical ? Height + BodyPartRenderer.RenderedArea.Height
                                                                                     : Height > BodyPartRenderer.RenderedArea.Height ? Height : BodyPartRenderer.RenderedArea.Height;
 
-                    nextFirstOutputCell = (nextFirstOutputCell ?? firstOutputCell).Offset[templateDefinition.Orientation == Orientation.Horizontal ? 0 : BodyPartRenderer.RenderedArea.Height,
+                    nextFirstOutputCell = (nextFirstOutputCell ?? FirstOutputCell).Offset[templateDefinition.Orientation == Orientation.Horizontal ? 0 : BodyPartRenderer.RenderedArea.Height,
                                                                                           templateDefinition.Orientation == Orientation.Horizontal ? BodyPartRenderer.RenderedArea.Width : 0];
                 }
             }
 
             if (templateDefinition.Footer != null)
             {
-                FooterPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Footer, bindingContext.Footer, nextFirstOutputCell ?? firstOutputCell, false);
+                FooterPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Footer, bindingContext.Footer, nextFirstOutputCell ?? FirstOutputCell, false);
                 FooterPartRenderer.Render();
                 if (FooterPartRenderer.RenderedArea != null && FooterPartRenderer.RenderedArea.Width != 0)
                 {
@@ -204,8 +206,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             if (Width > 0 && Height > 0)
             {
-                RenderedArea = new RenderedArea(firstOutputCell.Column, firstOutputCell.Row, Width, Height);
-                RenderedRange = firstOutputCell.Resize[Height, Width];
+                RenderedArea = new RenderedArea(FirstOutputCell.Column, FirstOutputCell.Row, Width, Height);
+                RenderedRange = FirstOutputCell.Resize[Height, Width];
             }
         }
 
@@ -224,7 +226,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (!IsDisposed)
             {
                 ClearRenderingData();
-                firstOutputCell = null;
+                FirstOutputCell = null;
                 IsDisposed = true;
             }
         }

@@ -176,8 +176,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
                 finally
                 {
-                    if(freezeExcel != null)
-                        freezeExcel.Dispose();
+                    freezeExcel?.Dispose();
                 }
             }
             return ret;

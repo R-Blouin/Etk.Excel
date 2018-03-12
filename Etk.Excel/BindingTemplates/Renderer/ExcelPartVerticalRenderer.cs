@@ -156,7 +156,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             }
 
                             // RenderView after last link
-                            if (linkCpt == lastPosLink && renderingContext.PosCurrentLink + 1 < partToRenderDefinition.Width)
+                            if (linkCpt == lastPosLink && partToRenderDefinition.Width > renderingContext.PosCurrentLink + 1)
                                 bindingContextItemsCpt = RenderAfterLink(renderingContext, bindingContextItemsCpt);
 
                             if (renderingContext.CurrentWidth > elementWidth)
@@ -309,7 +309,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 //    renderingContext.CurrentWidth += realEnd - startPosition;
                 //}
             }
-            if (startPosition < partToRenderDefinition.Width)
+            if (partToRenderDefinition.Width > startPosition)
             {
                 int realEnd = partToRenderDefinition.Width;
                 for (int i = partToRenderDefinition.Width - 1; i >= startPosition; i--)
