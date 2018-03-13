@@ -4,7 +4,7 @@
     <Address Street="1 Good Customer Road" City="CustomerCity"/>
     <OrderId>10</OrderId>
   </Customer>
-  <!--<Customer Id="2" Forename="Second" Surname="Customer" Phone="Phone number 2" Mobile="Mob number 2">
+  <Customer Id="2" Forename="Second" Surname="Customer" Phone="Phone number 2" Mobile="Mob number 2">
     <OrderId>20</OrderId>
     <OrderId>21</OrderId>
     <OrderId>22</OrderId>
@@ -99,5 +99,5 @@
   <Customer Id="20" Forename="Twentieth" Surname="Customer" Phone="Phone number 20" Mobile="Mob number 20">
     <OrderId>200</OrderId>
     <OrderId>201</OrderId>
-  </Customer>-->
+  </Customer>
 </Customers>
