@@ -40,9 +40,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 foreach(IBindingContextElement contextElement in bindingContextPart.ElementsToRender)
                 {
                     int cptItems = 0;
-                    for (int rowId = 0; rowId < partToRenderDefinition.Height; rowId++)
+                    for (int colId = 0; colId < partToRenderDefinition.Width; colId++)
                     {
-                        for (int colId = 0; colId < partToRenderDefinition.Width; colId++)
+                        for (int rowId = 0; rowId < partToRenderDefinition.Height; rowId++)
                         {
                             IBindingContextItem item = partToRenderDefinition.DefinitionParts[rowId, colId] == null ? null : contextElement.BindingContextItems[cptItems++];
                             if (item != null && ((item.BindingDefinition != null && item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly) || item is IExcelControl))
@@ -169,11 +169,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         currentRenderingTo = Parent.RootRenderer.View.ViewSheet.Cells[firstRangeTo.Row, firstElementCell.Column + elementWidth];
                     }
 
-                    int rowWidth = Parent.Width + Width + elementWidth;
+                    int nbrOfItemToHave = Parent.Width + Width + elementWidth;
                     Parent.ContextItems.ForEach(r =>
                     {
-                        if (r.Count < rowWidth)
-                            r.AddRange(new IBindingContextItem[rowWidth - r.Count]);
+                        if (r.Count < nbrOfItemToHave)
+                            r.AddRange(new IBindingContextItem[nbrOfItemToHave - r.Count]);
                     });
                 }
 
