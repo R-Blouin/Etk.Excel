@@ -94,13 +94,15 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public override IEnumerable<INotifyPropertyChanged> GetObjectsToNotify(object dataSource)
         {
-            List<INotifyPropertyChanged> toNotifiy = new List<INotifyPropertyChanged>();
-            if(FormulaBindingDefinition != null)
-                toNotifiy.AddRange(FormulaBindingDefinition.GetObjectsToNotify(dataSource));
+            List<INotifyPropertyChanged> toNotifiy=  null;
+
+            IEnumerable<INotifyPropertyChanged>  toAdd = FormulaBindingDefinition?.GetObjectsToNotify(dataSource);
+            if (toAdd != null && toAdd.Any())
+                toNotifiy = new List<INotifyPropertyChanged>(toAdd);
 
             //if (TargetBindingDefinition != null)
             //    toNotifiy.AddRange(TargetBindingDefinition.GetObjectsToNotify(dataSource));
-            return toNotifiy.Any() ? toNotifiy : null;
+            return toNotifiy;
         }
     }
 }
