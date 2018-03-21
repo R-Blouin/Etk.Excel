@@ -40,7 +40,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
         { get; protected set; }
 
         public MethodInfo MinOccurencesMethod
-        { get; private set; }
+        { get; }
+        public MethodInfo NumberOfOccurencesMethod
+        { get; }
 
         public List<List<IBindingContextItem>> ContextItems
         { get; }
@@ -80,7 +82,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         }
 
         #region .ctors
-        public ExcelRenderer(ExcelRenderer parent, ITemplateDefinition templateDefinition, IBindingContext bindingContext, ExcelInterop.Range firstOutputCell, MethodInfo minOccurencesMethod)
+        public ExcelRenderer(ExcelRenderer parent, ITemplateDefinition templateDefinition, IBindingContext bindingContext, ExcelInterop.Range firstOutputCell, MethodInfo minOccurencesMethod, MethodInfo numberOfOccurencesMethod)
         {
             NestedRenderer = new List<ExcelRenderer>();
             if (parent == null)
@@ -93,8 +95,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             this.templateDefinition = templateDefinition;
             this.bindingContext = bindingContext;
-            this.FirstOutputCell = firstOutputCell;
+            FirstOutputCell = firstOutputCell;
             MinOccurencesMethod = minOccurencesMethod;
+            NumberOfOccurencesMethod = numberOfOccurencesMethod;
             ContextItems = new List<List<IBindingContextItem>>();
         }
         #endregion

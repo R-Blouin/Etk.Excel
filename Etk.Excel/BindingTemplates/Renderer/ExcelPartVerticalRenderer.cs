@@ -24,7 +24,20 @@ namespace Etk.Excel.BindingTemplates.Renderer
             ExcelInterop.Range firstCell = currentRenderingTo;
             int cptElements = 0;
 
-            int nbrOfElement = bindingContextPart.ElementsToRender.Count();
+            int nbrOfElement;
+            // To take into account the number of elements to render.
+            if (Parent.NumberOfOccurencesMethod != null)
+            {
+                IBindingContextElement parentElement = null;
+                if (bindingContextPart.ParentContext != null)
+                    parentElement = bindingContextPart.ParentContext.Parent;
+
+                nbrOfElement = LinkedTemplateDefinition.ResolveNumberOfOccurences(Parent.NumberOfOccurencesMethod, parentElement);
+            }
+            else
+                nbrOfElement = bindingContextPart.ElementsToRender.Count();
+
+
             int localWidth = partToRenderDefinition.Width;
             int localHeight = partToRenderDefinition.Height * nbrOfElement;
             if (localHeight > 0)
@@ -97,7 +110,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 if (bindingContextPart.ParentContext != null)
                     parentElement = bindingContextPart.ParentContext.Parent;
 
-                int minElementsToRender = LinkedTemplateDefinition.ResolveMinOccurences(Parent.MinOccurencesMethod, parentElement);
+                int minElementsToRender = LinkedTemplateDefinition.ResolveNumberOfOccurences(Parent.MinOccurencesMethod, parentElement);
                 if (minElementsToRender > nbrOfElement)
                     localHeight = partToRenderDefinition.Height * minElementsToRender;
             }
@@ -226,7 +239,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         private void RenderLink(RenderingContext renderingContext, IBindingContext linkedBindingContext)
         {
             ExcelRenderer linkedRenderer = new ExcelRenderer(Parent, renderingContext.LinkedTemplateDefinition.TemplateDefinition, linkedBindingContext, currentRenderingTo,
-                                                             renderingContext.LinkedTemplateDefinition.MinOccurencesMethod);
+                                                             renderingContext.LinkedTemplateDefinition.MinOccurencesMethod, renderingContext.LinkedTemplateDefinition.NumberOfOccurencesMethod);
             Parent.RegisterNestedRenderer(linkedRenderer);
 
             linkedRenderer.Render();

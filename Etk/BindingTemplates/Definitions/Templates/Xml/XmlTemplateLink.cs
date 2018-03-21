@@ -26,6 +26,11 @@ namespace Etk.BindingTemplates.Definitions.Templates.Xml
         public string MinOccurences
         { get; set; }
 
+        [XmlAttribute]
+        public string NumberOfOccurences
+        { get; set; }
+        
+
         [XmlIgnore]
         public LinkedTemplatePositioning Position
         { get; set; }

@@ -34,7 +34,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #endregion
 
         #region .ctors 
-        public ExcelRootRenderer(ExcelTemplateView view) : base(null, view.TemplateDefinition, view.BindingContext, view.FirstOutputCell, null)
+        public ExcelRootRenderer(ExcelTemplateView view) : base(null, view.TemplateDefinition, view.BindingContext, view.FirstOutputCell, null, null)
         {
             View = view;
             RowDecorators = new List<ExcelElementDecorator>();

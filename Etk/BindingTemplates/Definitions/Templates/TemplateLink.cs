@@ -20,10 +20,15 @@ namespace Etk.BindingTemplates.Definitions.Templates
         public LinkedTemplatePositioning Positioning
         { get; private set; }
 
-        /// <summary> Method info to invoke to determinate the min nomber of occurences the link templates must occupied</summary>
+        /// <summary> Method to invoke to determinate the min nomber of occurences the link templates must occupied</summary>
         public string MinOccurencesMethod
         { get; private set; }
 
+        /// <summary> Method to invoke to force the number of occurences the link templates must have</summary>
+        public string NumberOfOccurencesMethod
+        { get; private set; }
+
+        
         #region .ctors and factories
         private TemplateLink()
         {}
@@ -42,6 +47,7 @@ namespace Etk.BindingTemplates.Definitions.Templates
             templateLink.With = xmlTemplateLink.With.EmptyIfNull().Trim();
             templateLink.Positioning = xmlTemplateLink.Position;
             templateLink.MinOccurencesMethod = xmlTemplateLink.MinOccurences;
+            templateLink.NumberOfOccurencesMethod = xmlTemplateLink.NumberOfOccurences;
 
             if (string.IsNullOrEmpty(templateLink.To))
                 throw new EtkException("Attribut 'To' cannot be null or empty", false);

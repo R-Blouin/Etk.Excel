@@ -22,8 +22,12 @@ namespace Etk.BindingTemplates.Definitions.Templates
         public LinkedTemplatePositioning Positioning
         { get; private set; }
 
-        /// <summary> Method info to invoke to determinate the min nomber of occurences the link templates must occupied</summary>
+        /// <summary> Method to invoke to determinate the min nomber of occurences the link templates must occupied</summary>
         public MethodInfo MinOccurencesMethod
+        { get; private set; }
+
+        /// <summary> Method to invoke to force the number of occurences the link templates must have</summary>
+        public MethodInfo NumberOfOccurencesMethod
         { get; private set; }
 
         #region .ctors
@@ -54,18 +58,38 @@ namespace Etk.BindingTemplates.Definitions.Templates
                         if (templateDefinition.Header != null && ((TemplateDefinitionPart)templateDefinition.Header).HasLinkedTemplates
                            || templateDefinition.Body != null && ((TemplateDefinitionPart)templateDefinition.Body).HasLinkedTemplates
                            || templateDefinition.Footer != null && ((TemplateDefinitionPart)templateDefinition.Footer).HasLinkedTemplates)
-                            throw new Exception("'MinOccurencesMethod' is not supported with templates linked with other templates");
+                            throw new Exception("'MinOccurences' is not supported with templates linked with other templates");
 
-                        Type type = TemplateDefinition.MainBindingDefinition == null ? null : TemplateDefinition.MainBindingDefinition.BindingType;
+                        Type type = TemplateDefinition.MainBindingDefinition?.BindingType;
                         MinOccurencesMethod = TypeHelpers.GetMethod(type, linkDefinition.MinOccurencesMethod);
                         if (MinOccurencesMethod.GetParameters().Length > 2)
-                            throw new Exception("The min occurences resolver method signature must be 'int <MethodName>([instance of element of the collection that owned the link declaration])'");
+                            throw new Exception("The 'MinOccurences' resolver method signature must be 'int <MethodName>([instance of element of the collection that owned the link declaration])'");
                     }
                     catch (Exception ex)
                     {
-                        throw new Exception($"Cannot retrieve the min occurences resolver method:{ex.Message}");
+                        throw new Exception($"Cannot retrieve the 'MinOccurences' resolver method:{ex.Message}");
                     }
                 }
+                if (!string.IsNullOrEmpty(linkDefinition.NumberOfOccurencesMethod))
+                {
+                    try
+                    {
+                        if (templateDefinition.Header != null && ((TemplateDefinitionPart)templateDefinition.Header).HasLinkedTemplates
+                            || templateDefinition.Body != null && ((TemplateDefinitionPart)templateDefinition.Body).HasLinkedTemplates
+                            || templateDefinition.Footer != null && ((TemplateDefinitionPart)templateDefinition.Footer).HasLinkedTemplates)
+                            throw new Exception("'NumberOfOccurences' is not supported with templates linked with other templates");
+
+                        Type type = TemplateDefinition.MainBindingDefinition?.BindingType;
+                        NumberOfOccurencesMethod = TypeHelpers.GetMethod(type, linkDefinition.NumberOfOccurencesMethod);
+                        if (NumberOfOccurencesMethod.GetParameters().Length > 2)
+                            throw new Exception("The 'NumberOfOccurences' resolver method signature must be 'int <MethodName>([instance of element of the collection that owned the link declaration])'");
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"Cannot retrieve the 'NumberOfOccurences' resolver method:{ex.Message}");
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -91,10 +115,10 @@ namespace Etk.BindingTemplates.Definitions.Templates
         }
 
         #region public methods
-        public static int ResolveMinOccurences(MethodInfo minOccurencesMethod, IBindingContextElement parentElement)
+        public static int ResolveNumberOfOccurences(MethodInfo method, IBindingContextElement parentElement)
         {
-            object invokeTarget = minOccurencesMethod.IsStatic ? null : parentElement.DataSource;
-            int nbrParameters = minOccurencesMethod.GetParameters().Length;
+            object invokeTarget = method.IsStatic ? null : parentElement.DataSource;
+            int nbrParameters = method.GetParameters().Length;
 
             object[] parameters = null;
             switch (nbrParameters)
@@ -104,11 +128,12 @@ namespace Etk.BindingTemplates.Definitions.Templates
                 //break;
                 case 1:
                     parameters = new object[] { parentElement.DataSource };
-                break;
+                    break;
             }
 
-            return (int)minOccurencesMethod.Invoke(invokeTarget, parameters);
+            return (int)method.Invoke(invokeTarget, parameters);
         }
+
         #endregion
         #endregion
     }
