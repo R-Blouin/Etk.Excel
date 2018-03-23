@@ -263,7 +263,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
 
                 int rowPos = renderingContext.CurrentHeight;
-                for (int i = 0; i < linkedRenderer.Height; i++)
+                int min = linkedRenderer.ContextItems.Count < linkedRenderer.Height ? linkedRenderer.ContextItems.Count : linkedRenderer.Height;
+                for (int i = 0; i < min; i++)
                     Parent.ContextItems[rowPos + i].AddRange(linkedRenderer.ContextItems[i]);
 
                 // To take the multilines into account
