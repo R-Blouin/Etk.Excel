@@ -745,6 +745,7 @@ namespace Etk.Excel.BindingTemplates
                     else
                     {
                         ExcelInterop.Range selectedRange = ExcelApplication.Application.Selection as ExcelInterop.Range;
+
                         using (new FreezeExcel(ExcelApplication.KeepStatusVisible))
                         {
                             foreach (IExcelTemplateView view in views)

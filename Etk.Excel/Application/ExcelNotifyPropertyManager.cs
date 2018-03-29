@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Threading;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using Etk.Excel.BindingTemplates.Controls.WithFormula;
@@ -32,6 +33,8 @@ namespace Etk.Excel.Application
             thread = new Thread(Execute);
             thread.Name = "NotifyPropertiesChanged";
             thread.IsBackground = true;
+            //thread.SetApartmentState(ApartmentState.STA);
+            thread.Priority = ThreadPriority.BelowNormal;
             thread.Start();
         }
         #endregion
@@ -78,10 +81,9 @@ namespace Etk.Excel.Application
                         Thread.Sleep(sleepTime);
                         waitExcelBusy = false;
                     }
-
                     ExcelNotityPropertyContext context = contextItems.Take(cancellationTokenSource.Token);
                     if (context != null)
-                        (ETKExcel.ExcelApplication as ExcelApplication).ExcelDispatcher.BeginInvoke(new Action(() => ExecuteNotify(context)));
+                        ((ExcelApplication) ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(new Action(() => ExecuteNotify(context)));
                 }
             }
             catch (Exception ex)
@@ -89,8 +91,7 @@ namespace Etk.Excel.Application
                 if (ex is OperationCanceledException)
                     Logger.Instance.Log(LogType.Info, "ExcelNotifyPropertyManager properly ended");
                 else
-                    Logger.Instance.LogException(LogType.Error, ex,
-                        $"ExcelNotifyPropertyManager not properly ended:{ex.Message}");
+                    Logger.Instance.LogException(LogType.Error, ex,$"ExcelNotifyPropertyManager not properly ended:{ex.Message}");
             }
             finally
             {
@@ -103,14 +104,12 @@ namespace Etk.Excel.Application
             if (isDisposed || context.ContextItem.IsDisposed || !context.View.IsRendered)
                 return;
 
-            ExcelInterop.Worksheet worksheet = null;
             ExcelInterop.Range range = null;
             bool enableEvent = ExcelApplication.Application.EnableEvents;
             try
             {
-                worksheet = context.View.FirstOutputCell.Worksheet;
                 KeyValuePair<int, int> kvp = context.Param;
-                range = worksheet.Cells[context.View.FirstOutputCell.Row + kvp.Key, context.View.FirstOutputCell.Column + kvp.Value];
+                range = context.View.ViewSheet.Cells[context.View.FirstOutputCell.Row + kvp.Key, context.View.FirstOutputCell.Column + kvp.Value];
                 if (range != null)
                 {
                     object value = context.ContextItem.ResolveBinding();
@@ -127,7 +126,6 @@ namespace Etk.Excel.Application
                             range.Calculate();
                             ((ExcelContextItemWithFormula)context.ContextItem).UpdateTarget(range.Value2);
                         }
-                        context.View.CurrentSelectedCell?.Select();
                     }
                     context.ContextItem.BindingDefinition.DecoratorDefinition?.Resolve(range, context.ContextItem);
                 }
@@ -147,11 +145,6 @@ namespace Etk.Excel.Application
             }
             finally
             {
-                if(worksheet != null)
-                {
-                    ExcelApplication.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
                 try
                 {
 

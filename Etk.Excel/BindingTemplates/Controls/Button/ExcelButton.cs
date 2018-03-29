@@ -62,7 +62,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
 
         public bool Enable
         {
-            get { return IsDisposed ? false : commandButton.Enabled; }
+            get { return !IsDisposed && commandButton.Enabled; }
             set
             {
                 if (!IsDisposed)

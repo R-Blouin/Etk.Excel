@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Threading;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
@@ -168,7 +170,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (templateDefinition.Header != null)
             {
                 HeaderPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Header, bindingContext.Header, FirstOutputCell, false);
+                //((ExcelApplication) ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(DispatcherPriority.Background, new Action(HeaderPartRenderer.Render));
                 HeaderPartRenderer.Render();
+
                 if (HeaderPartRenderer.RenderedArea != null && HeaderPartRenderer.RenderedArea.Width != 0)
                 {
                     Width = HeaderPartRenderer.RenderedArea.Width;
@@ -181,7 +185,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (templateDefinition.Body != null)
             {
                 BodyPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Body, bindingContext.Body, nextFirstOutputCell ?? FirstOutputCell, true);
+                //((ExcelApplication)ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(DispatcherPriority.Background, new Action(BodyPartRenderer.Render));
                 BodyPartRenderer.Render();
+
                 if (BodyPartRenderer.RenderedArea != null && BodyPartRenderer.RenderedArea.Width != 0)
                 {
                     Width = templateDefinition.Orientation == Orientation.Vertical ? Width > BodyPartRenderer.RenderedArea.Width ? Width : BodyPartRenderer.RenderedArea.Width
@@ -197,7 +203,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (templateDefinition.Footer != null)
             {
                 FooterPartRenderer = ExcelPartRenderer.CreateInstance(this, (ExcelTemplateDefinitionPart) templateDefinition.Footer, bindingContext.Footer, nextFirstOutputCell ?? FirstOutputCell, false);
+                //((ExcelApplication)ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(DispatcherPriority.Background, new Action(FooterPartRenderer.Render));
                 FooterPartRenderer.Render();
+
                 if (FooterPartRenderer.RenderedArea != null && FooterPartRenderer.RenderedArea.Width != 0)
                 {
                     Width = templateDefinition.Orientation == Orientation.Vertical ? Width > FooterPartRenderer.RenderedArea.Width ? Width : FooterPartRenderer.RenderedArea.Width
