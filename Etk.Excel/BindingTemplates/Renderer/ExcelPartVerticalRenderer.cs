@@ -76,7 +76,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                                     if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                                     {
                                         ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
-                                        enumManager.CreateControl(item, ref range);
+                                        enumManager.CreateControl(item, range);
                                         range = null;
                                     }
                                     if (item.BindingDefinition.OnAfterRendering != null)
@@ -385,14 +385,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                         {
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
-                            enumManager.CreateControl(item, ref range);
+                            enumManager.CreateControl(item, range);
                             range = null;
                         }
                         if (item.BindingDefinition.IsMultiLine)
                         {
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             ExcelInterop.Range localSource = source[1, 1 + colId - startPos];
-                            multiLineManager.CreateControl(item, ref range, ref localSource, ref vOffset);
+                            multiLineManager.CreateControl(item, range, localSource, ref vOffset);
                             range = null;
                         }
                         if (item.BindingDefinition.OnAfterRendering != null)

@@ -11,16 +11,16 @@ namespace Etk.BindingTemplates.Definitions.Binding
     public class BindingType
     {
         #region properties and attributes
-        private static readonly object syncObj = new object();
+        //private static readonly object syncObj = new object();
         private static int classIdent;
 
         private static readonly TypeBuilderFactory typeBuilderFactory = new TypeBuilderFactory("BindedTypeAssembly");
 
         public Type BindType
-        { get; private set; }
+        { get;  }
 
         public ReadOnlyDictionary<string, BindingTypeProperty> PropertyByName
-        { get; private set; }
+        { get; }
         #endregion
 
         #region .ctors
@@ -61,7 +61,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                     if (emitProperties.Count > 0)
                     {
                         Type type;
-                        lock (syncObj)
+                        //lock (syncObj)
                         {
                             Dictionary<string, BindingTypeProperty> propertyByName = new Dictionary<string, BindingTypeProperty>();
                             type = typeBuilderFactory.CreateType($"BindType{classIdent++}", emitProperties);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.Windows.Threading;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.Application
@@ -62,5 +63,8 @@ namespace Etk.Excel.Application
 
         /// <summary> Show/Hide 'numberOfColumns' columns 'before' (if 'numberOfColumns' &lt 0) or 'after' (if 'numberOfColumns' &gt 0)</summary>
         void ShowHideColumns(ExcelInterop.Range targetedRange, int numberOfColumns);
+
+        /// <summary> Access to the Excel UI thread</summary>
+        Dispatcher ExcelDispatcher { get; }
     }
 }

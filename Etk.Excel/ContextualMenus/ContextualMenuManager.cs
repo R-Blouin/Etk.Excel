@@ -17,7 +17,7 @@ namespace Etk.Excel.ContextualMenus
         private readonly ILogger log = Logger.Instance;
 
         private readonly object syncObj = new object();
-        private bool isDisposed = false;
+        private bool isDisposed;
 
         private readonly List<ContextualMenusRequestedHandler> contextualMenusManagers = new List<ContextualMenusRequestedHandler>();
         private readonly List<ExcelInterop.Workbook> manageWorkbooks = new List<ExcelInterop.Workbook>();

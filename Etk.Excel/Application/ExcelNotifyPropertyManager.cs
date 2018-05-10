@@ -83,7 +83,7 @@ namespace Etk.Excel.Application
                     }
                     ExcelNotityPropertyContext context = contextItems.Take(cancellationTokenSource.Token);
                     if (context != null)
-                        ((ExcelApplication) ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(new Action(() => ExecuteNotify(context)));
+                        ETKExcel.ExcelApplication.ExcelDispatcher.Invoke(new Action(() => ExecuteNotify(context)));
                 }
             }
             catch (Exception ex)

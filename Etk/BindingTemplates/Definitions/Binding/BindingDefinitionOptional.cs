@@ -11,7 +11,6 @@ namespace Etk.BindingTemplates.Definitions.Binding
     {
         private bool comNameIsInvalid;
         private readonly ILogger log = Logger.Instance;
-        private static readonly object syncObj = new object();
 
         private readonly Dictionary<Type, IBindingDefinition> bindingDefinitionByType = new Dictionary<Type, IBindingDefinition>();
         
@@ -39,12 +38,7 @@ namespace Etk.BindingTemplates.Definitions.Binding
                 if (! IsReadOnly)
                 {
                     if (Marshal.IsComObject(dataSource) && !comNameIsInvalid)
-                    {
-                        //lock (syncObj) // we need to synchro Com exec
-                        //{
-                            dataSource.GetType().InvokeMember(Name, BindingFlags.Default | BindingFlags.SetProperty, null, dataSource, new[] { data }, null);
-                        //}
-                    }
+                        dataSource.GetType().InvokeMember(Name, BindingFlags.Default | BindingFlags.SetProperty, null, dataSource, new[] { data }, null);
                 }
                 return ResolveBinding(dataSource);
             }

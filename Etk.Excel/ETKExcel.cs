@@ -22,7 +22,7 @@ namespace Etk.Excel
     public sealed class ETKExcel
     {
         #region properties
-        private bool isDisposed = false;
+        private bool isDisposed;
         private static readonly object syncObj = new object();
 
         private readonly List<ExcelInterop.Workbook> managedWorkbooks = new List<ExcelInterop.Workbook>();

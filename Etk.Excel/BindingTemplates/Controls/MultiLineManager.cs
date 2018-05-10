@@ -18,7 +18,7 @@ namespace Etk.Excel.BindingTemplates.Controls
 
     class MultiLineManager
     {
-        public void CreateControl(IBindingContextItem item, ref ExcelInterop.Range range, ref ExcelInterop.Range source, ref int vOffset)
+        public void CreateControl(IBindingContextItem item, ExcelInterop.Range range, ExcelInterop.Range source, ref int vOffset)
         {
             try
             {

@@ -62,7 +62,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             {
                                 ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId, firstCell.Column + colId + cptElements * partToRenderDefinition.Width];
                                 if (item.BindingDefinition.IsEnum )
-                                    enumManager.CreateControl(item, ref range);
+                                    enumManager.CreateControl(item, range);
                                 else
                                     ((IExcelControl)item).CreateControl(range);
                                 range = null;
@@ -381,7 +381,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                         {
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row + rowId - startPos, currentRenderingTo.Column];
-                            enumManager.CreateControl(item, ref range);
+                            enumManager.CreateControl(item, range);
                             range = null;
                         }
                         //if (item.BindingDefinition.IsMultiLine)

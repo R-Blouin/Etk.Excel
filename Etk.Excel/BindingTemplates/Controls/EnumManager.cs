@@ -10,7 +10,7 @@ namespace Etk.Excel.BindingTemplates.Controls
     {
         private readonly Dictionary<Type, string> enumByType = new Dictionary<Type, string>();
 
-        public void CreateControl(IBindingContextItem item, ref ExcelInterop.Range range)
+        public void CreateControl(IBindingContextItem item, ExcelInterop.Range range)
         {
             string values;
             if (!enumByType.TryGetValue(item.BindingDefinition.BindingType, out values))
@@ -27,11 +27,12 @@ namespace Etk.Excel.BindingTemplates.Controls
                 values = string.Join(separator, list);
                 enumByType[item.BindingDefinition.BindingType] = values;
             }
+
             range.Validation.Add(ExcelInterop.XlDVType.xlValidateList,
-                                 ExcelInterop.XlDVAlertStyle.xlValidAlertInformation,
-                                 ExcelInterop.XlFormatConditionOperator.xlBetween,
-                                 values,
-                                 Type.Missing);
+                                    ExcelInterop.XlDVAlertStyle.xlValidAlertInformation,
+                                    ExcelInterop.XlFormatConditionOperator.xlBetween,
+                                    values,
+                                    Type.Missing);
             range.Validation.IgnoreBlank = false;
             range.Validation.InCellDropdown = true;
         }

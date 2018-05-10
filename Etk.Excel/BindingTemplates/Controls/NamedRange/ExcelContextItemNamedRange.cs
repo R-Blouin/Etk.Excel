@@ -109,13 +109,13 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         public override void RealDispose()
         {
             if (rangeName != null)
+            {
                 rangeName.Delete();
+                ExcelApplication.ReleaseComObject(rangeName);
+            }
 
             if (NestedContextItem != null)
                 NestedContextItem.Dispose();
-
-            ExcelApplication.ReleaseComObject(rangeName);
-            ExcelApplication.ReleaseComObject(Range);
 
             rangeName = null;
             Range = null;
