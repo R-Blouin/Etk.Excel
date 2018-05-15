@@ -306,8 +306,10 @@ namespace Etk.Excel.Application
         public static void ReleaseComObject(object obj)
         {
             int refCpt = Marshal.ReleaseComObject(obj);
-            //if (refCpt < 0)
-            //    MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#if DEBUG
+            if (refCpt < 0)
+                MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+#endif
         }
 
 

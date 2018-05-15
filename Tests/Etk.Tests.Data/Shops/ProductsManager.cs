@@ -18,7 +18,7 @@
         {
             get
             {
-                lock(syncObj)
+                lock (syncObj)
                 {
                     if (instance == null)
                         instance = new ProductsManager();

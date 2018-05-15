@@ -10,23 +10,23 @@ namespace Etk.Excel.Application
 {
     class ExcelPostAsynchronousManager : IDisposable
     {
-        private volatile bool waitExcelBusy = false;
+        private volatile bool waitExcelBusy;
         private volatile bool isDisposed;
         private readonly object syncObj = new object();
         private readonly BlockingCollection<Action> actions;
         private readonly Dispatcher dispatcher;
         private readonly CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
-        private readonly Thread thread;
-
         #region .ctors
         public ExcelPostAsynchronousManager(Dispatcher dispatcher)
         {
             actions = new BlockingCollection<Action>(new ConcurrentStack<Action>());
             this.dispatcher = dispatcher;
-            thread = new Thread(Execute);
-            thread.Name = "PostAsynchronousActions";
-            thread.IsBackground = true;
+            Thread thread = new Thread(Execute)
+            {
+                Name = "PostAsynchronousActions",
+                IsBackground = true
+            };
             thread.Start();
         }
         #endregion
@@ -85,10 +85,18 @@ namespace Etk.Excel.Application
                                                                 if (!isDisposed)
                                                                     action();
                                                             }
-                                                            catch (COMException)
+                                                            catch (COMException comEx)
                                                             {
-                                                                actions.Add(action);
-                                                                waitExcelBusy = true;
+                                                                    if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                                                                    {
+                                                                        actions.Add(action);
+                                                                        waitExcelBusy = true;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        string message = $"'ExcelPostAsynchronousManager.ExecuteAction' failed.{comEx.Message}";
+                                                                        Logger.Instance.LogException(LogType.Error, comEx, message);
+                                                                    }
                                                             }
                                                             catch (Exception ex)
                                                             {
@@ -99,7 +107,7 @@ namespace Etk.Excel.Application
                         operation.Wait();
                         if (waitExcelBusy)
                         {
-                            Thread.Sleep(50);
+                            Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
                             waitExcelBusy = false;
                         }
                     }

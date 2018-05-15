@@ -17,7 +17,9 @@ using Etk.Tools.Extensions;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Etk.Excel.BindingTemplates
 {
@@ -59,10 +61,7 @@ namespace Etk.Excel.BindingTemplates
                                     [Import] EventExcelCallbacksManager eventCallbacksManager,
                                     [Import] BindingTemplateManager bindingTemplateManager)
         {
-            if (excelApplication == null)
-                throw new EtkException("'ExcelBindingTemplateManager' initialization: the 'application' parameter is mandatory");
-
-            ExcelApplication = excelApplication;
+            ExcelApplication = excelApplication ?? throw new EtkException("'ExcelBindingTemplateManager' initialization: the 'application' parameter is mandatory");
             CallbacksManager = eventCallbacksManager;
             this.excelDecoratorsManager = excelDecoratorsManager;
             this.contextualMenuManager = contextualMenuManager;
@@ -208,41 +207,38 @@ namespace Etk.Excel.BindingTemplates
             {
                 ExcelInterop.Range targetRange = range.Cells[1, 1];
 
-                lock (syncRoot)
+                List<ExcelTemplateView> views;
+                if (viewsBySheet.TryGetValue(sheet, out views))
                 {
-                    List<ExcelTemplateView> views;
-                    if (viewsBySheet.TryGetValue(sheet, out views))
+                    if (views != null)
                     {
-                        if (views != null)
+                        foreach (ExcelTemplateView view in views.Where(v => v.IsRendered).Select(v => v))
                         {
-                            foreach (ExcelTemplateView view in views.Where(v => v.IsRendered).Select(v => v))
+                            ExcelInterop.Range intersect = ExcelApplication.Application.Intersect(view.RenderedRange, targetRange);
+                            if (intersect != null)
                             {
-                                ExcelInterop.Range intersect = ExcelApplication.Application.Intersect(view.RenderedRange, targetRange);
-                                if (intersect != null)
+                                IBindingContextItem currentContextItem = view.GetConcernedContextItem(targetRange);
+                                if (currentContextItem != null)
                                 {
-                                    IBindingContextItem currentContextItem = view.GetConcernedContextItem(targetRange);
-                                    if (currentContextItem != null)
+                                    // User contextual menu
+                                    IBindingContextElement catchingContextElement = currentContextItem.ParentElement;
+                                    do
                                     {
-                                        // User contextual menu
-                                        IBindingContextElement catchingContextElement = currentContextItem.ParentElement;
-                                        do
+                                        ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
+                                        if ((currentTemplateDefinition.Parent as ExcelTemplateDefinition).ContextualMenu != null)
                                         {
-                                            ExcelTemplateDefinitionPart currentTemplateDefinition = catchingContextElement.ParentPart.TemplateDefinitionPart as ExcelTemplateDefinitionPart;
-                                            if ((currentTemplateDefinition.Parent as ExcelTemplateDefinition).ContextualMenu != null)
-                                            {
-                                                ContextualMenu contextualMenu = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).ContextualMenu as ContextualMenu;
-                                                contextualMenu.SetAction(targetRange, catchingContextElement, currentContextItem.ParentElement);
-                                                menus.Insert(0, contextualMenu);
-                                            }
-                                            catchingContextElement = catchingContextElement.ParentPart.ParentContext == null ? null : catchingContextElement.ParentPart.ParentContext.Parent;
+                                            ContextualMenu contextualMenu = (currentTemplateDefinition.Parent as ExcelTemplateDefinition).ContextualMenu as ContextualMenu;
+                                            contextualMenu.SetAction(targetRange, catchingContextElement, currentContextItem.ParentElement);
+                                            menus.Insert(0, contextualMenu);
                                         }
-                                        while (catchingContextElement != null);
-                                    
-                                        // Etk sort, search and filter
-                                        IContextualMenu searchSortAndFilterMenu = sortSearchAndFilterMenuManager.GetMenus(view, targetRange, currentContextItem);
-                                        if (searchSortAndFilterMenu != null)
-                                            menus.Insert(0, searchSortAndFilterMenu);
+                                        catchingContextElement = catchingContextElement.ParentPart.ParentContext?.Parent;
                                     }
+                                    while (catchingContextElement != null);
+                                    
+                                    // Etk sort, search and filter
+                                    IContextualMenu searchSortAndFilterMenu = sortSearchAndFilterMenuManager.GetMenus(view, targetRange, currentContextItem);
+                                    if (searchSortAndFilterMenu != null)
+                                        menus.Insert(0, searchSortAndFilterMenu);
                                 }
                             }
                         }
@@ -300,26 +296,23 @@ namespace Etk.Excel.BindingTemplates
         private void OnSheetChange(ExcelInterop.Range target)
         {
             bool inError = false;
-            lock (syncRoot)
+            List<ExcelTemplateView> views;
+            if (viewsBySheet.TryGetValue(target.Worksheet, out views))
             {
-                List<ExcelTemplateView> views;
-                if (viewsBySheet.TryGetValue(target.Worksheet, out views))
+                if (views != null)
                 {
-                    if (views != null)
+                    foreach (ExcelTemplateView view in views)
                     {
-                        foreach (ExcelTemplateView view in views)
+                        try
                         {
-                            try
-                            {
-                                if (view.OnSheetChange(ExcelApplication, target))
-                                    break;
-                            }
-                            catch (Exception ex)
-                            {
-                                string message = $"Sheet '{target.Worksheet.Name}', Template '{view.TemplateDefinition.Name}'. Sheet change failed: '{ex.Message}'";
-                                log.LogException(LogType.Error, ex, message);
-                                inError = true;
-                            }
+                            if (view.OnSheetChange(ExcelApplication, target))
+                                break;
+                        }
+                        catch (Exception ex)
+                        {
+                            string message = $"Sheet '{target.Worksheet.Name}', Template '{view.TemplateDefinition.Name}'. Sheet change failed: '{ex.Message}'";
+                            log.LogException(LogType.Error, ex, message);
+                            inError = true;
                         }
                     }
                 }
@@ -420,8 +413,7 @@ namespace Etk.Excel.BindingTemplates
             }
             catch (Exception ex)
             {
-                string message = $"Cannot create the template dataAccessor. {ex.Message}";
-                throw new EtkException(message, false);
+                throw new EtkException($"Cannot create the template dataAccessor. {ex.Message}", false);
             }
         }
         #endregion
@@ -479,7 +471,7 @@ namespace Etk.Excel.BindingTemplates
         /// <summary> Implements <see cref="IExcelTemplateManager.AddView"/> </summary> 
         public IExcelTemplateView AddView(string sheetTemplatePath, string templateName, string sheetDestinationName, string destinationRange, string clearingCellName)
         {
-            if (string.IsNullOrEmpty(sheetTemplatePath) || string.IsNullOrEmpty(sheetDestinationName) || string.IsNullOrEmpty(templateName) || destinationRange == null)
+            if (string.IsNullOrEmpty(sheetTemplatePath) || string.IsNullOrEmpty(sheetDestinationName) || string.IsNullOrEmpty(templateName) || string.IsNullOrEmpty(destinationRange))
                 throw new ArgumentNullException("Cannot create the requested view: the parameters 'sheetTemplatePath', 'sheetDestinationName', 'templateName' and 'destinationRange' are mandatory");
 
             ExcelInterop.Workbooks workbooks = null;
@@ -488,12 +480,6 @@ namespace Etk.Excel.BindingTemplates
             ExcelInterop.Worksheet sheetDestination = null;
             try
             {
-                if (string.IsNullOrEmpty(sheetTemplatePath))
-                    throw new ArgumentNullException("the sheet container name is mandatory");
-
-                if (sheetDestinationName == null)
-                    throw new ArgumentNullException("Destination sheet name is mandatory");
-
                 string sheetTemplateName;
                 if (sheetTemplatePath.Contains("|"))
                 {
@@ -530,7 +516,6 @@ namespace Etk.Excel.BindingTemplates
             catch (Exception ex)
             {
                 string message = $"Sheet '{(sheetDestination != null ? sheetDestination.Name.EmptyIfNull() : string.Empty)}', cannot add the View from template '{sheetTemplatePath.EmptyIfNull()}.{templateName.EmptyIfNull()}'";
-                Logger.Instance.LogException(LogType.Error, ex, message);
                 throw new EtkException(message, ex);
             }
             finally
@@ -629,7 +614,7 @@ namespace Etk.Excel.BindingTemplates
                 lock (syncRoot)
                 {
                     if (ExcelApplication.IsInEditMode())
-                        ExcelApplication.DisplayMessageBox(null, "'Clear views' is not allowed: Excel is in Edit mode", System.Windows.Forms.MessageBoxIcon.Warning);
+                        ExcelApplication.DisplayMessageBox(null, "'Remove views' is not allowed: Excel is in Edit mode", System.Windows.Forms.MessageBoxIcon.Warning);
                     else
                     {
                         bool success = true;
@@ -651,10 +636,8 @@ namespace Etk.Excel.BindingTemplates
 
                                     bindingTemplateManager.RemoveView(excelView);
                                 }
-                                catch(Exception ex)
+                                catch
                                 {
-                                    string message = "Remove View failed.";
-                                    Logger.Instance.LogException(LogType.Error, ex, message);
                                     success = false;
                                 }
                             }
@@ -666,9 +649,7 @@ namespace Etk.Excel.BindingTemplates
             }
             catch (Exception ex)
             {
-                string message = "'Remove views' failed.";
-                Logger.Instance.LogException(LogType.Error, ex, message);
-                throw new EtkException(message, ex);
+                throw new EtkException("'Remove views' failed.", ex);
                 //ExcelApplication.DisplayException(null, message, ex);
             }
         }
@@ -694,9 +675,7 @@ namespace Etk.Excel.BindingTemplates
             }
             catch (Exception ex)
             {
-                string message = "'GetSheetTemplates' failed";
-                Logger.Instance.LogException(LogType.Error, ex, message);
-                throw new EtkException(message, ex);
+                throw new EtkException("'GetSheetTemplates' failed", ex);
                 //ExcelApplication.DisplayException(null, message, ex);
             }
             return iViews;
@@ -715,9 +694,7 @@ namespace Etk.Excel.BindingTemplates
             }
             catch (Exception ex)
             {
-                string message = "'GetActiveSheetViews' failed";
-                Logger.Instance.LogException(LogType.Error, ex, message);
-                throw new EtkException(message, ex);
+                throw new EtkException("'GetActiveSheetViews' failed", ex);
                 //ExcelApplication.DisplayException(null, message, ex);
             }
             finally
@@ -770,20 +747,14 @@ namespace Etk.Excel.BindingTemplates
                                 }
                             }
                         }
-                        if(selectedRange != null)
-                        {
-                            selectedRange.Select();
-                            //ExcelApplication.ReleaseComObject(selectedRange);
-                            selectedRange = null;
-                        }
+                        if (selectedRange != null)
+                            SelectRange(ref selectedRange);
                     }
                 }
             }
             catch (Exception ex)
             {
-                string message = "'Render' failed.";
-                Logger.Instance.LogException(LogType.Error, ex, message);
-                throw new EtkException(message, ex);
+                throw new EtkException("'Render' failed.", ex);
                 //ExcelApplication.DisplayException(null, message, ex);
             }
         }
@@ -835,15 +806,14 @@ namespace Etk.Excel.BindingTemplates
                                 }
                             }
                         }
-                        selectedRange?.Select();
+                        if (selectedRange != null)
+                            SelectRange(ref selectedRange);
                     }
                 }
             }
             catch (Exception ex)
             {
-                string message = "'RenderDataOnly' failed.";
-                Logger.Instance.LogException(LogType.Error, ex, message);
-                throw new EtkException(message, ex);
+                throw new EtkException("'RenderDataOnly' failed.", ex);
                 //ExcelApplication.DisplayException(null, message, ex);
             }
         }
@@ -897,9 +867,7 @@ namespace Etk.Excel.BindingTemplates
             }
             catch (Exception ex)
             {
-                string message = "'Clear views' failed.";
-                Logger.Instance.LogException(LogType.Error, ex, message);
-                throw new EtkException(message, ex);
+                throw new EtkException("'Clear views' failed.", ex);
                 //ExcelApplication.DisplayException(null, message, ex);
             }
         }
@@ -962,6 +930,22 @@ namespace Etk.Excel.BindingTemplates
                         ExcelNotifyPropertyManager.Dispose();
                         ExcelNotifyPropertyManager = null;
                     }
+                }
+            }
+        }
+
+        private void SelectRange(ref ExcelInterop.Range range)
+        {
+            try
+            {
+                range?.Select();
+            }
+            catch (COMException comEx)
+            {
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
+                    SelectRange(ref range);
                 }
             }
         }

@@ -158,59 +158,50 @@ namespace Etk.Excel.BindingTemplates.Views
         /// <summary> Clear the execution previous rendering.</summary>
         public override void Clear()
         {
-            lock (syncRoot)
+            currentSelectedRangePattern.Clear();
+
+            currentSelectedRange = null;
+            CurrentSelectedCell = null;
+            CellsThatContainSearchValue.Clear();
+            //@@ searchValue = null;
+
+            base.Clear();
+            if (!IsDisposed && Renderer != null)
             {
-                currentSelectedRangePattern.Clear();
-
-                currentSelectedRange = null;
-                CurrentSelectedCell = null;
-                CellsThatContainSearchValue.Clear();
-                //@@ searchValue = null;
-
-                base.Clear();
-                if (!IsDisposed && Renderer != null)
-                {
-                    if (ETKExcel.ExcelApplication.IsInEditMode())
-                        throw new COMException("Excel is on Edit mode");
-                    Renderer.Clear();
-                    if (log.GetLogLevel() == LogType.Debug)
-                        log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' cleared.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
-                }
+                if (ETKExcel.ExcelApplication.IsInEditMode())
+                    throw new COMException("Excel is on Edit mode");
+                Renderer.Clear();
+                if (log.GetLogLevel() == LogType.Debug)
+                    log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' cleared.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
             }
         }
 
         public override void CreateBindingContext(object dataSource)
         {
-            lock (syncRoot)
+            if (!IsDisposed)
             {
-                if (!IsDisposed)
+                try
                 {
-                    try
-                    {
-                        base.CreateBindingContext(dataSource);
+                    base.CreateBindingContext(dataSource);
 
-                        Renderer?.Dispose();
-                        if (dataSource != null)
-                            Renderer = new ExcelRootRenderer(this);
-                    }
-                    catch (Exception ex)
-                    {
-                        string message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' Set data source failed.";
-                        throw new EtkException(message, ex, false);
-                    }
+                    Renderer?.Dispose();
+                    if (dataSource != null)
+                        Renderer = new ExcelRootRenderer(this);
+                }
+                catch (Exception ex)
+                {
+                    string message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' Set data source failed.";
+                    throw new EtkException(message, ex, false);
                 }
             }
         }
 
         public void SetAccessorParameters(IEnumerable<object> parameters)
         {
-            lock (syncRoot)
+            if (!IsDisposed)
             {
-                if (!IsDisposed)
-                {
-                    AccessorParametersManager?.Dispose();
-                    AccessorParametersManager = new AccessorParametersManager(this, parameters);
-                }
+                AccessorParametersManager?.Dispose();
+                AccessorParametersManager = new AccessorParametersManager(this, parameters);
             }
         }
 
@@ -489,41 +480,38 @@ namespace Etk.Excel.BindingTemplates.Views
         /// </summary>
         internal void RenderView()
         {
-            lock (syncRoot)
+            if (!IsDisposed && Renderer != null)
             {
-                if (!IsDisposed && Renderer != null)
+                if (ETKExcel.ExcelApplication.IsInEditMode())
+                    throw new COMException("Excel is on Edit mode");
+
+                try
                 {
-                    if (ETKExcel.ExcelApplication.IsInEditMode())
-                        throw new COMException("Excel is on Edit mode");
-
-                    try
+                    using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                     {
-                        using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
-                        {
-                            BeforeRendering?.Invoke(false);
+                        BeforeRendering?.Invoke(false);
 
-                            // Clear the previous rendering.
-                            ////////////////////////////////
-                            CurrentSelectedCell = null;
-                            currentSelectedRange = null;
-                            Renderer.Clear();
+                        // Clear the previous rendering.
+                        ////////////////////////////////
+                        CurrentSelectedCell = null;
+                        currentSelectedRange = null;
+                        Renderer.Clear();
 
-                            Renderer.Render();
+                        Renderer.Render();
 
-                            ExecuteAutoFit();
+                        ExecuteAutoFit();
 
-                            if (log.GetLogLevel() == LogType.Debug)
-                                log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
+                        if (log.GetLogLevel() == LogType.Debug)
+                            log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' rendered.", ViewSheet.Name, this.Ident, TemplateDefinition.Name);
 
-                            AfterRendering?.Invoke(false);
-                            Renderer.AfterRendering();
-                        }
+                        AfterRendering?.Invoke(false);
+                        Renderer.AfterRendering();
                     }
-                    catch (Exception ex)
-                    {
-                        string message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' render failed.";
-                        throw new EtkException(message, ex, false);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    string message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' render failed.";
+                    throw new EtkException(message, ex, false);
                 }
             }
         }
@@ -539,48 +527,45 @@ namespace Etk.Excel.BindingTemplates.Views
         /// </summary>
         internal void RenderViewDataOnly()
         {
-            lock (syncRoot)
+            if (!IsDisposed && Renderer != null)
             {
-                if (!IsDisposed && Renderer != null)
+                if (ETKExcel.ExcelApplication.IsInEditMode())
+                    throw new COMException("Excel is on Edit mode");
+
+                try
                 {
-                    if (ETKExcel.ExcelApplication.IsInEditMode())
-                        throw new COMException("Excel is on Edit mode");
-
-                    try
+                    if (Renderer.RenderedRange == null)
+                        RenderView();
+                    else
                     {
-                        if (Renderer.RenderedRange == null)
-                            RenderView();
-                        else
+                        using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                         {
-                            using (var freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
+                            if (BindingContext?.Body.ElementsToRender != null)
                             {
-                                if (BindingContext != null && BindingContext.Body.ElementsToRender != null)
-                                {
-                                    BeforeRendering?.Invoke(true);
+                                BeforeRendering?.Invoke(true);
 
-                                    Renderer.RenderDataOnly();
-                                    if (log.GetLogLevel() == LogType.Debug)
-                                        log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, Ident, TemplateDefinition.Name);
+                                Renderer.RenderDataOnly();
+                                if (log.GetLogLevel() == LogType.Debug)
+                                    log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}' from '{2}' render data only failed.", ViewSheet.Name, Ident, TemplateDefinition.Name);
 
-                                    AfterRendering?.Invoke(true); ;
+                                AfterRendering?.Invoke(true); ;
 
-                                    CurrentSelectedCell?.Select();
-                                }
+                                CurrentSelectedCell?.Select();
                             }
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        var message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' render data only failed.";
-                        throw new EtkException(message, ex, false);
-                    }
+                }
+                catch (Exception ex)
+                {
+                    var message = $"Sheet '{ViewSheet.Name}', View '{this.Ident}' from '{TemplateDefinition.Name}' render data only failed.";
+                    throw new EtkException(message, ex, false);
                 }
             }
         }
 
         internal bool OnSheetChange(ExcelApplication excelApplication, ExcelInterop.Range target)
         {
-            if (!IsDisposed && Renderer != null && Renderer.RenderedRange != null)
+            if (!IsDisposed && Renderer?.RenderedRange != null)
             {
                 ExcelInterop.Range intersect = excelApplication.Application.Intersect(Renderer.RenderedRange, target);
                 if (intersect != null)

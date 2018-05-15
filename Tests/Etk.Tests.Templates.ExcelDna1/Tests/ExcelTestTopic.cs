@@ -112,7 +112,7 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         {
             Tests.ForEach(t => t.InitTestStatus());
 
-            if (!renderDone)
+            //if (!renderDone)
                 Render();
 
             if (!RenderSuccessful)
@@ -158,7 +158,7 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
             }
             finally
             {
-                renderDone = true;
+               // renderDone = true;
             }
         }
  

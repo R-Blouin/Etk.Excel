@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;

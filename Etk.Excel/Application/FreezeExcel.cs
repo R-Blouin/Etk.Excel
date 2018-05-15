@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.Application
@@ -9,7 +11,7 @@ namespace Etk.Excel.Application
     /// </summary>
     public class FreezeExcel : IDisposable
     {
-        private static int requestsCpt = 0;
+        private static int requestsCpt;
         private static readonly object objSync = new object();
 
         private bool disposed;
@@ -18,6 +20,7 @@ namespace Etk.Excel.Application
         private readonly bool displayStatusBar;
         private readonly ExcelInterop.XlCalculation calculationMode;
 
+        #region .ctors
         public FreezeExcel(bool keepStatusVisible = true, bool keepScreenUpdating = false, bool keepEnabledEvent = false, bool keepCalculation = false)
         {
             lock (objSync)
@@ -32,10 +35,7 @@ namespace Etk.Excel.Application
                         displayStatusBar = ETKExcel.ExcelApplication.Application.DisplayStatusBar;
                         calculationMode = ETKExcel.ExcelApplication.Application.Calculation;
 
-                        ETKExcel.ExcelApplication.Application.ScreenUpdating   = keepScreenUpdating && screenUpdating;
-                        ETKExcel.ExcelApplication.Application.EnableEvents     = keepEnabledEvent && enableEvents;
-                        ETKExcel.ExcelApplication.Application.DisplayStatusBar = keepStatusVisible && displayStatusBar;
-                        ETKExcel.ExcelApplication.Application.Calculation      = keepCalculation ? ETKExcel.ExcelApplication.Application.Calculation : ExcelInterop.XlCalculation.xlCalculationManual;
+                        Freeze(keepStatusVisible, keepScreenUpdating, keepEnabledEvent, keepCalculation);
                     }
                 }
             }
@@ -45,6 +45,7 @@ namespace Etk.Excel.Application
         {
             Dispose();
         }
+        #endregion
 
         public void Dispose()
         {
@@ -57,14 +58,53 @@ namespace Etk.Excel.Application
                     if (! ETKExcel.ExcelApplication.IsInEditMode())
                     {
                         if (requestsCpt == 0)
-                        {
-                            ETKExcel.ExcelApplication.Application.ScreenUpdating = screenUpdating;
-                            ETKExcel.ExcelApplication.Application.EnableEvents = enableEvents;
-                            ETKExcel.ExcelApplication.Application.DisplayStatusBar = displayStatusBar;
-                            ETKExcel.ExcelApplication.Application.Calculation = calculationMode;
-                        }
+                            UnFreeze();
                     }
                 }
+            }
+        }
+
+        private void Freeze(bool keepStatusVisible, bool keepScreenUpdating, bool keepEnabledEvent, bool keepCalculation)
+        {
+            try
+            {
+                ETKExcel.ExcelApplication.Application.ScreenUpdating = keepScreenUpdating && screenUpdating;
+                ETKExcel.ExcelApplication.Application.EnableEvents = keepEnabledEvent && enableEvents;
+                ETKExcel.ExcelApplication.Application.DisplayStatusBar = keepStatusVisible && displayStatusBar;
+                ETKExcel.ExcelApplication.Application.Calculation = keepCalculation ? ETKExcel.ExcelApplication.Application.Calculation : ExcelInterop.XlCalculation.xlCalculationManual;
+            }
+            catch (COMException comEx)
+            {
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
+                    Freeze(keepStatusVisible, keepScreenUpdating, keepEnabledEvent, keepCalculation);
+                    return;
+                }
+
+                throw new EtkException($"'Freeze Excel' failed: {comEx.Message}");
+            }
+        }
+
+        private void UnFreeze()
+        {
+            try
+            {
+                ETKExcel.ExcelApplication.Application.ScreenUpdating = screenUpdating;
+                ETKExcel.ExcelApplication.Application.EnableEvents = enableEvents;
+                ETKExcel.ExcelApplication.Application.DisplayStatusBar = displayStatusBar;
+                ETKExcel.ExcelApplication.Application.Calculation = calculationMode;
+            }
+            catch (COMException comEx)
+            {
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
+                    UnFreeze();
+                    return;
+                }
+
+                throw new EtkException($"'UnFreeze Excel' failed: {comEx.Message}");
             }
         }
     }

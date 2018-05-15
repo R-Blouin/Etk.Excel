@@ -21,6 +21,9 @@ namespace Etk.Excel
     [Export]
     public sealed class ETKExcel
     {
+        internal const int EXCEL_BUSY = -2146777998;
+        internal const int WAITINGTIME_EXCEL_BUSY = 30;
+
         #region properties
         private bool isDisposed;
         private static readonly object syncObj = new object();

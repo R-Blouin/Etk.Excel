@@ -9,6 +9,7 @@ using Etk.Excel.BindingTemplates.Decorators.XmlDefinitions;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
+using System.Threading;
 using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Decorators
@@ -98,7 +99,6 @@ namespace Etk.Excel.BindingTemplates.Decorators
             ExcelInterop.Range concernedRange = sender as ExcelInterop.Range;
             if (concernedRange == null)
                 return false;
-
             try
             {
                 if (decoratorRange == null)
@@ -151,6 +151,16 @@ namespace Etk.Excel.BindingTemplates.Decorators
                     }
                     return decoratorResult != null;
                 }
+                return false;
+            }
+            catch (COMException comEx)
+            {
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
+                    return Resolve(sender, element);
+                }
+                log.LogExceptionFormat(LogType.Error, comEx, $"Cannot resolve decorator '{Ident}':{comEx.Message}");
                 return false;
             }
             catch (Exception ex)
@@ -216,6 +226,16 @@ namespace Etk.Excel.BindingTemplates.Decorators
                     }
                     return decoratorResult != null;
                 }
+                return false;
+            }
+            catch (COMException comEx)
+            {
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
+                    return Resolve(sender, contextItem);
+                }
+                log.LogExceptionFormat(LogType.Error, comEx, $"Cannot resolve decorator '{Ident}':{comEx.Message}");
                 return false;
             }
             catch (Exception ex)

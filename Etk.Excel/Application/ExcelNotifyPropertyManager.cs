@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -30,11 +31,13 @@ namespace Etk.Excel.Application
             contextItems = new BlockingCollection<ExcelNotityPropertyContext>();
             ExcelApplication = excelApplication;
 
-            thread = new Thread(Execute);
-            thread.Name = "NotifyPropertiesChanged";
-            thread.IsBackground = true;
+            thread = new Thread(Execute)
+            {
+                Name = "NotifyPropertiesChanged",
+                IsBackground = true,
+                Priority = ThreadPriority.BelowNormal
+            };
             //thread.SetApartmentState(ApartmentState.STA);
-            thread.Priority = ThreadPriority.BelowNormal;
             thread.Start();
         }
         #endregion
@@ -83,7 +86,7 @@ namespace Etk.Excel.Application
                     }
                     ExcelNotityPropertyContext context = contextItems.Take(cancellationTokenSource.Token);
                     if (context != null)
-                        ETKExcel.ExcelApplication.ExcelDispatcher.Invoke(new Action(() => ExecuteNotify(context)));
+                        ETKExcel.ExcelApplication.ExcelDispatcher.Invoke(() => ExecuteNotify(context));
                 }
             }
             catch (Exception ex)
@@ -104,7 +107,7 @@ namespace Etk.Excel.Application
             if (isDisposed || context.ContextItem.IsDisposed || !context.View.IsRendered)
                 return;
 
-            ExcelInterop.Range range = null;
+            ExcelInterop.Range range;
             bool enableEvent = ExcelApplication.Application.EnableEvents;
             try
             {
@@ -124,7 +127,7 @@ namespace Etk.Excel.Application
                         if (context.ContextItem is ExcelContextItemWithFormula)
                         {
                             range.Calculate();
-                            ((ExcelContextItemWithFormula)context.ContextItem).UpdateTarget(range.Value2);
+                            ((ExcelContextItemWithFormula) context.ContextItem).UpdateTarget(range.Value2);
                         }
                     }
                     context.ContextItem.BindingDefinition.DecoratorDefinition?.Resolve(range, context.ContextItem);
@@ -133,10 +136,16 @@ namespace Etk.Excel.Application
             }
             catch (COMException comEx)
             {
-                waitExcelBusy = true;
-                NotifyPropertyChanged(context);
-                if (sleepTime < 1000)
-                    sleepTime += 10;
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    waitExcelBusy = true;
+                    NotifyPropertyChanged(context);
+                    if (sleepTime < 1000)
+                        sleepTime += 10;
+                    return;
+                }
+                string message = $"'ExecuteNotify' failed.{comEx.Message}";
+                Logger.Instance.LogException(LogType.Error, comEx, message);
             }
             catch (Exception ex)
             {
@@ -145,16 +154,29 @@ namespace Etk.Excel.Application
             }
             finally
             {
-                try
-                {
-
-                    if (ExcelApplication.Application.EnableEvents != enableEvent)
-                        ExcelApplication.Application.EnableEvents = enableEvent;
-                }
-                catch (COMException comEx)
-                { }
+                ChangedEnableEvent(enableEvent);
             }
             range = null;
+        }
+
+        private void ChangedEnableEvent(bool enableEvent)
+        {
+            try
+            {
+                if (ExcelApplication.Application.EnableEvents != enableEvent)
+                    ExcelApplication.Application.EnableEvents = enableEvent;
+            }
+            catch (COMException comEx)
+            {
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
+                    ChangedEnableEvent(enableEvent);
+                    return;
+                }
+
+                throw new EtkException($"'ExecuteNotify.ChangedEnableEvent' failed: {comEx.Message}");
+            }
         }
         #endregion
     }

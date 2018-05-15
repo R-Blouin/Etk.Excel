@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.InteropServices;
+using System.Threading;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
@@ -62,6 +64,16 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 }
                 return false;
             }
+            catch (COMException comEx)
+            {
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
+                    return Resolve(sender, element);
+                }
+                log.LogExceptionFormat(LogType.Error, comEx, $"Cannot resolve decorator '{Ident}':{comEx.Message}");
+                return false;
+            }
             catch (Exception ex)
             {
                 log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve decorator2 '{Ident}':{ex.Message}");
@@ -100,6 +112,16 @@ namespace Etk.Excel.BindingTemplates.Decorators
                     }
                     return commentStr != null;
                 }
+                return false;
+            }
+            catch (COMException comEx)
+            {
+                if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
+                {
+                    Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
+                    return Resolve(sender, contextItem);
+                }
+                log.LogExceptionFormat(LogType.Error, comEx, $"Cannot resolve decorator '{Ident}':{comEx.Message}");
                 return false;
             }
             catch (Exception ex)

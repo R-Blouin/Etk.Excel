@@ -63,8 +63,7 @@ namespace Etk.BindingTemplates
                         if (view.TemplateDefinition == null)
                             throw new BindingTemplateException("the template dataAccessor cannot be null");
                         if (GetTemplateDefinition(view.TemplateDefinition.Name) != null)
-
-                        viewsByTemplateDefinition[view.TemplateDefinition.Name].Add(view);
+                            viewsByTemplateDefinition[view.TemplateDefinition.Name].Add(view);
                         viewById[view.Ident] = view;
                     }
                     catch (Exception ex)
@@ -78,12 +77,9 @@ namespace Etk.BindingTemplates
         public ITemplateView GetView(Guid ident)
         {
             ITemplateView view = null;
-            if (ident != null)
+            lock (syncRoot)
             {
-                lock (syncRoot)
-                {
-                    viewById.TryGetValue(ident, out view);
-                }
+                viewById.TryGetValue(ident, out view);
             }
             return view;
         }
@@ -95,7 +91,7 @@ namespace Etk.BindingTemplates
 
         public void RemoveView(ITemplateView view)
         {
-            if (view != null && view.Ident != null )
+            if (view?.Ident != null )
             {
                 lock (syncRoot)
                 {
