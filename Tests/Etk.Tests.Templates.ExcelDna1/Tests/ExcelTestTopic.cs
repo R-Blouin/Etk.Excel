@@ -9,7 +9,7 @@ using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Tests.Templates.ExcelDna1.Tests
 {
-    abstract class ExcelTestTopic : ViewModelBase, IExcelTestTopic
+    abstract class ExcelTestTopic : ViewModelBase, IExcelTestTopic, IDisposable
     {
         #region properties and attributes
         private IExcelTestsManager testManager;
@@ -65,26 +65,25 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         #region pubic methods
         public void Init()
         {
+            ExcelInterop.Workbook workbook = null;
+            ExcelInterop.Sheets sheets = null;
+            ExcelInterop.Worksheet lastSheet = null;
+            ExcelInterop.Worksheet firstSheet = null;
             try
             {
                 //viewsOwnerSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, DestinationSheetName);
 
                 // Create the destination sheet
-                ExcelInterop.Workbook workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
-                ExcelInterop.Sheets sheets = workbook.Sheets;
-                ExcelInterop.Worksheet lastSheet = workbook.Sheets[sheets.Count];
-                ExcelInterop.Worksheet firstSheet = workbook.Sheets[1];
+                workbook = ETKExcel.ExcelApplication.Application.ActiveWorkbook;
+                sheets = workbook.Sheets;
+                lastSheet = workbook.Sheets[sheets.Count];
+                firstSheet = workbook.Sheets[1];
 
                 viewsOwnerSheet = workbook.Worksheets.Add(Type.Missing, lastSheet);
                 viewsOwnerSheet.Name = DestinationSheetName;
                 viewsOwnerSheet.Visible = ExcelInterop.XlSheetVisibility.xlSheetHidden;
 
                 firstSheet.Activate();
-
-                int i = Marshal.ReleaseComObject(firstSheet);
-                i = Marshal.ReleaseComObject(lastSheet);
-                i = Marshal.ReleaseComObject(sheets);
-                i = Marshal.ReleaseComObject(workbook);
                 // End create the destination sheet
 
                 // Create the 'GoBackToDashboard' view
@@ -96,6 +95,17 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
             catch (Exception ex)
             {
                 throw new Exception(string.Format("Init Topics failed:{0}", ex.Message), ex);
+            }
+            finally
+            {
+                if (firstSheet != null)
+                    Marshal.ReleaseComObject(firstSheet);
+                if (lastSheet != null)
+                    Marshal.ReleaseComObject(lastSheet);
+                if (sheets != null)
+                    Marshal.ReleaseComObject(sheets);
+                if (workbook != null)
+                    Marshal.ReleaseComObject(workbook);
             }
         }
 
@@ -131,6 +141,20 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         public int GetNumberOfTests()
         {
             return Tests.Count;
+        }
+
+        public void Dispose()
+        {
+            if (templatesSheet != null)
+            {
+                Marshal.ReleaseComObject(templatesSheet);
+                templatesSheet = null;
+            }
+            if (viewsOwnerSheet != null)
+            {
+                Marshal.ReleaseComObject(viewsOwnerSheet);
+                viewsOwnerSheet = null;
+            }
         }
         #endregion
 

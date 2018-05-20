@@ -1,21 +1,22 @@
-﻿namespace Etk.Tests.Templates.ExcelDna1
-{
-    using Dashboard;
-    using Etk.Excel;
-    using ExcelDna.Integration;
-    using Excel = Microsoft.Office.Interop.Excel;
+﻿using Etk.Excel;
+using Etk.Tests.Templates.ExcelDna1.Dashboard;
+using ExcelDna.Integration;
+using Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
+namespace Etk.Tests.Templates.ExcelDna1
+{
     class AddinManager : IExcelAddIn
     {
-        public Excel.Application ExcelApplication
+        public Application ExcelApplication
         { get; private set; }
 
         public void AutoOpen()
         {
-            ExcelApplication = ExcelDnaUtil.Application as Excel.Application;
+            ExcelApplication = ExcelDnaUtil.Application as Application;
 
             // To avoid the Excel 'Save message' on Exit
-            Excel.Workbook currentWorkbook = ExcelApplication.ActiveWorkbook;
+            Workbook currentWorkbook = ExcelApplication.ActiveWorkbook;
             if(currentWorkbook != null)
                 currentWorkbook.BeforeClose += (ref bool cancel) => currentWorkbook.Saved = true;
 
@@ -24,6 +25,8 @@
 
             // Create, render and activate the dashboard view
             DashboardSheet.CreateAndActivateDashBoard();
+
+            Marshal.ReleaseComObject(currentWorkbook);
         }
 
         public void AutoClose()

@@ -23,6 +23,11 @@ namespace Etk.Demos.Data.Shops
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Etk.Demos.Data.Shops.Data.Customers.xml"))
             {
                 customerList = xs.Deserialize(stream) as CustomerList;
+
+                customerList.Customers.AddRange(customerList.Customers);
+                customerList.Customers.AddRange(customerList.Customers);
+                customerList.Customers.AddRange(customerList.Customers);
+                customerList.Customers.AddRange(customerList.Customers);
             }
         }
         #endregion

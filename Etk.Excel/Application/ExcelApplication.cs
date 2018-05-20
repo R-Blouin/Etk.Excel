@@ -163,14 +163,11 @@ namespace Etk.Excel.Application
         {
             if (!string.IsNullOrEmpty(name))
             {
-                bool getActiveWorkbook = false;
+                bool workbookParameterIsNull = workbook == null;
                 try
                 {
-                    if(workbook == null)
-                    {
+                    if(workbookParameterIsNull)
                         workbook = Application.ActiveWorkbook;
-                        getActiveWorkbook = true;
-                    }
 
                     foreach (ExcelInterop.Worksheet sheet in workbook.Worksheets)
                     {
@@ -181,7 +178,7 @@ namespace Etk.Excel.Application
                 }
                 finally
                 {
-                    if(getActiveWorkbook)
+                    if(workbookParameterIsNull)
                     {
                         Marshal.ReleaseComObject(workbook);
                         workbook = null;
@@ -250,25 +247,25 @@ namespace Etk.Excel.Application
                     font.Color = withFont.Color;
                     interior.Color = withInterior.Color;
 
-                    ExcelApplication.ReleaseComObject(interior);
-                    ExcelApplication.ReleaseComObject(font);
-                    ExcelApplication.ReleaseComObject(withInterior);
-                    ExcelApplication.ReleaseComObject(withFont);
+                    ReleaseComObject(interior);
+                    ReleaseComObject(font);
+                    ReleaseComObject(withInterior);
+                    ReleaseComObject(withFont);
+
                     interior = null;
                     font = null;
                     withInterior = null;
                     withFont = null;
                 }
             }
-            catch
-            {
-                if(concernedSheet != null)
-                    ExcelApplication.ReleaseComObject(concernedSheet);
-            }
             finally
             {
-                if (concernedSheet != null && isProtected)
-                    ProtectSheet(concernedSheet);
+                if (concernedSheet != null)
+                {
+                    if (isProtected)
+                        ProtectSheet(concernedSheet);
+                    ReleaseComObject(concernedSheet);
+                }
             }
         }
 
@@ -276,6 +273,7 @@ namespace Etk.Excel.Application
         {
             if (concernedSheet != null && !concernedSheet.ProtectContents)
             {
+                ExcelInterop.Range cells = concernedSheet.Cells;
                 concernedSheet.Cells.Locked = false;
                 concernedSheet.Protect(Type.Missing, false, false, Type.Missing, false, true,
                                        true, true,
@@ -283,6 +281,7 @@ namespace Etk.Excel.Application
                                        false,
                                        false, false, false, true,
                                        true);
+                ReleaseComObject(cells);
             }
         }
 
@@ -294,8 +293,13 @@ namespace Etk.Excel.Application
                 {
                     isDisposed = true;
                     postAsynchronousManager.Dispose();
+
                     ReleaseComObject(Application);
                     Application = null;
+
+                    if(newMenu != null)
+                        ReleaseComObject(Application);
+
                     ExcelDispatcher = null;
                 }
             }
@@ -326,10 +330,10 @@ namespace Etk.Excel.Application
                 workingRange = workingRange.Resize[Type.Missing, Math.Abs(numberOfColumns)];
 
                 ExcelInterop.Range columns = workingRange.EntireColumn;
-                columns.Hidden = !(bool)columns.Hidden;
+                columns.Hidden = !(bool) columns.Hidden;
 
-                columns = null;
-                workingRange = null;
+                Marshal.ReleaseComObject(columns);
+                Marshal.ReleaseComObject(workingRange);
             }
         }
         #endregion

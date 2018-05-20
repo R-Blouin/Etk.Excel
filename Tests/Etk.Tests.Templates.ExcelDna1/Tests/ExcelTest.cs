@@ -6,6 +6,7 @@ using Etk.Tests.Templates.ExcelDna1.Extensions;
 using Etk.Excel;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using Etk.Excel.MvvmBase;
+using System.Runtime.InteropServices;
 
 namespace Etk.Tests.Templates.ExcelDna1.Tests
 {
@@ -101,7 +102,10 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         {
             ExcelInterop.Worksheet destinationSheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(ETKExcel.ExcelApplication.Application.ActiveWorkbook, concernedTest.Parent.DestinationSheetName);
             if (destinationSheet != null)
-                ((ExcelInterop._Worksheet)destinationSheet).Activate();
+            {
+                destinationSheet.Activate();
+                Marshal.ReleaseComObject(destinationSheet);
+            }
         }
         #endregion
 

@@ -700,10 +700,7 @@ namespace Etk.Excel.BindingTemplates
             finally
             {
                 if (activeSheet != null)
-                {
                     ExcelApplication.ReleaseComObject(activeSheet);
-                    activeSheet = null;
-                }
             }
             return iViews;
         }

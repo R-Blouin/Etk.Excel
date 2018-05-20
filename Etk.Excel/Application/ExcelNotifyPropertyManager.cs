@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Windows.Threading;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using Etk.Excel.BindingTemplates.Controls.WithFormula;

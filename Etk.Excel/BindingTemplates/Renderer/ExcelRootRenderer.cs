@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Threading;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
@@ -51,7 +51,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             base.Render();
 
             toOperateOnSheetCalculation = ContextItems?.SelectMany(r => r.Where(ci => ci is IFormulaCalculation))
-                                                   .Select(c =>(IFormulaCalculation) c).ToArray();
+                                                       .Select(c =>(IFormulaCalculation) c).ToArray();
             RenderDataOnly();
         }
 
@@ -91,51 +91,58 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 }
             }
             //);
-            RenderedRange.Value2 = cells;
 
-            // Element decorators managements
-            foreach(ExcelElementDecorator rowDecorator in RowDecorators)
-                rowDecorator.Resolve();
-
-            // Decorators managements
-            foreach (KeyValuePair<IBindingContextItem, System.Drawing.Point> kvp in decorators)
+            ((ExcelApplication)ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(DispatcherPriority.Background, new Action( () =>
             {
-                ExcelInterop.Range range = RenderedRange[kvp.Value.Y, kvp.Value.X];
-                kvp.Key.BindingDefinition.DecoratorDefinition.Resolve(range, kvp.Key);
-                range = null;
-            }
+                RenderedRange.Value2 = cells;
 
-            // Redraw the borders of the current selection
-            if (((TemplateDefinition) View.TemplateDefinition).AddBorder)
-                BorderAround(RenderedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlMedium, 1);
+                // Element decorators managements
+                foreach (ExcelElementDecorator rowDecorator in RowDecorators)
+                    rowDecorator.Resolve();
+
+                // Decorators managements
+                foreach (KeyValuePair<IBindingContextItem, System.Drawing.Point> kvp in decorators)
+                {
+                    ExcelInterop.Range range = RenderedRange[kvp.Value.Y, kvp.Value.X];
+                    kvp.Key.BindingDefinition.DecoratorDefinition.Resolve(range, kvp.Key);
+                    range = null;
+                }
+
+                // Redraw the borders of the current selection
+                if (((TemplateDefinition)View.TemplateDefinition).AddBorder)
+                    BorderAround(RenderedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlMedium, 1);
+            }));
         }
 
         public void Clear()
         {
             if (!IsDisposed && RenderedRange != null)
             {
-                using (FreezeExcel freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
+                ((ExcelApplication)ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
                 {
-                    try
+                    using (FreezeExcel freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                     {
-                        IsClearing = true;
+                        try
+                        {
+                            IsClearing = true;
 
-                        RenderedRange.Clear();
-                        if (View.TemplateDefinition.Orientation == Orientation.Horizontal)
-                            RenderedRange.EntireColumn.Hidden = false;
-                        else
-                            RenderedRange.EntireRow.Hidden = false;
+                            RenderedRange.Clear();
+                            if (View.TemplateDefinition.Orientation == Orientation.Horizontal)
+                                RenderedRange.EntireColumn.Hidden = false;
+                            else
+                                RenderedRange.EntireRow.Hidden = false;
 
-                        View.ClearingCell?.Copy(RenderedRange);
+                            View.ClearingCell?.Copy(RenderedRange);
 
-                        RowDecorators.Clear();
-                        ClearRenderingData();
+                            RowDecorators.Clear();
+                            ClearRenderingData();
+                        }
+                        finally
+                        {
+                            IsClearing = false;
+                        }
                     }
-                    finally
-                    {
-                        IsClearing = false;
-                    }
-                }
+                }));
             }
         }
 
@@ -156,11 +163,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         catch
                         { }
 
-                        if (contextItem != null)
+                        if (contextItem != null && ! contextItem.BindingDefinition.IsReadOnly)
                         {
                             object retValue;
-                            bool mustUpdate = contextItem.UpdateDataSource(cell.Value2, out retValue);
-                            if (mustUpdate)
+                            if (contextItem.UpdateDataSource(cell.Value2, out retValue))
                             {
                                 if (freezeExcel == null)
                                     freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible);

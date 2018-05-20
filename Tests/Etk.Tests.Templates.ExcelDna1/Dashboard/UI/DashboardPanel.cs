@@ -1,8 +1,8 @@
-﻿namespace EEtk.Tests.Templates.ExcelDna1.Dashboard
-{
-    using System.Runtime.InteropServices;
-    using System.Windows.Forms;
+﻿using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
+namespace EEtk.Tests.Templates.ExcelDna1.Dashboard
+{
     [ComVisible(true)]
     public partial class DashboardPanel : UserControl
     {
