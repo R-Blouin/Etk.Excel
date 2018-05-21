@@ -60,21 +60,21 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             IBindingContextItem item = partToRenderDefinition.DefinitionParts[rowId, colId] == null ? null : contextElement.BindingContextItems[cptItems++];
                             if (item != null && ((item.BindingDefinition != null && item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly) || item is IExcelControl))
                             {
+                                // Live Cycle of range is managed by Control
                                 ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId, firstCell.Column + colId + cptElements * partToRenderDefinition.Width];
                                 if (item.BindingDefinition.IsEnum )
                                     enumManager.CreateControl(item, range);
                                 else
-                                    ((IExcelControl)item).CreateControl(range);
-                                range = null;
+                                    ((IExcelControl)item) .CreateControl(range);
                             }
                             Parent.ContextItems[rowId].Add(item);
                         }
                     }
                     if (useDecorator && ((ExcelTemplateDefinition)this.partToRenderDefinition.Parent).Decorator != null)
                     {
+                        // Live cycle of elementRange managed by ExcelElementDecorator
                         ExcelInterop.Range elementRange = firstCell.Offset[0, cptElements];
                         elementRange = elementRange.Resize[localHeight, 1];
-
                         Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
                     }
                     cptElements++;
@@ -192,6 +192,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                 if (useDecorator && ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator != null)
                 {
+                    // Live cycle of elementRange managed by ExcelElementDecorator
                     ExcelInterop.Range elementRange = firstElementCell.Resize[elementHeight, elementWidth];
                     Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
                 }
@@ -372,17 +373,17 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     //else 
                     if (item is IExcelControl)
                     {
+                        // Live Cycle of range is managed by Control
                         ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row + rowId - startPos, currentRenderingTo.Column];
                         ((IExcelControl)item).CreateControl(range);
-                        range = null;
                     }
                     if (item.BindingDefinition != null)
                     {
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                         {
+                            // Live Cycle of range is managed by Control
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row + rowId - startPos, currentRenderingTo.Column];
                             enumManager.CreateControl(item, range);
-                            range = null;
                         }
                         //if (item.BindingDefinition.IsMultiLine)
                         //{
@@ -395,7 +396,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
                         {
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row + rowId - startPos, currentRenderingTo.Column];
                             AddAfterRenderingAction(item.BindingDefinition, range);
-                            range = null;
                         }
                     }
                 }

@@ -33,9 +33,7 @@ namespace Etk.Excel.Extensions
         }
     }
 
-    /// <summary> 
-    /// Extension methods for 'Microsoft.Office.Interop.Excel.Application'
-    /// </summary>
+    /// <summary> Extension methods for 'Microsoft.Office.Interop.Excel.Application'</summary>
     public static class ApplicationExtension
     {
         /// <summary> Return a wrapper around Excel main windows of the current application insatnce.</summary>

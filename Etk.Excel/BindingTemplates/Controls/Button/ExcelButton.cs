@@ -116,9 +116,6 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     ExcelApplication.ReleaseComObject(oleObjects);
                 if (worksheet != null)
                     ExcelApplication.ReleaseComObject(worksheet);
-                obj = null;
-                oleObjects = null;
-                worksheet = null;
             }
         }
         #endregion
@@ -126,7 +123,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         #region public methods
         public void Dispose()
         {
-            if (commandButton != null)
+            if (! IsDisposed && commandButton != null)
             {
                 IsDisposed = true;
 
@@ -134,7 +131,6 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                     commandButton.Click -= CurrentCommand;
 
                 ExcelInterop.Worksheet worksheet = OwnerRange.Worksheet;
-
                 ExcelInterop.OLEObject obj  = worksheet.OLEObjects(Name);
                 obj.Delete();
 
@@ -143,11 +139,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 ExcelApplication.ReleaseComObject(OwnerRange);
                 ExcelApplication.ReleaseComObject(worksheet);
 
-                obj = null;
                 commandButton = null;
-                OwnerRange = null;
-                worksheet = null;
-
             }
         }
 

@@ -12,6 +12,7 @@ using Etk.Excel.BindingTemplates.Controls.NamedRange;
 using Etk.Excel.BindingTemplates.SortSearchAndFilter;
 using Etk.Tools.Extensions;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Definitions
 {
@@ -70,6 +71,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             part.OnAfterRendering.Add(((IBindingDefinition)definitionPart).OnAfterRendering);
                         }
                     }
+                    ExcelApplication.ReleaseComObject(cell);
                 }
                 part.PositionLinkedTemplates.Add(posLinks);
             }
@@ -110,6 +112,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                             part.OnAfterRendering.Add(((IBindingDefinition) definitionPart).OnAfterRendering);
                         }
                     }
+                    ExcelApplication.ReleaseComObject(cell);
                 }
                 part.PositionLinkedTemplates.Add(posLinks);
             }

@@ -92,57 +92,51 @@ namespace Etk.Excel.BindingTemplates.Renderer
             }
             //);
 
-            ((ExcelApplication)ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(DispatcherPriority.Background, new Action( () =>
+            RenderedRange.Value2 = cells;
+
+            // Element decorators managements
+            foreach (ExcelElementDecorator rowDecorator in RowDecorators)
+                rowDecorator.Resolve();
+
+            // Decorators managements
+            foreach (KeyValuePair<IBindingContextItem, System.Drawing.Point> kvp in decorators)
             {
-                RenderedRange.Value2 = cells;
+                ExcelInterop.Range range = RenderedRange[kvp.Value.Y, kvp.Value.X];
+                kvp.Key.BindingDefinition.DecoratorDefinition.Resolve(range, kvp.Key);
+                range = null;
+            }
 
-                // Element decorators managements
-                foreach (ExcelElementDecorator rowDecorator in RowDecorators)
-                    rowDecorator.Resolve();
-
-                // Decorators managements
-                foreach (KeyValuePair<IBindingContextItem, System.Drawing.Point> kvp in decorators)
-                {
-                    ExcelInterop.Range range = RenderedRange[kvp.Value.Y, kvp.Value.X];
-                    kvp.Key.BindingDefinition.DecoratorDefinition.Resolve(range, kvp.Key);
-                    range = null;
-                }
-
-                // Redraw the borders of the current selection
-                if (((TemplateDefinition)View.TemplateDefinition).AddBorder)
-                    BorderAround(RenderedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlMedium, 1);
-            }));
+            // Redraw the borders of the current selection
+            if (((TemplateDefinition)View.TemplateDefinition).AddBorder)
+                BorderAround(RenderedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlMedium, 1);
         }
 
         public void Clear()
         {
             if (!IsDisposed && RenderedRange != null)
             {
-                ((ExcelApplication)ETKExcel.ExcelApplication).ExcelDispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
+                using (FreezeExcel freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
                 {
-                    using (FreezeExcel freezeExcel = new FreezeExcel(ETKExcel.ExcelApplication.KeepStatusVisible))
+                    try
                     {
-                        try
-                        {
-                            IsClearing = true;
+                        IsClearing = true;
 
-                            RenderedRange.Clear();
-                            if (View.TemplateDefinition.Orientation == Orientation.Horizontal)
-                                RenderedRange.EntireColumn.Hidden = false;
-                            else
-                                RenderedRange.EntireRow.Hidden = false;
+                        RenderedRange.Clear();
+                        if (View.TemplateDefinition.Orientation == Orientation.Horizontal)
+                            RenderedRange.EntireColumn.Hidden = false;
+                        else
+                            RenderedRange.EntireRow.Hidden = false;
 
-                            View.ClearingCell?.Copy(RenderedRange);
+                        View.ClearingCell?.Copy(RenderedRange);
 
-                            RowDecorators.Clear();
-                            ClearRenderingData();
-                        }
-                        finally
-                        {
-                            IsClearing = false;
-                        }
+                        RowDecorators.Clear();
+                        ClearRenderingData();
                     }
-                }));
+                    finally
+                    {
+                        IsClearing = false;
+                    }
+                }
             }
         }
 

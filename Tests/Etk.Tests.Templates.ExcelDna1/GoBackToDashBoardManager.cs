@@ -20,15 +20,9 @@ namespace Etk.Tests.Templates.ExcelDna1
             finally
             {
                 if (dashBoard != null)
-                {
                     Marshal.ReleaseComObject(dashBoard);
-                    dashBoard = null;
-                }
                 if (workbook != null)
-                {
                     Marshal.ReleaseComObject(workbook);
-                    workbook = null;
-                }
             }
         }
     }

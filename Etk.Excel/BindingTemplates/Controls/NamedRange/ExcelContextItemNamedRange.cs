@@ -15,8 +15,8 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
         private readonly string name;
         private ExcelInterop.Name rangeName;
 
-        public ExcelInterop.Range Range
-        { get; private set; }
+        //public ExcelInterop.Range Range
+        //{ get; private set; }
 
         public IBindingContextItem NestedContextItem
         { get; private set; }
@@ -69,15 +69,14 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             ExcelInterop.Worksheet workSheet = null;
             try
             {
-                Range = range;
-                workSheet = Range.Worksheet;
+                workSheet = range.Worksheet;
                 if (!string.IsNullOrEmpty(name))
                 {
                     ExcelInterop.Names names = null;
                     try
                     {
                         names = workSheet.Names;
-                        rangeName = names.Add(name, Range);
+                        rangeName = names.Add(name, range);
                     }
                     catch (COMException ex)
                     {
@@ -86,10 +85,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
                     finally
                     {
                         if (names != null)
-                        {
                             ExcelApplication.ReleaseComObject(names);
-                            names = null;
-                        }
                     }
                 }
 
@@ -99,10 +95,7 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
             finally
             {
                 if (workSheet != null)
-                {
                     ExcelApplication.ReleaseComObject(workSheet);
-                    workSheet = null;
-                }
             }
         }
 
@@ -116,9 +109,6 @@ namespace Etk.Excel.BindingTemplates.Controls.NamedRange
 
             if (NestedContextItem != null)
                 NestedContextItem.Dispose();
-
-            rangeName = null;
-            Range = null;
         }
 
         public override object ResolveBinding()

@@ -18,8 +18,8 @@ namespace Etk.Excel.Extensions
         /// <summary>Return the intersection range.</summary>
         public static ExcelInterop.Range IntersectHelper(this ExcelInterop.Range me, ExcelInterop.Range target)
         {
-            ExcelInterop.Application application = null;
             ExcelInterop.Range ret;
+            ExcelInterop.Application application = null;
             try
             {
                 application = me.Application;

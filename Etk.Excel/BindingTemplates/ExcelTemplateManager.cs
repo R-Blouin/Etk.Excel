@@ -124,7 +124,6 @@ namespace Etk.Excel.BindingTemplates
             ExcelTemplateView view = new ExcelTemplateView(templateDefinition, sheetContainer, sheetDestination, firstOutputCell, clearingCell);
             bindingTemplateManager.AddView(view);
             log.LogFormat(LogType.Debug, "Sheet '{0}', View '{1}'.'{2}' created.", sheetDestination.Name.EmptyIfNull(), sheetContainer.Name.EmptyIfNull(), templateName.EmptyIfNull());
-            range = null;
 
             return view;
         }
@@ -157,7 +156,6 @@ namespace Etk.Excel.BindingTemplates
                         book.SheetDeactivate += OnSheetDeactivation;
 
                         ExcelApplication.ReleaseComObject(book);
-                        book = null;
                     }
                 }
                 viewsBySheet[view.ViewSheet].Add(view);
@@ -182,8 +180,7 @@ namespace Etk.Excel.BindingTemplates
                         break;
                 }
             }
-            //ExcelApplication.ReleaseComObject(realTarget);
-            realTarget = null;
+            ExcelApplication.ReleaseComObject(realTarget);
         }
 
         private void OnSheetCalculate(object sheet)
@@ -236,16 +233,16 @@ namespace Etk.Excel.BindingTemplates
                                     while (catchingContextElement != null);
                                     
                                     // Etk sort, search and filter
-                                    IContextualMenu searchSortAndFilterMenu = sortSearchAndFilterMenuManager.GetMenus(view, targetRange, currentContextItem);
+                                    IContextualMenu searchSortAndFilterMenu = sortSearchAndFilterMenuManager.GetMenus(view, null, currentContextItem);
                                     if (searchSortAndFilterMenu != null)
                                         menus.Insert(0, searchSortAndFilterMenu);
                                 }
+                                ExcelApplication.ReleaseComObject(intersect);
                             }
                         }
                     }
                 }
-                //ExcelApplication.ReleaseComObject(targetRange);
-                targetRange = null;
+                ExcelApplication.ReleaseComObject(targetRange);
             }
             return menus;
         }
@@ -253,42 +250,28 @@ namespace Etk.Excel.BindingTemplates
         private void OnSheetActivation(object sheet)
         {
             ExcelInterop.Worksheet worksheet = sheet as ExcelInterop.Worksheet;
-            try
+            List<ExcelTemplateView> views;
+            if (viewsBySheet.TryGetValue(worksheet, out views))
             {
-                List<ExcelTemplateView> views;
-                if (viewsBySheet.TryGetValue(worksheet, out views))
+                if (views != null)
                 {
-                    if (views != null)
-                    {
-                        foreach (ExcelTemplateView view in views.ToArray())
-                            view.OnViewSheetIsActivated();
-                    }
+                    foreach (ExcelTemplateView view in views.ToArray())
+                        view.OnViewSheetIsActivated();
                 }
-            }
-            finally
-            {
-                worksheet = null;
             }
         }
 
         private void OnSheetDeactivation(object sheet)
         {
             ExcelInterop.Worksheet worksheet = sheet as ExcelInterop.Worksheet;
-            try
+            List<ExcelTemplateView> views;
+            if (viewsBySheet.TryGetValue(worksheet, out views))
             {
-                List<ExcelTemplateView> views;
-                if (viewsBySheet.TryGetValue(worksheet, out views))
+                if (views != null)
                 {
-                    if (views != null)
-                    {
-                        foreach (ExcelTemplateView view in views.ToArray())
-                            view.OnViewSheetIsDeactivated();
-                    }
+                    foreach (ExcelTemplateView view in views.ToArray())
+                        view.OnViewSheetIsDeactivated();
                 }
-            }
-            finally
-            {
-                worksheet = null;
             }
         }
 
@@ -297,43 +280,47 @@ namespace Etk.Excel.BindingTemplates
         {
             bool inError = false;
             List<ExcelTemplateView> views;
-            if (viewsBySheet.TryGetValue(target.Worksheet, out views))
+            ExcelInterop.Worksheet worksheet = target.Worksheet;
+            try
             {
-                if (views != null)
+                if (viewsBySheet.TryGetValue(worksheet, out views))
                 {
-                    foreach (ExcelTemplateView view in views)
+                    if (views != null)
                     {
-                        try
+                        foreach (ExcelTemplateView view in views)
                         {
-                            if (view.OnSheetChange(ExcelApplication, target))
-                                break;
-                        }
-                        catch (Exception ex)
-                        {
-                            string message = $"Sheet '{target.Worksheet.Name}', Template '{view.TemplateDefinition.Name}'. Sheet change failed: '{ex.Message}'";
-                            log.LogException(LogType.Error, ex, message);
-                            inError = true;
+                            try
+                            {
+                                if (view.OnSheetChange(ExcelApplication, target))
+                                    break;
+                            }
+                            catch (Exception ex)
+                            {
+                                string message = $"Sheet '{worksheet.Name}', Template '{view.TemplateDefinition.Name}'. Sheet change failed: '{ex.Message}'";
+                                log.LogException(LogType.Error, ex, message);
+                                inError = true;
+                            }
                         }
                     }
                 }
+
+                if (inError)
+                {
+                    string message = $"Sheet '{worksheet.Name}', At least one sheet change failed. Please, checked the log";
+                    throw new EtkException(message);
+                }
             }
-
-            if (inError)
+            finally
             {
-                ExcelInterop.Worksheet worksheet = target.Worksheet;
-                string message = $"Sheet '{worksheet.Name}', At least one sheet change failed. Please, checked the log";
-
                 ExcelApplication.ReleaseComObject(worksheet);
-                worksheet = null;
-                throw new EtkException(message);
             }
         }
 
         /// <summary> MAnage the double click on a cell</summary>
         private void OnBeforeBoubleClick(ExcelInterop.Range target, ref bool cancel)
         {
-            ExcelInterop.Range realTarget = target.Cells[1, 1];
             ExcelInterop.Worksheet worksheet = target.Worksheet;
+            ExcelInterop.Range realTarget = target.Cells[1, 1];
             try
             {
                 List<ExcelTemplateView> views;
@@ -355,9 +342,7 @@ namespace Etk.Excel.BindingTemplates
             finally
             {
                 ExcelApplication.ReleaseComObject(worksheet);
-                worksheet = null;
-                //ExcelApplication.ReleaseComObject(realTarget);
-                realTarget = null;
+                ExcelApplication.ReleaseComObject(realTarget);
             }
         }
         #endregion
@@ -365,10 +350,10 @@ namespace Etk.Excel.BindingTemplates
         #region internal methods
         internal ExcelTemplateDefinition GetTemplateDefinitionFromLink(ExcelTemplateDefinitionPart parent, TemplateLink templateLink)
         {
+            ExcelInterop.Worksheet sheetContainer = null;
             try
             {
                 string[] tos = templateLink.To.Split('.');
-                ExcelInterop.Worksheet sheetContainer = null;
                 string templateName;
                 if (tos.Count() == 1)
                 {
@@ -391,7 +376,7 @@ namespace Etk.Excel.BindingTemplates
                         throw new EtkException($"Cannot find the sheet '{worksheetContainerName}' in the current workbook", false);
 
                     ExcelApplication.ReleaseComObject(workbook);
-                    workbook = null;
+                    ExcelApplication.ReleaseComObject(parentWorkSheet);
                 }
 
                 string templateDescriptionKey = $"{sheetContainer.Name}-{templateName}";
@@ -403,17 +388,18 @@ namespace Etk.Excel.BindingTemplates
                         throw new EtkException($"Cannot find the template '{templateName.EmptyIfNull()}' in sheet '{sheetContainer.Name.EmptyIfNull()}'");
                     templateDefinition = ExcelTemplateDefinitionFactory.CreateInstance(templateName, range);
                     bindingTemplateManager.RegisterTemplateDefinition(templateDefinition);
-
-                    range = null;
                 }
 
-                ExcelApplication.ReleaseComObject(sheetContainer);
-                sheetContainer = null;
                 return templateDefinition;
             }
             catch (Exception ex)
             {
                 throw new EtkException($"Cannot create the template dataAccessor. {ex.Message}", false);
+            }
+            finally
+            {
+                if(sheetContainer != null)
+                    ExcelApplication.ReleaseComObject(sheetContainer);
             }
         }
         #endregion
@@ -636,8 +622,9 @@ namespace Etk.Excel.BindingTemplates
 
                                     bindingTemplateManager.RemoveView(excelView);
                                 }
-                                catch
+                                catch(Exception ex)
                                 {
+                                    log.LogFormat(LogType.Error, "Error: Sheet'{0}': View '{1}' from '{2}' removing failed.", excelView.ViewSheet.Name, excelView.Ident, excelView.TemplateDefinition.Name);
                                     success = false;
                                 }
                             }
@@ -745,7 +732,10 @@ namespace Etk.Excel.BindingTemplates
                             }
                         }
                         if (selectedRange != null)
-                            SelectRange(ref selectedRange);
+                        {
+                            SelectRange(selectedRange);
+                            ExcelApplication.ReleaseComObject(selectedRange);
+                        }
                     }
                 }
             }
@@ -804,7 +794,10 @@ namespace Etk.Excel.BindingTemplates
                             }
                         }
                         if (selectedRange != null)
-                            SelectRange(ref selectedRange);
+                        {
+                            SelectRange(selectedRange);
+                            ExcelApplication.ReleaseComObject(selectedRange);
+                        }
                     }
                 }
             }
@@ -931,7 +924,7 @@ namespace Etk.Excel.BindingTemplates
             }
         }
 
-        private void SelectRange(ref ExcelInterop.Range range)
+        private void SelectRange(ExcelInterop.Range range)
         {
             try
             {
@@ -942,7 +935,7 @@ namespace Etk.Excel.BindingTemplates
                 if (comEx.ErrorCode == ETKExcel.EXCEL_BUSY)
                 {
                     Thread.Sleep(ETKExcel.WAITINGTIME_EXCEL_BUSY);
-                    SelectRange(ref range);
+                    SelectRange(range);
                 }
             }
         }

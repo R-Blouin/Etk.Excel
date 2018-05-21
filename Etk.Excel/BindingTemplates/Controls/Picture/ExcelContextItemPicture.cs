@@ -12,7 +12,6 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
     {
         #region attributes and properties
         private readonly ExcelBindingDefinitionPicture excelBindingDefinition;
-        //private ExcelContextItemPicture picture;
         private IEnumerable<INotifyPropertyChanged> objectsToNotify;
 
         public Action<IBindingContextItem, object> OnPropertyChangedAction

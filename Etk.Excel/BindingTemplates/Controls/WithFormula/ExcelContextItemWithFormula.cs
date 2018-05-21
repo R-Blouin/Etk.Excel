@@ -4,7 +4,7 @@ using System.ComponentModel;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using Etk.Excel.Application;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 {
@@ -17,8 +17,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         private object currentFormula;
         private IBindingContextItem formulaBindingContext = null;
 
-        public Microsoft.Office.Interop.Excel.Range Range
-        { get; private set; }
+        private ExcelInterop.Range range;
 
         public Action<IBindingContextItem, object> OnPropertyChangedAction
         { get; set; }
@@ -49,9 +48,9 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
         }
         #endregion
 
-        public void CreateControl(Microsoft.Office.Interop.Excel.Range range)
+        public void CreateControl(ExcelInterop.Range range)
         {
-            Range = range;
+            this.range = range;
         }
 
         public override void RealDispose()
@@ -63,7 +62,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
                     obj.PropertyChanged -= OnPropertyChanged;
                 objectsToNotify = null;
             }
-            Range = null;
+            ExcelApplication.ReleaseComObject(range);
         }
 
         public override object ResolveBinding()
@@ -130,10 +129,10 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public void OnSheetCalculate()
         {
-            if ((Range.HasFormula && Range.Formula != currentFormula) ||  ! object.Equals(Range.Value2, currentValue))
+            if ((range.HasFormula && range.Formula != currentFormula) ||  ! object.Equals(range.Value2, currentValue))
             {
-                Microsoft.Office.Interop.Excel.WorksheetFunction worksheetFunction = ETKExcel.ExcelApplication.Application.WorksheetFunction;
-                if (Range.HasFormula && worksheetFunction.IsError(Range))
+                ExcelInterop.WorksheetFunction worksheetFunction = ETKExcel.ExcelApplication.Application.WorksheetFunction;
+                if (range.HasFormula && worksheetFunction.IsError(range))
                 {
                     if (excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
                     {
@@ -148,17 +147,14 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
                 else
                 {
                     if(excelBindingDefinitionWithFormula.TargetBindingDefinition != null)
-                        excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, Range.Value2);
+                        excelBindingDefinitionWithFormula.TargetBindingDefinition.UpdateDataSource(DataSource, range.Value2);
                 }
 
-                currentValue = Range.Value2;
-                currentFormula = Range.HasFormula ? Range.Formula : null;
+                currentValue = range.Value2;
+                currentFormula = range.HasFormula ? range.Formula : null;
 
                 if (worksheetFunction != null)
-                {
                     ExcelApplication.ReleaseComObject(worksheetFunction);
-                    worksheetFunction = null;
-                }
             }
         }
     }

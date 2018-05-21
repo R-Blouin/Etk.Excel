@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using ExcelForms = Microsoft.Vbe.Interop.Forms;
 using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Controls.Picture
 {
-    using ExcelForms = Microsoft.Vbe.Interop.Forms;
-
     class ExcelPicture : IDisposable
     {
         #region attributes and properties
@@ -72,13 +70,9 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
             ExcelApplication.ReleaseComObject(oleObject);
             ExcelApplication.ReleaseComObject(oleObjects);
             ExcelApplication.ReleaseComObject(worksheet);
-
-            oleObject = null;
-            oleObjects = null;
-            worksheet = null;
         }
 
-        public void SetOnClick(System.Action action)
+        public void SetOnClick(Action action)
         {
             if (CurrentOnClick != null)
                 CheckBox.Click -= CurrentOnClick;
@@ -108,10 +102,6 @@ namespace Etk.Excel.BindingTemplates.Controls.Picture
                 ExcelApplication.ReleaseComObject(OwnerRange);
                 ExcelApplication.ReleaseComObject(worksheet);
                 ExcelApplication.ReleaseComObject(CheckBox);
-                oleObject = null;
-                OwnerRange = null;
-                worksheet = null;
-                CheckBox = null;
             }
         }
         #endregion

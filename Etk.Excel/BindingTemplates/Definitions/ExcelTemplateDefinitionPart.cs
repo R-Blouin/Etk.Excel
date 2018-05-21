@@ -2,6 +2,7 @@
 using Etk.BindingTemplates.Definitions;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
 using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.Application;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Definitions
@@ -54,12 +55,19 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 throw new System.Exception("A template part ('Header','Body' or 'Footer' must have a 'Height' and a 'Width' >= 1");
 
             ExcelInterop.Range templateRange = DefinitionFirstCell;
-            DefinitionCells = DefinitionFirstCell = templateRange.Cells[1, 1];
+            DefinitionCells = templateRange.Cells[1, 1];
+            DefinitionFirstCell = templateRange.Cells[1, 1];
 
             DefinitionCells = templateRange.Resize[Height, Width];
             DefinitionParts = new IDefinitionPart[Height, Width];
 
             PositionLinkedTemplates = new List<List<int>>();
+        }
+
+        ~ExcelTemplateDefinitionPart()
+        {
+            ExcelApplication.ReleaseComObject(DefinitionFirstCell);
+            ExcelApplication.ReleaseComObject(DefinitionLastCell);
         }
         #endregion
     }

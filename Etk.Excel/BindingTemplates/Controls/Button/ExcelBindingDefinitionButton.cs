@@ -9,6 +9,7 @@ using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Tools.Extensions;
 using Etk.Tools.Reflection;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.Controls.Button
 {
@@ -125,7 +126,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                         }
                         else
                         {
-                            if (parameters.Count() > 1 || (parameters.Count() == 1 && parameters[0].ParameterType != typeof(Microsoft.Office.Interop.Excel.Range)))
+                            if (parameters.Count() > 1 || (parameters.Count() == 1 && parameters[0].ParameterType != typeof(ExcelInterop.Range)))
                                 throw new EtkException($"Method dataAccessor must be 'void {Command.Callback.Name}([Range <currentObject caller>])'");
 
                             OnClickWithRange = parameters.Count() == 1;

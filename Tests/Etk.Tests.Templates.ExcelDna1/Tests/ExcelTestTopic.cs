@@ -15,7 +15,6 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         private IExcelTestsManager testManager;
         private ExcelInterop.Worksheet templatesSheet = null;
         private ExcelInterop.Worksheet viewsOwnerSheet = null;
-        private bool renderDone;
 
         public IExcelTemplateView TopicView { get; private set; }
         public IExcelTemplateView GoBackView { get; private set; }
@@ -146,15 +145,9 @@ namespace Etk.Tests.Templates.ExcelDna1.Tests
         public void Dispose()
         {
             if (templatesSheet != null)
-            {
                 Marshal.ReleaseComObject(templatesSheet);
-                templatesSheet = null;
-            }
             if (viewsOwnerSheet != null)
-            {
                 Marshal.ReleaseComObject(viewsOwnerSheet);
-                viewsOwnerSheet = null;
-            }
         }
         #endregion
 

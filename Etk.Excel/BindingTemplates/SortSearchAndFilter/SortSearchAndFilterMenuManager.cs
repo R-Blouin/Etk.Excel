@@ -6,6 +6,7 @@ using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Views;
 using Etk.Excel.ContextualMenus;
 using Etk.SortAndFilter;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 
 namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
 {
@@ -30,7 +31,7 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
         /// <summary>
         /// Manage the contextual menus
         /// </summary>
-        public IContextualMenu GetMenus(ExcelTemplateView view, Microsoft.Office.Interop.Excel.Range range, IBindingContextItem contextItem)
+        public IContextualMenu GetMenus(ExcelTemplateView view, ExcelInterop.Range range, IBindingContextItem contextItem)
         {
             IBindingDefinition bindingDefinition = contextItem.BindingDefinition;
             if (bindingDefinition == null || !bindingDefinition.IsBoundWithData || bindingDefinition.BindingType == null)

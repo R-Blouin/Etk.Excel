@@ -2,6 +2,7 @@
 using System.Linq;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Templates;
+using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Controls;
 using Etk.Excel.BindingTemplates.Decorators;
 using Etk.Excel.BindingTemplates.Definitions;
@@ -61,29 +62,28 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             {
                                 if (item is ExcelBindingSearchContextItem)
                                 {
+                                    // Live Cycle of range is managed by Control
                                     ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
-                                    ((ExcelBindingSearchContextItem)item).SetRange(ref range);
-                                    range = null;
+                                    ((ExcelBindingSearchContextItem)item).SetRange(range);
                                 }
                                 else if (item is IExcelControl)
                                 {
+                                    // Live Cycle of range is managed by Control
                                     ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                     ((IExcelControl)item).CreateControl(range);
-                                    range = null;
                                 }
                                 else if (item.BindingDefinition != null)
                                 {
                                     if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                                     {
+                                        // Live Cycle of range is managed by Control
                                         ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                         enumManager.CreateControl(item, range);
-                                        range = null;
                                     }
                                     if (item.BindingDefinition.OnAfterRendering != null)
                                     {
                                         ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                         AddAfterRenderingAction(item.BindingDefinition, range);
-                                        range = null;
                                     }
                                 }
                             }
@@ -92,15 +92,14 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     }
                     if (useDecorator && ((ExcelTemplateDefinition) partToRenderDefinition.Parent).Decorator != null)
                     {
+                        // Live cycle of elementRange managed by ExcelElementDecorator
                         ExcelInterop.Range elementRange = firstCell.Offset[cptElements, 0];
                         elementRange = elementRange.Resize[1, localWidth];
-
                         Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
                     }
                     cptElements++;
                 }
-                //ExcelApplication.ReleaseComObject(workingRange);
-                workingRange = null;
+                ExcelApplication.ReleaseComObject(workingRange);
             }
 
             // To take into account the min number of elements to render.
@@ -187,6 +186,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                 if (useDecorator && ((ExcelTemplateDefinition) partToRenderDefinition.Parent).Decorator != null)
                 {
+                    // Live cycle of elementRange managed by ExcelElementDecorator
                     ExcelInterop.Range elementRange = firstElementCell.Resize[elementHeight, elementWidth];
                     Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
                 }
@@ -370,43 +370,42 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 {
                     if (item is ExcelBindingSearchContextItem)
                     {
+                        // Live Cycle of range is managed by Control
                         ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
-                        ((ExcelBindingSearchContextItem)item).SetRange(ref range);
-                        range = null;
+                        ((ExcelBindingSearchContextItem)item).SetRange(range);
                     }
                     else if (item is IExcelControl)
                     {
+                        // Live Cycle of range is managed by Control
                         ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                         ((IExcelControl) item).CreateControl(range);
-                        range = null;
                     }
                     if (item.BindingDefinition != null)
                     {
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                         {
+                            // Live Cycle of range is managed by Control
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             enumManager.CreateControl(item, range);
-                            range = null;
                         }
                         if (item.BindingDefinition.IsMultiLine)
                         {
+                            // Live Cycle of range is managed by Control
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             ExcelInterop.Range localSource = source[1, 1 + colId - startPos];
                             multiLineManager.CreateControl(item, range, localSource, ref vOffset);
-                            range = null;
                         }
                         if (item.BindingDefinition.OnAfterRendering != null)
                         {
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             AddAfterRenderingAction(item.BindingDefinition, range);
-                            range = null;
                         }
                     }
                 }
                 renderingContext.ContextItems.Add(item);
             }
-            source = null;
-            workingRange = null;
+            ExcelApplication.ReleaseComObject(source);
+            ExcelApplication.ReleaseComObject(workingRange);
         }
         #endregion
     }

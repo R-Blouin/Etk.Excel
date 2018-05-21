@@ -33,7 +33,6 @@ namespace Etk.Excel.ContextualMenus
         }
         #endregion
 
-        #region public methods
         public void SetAction(ExcelInterop.Range range, IBindingContextElement catchingContextElement, IBindingContextElement currentContextItem)
         {
             if (Items != null)
@@ -41,14 +40,14 @@ namespace Etk.Excel.ContextualMenus
                 foreach(IContextualPart part in Items)
                 {
                     if (part is ContextualMenu)
-                        (part as ContextualMenu).SetAction(range, catchingContextElement, currentContextItem);
+                        (part as ContextualMenu).SetAction(range[1,1], catchingContextElement, currentContextItem);
                     else
-                        (part as ContextualMenuItem).SetAction(range, catchingContextElement, currentContextItem);
+                        (part as ContextualMenuItem).SetAction(range[1, 1], catchingContextElement, currentContextItem);
                 }
             }
         }
 
-        public void SetAction(ExcelInterop.Range range)
+        private void SetAction(ExcelInterop.Range range)
         {
             if (Items != null)
             {
@@ -75,6 +74,5 @@ namespace Etk.Excel.ContextualMenus
         //        }
         //    }
         //}
-        #endregion
     }
 }

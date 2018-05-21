@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -36,7 +35,6 @@ namespace Etk.Excel.Application
                 IsBackground = true,
                 Priority = ThreadPriority.BelowNormal
             };
-            //thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
         }
         #endregion
@@ -106,7 +104,7 @@ namespace Etk.Excel.Application
             if (isDisposed || context.ContextItem.IsDisposed || !context.View.IsRendered)
                 return;
 
-            ExcelInterop.Range range;
+            ExcelInterop.Range range = null;
             bool enableEvent = ExcelApplication.Application.EnableEvents;
             try
             {
@@ -153,9 +151,10 @@ namespace Etk.Excel.Application
             }
             finally
             {
+                if (range != null)
+                    ExcelApplication.ReleaseComObject(range);
                 ChangedEnableEvent(enableEvent);
             }
-            range = null;
         }
 
         private void ChangedEnableEvent(bool enableEvent)

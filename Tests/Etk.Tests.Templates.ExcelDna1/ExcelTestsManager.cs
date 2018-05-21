@@ -62,8 +62,7 @@ namespace Etk.Tests.Templates.ExcelDna1
         /// </summary>
         public void Execute()
         {
-            for(int cpt = 0; cpt < 20; cpt++)
-                ExecuteTopics(TestTopics);
+            ExecuteTopics(TestTopics);
         }
 
         public void ExecuteTopics(IEnumerable<IExcelTestTopic> topics)

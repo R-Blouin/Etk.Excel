@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Definitions.Templates;
 using Etk.Excel.BindingTemplates.Definitions.Xml;
 using Etk.Tools.Extensions;
@@ -40,6 +39,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         private ExcelTemplateDefinition Execute(string templateName, ExcelInterop.Range templateDeclarationFirstCell)
         {
             ExcelInterop.Worksheet worksheet = null;
+            ExcelInterop.Range cells = null;
             try
             {
                 if (string.IsNullOrEmpty(templateName))
@@ -54,13 +54,14 @@ namespace Etk.Excel.BindingTemplates.Definitions
 
                 // Get the template end.
                 worksheet = templateDeclarationFirstCell.Worksheet;
-                ExcelInterop.Range templateDeclarationLastRange = worksheet.Cells.Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
+                cells = worksheet.Cells;
+                ExcelInterop.Range templateDeclarationLastRange = cells.Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                 if (templateDeclarationLastRange == null)
                     throw new EtkException($"Cannot find the end of template '{templateName.EmptyIfNull()}' in sheet '{worksheet.Name.EmptyIfNull()}'");
 
                 ExcelTemplateDefinition excelTemplateDefinition = new ExcelTemplateDefinition(templateDeclarationFirstCell, templateDeclarationLastRange, templateOption);
                 ExcelTemplateDefinitionPart header, body, footer;
-                ParseTemplate(excelTemplateDefinition, ref worksheet, out header, out body, out footer);
+                ParseTemplate(excelTemplateDefinition, worksheet, out header, out body, out footer);
                 excelTemplateDefinition.ExcelInit(header, body, footer);
 
                 return excelTemplateDefinition;
@@ -71,16 +72,15 @@ namespace Etk.Excel.BindingTemplates.Definitions
             }
             finally
             {
+                if (cells != null)
+                    ExcelApplication.ReleaseComObject(cells);
                 if (worksheet != null)
-                {
                     ExcelApplication.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
             }
         }
 
         /// <summary> Parse the template. Retrieve its components. </summary>
-        private void ParseTemplate(ExcelTemplateDefinition excelTemplateDefinition, ref ExcelInterop.Worksheet worksheet, out ExcelTemplateDefinitionPart header, out ExcelTemplateDefinitionPart body, out ExcelTemplateDefinitionPart footer)
+        private void ParseTemplate(ExcelTemplateDefinition excelTemplateDefinition, ExcelInterop.Worksheet worksheet, out ExcelTemplateDefinitionPart header, out ExcelTemplateDefinitionPart body, out ExcelTemplateDefinitionPart footer)
         {
             try
             {
@@ -107,7 +107,6 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         headerLastRange = worksheet.Cells[firstRange.Row + headerSize - 1, lastRange.Column];
                     //string name = string.Format("{0}-{1}", excelTemplateDefinition.Name, "Header");
                     header = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Header, firstRange, headerLastRange);
-                    headerLastRange = null;
                 }
 
                 // Footer
@@ -121,7 +120,6 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         footerFirstRange = worksheet.Cells[lastRange.Row - footerSize + 1, firstRange.Column];
                     //string name = string.Format("{0}-{1}", excelTemplateDefinition.Name, "Footer");
                     footer = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Footer, footerFirstRange, lastRange);
-                    footerFirstRange = null;
                 }
 
                 // Body
@@ -140,7 +138,6 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 }
 
                 body = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Body, bodyFirstRange, bodyLastRange);
-                bodyFirstRange = bodyLastRange = null;
             }
             catch (Exception ex)
             {
@@ -233,9 +230,8 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     }
                 }
                 startHeader = startFooter = endHeader = endFooter = null;
-
+                ExcelApplication.ReleaseComObject(searchRange);
             }
-            searchRange = null;
         }
         #endregion
     }

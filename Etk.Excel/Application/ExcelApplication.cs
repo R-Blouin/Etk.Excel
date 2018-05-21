@@ -9,6 +9,7 @@ using Microsoft.Office.Core;
 using System.Collections.Generic;
 using System.Reflection;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using System.Diagnostics;
 
 namespace Etk.Excel.Application
 {
@@ -294,26 +295,26 @@ namespace Etk.Excel.Application
                     isDisposed = true;
                     postAsynchronousManager.Dispose();
 
-                    ReleaseComObject(Application);
-                    Application = null;
-
+                    //ReleaseComObject(Application);
                     if(newMenu != null)
-                        ReleaseComObject(Application);
-
-                    ExcelDispatcher = null;
+                        ReleaseComObject(newMenu);
                 }
             }
         }
         #endregion
 
         #region static public methods
-        public static void ReleaseComObject(object obj)
+        public static int ReleaseComObject(object obj)
         {
             int refCpt = Marshal.ReleaseComObject(obj);
 #if DEBUG
             if (refCpt < 0)
+            {
+                Trace.WriteLine("'ReleaseComObject': RefCpt < 0");
                 MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
 #endif
+            return refCpt;
         }
 
 

@@ -62,6 +62,12 @@ namespace Etk.Excel.BindingTemplates.Definitions
             Width = DefinitionLastCell.Column - DefinitionFirstCell.Column + 1;
             Height = DefinitionLastCell.Row - DefinitionFirstCell.Row + 1;
         }
+
+        ~ExcelTemplateDefinition()
+        {
+            ExcelApplication.ReleaseComObject(DefinitionFirstCell);
+            ExcelApplication.ReleaseComObject(DefinitionLastCell);
+        }
         #endregion
 
         #region internal metrhods
@@ -101,11 +107,9 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     finally
                     {
                         if (worksheet != null)
-                        {
                             ExcelApplication.ReleaseComObject(worksheet);
-                            worksheet = null;
-                        }
-                        menuRange = null;
+                        if (menuRange != null)
+                            ExcelApplication.ReleaseComObject(menuRange);
                     }
                 }
                 if (ContextualMenu == null)

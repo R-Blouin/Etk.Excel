@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Binding;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
@@ -60,13 +59,13 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
                     obj.PropertyChanged -= OnPropertyChanged;
                 objectsToNotify = null;
             }
-            Range = null;
+            ExcelApplication.ReleaseComObject(Range);
         }
 
         public override object ResolveBinding()
         {
             if (excelBindingDefinitionFormulaResult.UseFormulaBindingDefinition != null)
-                excelBindingDefinitionFormulaResult.UseFormulaBindingDefinition.UpdateDataSource(DataSource, (bool)Range.HasFormula);
+                excelBindingDefinitionFormulaResult.UseFormulaBindingDefinition.UpdateDataSource(DataSource, (bool) Range.HasFormula);
 
             if (Range != null && Range.HasFormula)
                 return Range.Formula;
@@ -114,10 +113,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
                 currentValue = Range.Value2;
 
                 if (worksheetFunction != null)
-                {
                     ExcelApplication.ReleaseComObject(worksheetFunction);
-                    worksheetFunction = null;
-                }
             }
         } 
     }

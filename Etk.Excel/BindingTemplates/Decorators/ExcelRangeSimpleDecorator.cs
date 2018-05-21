@@ -4,6 +4,7 @@ using System.Threading;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Definitions.Decorators;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
+using Etk.Excel.Application;
 using Etk.Tools.Log;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
@@ -39,13 +40,17 @@ namespace Etk.Excel.BindingTemplates.Decorators
             if (concernedRange == null)
                 return false;
 
+            ExcelInterop.Range concernedRangeFirstCell = null;
             try
             {
-                ExcelInterop.Range concernedRangeFirstCell = concernedRange.Cells[1, 1];
-
+                concernedRangeFirstCell = concernedRange.Cells[1, 1];
                 // We delete the previous concernedRange comment 
                 ExcelInterop.Comment comment = concernedRangeFirstCell.Comment;
-                comment?.Delete();
+                if(comment != null)
+                {
+                    comment.Delete();
+                    ExcelApplication.ReleaseComObject(comment);
+                }
 
                 // Invoke decorator resolver
                 object result = EventCallbacksManager.DecoratorInvoke(Callback, concernedRange, element.DataSource, null);
@@ -55,10 +60,15 @@ namespace Etk.Excel.BindingTemplates.Decorators
                     if (!string.IsNullOrEmpty(commentStr))
                     {
                         concernedRange.AddComment(commentStr);
+
                         ExcelInterop.Comment addedComment = concernedRange.Comment;
                         ExcelInterop.Shape shape = addedComment.Shape;
                         ExcelInterop.TextFrame textFrame = shape.TextFrame;
                         textFrame.AutoSize = true;
+
+                        ExcelApplication.ReleaseComObject(textFrame);
+                        ExcelApplication.ReleaseComObject(shape);
+                        ExcelApplication.ReleaseComObject(addedComment);
                     }
                     return commentStr != null;
                 }
@@ -79,6 +89,10 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve decorator2 '{Ident}':{ex.Message}");
                 return false;
             }
+            finally
+            {
+                ExcelApplication.ReleaseComObject(concernedRangeFirstCell);
+            }
         }
 
         /// <summary> Invoke the decorator</summary>
@@ -95,7 +109,11 @@ namespace Etk.Excel.BindingTemplates.Decorators
             {
                 // We delete the previous concernedRange comment 
                 ExcelInterop.Comment comment = concernedRange.Comment;
-                comment?.Delete();
+                if (comment != null)
+                {
+                    comment.Delete();
+                    ExcelApplication.ReleaseComObject(comment);
+                }
 
                 // Invoke decorator resolver
                 object result = EventCallbacksManager.DecoratorInvoke(Callback, concernedRange, contextItem.DataSource, contextItem.BindingDefinition.Name);
@@ -106,9 +124,14 @@ namespace Etk.Excel.BindingTemplates.Decorators
                     {
                         concernedRange.AddComment(commentStr);
                         ExcelInterop.Comment addedComment = concernedRange.Comment;
+
                         ExcelInterop.Shape shape = addedComment.Shape;
                         ExcelInterop.TextFrame textFrame = shape.TextFrame;
                         textFrame.AutoSize = true;
+
+                        ExcelApplication.ReleaseComObject(textFrame);
+                        ExcelApplication.ReleaseComObject(shape);
+                        ExcelApplication.ReleaseComObject(addedComment);
                     }
                     return commentStr != null;
                 }

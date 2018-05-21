@@ -1,22 +1,23 @@
 ﻿using Etk.Excel;
+using Etk.Tests.Templates.ExcelDna1.BasicExcelComTests;
 using Etk.Tests.Templates.ExcelDna1.Dashboard;
 using ExcelDna.Integration;
-using Microsoft.Office.Interop.Excel;
+using ExcelInterop = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 
 namespace Etk.Tests.Templates.ExcelDna1
 {
     class AddinManager : IExcelAddIn
     {
-        public Application ExcelApplication
+        public ExcelInterop.Application ExcelApplication
         { get; private set; }
 
         public void AutoOpen()
         {
-            ExcelApplication = ExcelDnaUtil.Application as Application;
+            ExcelApplication = ExcelDnaUtil.Application as ExcelInterop.Application;
 
             // To avoid the Excel 'Save message' on Exit
-            Workbook currentWorkbook = ExcelApplication.ActiveWorkbook;
+            ExcelInterop.Workbook currentWorkbook = ExcelApplication.ActiveWorkbook;
             if(currentWorkbook != null)
                 currentWorkbook.BeforeClose += (ref bool cancel) => currentWorkbook.Saved = true;
 
@@ -27,6 +28,9 @@ namespace Etk.Tests.Templates.ExcelDna1
             DashboardSheet.CreateAndActivateDashBoard();
 
             Marshal.ReleaseComObject(currentWorkbook);
+
+            BasicExcelComTestsManager basicExcelComTests = new BasicExcelComTestsManager();
+            basicExcelComTests.Execute();
         }
 
         public void AutoClose()

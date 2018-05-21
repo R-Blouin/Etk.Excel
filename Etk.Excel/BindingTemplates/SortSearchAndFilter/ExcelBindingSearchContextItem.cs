@@ -2,6 +2,7 @@
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.SortSearchAndFilter;
 using Etk.BindingTemplates.Views;
+using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 
@@ -18,9 +19,14 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
              ((ExcelTemplateView) view).RegisterSearchControl(this);   
         }
 
-        public void SetRange(ref ExcelInterop.Range range)
+        public void SetRange(ExcelInterop.Range range)
         {
             DestinationRange = range;    
+        }
+
+        public override void RealDispose()
+        {
+            ExcelApplication.ReleaseComObject(DestinationRange);
         }
     }
 }

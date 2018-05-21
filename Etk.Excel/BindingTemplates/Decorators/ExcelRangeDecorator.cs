@@ -99,16 +99,22 @@ namespace Etk.Excel.BindingTemplates.Decorators
             ExcelInterop.Range concernedRange = sender as ExcelInterop.Range;
             if (concernedRange == null)
                 return false;
+
+            ExcelInterop.Range concernedRangeFirstCell = null;
             try
             {
                 if (decoratorRange == null)
                     RevolveDecoratorRange();
 
-                ExcelInterop.Range concernedRangeFirstCell = concernedRange.Cells[1, 1];
+                concernedRangeFirstCell = concernedRange.Cells[1, 1];
 
                 // We delete the previous concernedRange comment 
                 ExcelInterop.Comment comment = concernedRangeFirstCell.Comment;
-                comment?.Delete();
+                if(comment != null)
+                {
+                    comment.Delete();
+                    ExcelApplication.ReleaseComObject(comment);
+                }
 
                 // Invoke decorator resolver
                 object result = EventCallbacksManager.DecoratorInvoke(Callback, addConcernedRangeParameter ? concernedRange : null, element.DataSource, null);
@@ -125,6 +131,10 @@ namespace Etk.Excel.BindingTemplates.Decorators
                             ExcelInterop.Shape shape = addedComment.Shape;
                             ExcelInterop.TextFrame textFrame = shape.TextFrame;
                             textFrame.AutoSize = true;
+
+                            ExcelApplication.ReleaseComObject(textFrame);
+                            ExcelApplication.ReleaseComObject(shape);
+                            ExcelApplication.ReleaseComObject(addedComment);
                         }
 
                         if (notOnlyColor)
@@ -142,10 +152,8 @@ namespace Etk.Excel.BindingTemplates.Decorators
                                 font.Color = decoratorProperties[decoratorResult.Item.Value].FrontColor;
                                 interior.Color = decoratorProperties[decoratorResult.Item.Value].BackColor;
 
-                                ExcelApplication.ReleaseComObject(interior);
                                 ExcelApplication.ReleaseComObject(font);
-                                interior = null;
-                                font = null;
+                                ExcelApplication.ReleaseComObject(interior);
                             }
                         }
                     }
@@ -168,6 +176,10 @@ namespace Etk.Excel.BindingTemplates.Decorators
                 log.LogExceptionFormat(LogType.Error, ex, $"Cannot resolve decorator '{Ident}':{ex.Message}");
                 return false;
             }
+            finally
+            {
+                ExcelApplication.ReleaseComObject(concernedRangeFirstCell);
+            }
         }
 
         /// <summary> Invoke the decorator</summary>
@@ -184,7 +196,11 @@ namespace Etk.Excel.BindingTemplates.Decorators
             {
                 // We delete the previous concernedRange comment 
                 ExcelInterop.Comment comment = concernedRange.Comment;
-                comment?.Delete();
+                if(comment != null)
+                {
+                    comment.Delete();
+                    ExcelApplication.ReleaseComObject(comment);
+                }
 
                 if (decoratorRange == null)
                     RevolveDecoratorRange();
@@ -204,6 +220,10 @@ namespace Etk.Excel.BindingTemplates.Decorators
                         ExcelInterop.Shape shape = addedComment.Shape;
                         ExcelInterop.TextFrame textFrame = shape.TextFrame;
                         textFrame.AutoSize = true;
+
+                        ExcelApplication.ReleaseComObject(textFrame);
+                        ExcelApplication.ReleaseComObject(shape);
+                        ExcelApplication.ReleaseComObject(addedComment);
                     }
                     if (decoratorResult.Item.HasValue)
                     {
@@ -221,6 +241,9 @@ namespace Etk.Excel.BindingTemplates.Decorators
 
                                 font.Color = decoratorProperties[decoratorResult.Item.Value].FrontColor;
                                 interior.Color = decoratorProperties[decoratorResult.Item.Value].BackColor;
+
+                                ExcelApplication.ReleaseComObject(font);
+                                ExcelApplication.ReleaseComObject(interior);
                             }
                         }
                     }
@@ -305,7 +328,12 @@ namespace Etk.Excel.BindingTemplates.Decorators
                     {
                         ExcelInterop.Interior interior = cell.Interior;
                         ExcelInterop.Font font = cell.Font;
+
                         decoratorProperties.Add(new DecoratorProperty((double)font.Color, (double)interior.Color));
+
+                        ExcelApplication.ReleaseComObject(font);
+                        ExcelApplication.ReleaseComObject(interior);
+                        ExcelApplication.ReleaseComObject(cell);
                     }
                 }
             }

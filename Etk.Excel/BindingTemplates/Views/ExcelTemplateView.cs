@@ -31,7 +31,7 @@ namespace Etk.Excel.BindingTemplates.Views
         public int PatternThemeColor;
         public double PatternTintAndShade;
 
-        public SelectionPattern(ref ExcelInterop.Interior interior)
+        public SelectionPattern(ExcelInterop.Interior interior)
         {
             try
             {
@@ -213,33 +213,24 @@ namespace Etk.Excel.BindingTemplates.Views
                 {
                     //Expander = null;
                     if (AccessorParametersManager != null)
-                    {
                         AccessorParametersManager.Dispose();
-                        AccessorParametersManager = null;
-                    }
 
                     if (Renderer != null)
-                    {
                         Renderer.Dispose();
-                        Renderer = null;
-                    }
 
                     CellsThatContainSearchValue.Clear();
+
+                    if (FirstOutputCell != null)
+                        ExcelApplication.ReleaseComObject(FirstOutputCell);
+                    if (currentSelectedRange != null)
+                        ExcelApplication.ReleaseComObject(currentSelectedRange);
+                    if (ClearingCell != null)
+                        ExcelApplication.ReleaseComObject(ClearingCell);
+
                     if (ViewSheet != null)
-                    {
                         ExcelApplication.ReleaseComObject(ViewSheet);
-                        ViewSheet = null;
-                    }
                     if(TemplateSheet != null)
-                    {
                         ExcelApplication.ReleaseComObject(TemplateSheet);
-                        TemplateSheet = null;
-                    }
-
-                    FirstOutputCell = null;
-                    currentSelectedRange = null;
-                    ClearingCell = null;
-
                     base.Dispose();
                 }
             }
@@ -284,7 +275,11 @@ namespace Etk.Excel.BindingTemplates.Views
                         {
                             string cellText;
                             if (cell.MergeCells)
-                                cellText = cell.MergeArea[1.1].Text;
+                            {
+                                ExcelInterop.Range mergeArea = cell.MergeArea[1.1];
+                                cellText = mergeArea.Text;
+                                ExcelApplication.ReleaseComObject(mergeArea);
+                            }
                             else
                                 cellText = cell.Text;
                             if (!string.IsNullOrEmpty(cellText) && cellText.ToUpper().Contains(searchValueUpper))
@@ -292,6 +287,7 @@ namespace Etk.Excel.BindingTemplates.Views
                                 toHide = false;
                                 break;
                             }
+                            ExcelApplication.ReleaseComObject(cell);
                         }
                         toShowOrHide.Add(new KeyValuePair<ExcelInterop.Range, bool>(rowOrColumn, toHide));
                     }
@@ -305,16 +301,16 @@ namespace Etk.Excel.BindingTemplates.Views
                     else
                         cells = ViewSheet.Rows[showOrHide.Key.Row];
                     cells.Hidden = showOrHide.Value;
-                    cells = null;
+                    ExcelApplication.ReleaseComObject(cells);
                 }
 
                 if (string.IsNullOrEmpty(SearchValue))
                     ManageExpander();
 
-                firstRange = null;
-                lastRange = null;
-                renderedRange = null;
-                rowsOrColumns = null;
+                ExcelApplication.ReleaseComObject(firstRange);
+                ExcelApplication.ReleaseComObject(lastRange);
+                ExcelApplication.ReleaseComObject(renderedRange);
+                ExcelApplication.ReleaseComObject(rowsOrColumns);
             }
         }
 
@@ -769,7 +765,7 @@ namespace Etk.Excel.BindingTemplates.Views
                             currentSelectedRangePattern.Add(null);
                         else
                         {
-                            currentSelectedRangePattern.Add(new SelectionPattern(ref interior));
+                            currentSelectedRangePattern.Add(new SelectionPattern(interior));
                             interior.Pattern = ExcelInterop.XlPattern.xlPatternGray8;
                             interior.PatternColor = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.DimGray);
                         }

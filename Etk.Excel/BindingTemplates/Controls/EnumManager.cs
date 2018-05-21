@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Etk.BindingTemplates.Context;
+using Etk.Excel.Application;
 using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Controls
@@ -29,12 +30,14 @@ namespace Etk.Excel.BindingTemplates.Controls
             }
 
             range.Validation.Add(ExcelInterop.XlDVType.xlValidateList,
-                                    ExcelInterop.XlDVAlertStyle.xlValidAlertInformation,
-                                    ExcelInterop.XlFormatConditionOperator.xlBetween,
-                                    values,
-                                    Type.Missing);
+                                 ExcelInterop.XlDVAlertStyle.xlValidAlertInformation,
+                                 ExcelInterop.XlFormatConditionOperator.xlBetween,
+                                 values,
+                                 Type.Missing);
             range.Validation.IgnoreBlank = false;
             range.Validation.InCellDropdown = true;
+
+            ExcelApplication.ReleaseComObject(range);
         }
     }
 }

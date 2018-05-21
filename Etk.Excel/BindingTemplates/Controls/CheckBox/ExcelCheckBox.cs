@@ -3,12 +3,11 @@ using System.Reflection;
 using System.Threading;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
+using ExcelForms = Microsoft.Vbe.Interop.Forms;
 using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Controls.CheckBox
 {
-    using ExcelForms = Microsoft.Vbe.Interop.Forms;
-
     class ExcelCheckBox : IDisposable
     {
         #region attributes and properties
@@ -83,14 +82,10 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
                     ExcelApplication.ReleaseComObject(oleObjects);
                 if (worksheet != null)
                     ExcelApplication.ReleaseComObject(worksheet);
-
-                oleObject = null;
-                oleObjects = null;
-                worksheet = null;
             }
         }
 
-        public void SetOnClick(System.Action action)
+        public void SetOnClick(Action action)
         {
             if (CurrentOnClick != null)
                 CheckBox.Click -= CurrentOnClick;
@@ -123,19 +118,12 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
                 finally
                 {
                     if (worksheet != null)
-                    {
                         ExcelApplication.ReleaseComObject(worksheet);
-                        worksheet = null;
-                    }
                     if (oleObject != null)
-                    {
                         ExcelApplication.ReleaseComObject(oleObject);
-                        oleObject = null;
-                    }
                 }
-
-                CheckBox = null;
-                OwnerRange = null;
+                ExcelApplication.ReleaseComObject(OwnerRange);
+                ExcelApplication.ReleaseComObject(CheckBox);
             }
         }
         #endregion

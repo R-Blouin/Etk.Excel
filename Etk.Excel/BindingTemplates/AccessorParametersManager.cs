@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Etk.Excel.Application;
 using Etk.Excel.BindingTemplates.Views;
@@ -41,13 +40,8 @@ namespace Etk.Excel.BindingTemplates
                     }
                 }
 
-                if (rangesToListen.Count > 0)
-                {
-                    ExcelInterop.Worksheet sheet = View.ViewSheet;
-                    sheet.Change += OnParametersChanged;
-                    ExcelApplication.ReleaseComObject(sheet);
-                    sheet = null;
-                }
+                if (rangesToListen.Any())
+                    View.ViewSheet.Change += OnParametersChanged;
             }
         }
 
@@ -98,17 +92,13 @@ namespace Etk.Excel.BindingTemplates
 
         public void Dispose()
         {
-            if (rangesToListen != null)
+            if (rangesToListen.Any())
             {
-                foreach (ExcelInterop.Range range in rangesToListen)
-                    ExcelApplication.ReleaseComObject(range);
-
+                //++foreach (ExcelInterop.Range range in rangesToListen)
+                //    ExcelApplication.ReleaseComObject(range);
+                View.ViewSheet.Change -= OnParametersChanged;
                 rangesToListen.Clear();
-                rangesToListen = null;
             }
-            ExcelInterop.Worksheet sheet = View.ViewSheet;
-            sheet.Change -= OnParametersChanged;
-            ExcelApplication.ReleaseComObject(sheet);
         }
     }
 }

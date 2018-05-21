@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddinManager.cs" />
+    <Compile Include="BasicExcelComTests\BasicExcelComTestsManager.cs" />
     <Compile Include="Dashboard\DashboardDecoratorsManager.cs" />
     <Compile Include="Dashboard\DashboardSheet.cs" />
     <Compile Include="Dashboard\UI\DashboardPanel.cs">

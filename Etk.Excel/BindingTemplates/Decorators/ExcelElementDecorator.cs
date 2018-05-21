@@ -1,9 +1,11 @@
-﻿using Etk.BindingTemplates.Context;
+﻿using System;
+using Etk.BindingTemplates.Context;
+using Etk.Excel.Application;
 using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
 namespace Etk.Excel.BindingTemplates.Decorators
 {
-    class ExcelElementDecorator
+    class ExcelElementDecorator : IDisposable
     {
         private readonly ExcelInterop.Range range;
         private readonly ExcelRangeDecorator decorator;
@@ -14,6 +16,11 @@ namespace Etk.Excel.BindingTemplates.Decorators
             this.range = range;
             this.decorator = decorator;
             this.contextElement = contextElement;
+        }
+
+        public void Dispose()
+        {
+            ExcelApplication.ReleaseComObject(range);
         }
 
         public void Resolve()

@@ -161,8 +161,15 @@ namespace Etk.Excel
 
         private void OnWorkbookBeforeClose(ExcelInterop.Workbook workbook, ref bool cancel)
         {
-            if (!cancel && workbook.Application.Workbooks.Count >= 1)
-                Instance.managedWorkbooks.Remove(workbook);
+            if (!cancel)
+            {
+                ExcelInterop.Workbooks workbooks = ExcelApplication.Application.Workbooks;
+                if(workbooks != null)
+                {
+                    Instance.managedWorkbooks.Remove(workbook);
+                    Etk.Excel.Application.ExcelApplication.ReleaseComObject(workbooks);
+                }
+            }
         }
 
         private void InternalDispose()
@@ -175,8 +182,6 @@ namespace Etk.Excel
                     //  RequestsManager?.Dispose();
                     contextualMenuManager?.Dispose();
 
-                    managedWorkbooks.Clear();
-
                     if (excelApplication != null)
                     {
                         if (excelApplication.Application != null)
@@ -186,6 +191,12 @@ namespace Etk.Excel
                         }
                         excelApplication.Dispose();
                     }
+
+                    foreach (ExcelInterop.Workbook workbook in managedWorkbooks)
+                        Etk.Excel.Application.ExcelApplication.ReleaseComObject(workbook);
+
+                    managedWorkbooks.Clear();
+
 
                     isDisposed = true;
                     Instance = null;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Etk.BindingTemplates.Context;
 using ExcelInterop = Microsoft.Office.Interop.Excel; 
 
@@ -50,20 +51,35 @@ namespace Etk.Excel.BindingTemplates.Controls
                 }
 
                 if (range.MergeCells)
-                    hOffset = range.MergeArea.Columns.Count;
+                {
+                    ExcelInterop.Range mergeArea = range.MergeArea;
+                    ExcelInterop.Range columns = mergeArea.Columns;
+                    hOffset = columns.Count;
+                    Marshal.ReleaseComObject(mergeArea);
+                    Marshal.ReleaseComObject(columns);
+                }
 
                 IEnumerable<BorderStyle> bordersStyle = RetrieveBorders(source.MergeCells ? source.MergeArea : source);
                 ExcelInterop.Range toMerge = range.Resize[vOffset, hOffset];
                 toMerge.Merge();
 
+                ExcelInterop.Borders borders = toMerge.Borders;
                 foreach (BorderStyle borderStyle in bordersStyle)
                 {
-                    toMerge.Borders[borderStyle.Index].ColorIndex = borderStyle.ColorIndex;
-                    toMerge.Borders[borderStyle.Index].Weight = borderStyle.Weight;
-                    toMerge.Borders[borderStyle.Index].LineStyle = borderStyle.LineStyle;
-                    toMerge.Borders[borderStyle.Index].Color = borderStyle.Color;
-                    toMerge.Borders[borderStyle.Index].TintAndShade = borderStyle.TintAndShade;
+                    ExcelInterop.Border border = borders[borderStyle.Index];
+
+                    border.ColorIndex = borderStyle.ColorIndex;
+                    border.Weight = borderStyle.Weight;
+                    border.LineStyle = borderStyle.LineStyle;
+                    border.Color = borderStyle.Color;
+                    border.TintAndShade = borderStyle.TintAndShade;
+
+                    Marshal.ReleaseComObject(border);
                 }
+                Marshal.ReleaseComObject(borders);
+                Marshal.ReleaseComObject(toMerge);
+                Marshal.ReleaseComObject(range);
+                Marshal.ReleaseComObject(source);
             }
             catch (Exception ex)
             {
@@ -86,16 +102,20 @@ namespace Etk.Excel.BindingTemplates.Controls
         private BorderStyle RetrieveBorderStyle(ExcelInterop.Range range, ExcelInterop.XlBordersIndex bordersIndex)
         {
             BorderStyle ret = null;
-            if (range.Borders[bordersIndex].LineStyle != (int)ExcelInterop.XlLineStyle.xlLineStyleNone)
+            ExcelInterop.Borders borders = range.Borders;
+            ExcelInterop.Border border = borders[bordersIndex];
+            if (border.LineStyle != (int) ExcelInterop.XlLineStyle.xlLineStyleNone)
             {
                 ret = new BorderStyle();
                 ret.Index = bordersIndex;
-                ret.LineStyle = range.Borders[bordersIndex].LineStyle;
-                ret.Weight =  range.Borders[bordersIndex].Weight;
-                ret.ColorIndex = range.Borders[bordersIndex].ColorIndex;
-                ret.Color = range.Borders[bordersIndex].Color;
-                ret.TintAndShade = range.Borders[bordersIndex].TintAndShade;
+                ret.LineStyle = border.LineStyle;
+                ret.Weight = border.Weight;
+                ret.ColorIndex = border.ColorIndex;
+                ret.Color = border.Color;
+                ret.TintAndShade = border.TintAndShade;
             }
+            Marshal.ReleaseComObject(border);
+            Marshal.ReleaseComObject(borders);
             return ret;
         }
     }
