@@ -568,7 +568,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 {
                     if (Renderer.OnDataChanged(intersect))
                         DataChanged?.Invoke();
-                    intersect = null;
+                    Marshal.ReleaseComObject(intersect);
                     return true;
                 }
             }

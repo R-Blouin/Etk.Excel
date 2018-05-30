@@ -25,7 +25,7 @@ namespace Etk.Demos.Data.Shops.DataType
         private int idPlus5;
         public int IdPlus5
         {
-            get { return idPlus5; }
+            get => idPlus5;
             set
             {
                 idPlus5 = value;
@@ -38,7 +38,7 @@ namespace Etk.Demos.Data.Shops.DataType
         [XmlAttribute]
         public string Forename
         {
-            get { return forename; }
+            get => forename;
             set
             {
                 forename = value;
@@ -50,7 +50,7 @@ namespace Etk.Demos.Data.Shops.DataType
         [XmlAttribute]
         public string Surname
         { 
-            get {return surname;}
+            get => surname;
             set 
             {
                 surname = value;
@@ -62,7 +62,7 @@ namespace Etk.Demos.Data.Shops.DataType
         [XmlAttribute]
         public string PhoneNumber
         {
-            get { return phoneNumber; }
+            get => phoneNumber;
             set
             {
                 phoneNumber = value;
@@ -74,7 +74,7 @@ namespace Etk.Demos.Data.Shops.DataType
         [XmlAttribute]
         public string MobileNumber
         {
-            get { return mobileNumber; }
+            get => mobileNumber;
             set
             {
                 mobileNumber = value;
@@ -91,24 +91,21 @@ namespace Etk.Demos.Data.Shops.DataType
         { get; set; }
 
         [XmlIgnore]
-        public int NumberOfOrders
-        { get { return OrderIds.Count; } }
+        public int NumberOfOrders => OrderIds.Count;
 
         [XmlIgnore]
-        public IEnumerable<Order> Orders
-        { get { return OrdersManager.GetOrders(OrderIds); }}
+        public IEnumerable<Order> Orders => OrdersManager.GetOrders(OrderIds);
 
         [XmlIgnore]
         public string Name
-        { get { return string.Format("{0} {1}", Forename, Surname); } }
+        { get { return $"{Forename} {Surname}"; } }
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void OnPropertyChanged(string propertyName)
         {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
 

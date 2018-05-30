@@ -79,7 +79,7 @@ namespace Etk.BindingTemplates.Context
             if (BindingDefinition != null)
             {
                 retValue = BindingDefinition.UpdateDataSource(DataSource, data);
-                return BindingDefinition.IsReadOnly;
+                return true;
             }
             else
             { 

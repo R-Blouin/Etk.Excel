@@ -10,10 +10,10 @@ namespace Etk.Demos.Data.Shops
     public static class CustomersManager
     {
         #region attributes and properties
-        private static CustomerList customerList;
+        private static readonly CustomerList customerList;
 
-        public static IEnumerable<Customer> Customers
-        { get { return customerList?.Customers;}}
+        public static IEnumerable<Customer> Customers => customerList?.Customers;
+
         #endregion
 
         #region .ctors
@@ -24,10 +24,10 @@ namespace Etk.Demos.Data.Shops
             {
                 customerList = xs.Deserialize(stream) as CustomerList;
 
-                customerList.Customers.AddRange(customerList.Customers);
-                customerList.Customers.AddRange(customerList.Customers);
-                customerList.Customers.AddRange(customerList.Customers);
-                customerList.Customers.AddRange(customerList.Customers);
+                //customerList.Customers.AddRange(customerList.Customers);
+                //customerList.Customers.AddRange(customerList.Customers);
+                //customerList.Customers.AddRange(customerList.Customers);
+                //customerList.Customers.AddRange(customerList.Customers);
             }
         }
         #endregion

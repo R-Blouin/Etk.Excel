@@ -97,10 +97,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
             //ExcelApplication.ReleaseComObject(elementFirstRangeTo);
             //ExcelApplication.ReleaseComObject(currentRenderingFrom);
             //ExcelApplication.ReleaseComObject(currentRenderingTo);
+            //ExcelApplication.ReleaseComObject(RenderedRange);
             elementFirstRangeTo = null;
             currentRenderingFrom = null;
             currentRenderingTo = null;
-
             firstRangeTo = null;
             RenderedRange = null;
         }
