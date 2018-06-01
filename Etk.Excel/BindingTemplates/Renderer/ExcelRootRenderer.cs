@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Threading;
 using Etk.BindingTemplates.Context;
 using Etk.BindingTemplates.Context.SortSearchAndFilter;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
@@ -23,10 +22,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
         { get; private set; }
 
         public  ExcelTemplateView View
-        { get; private set; }
+        { get; }
 
         public List<ExcelElementDecorator> RowDecorators
-        { get; private set; }
+        { get; }
 
         public IEnumerable<IFormulaCalculation> toOperateOnSheetCalculation;
 

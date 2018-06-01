@@ -19,7 +19,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         protected object[,] cells;
 
         public List<ExcelRenderer> NestedRenderer
-        { get; private set; }
+        { get;  }
 
         public bool IsDisposed
         { get; protected set; }
@@ -134,7 +134,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                                                                                     : Height > BodyPartRenderer.RenderedArea.Height ? Height : BodyPartRenderer.RenderedArea.Height;
 
                     nextFirstOutputCell = (nextFirstOutputCell ?? FirstOutputCell).Offset[templateDefinition.Orientation == Orientation.Horizontal ? 0 : BodyPartRenderer.RenderedArea.Height,
-                                                                                          templateDefinition.Orientation == Orientation.Horizontal ? BodyPartRenderer.RenderedArea.Width : 0];
+                                                                                         templateDefinition.Orientation == Orientation.Horizontal ? BodyPartRenderer.RenderedArea.Width : 0];
                 }
             }
 
