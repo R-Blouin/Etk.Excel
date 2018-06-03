@@ -171,7 +171,8 @@ namespace Etk.Excel.BindingTemplates
             //Excel.Range realTarget = target.Cells.Count > 1 ? target.Resize[1, 1] : target;
             ExcelInterop.Range realTarget = target.Cells[1, 1];
             List<ExcelTemplateView> views;
-            if (viewsBySheet.TryGetValue(realTarget.Worksheet, out views))
+            ExcelInterop.Worksheet sheet = realTarget.Worksheet;
+            if (viewsBySheet.TryGetValue(sheet, out views))
             {
                 IEnumerable<ExcelTemplateView> viewToWorkWith = views.Select(v => v).ToList();
                 foreach (ExcelTemplateView view in viewToWorkWith)
@@ -180,6 +181,7 @@ namespace Etk.Excel.BindingTemplates
                         break;
                 }
             }
+            ExcelApplication.ReleaseComObject(sheet);
             ExcelApplication.ReleaseComObject(realTarget);
         }
 
@@ -280,9 +282,10 @@ namespace Etk.Excel.BindingTemplates
         {
             bool inError = false;
             List<ExcelTemplateView> views;
-            ExcelInterop.Worksheet worksheet = target.Worksheet;
+            ExcelInterop.Worksheet worksheet = null;
             try
             {
+                worksheet = target.Worksheet;
                 if (viewsBySheet.TryGetValue(worksheet, out views))
                 {
                     if (views != null)
@@ -312,17 +315,20 @@ namespace Etk.Excel.BindingTemplates
             }
             finally
             {
-                ExcelApplication.ReleaseComObject(worksheet);
+                if(worksheet != null)
+                    ExcelApplication.ReleaseComObject(worksheet);
             }
         }
 
         /// <summary> MAnage the double click on a cell</summary>
         private void OnBeforeBoubleClick(ExcelInterop.Range target, ref bool cancel)
         {
-            ExcelInterop.Worksheet worksheet = target.Worksheet;
-            ExcelInterop.Range realTarget = target.Cells[1, 1];
+            ExcelInterop.Worksheet worksheet = null;
+            ExcelInterop.Range realTarget = null;
             try
             {
+                worksheet = target.Worksheet;
+                realTarget = target.Cells[1, 1];
                 List<ExcelTemplateView> views;
                 if (viewsBySheet.TryGetValue(worksheet, out views))
                 {
@@ -341,8 +347,10 @@ namespace Etk.Excel.BindingTemplates
             }
             finally
             {
-                ExcelApplication.ReleaseComObject(worksheet);
-                ExcelApplication.ReleaseComObject(realTarget);
+                if (realTarget != null)
+                    ExcelApplication.ReleaseComObject(realTarget);
+                if (worksheet != null)
+                    ExcelApplication.ReleaseComObject(worksheet);
             }
         }
         #endregion
@@ -388,6 +396,7 @@ namespace Etk.Excel.BindingTemplates
                         throw new EtkException($"Cannot find the template '{templateName.EmptyIfNull()}' in sheet '{sheetContainer.Name.EmptyIfNull()}'");
                     templateDefinition = ExcelTemplateDefinitionFactory.CreateInstance(templateName, range);
                     bindingTemplateManager.RegisterTemplateDefinition(templateDefinition);
+                    ExcelApplication.ReleaseComObject(range);
                 }
 
                 return templateDefinition;
@@ -441,16 +450,9 @@ namespace Etk.Excel.BindingTemplates
             finally
             {
                 if (sheetContainerWorkbook != null)
-                {
                     ExcelApplication.ReleaseComObject(sheetContainerWorkbook);
-                    sheetContainerWorkbook = null;
-                }
                 if (sheetDestinationWorkbook != null)
-                {
                     ExcelApplication.ReleaseComObject(sheetDestinationWorkbook);
-                    sheetDestinationWorkbook = null;
-
-                }
             }
         }
 

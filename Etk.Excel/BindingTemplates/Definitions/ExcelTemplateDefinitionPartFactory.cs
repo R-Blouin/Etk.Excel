@@ -73,6 +73,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     }
                     ExcelApplication.ReleaseComObject(cell);
                 }
+                ExcelApplication.ReleaseComObject(row);
                 part.PositionLinkedTemplates.Add(posLinks);
             }
 
@@ -86,7 +87,6 @@ namespace Etk.Excel.BindingTemplates.Definitions
             {
                 List<int> posLinks = null;
                 ExcelInterop.Range col = part.DefinitionCells.Columns[colId + 1];
-
                 for (int rowId = 0; rowId < col.Cells.Count; rowId++)
                 {
                     ExcelInterop.Range cell = col.Cells[rowId + 1];
@@ -115,6 +115,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     ExcelApplication.ReleaseComObject(cell);
                 }
                 part.PositionLinkedTemplates.Add(posLinks);
+                ExcelApplication.ReleaseComObject(col);
             }
             return part;
         }

@@ -52,7 +52,8 @@ namespace Etk.Excel.BindingTemplates.Views
         private const int AutoFitMaxIterationCount = 10;
         private readonly ILogger log = Logger.Instance;
         private readonly List<SelectionPattern> currentSelectedRangePattern = new List<SelectionPattern>();
-        private ExcelInterop.Range currentSelectedRange;
+        private ExcelInterop.Range highlightRangeRange;
+        private ExcelInterop.Range currentSelectedCell;
 
         private bool useHighlightSelection = true;
         public bool UseHighlightSelection
@@ -65,9 +66,6 @@ namespace Etk.Excel.BindingTemplates.Views
                     UnhighlightSelection();
             }
         }
-
-        internal ExcelInterop.Range CurrentSelectedCell
-        { get; private set; }
 
         internal List<ExcelBindingSearchContextItem> CellsThatContainSearchValue
         { get;  }
@@ -160,8 +158,8 @@ namespace Etk.Excel.BindingTemplates.Views
         {
             currentSelectedRangePattern.Clear();
 
-            currentSelectedRange = null;
-            CurrentSelectedCell = null;
+            highlightRangeRange = null;
+            currentSelectedCell = null;
             CellsThatContainSearchValue.Clear();
             //@@ searchValue = null;
 
@@ -222,8 +220,10 @@ namespace Etk.Excel.BindingTemplates.Views
 
                     if (FirstOutputCell != null)
                         ExcelApplication.ReleaseComObject(FirstOutputCell);
-                    if (currentSelectedRange != null)
-                        ExcelApplication.ReleaseComObject(currentSelectedRange);
+                    if (highlightRangeRange != null)
+                        ExcelApplication.ReleaseComObject(highlightRangeRange);
+                    if (currentSelectedCell != null)
+                        ExcelApplication.ReleaseComObject(currentSelectedCell);
                     if (ClearingCell != null)
                         ExcelApplication.ReleaseComObject(ClearingCell);
 
@@ -259,7 +259,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 ExcelInterop.Range firstRange = ViewSheet.Cells[Renderer.BodyPartRenderer.RenderedArea.YPos, Renderer.BodyPartRenderer.RenderedArea.XPos];
                 ExcelInterop.Range lastRange = ViewSheet.Cells[Renderer.BodyPartRenderer.RenderedArea.YPos + Renderer.BodyPartRenderer.RenderedArea.Height - 1, Renderer.BodyPartRenderer.RenderedArea.XPos + Renderer.BodyPartRenderer.RenderedArea.Width - 1];
                 ExcelInterop.Range renderedRange = ViewSheet.Range[firstRange, lastRange];
-                ExcelInterop.Range rowsOrColumns = TemplateDefinition.Orientation == Orientation.Horizontal ? renderedRange.Columns : renderedRange.Cells.Rows;
+                ExcelInterop.Range rowsOrColumns = TemplateDefinition.Orientation == Orientation.Horizontal ? renderedRange.Columns : renderedRange.Rows;
                 if (string.IsNullOrEmpty(SearchValue))
                 {
                     foreach (ExcelInterop.Range rowOrColumn in rowsOrColumns)
@@ -302,6 +302,7 @@ namespace Etk.Excel.BindingTemplates.Views
                         cells = ViewSheet.Rows[showOrHide.Key.Row];
                     cells.Hidden = showOrHide.Value;
                     ExcelApplication.ReleaseComObject(cells);
+                    ExcelApplication.ReleaseComObject(showOrHide.Key);
                 }
 
                 if (string.IsNullOrEmpty(SearchValue))
@@ -383,8 +384,8 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
                break;
             }
-
-            range = null;
+            if(range != null)
+                ExcelApplication.ReleaseComObject(range);
         }
 
         public void ProtectSheet()
@@ -489,8 +490,8 @@ namespace Etk.Excel.BindingTemplates.Views
 
                         // Clear the previous rendering.
                         ////////////////////////////////
-                        CurrentSelectedCell = null;
-                        currentSelectedRange = null;
+                        currentSelectedCell = null;
+                        highlightRangeRange = null;
                         Renderer.Clear();
 
                         Renderer.Render();
@@ -546,7 +547,7 @@ namespace Etk.Excel.BindingTemplates.Views
 
                                 AfterRendering?.Invoke(true); ;
 
-                                CurrentSelectedCell?.Select();
+                                currentSelectedCell?.Select();
                             }
                         }
                     }
@@ -587,7 +588,7 @@ namespace Etk.Excel.BindingTemplates.Views
         {
             try
             {
-                CurrentSelectedCell = null;
+                currentSelectedCell = null;
                 if (UseHighlightSelection)
                     UnhighlightSelection();
 
@@ -596,7 +597,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     ExcelInterop.Range intersect = ETKExcel.ExcelApplication.Application.Intersect(RenderedRange, target);
                     if (intersect != null)
                     {
-                        CurrentSelectedCell = target.Cells[1, 1];
+                        currentSelectedCell = target.Cells[1, 1];
 
                         IBindingContextItem currentContextItem = GetConcernedContextItem(target);
                         if (currentContextItem?.BindingDefinition != null)
@@ -631,7 +632,7 @@ namespace Etk.Excel.BindingTemplates.Views
                                 while (!isResolved && catchingContextElement != null);
                             }
                         }
-                        intersect = null;
+                        ExcelApplication.ReleaseComObject(intersect);
                         if(UseHighlightSelection)
                             HighlightSelection(target);
                     }
@@ -642,7 +643,7 @@ namespace Etk.Excel.BindingTemplates.Views
                 string message = $"Sheet '{target.Worksheet.Name}', Template '{TemplateDefinition.Name}' 'OnSelectionChange' failed: '{ex.Message}'";
                 log.LogException(LogType.Error, ex, message);
             }
-            return CurrentSelectedCell != null;
+            return currentSelectedCell != null;
         }
 
         internal bool OnBeforeBoubleClick(ExcelInterop.Range target, ref bool cancel)
@@ -675,8 +676,7 @@ namespace Etk.Excel.BindingTemplates.Views
                     }
                 }
             }
-
-            intersect = null;
+            ExcelApplication.ReleaseComObject(intersect);
             return true;
         }
         #endregion
@@ -720,8 +720,7 @@ namespace Etk.Excel.BindingTemplates.Views
                             toShowHide = toShowHide.Resize[toShowHideSize, Type.Missing];
                             toShowHide.EntireRow.Hidden = !renderer.IsExpanded;
 
-                            // ExcelApplication.ReleaseComObject(toShowHide);
-                            toShowHide = null;
+                            ExcelApplication.ReleaseComObject(toShowHide);
                         }
                     }
 
@@ -736,27 +735,21 @@ namespace Etk.Excel.BindingTemplates.Views
 
         private void HighlightSelection(ExcelInterop.Range selectedCell)
         {
-            ExcelInterop.Range viewSelectedRange = null;
-
             if (TemplateDefinition.Orientation == Orientation.Vertical)
             {
-                viewSelectedRange = ViewSheet.Cells[selectedCell.Row, RenderedRange.Column];
-                viewSelectedRange = viewSelectedRange.Resize[1, RenderedRange.Columns.Count];
-
-                currentSelectedRange = viewSelectedRange;
+                highlightRangeRange = ViewSheet.Cells[selectedCell.Row, RenderedRange.Column];
+                highlightRangeRange = highlightRangeRange.Resize[1, RenderedRange.Columns.Count];
             }
             else
             {
-                viewSelectedRange = ViewSheet.Cells[RenderedRange.Row, selectedCell.Column];
-                viewSelectedRange = viewSelectedRange.Resize[RenderedRange.Rows.Count, 1];
-
-                currentSelectedRange = viewSelectedRange;
+                highlightRangeRange = ViewSheet.Cells[RenderedRange.Row, selectedCell.Column];
+                highlightRangeRange = highlightRangeRange.Resize[RenderedRange.Rows.Count, 1];
             }
 
-            for (int i = 1; i <= currentSelectedRange.Cells.Count; i++)
+            for (int i = 1; i <= highlightRangeRange.Cells.Count; i++)
             {
-                ExcelInterop.Range cell = currentSelectedRange.Cells[1, i];
-                if (CurrentSelectedCell.Column != cell.Column || CurrentSelectedCell.Row != cell.Row)
+                ExcelInterop.Range cell = highlightRangeRange.Cells[1, i];
+                if (currentSelectedCell.Column != cell.Column || currentSelectedCell.Row != cell.Row)
                 {
                     ExcelInterop.Interior interior = cell.Interior;
                     try
@@ -773,26 +766,24 @@ namespace Etk.Excel.BindingTemplates.Views
                     catch
                     { }
                     ExcelApplication.ReleaseComObject(interior);
-                    interior = null;
                 }
                 else
                     currentSelectedRangePattern.Add(null);
+                ExcelApplication.ReleaseComObject(cell);
             }
 
             // Redraw the borders of the current selection
             if (((TemplateDefinition) TemplateDefinition).AddBorder)
-                Renderer.BorderAround(currentSelectedRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlThin, 1);
-
-            viewSelectedRange = null;
+                Renderer.BorderAround(highlightRangeRange, ExcelInterop.XlLineStyle.xlContinuous, ExcelInterop.XlBorderWeight.xlThin, 1);
         }
 
         private void UnhighlightSelection()
         {
             // If not the first selection, redraw the borders of the previously selected range
-            if (currentSelectedRange != null)
+            if (highlightRangeRange != null)
             {
                 int cpt = 0;
-                foreach (ExcelInterop.Range cell in currentSelectedRange.Cells)
+                foreach (ExcelInterop.Range cell in highlightRangeRange.Cells)
                 {
                     try
                     {
@@ -811,14 +802,13 @@ namespace Etk.Excel.BindingTemplates.Views
                             cell.Interior.PatternTintAndShade = selectionPattern.PatternTintAndShade;
 
                             ExcelApplication.ReleaseComObject(interior);
-                            interior = null;
                         }
                     }
                     catch
                     { }
+                    ExcelApplication.ReleaseComObject(cell);
                 }
                 currentSelectedRangePattern.Clear();
-                currentSelectedRange = null;
             }
         }
 
@@ -831,8 +821,10 @@ namespace Etk.Excel.BindingTemplates.Views
             {
                 iteration++;
                 previousSize = rows.Height;
-                rows.Rows.AutoFit();
+                ExcelInterop.Range rowsOfRows = rows.Rows;
+                rowsOfRows.AutoFit();
                 currentSize = rows.Height;
+                ExcelApplication.ReleaseComObject(rowsOfRows);
             }
         }
 
@@ -845,8 +837,10 @@ namespace Etk.Excel.BindingTemplates.Views
             {
                 iteration++;
                 previousSize = columns.Width;
-                columns.Columns.AutoFit();
+                ExcelInterop.Range columnsOfColumns = columns.Columns;
+                columnsOfColumns.AutoFit();
                 currentSize = columns.Width;
+                ExcelApplication.ReleaseComObject(columnsOfColumns);
             }
         }
         #endregion

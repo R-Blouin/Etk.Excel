@@ -95,7 +95,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             this.templateDefinition = templateDefinition;
             this.bindingContext = bindingContext;
-            FirstOutputCell = firstOutputCell;
+            FirstOutputCell = firstOutputCell[1, 1];
             MinOccurencesMethod = minOccurencesMethod;
             NumberOfOccurencesMethod = numberOfOccurencesMethod;
             ContextItems = new List<List<IBindingContextItem>>();
@@ -157,7 +157,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 RenderedArea = new RenderedArea(FirstOutputCell.Column, FirstOutputCell.Row, Width, Height);
                 RenderedRange = FirstOutputCell.Resize[Height, Width];
             }
-            //ExcelApplication.ReleaseComObject(nextFirstOutputCell);
+            ExcelApplication.ReleaseComObject(nextFirstOutputCell);
         }
 
         public void RegisterNestedRenderer(ExcelRenderer nestedRenderer)
@@ -174,9 +174,11 @@ namespace Etk.Excel.BindingTemplates.Renderer
         {
             if (!IsDisposed)
             {
-                ClearRenderingData();
-                FirstOutputCell = null;
                 IsDisposed = true;
+                ClearRenderingData();
+                ExcelApplication.ReleaseComObject(FirstOutputCell);
+                if(RenderedRange != null)
+                    ExcelApplication.ReleaseComObject(RenderedRange);
             }
         }
         #endregion
@@ -205,7 +207,6 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
             NestedRenderer.Clear();
             ContextItems.Clear();
-            RenderedRange = null;
             contextItems = null;
             cells = null;
         }

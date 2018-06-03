@@ -8,6 +8,7 @@ using Etk.Excel.BindingTemplates.Definitions;
 using Etk.Excel.BindingTemplates.Views;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using Etk.BindingTemplates.Definitions.EventCallBacks;
+using Etk.Excel.Application;
 
 namespace Etk.Excel.BindingTemplates.Renderer
 {
@@ -52,10 +53,10 @@ namespace Etk.Excel.BindingTemplates.Renderer
             this.bindingContextPart = bindingContextPart;
             this.useDecorator = useDecorator;
 
-            currentRenderingFrom = partToRenderDefinition.DefinitionFirstCell;
-            firstRangeTo = firstOutputCell;
-            elementFirstRangeTo = firstOutputCell;
-            currentRenderingTo = firstOutputCell;
+            currentRenderingFrom = partToRenderDefinition.DefinitionFirstCell[1, 1];
+            firstRangeTo = firstOutputCell[1, 1];
+            elementFirstRangeTo = firstOutputCell[1, 1];
+            currentRenderingTo = firstOutputCell[1, 1];
 
             Height = Width = 0;
         }
@@ -84,23 +85,17 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 RenderedArea = new RenderedArea(firstRangeTo.Column, firstRangeTo.Row, Width, Height);
                 RenderedRange = firstRangeTo.Resize[Height, Width];
             }
-            elementFirstRangeTo = null;
-            currentRenderingFrom = null;
-            currentRenderingTo = null;
         }
 
         public void Dispose()
         {
-            //ExcelApplication.ReleaseComObject(firstRangeTo);
-            //ExcelApplication.ReleaseComObject(elementFirstRangeTo);
-            //ExcelApplication.ReleaseComObject(currentRenderingFrom);
-            //ExcelApplication.ReleaseComObject(currentRenderingTo);
-            //ExcelApplication.ReleaseComObject(RenderedRange);
-            elementFirstRangeTo = null;
-            currentRenderingFrom = null;
-            currentRenderingTo = null;
-            firstRangeTo = null;
-            RenderedRange = null;
+            ExcelApplication.ReleaseComObject(currentRenderingFrom);
+            ExcelApplication.ReleaseComObject(firstRangeTo);
+            ExcelApplication.ReleaseComObject(elementFirstRangeTo);
+            ExcelApplication.ReleaseComObject(currentRenderingTo);
+
+            if(RenderedRange != null)
+                ExcelApplication.ReleaseComObject(RenderedRange);
         }
         #endregion
 
@@ -113,7 +108,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             if (bindingDefinition.OnAfterRendering?.Parameters != null)
             {
                 foreach (SpecificEventCallbackParameter param in bindingDefinition.OnAfterRendering.Parameters.Where(p => p.IsSender))
-                    param.ParameterValue = concernedRange;
+                    param.ParameterValue = concernedRange[1, 1];
             }
             Parent.AddAfterRenderingAction(bindingDefinition.OnAfterRendering);
         }

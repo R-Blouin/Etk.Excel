@@ -24,8 +24,8 @@ namespace Etk.Demos.Data.Shops
             {
                 customerList = xs.Deserialize(stream) as CustomerList;
 
-                //customerList.Customers.AddRange(customerList.Customers);
-                //customerList.Customers.AddRange(customerList.Customers);
+                customerList.Customers.AddRange(customerList.Customers);
+                customerList.Customers.AddRange(customerList.Customers);
                 //customerList.Customers.AddRange(customerList.Customers);
                 //customerList.Customers.AddRange(customerList.Customers);
             }

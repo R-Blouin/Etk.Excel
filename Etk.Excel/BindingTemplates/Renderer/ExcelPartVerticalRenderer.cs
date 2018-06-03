@@ -22,7 +22,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
         #region private methods
         protected override void ManageTemplateWithoutLinkedTemplates()
         {
-            ExcelInterop.Range firstCell = currentRenderingTo;
+            ExcelInterop.Range firstCell = currentRenderingTo[1, 1];
             int cptElements = 0;
 
             int nbrOfElement;
@@ -61,28 +61,29 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             {
                                 if (item is ExcelBindingSearchContextItem)
                                 {
-                                    // Live Cycle of range is managed by Control
                                     ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                     ((ExcelBindingSearchContextItem)item).SetRange(range);
+                                    ExcelApplication.ReleaseComObject(range);
                                 }
                                 else if (item is IExcelControl)
                                 {
-                                    // Live Cycle of range is managed by Control
                                     ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                     ((IExcelControl)item).CreateControl(range);
+                                    ExcelApplication.ReleaseComObject(range);
                                 }
                                 else if (item.BindingDefinition != null)
                                 {
                                     if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                                     {
-                                        // Live Cycle of range is managed by Control
                                         ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                         enumManager.CreateControl(item, range);
+                                        ExcelApplication.ReleaseComObject(range);
                                     }
                                     if (item.BindingDefinition.OnAfterRendering != null)
                                     {
                                         ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[firstCell.Row + rowId + cptElements * partToRenderDefinition.Height, firstCell.Column + colId];
                                         AddAfterRenderingAction(item.BindingDefinition, range);
+                                        ExcelApplication.ReleaseComObject(range);
                                     }
                                 }
                             }
@@ -91,10 +92,9 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     }
                     if (useDecorator && ((ExcelTemplateDefinition) partToRenderDefinition.Parent).Decorator != null)
                     {
-                        // Live cycle of elementRange managed by ExcelElementDecorator
                         ExcelInterop.Range elementRange = firstCell.Offset[cptElements, 0];
-                        elementRange = elementRange.Resize[1, localWidth];
-                        Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
+                        Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, 1, localWidth, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
+                        ExcelApplication.ReleaseComObject(elementRange);
                     }
                     cptElements++;
                 }
@@ -116,6 +116,8 @@ namespace Etk.Excel.BindingTemplates.Renderer
             Height += localHeight;
             if (Width < localWidth)
                 Width = localWidth;
+
+            ExcelApplication.ReleaseComObject(firstCell);
         }
 
         protected override void ManageTemplateWithLinkedTemplates()
@@ -123,7 +125,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
             Width = partToRenderDefinition.Width;
             foreach (IBindingContextElement contextElement in bindingContextPart.ElementsToRender)
             {
-                ExcelInterop.Range firstElementCell = currentRenderingTo;
+                ExcelInterop.Range firstElementCell = currentRenderingTo[1, 1];
                 int bindingContextItemsCpt = 0;
                 int cptLinkedDefinition = 0;
                 int elementHeight = 0;
@@ -183,11 +185,12 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                 if (useDecorator && ((ExcelTemplateDefinition) partToRenderDefinition.Parent).Decorator != null)
                 {
-                    // Live cycle of elementRange managed by ExcelElementDecorator
                     ExcelInterop.Range elementRange = firstElementCell.Resize[elementHeight, elementWidth];
-                    Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
+                    Parent.RootRenderer.RowDecorators.Add(new ExcelElementDecorator(elementRange, elementHeight, elementWidth, ((ExcelTemplateDefinition)partToRenderDefinition.Parent).Decorator, contextElement));
+                    ExcelApplication.ReleaseComObject(elementRange);
                 }
                 Height += elementHeight;
+                ExcelApplication.ReleaseComObject(firstElementCell);
             }
         }
 
@@ -371,33 +374,37 @@ namespace Etk.Excel.BindingTemplates.Renderer
                 {
                     if (item is ExcelBindingSearchContextItem)
                     {
-                        // Live Cycle of range is managed by Control
-                        ((ExcelBindingSearchContextItem)item).SetRange(Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos]);
+                        ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
+                        ((ExcelBindingSearchContextItem)item).SetRange(range);
+                        ExcelApplication.ReleaseComObject(range);
                     }
                     else if (item is IExcelControl)
                     {
-                        // Live Cycle of range is managed by Control
-                        ((IExcelControl) item).CreateControl(Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos]);
+                        ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
+                        ((IExcelControl) item).CreateControl(range);
+                        ExcelApplication.ReleaseComObject(range);
                     }
                     if (item.BindingDefinition != null)
                     {
                         if (item.BindingDefinition.IsEnum && !item.BindingDefinition.IsReadOnly)
                         {
-                            // Live Cycle of range is managed by Control
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             enumManager.CreateControl(item, range);
+                            ExcelApplication.ReleaseComObject(range);
                         }
                         if (item.BindingDefinition.IsMultiLine)
                         {
-                            // Live Cycle of range is managed by Control
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             ExcelInterop.Range localSource = source[1, 1 + colId - startPos];
                             multiLineManager.CreateControl(item, range, localSource, ref vOffset);
+                            ExcelApplication.ReleaseComObject(range);
+                            ExcelApplication.ReleaseComObject(localSource);
                         }
                         if (item.BindingDefinition.OnAfterRendering != null)
                         {
                             ExcelInterop.Range range = Parent.RootRenderer.View.ViewSheet.Cells[currentRenderingTo.Row, currentRenderingTo.Column + colId - startPos];
                             AddAfterRenderingAction(item.BindingDefinition, range);
+                            ExcelApplication.ReleaseComObject(range);
                         }
                     }
                 }

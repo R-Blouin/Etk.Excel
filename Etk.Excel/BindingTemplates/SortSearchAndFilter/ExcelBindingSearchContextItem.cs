@@ -21,7 +21,7 @@ namespace Etk.Excel.BindingTemplates.SortSearchAndFilter
 
         public void SetRange(ExcelInterop.Range range)
         {
-            DestinationRange = range;    
+            DestinationRange = range[1, 1];    
         }
 
         public override void RealDispose()

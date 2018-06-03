@@ -192,8 +192,8 @@ namespace Etk.Excel
                         excelApplication.Dispose();
                     }
 
-                    foreach (ExcelInterop.Workbook workbook in managedWorkbooks)
-                        Etk.Excel.Application.ExcelApplication.ReleaseComObject(workbook);
+                    //foreach (ExcelInterop.Workbook workbook in managedWorkbooks)
+                    //    Etk.Excel.Application.ExcelApplication.ReleaseComObject(workbook);
 
                     managedWorkbooks.Clear();
 

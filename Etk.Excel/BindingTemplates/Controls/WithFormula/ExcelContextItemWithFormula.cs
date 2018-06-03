@@ -50,7 +50,7 @@ namespace Etk.Excel.BindingTemplates.Controls.WithFormula
 
         public void CreateControl(ExcelInterop.Range range)
         {
-            this.range = range;
+            this.range = range[1, 1];
         }
 
         public override void RealDispose()

@@ -56,8 +56,8 @@ namespace Etk.Excel.BindingTemplates.Definitions
         internal ExcelTemplateDefinition(ExcelInterop.Range firstRange, ExcelInterop.Range lastRange, TemplateOption templateOption)
             : base(templateOption)
         {
-            DefinitionFirstCell = firstRange;
-            DefinitionLastCell = lastRange;
+            DefinitionFirstCell = firstRange[1, 1];
+            DefinitionLastCell = lastRange[1, 1];
 
             Width = DefinitionLastCell.Column - DefinitionFirstCell.Column + 1;
             Height = DefinitionLastCell.Row - DefinitionFirstCell.Row + 1;

@@ -14,6 +14,7 @@ namespace Etk.Excel.BindingTemplates.Controls
         public void CreateControl(IBindingContextItem item, ExcelInterop.Range range)
         {
             string values;
+            ExcelInterop.Range workingRange = range[1, 1];
             if (!enumByType.TryGetValue(item.BindingDefinition.BindingType, out values))
             {
                 Type type = item.BindingDefinition.IsNullable ? item.BindingDefinition.BindingType.GetGenericArguments()[0] : item.BindingDefinition.BindingType;
@@ -29,15 +30,15 @@ namespace Etk.Excel.BindingTemplates.Controls
                 enumByType[item.BindingDefinition.BindingType] = values;
             }
 
-            range.Validation.Add(ExcelInterop.XlDVType.xlValidateList,
+            workingRange.Validation.Add(ExcelInterop.XlDVType.xlValidateList,
                                  ExcelInterop.XlDVAlertStyle.xlValidAlertInformation,
                                  ExcelInterop.XlFormatConditionOperator.xlBetween,
                                  values,
                                  Type.Missing);
-            range.Validation.IgnoreBlank = false;
+            workingRange.Validation.IgnoreBlank = false;
             range.Validation.InCellDropdown = true;
 
-            ExcelApplication.ReleaseComObject(range);
+            ExcelApplication.ReleaseComObject(workingRange);
         }
     }
 }

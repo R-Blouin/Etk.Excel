@@ -46,19 +46,15 @@ namespace Etk.Excel.BindingTemplates.Definitions
         public ExcelTemplateDefinitionPart(ExcelTemplateDefinition parent, TemplateDefinitionPartType partType, ExcelInterop.Range firstRange, ExcelInterop.Range lastRange) : base(partType)
         {
             Parent = parent;
-            DefinitionFirstCell = firstRange;
-            DefinitionLastCell = lastRange;
+            DefinitionFirstCell = firstRange[1, 1];
+            DefinitionLastCell = lastRange[1, 1];
 
             Width = DefinitionLastCell.Column - DefinitionFirstCell.Column + 1;
             Height = DefinitionLastCell.Row - DefinitionFirstCell.Row + 1;
             if (Width == 0 || Height == 0)
                 throw new System.Exception("A template part ('Header','Body' or 'Footer' must have a 'Height' and a 'Width' >= 1");
 
-            ExcelInterop.Range templateRange = DefinitionFirstCell;
-            DefinitionCells = templateRange.Cells[1, 1];
-            DefinitionFirstCell = templateRange.Cells[1, 1];
-
-            DefinitionCells = templateRange.Resize[Height, Width];
+            DefinitionCells = DefinitionFirstCell.Resize[Height, Width];
             DefinitionParts = new IDefinitionPart[Height, Width];
 
             PositionLinkedTemplates = new List<List<int>>();
@@ -68,6 +64,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         {
             ExcelApplication.ReleaseComObject(DefinitionFirstCell);
             ExcelApplication.ReleaseComObject(DefinitionLastCell);
+            ExcelApplication.ReleaseComObject(DefinitionCells);
         }
         #endregion
     }

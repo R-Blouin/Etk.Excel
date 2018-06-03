@@ -40,6 +40,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
         {
             ExcelInterop.Worksheet worksheet = null;
             ExcelInterop.Range cells = null;
+            ExcelInterop.Range templateDeclarationLastRange = null;
             try
             {
                 if (string.IsNullOrEmpty(templateName))
@@ -55,7 +56,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                 // Get the template end.
                 worksheet = templateDeclarationFirstCell.Worksheet;
                 cells = worksheet.Cells;
-                ExcelInterop.Range templateDeclarationLastRange = cells.Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
+                templateDeclarationLastRange = cells.Find(string.Format(TEMPLATE_END_FORMAT, templateName), Type.Missing, ExcelInterop.XlFindLookIn.xlValues, ExcelInterop.XlLookAt.xlPart, ExcelInterop.XlSearchOrder.xlByRows, ExcelInterop.XlSearchDirection.xlNext, false);
                 if (templateDeclarationLastRange == null)
                     throw new EtkException($"Cannot find the end of template '{templateName.EmptyIfNull()}' in sheet '{worksheet.Name.EmptyIfNull()}'");
 
@@ -72,6 +73,8 @@ namespace Etk.Excel.BindingTemplates.Definitions
             }
             finally
             {
+                if (templateDeclarationLastRange !=  null)
+                    ExcelApplication.ReleaseComObject(templateDeclarationLastRange);
                 if (cells != null)
                     ExcelApplication.ReleaseComObject(cells);
                 if (worksheet != null)
@@ -107,6 +110,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         headerLastRange = worksheet.Cells[firstRange.Row + headerSize - 1, lastRange.Column];
                     //string name = string.Format("{0}-{1}", excelTemplateDefinition.Name, "Header");
                     header = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Header, firstRange, headerLastRange);
+                    ExcelApplication.ReleaseComObject(headerLastRange);
                 }
 
                 // Footer
@@ -120,6 +124,7 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         footerFirstRange = worksheet.Cells[lastRange.Row - footerSize + 1, firstRange.Column];
                     //string name = string.Format("{0}-{1}", excelTemplateDefinition.Name, "Footer");
                     footer = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Footer, footerFirstRange, lastRange);
+                    ExcelApplication.ReleaseComObject(footerFirstRange);
                 }
 
                 // Body
@@ -136,8 +141,13 @@ namespace Etk.Excel.BindingTemplates.Definitions
                     bodyFirstRange = worksheet.Cells[firstRange.Row + headerSize, firstRange.Column];
                     bodyLastRange = worksheet.Cells[lastRange.Row - footerSize, lastRange.Column];
                 }
-
                 body = ExcelTemplateDefinitionPartFactory.CreateInstance(excelTemplateDefinition, TemplateDefinitionPartType.Body, bodyFirstRange, bodyLastRange);
+                ExcelApplication.ReleaseComObject(bodyFirstRange);
+                ExcelApplication.ReleaseComObject(bodyLastRange);
+
+
+                ExcelApplication.ReleaseComObject(firstRange);
+                ExcelApplication.ReleaseComObject(lastRange);
             }
             catch (Exception ex)
             {
@@ -229,7 +239,15 @@ namespace Etk.Excel.BindingTemplates.Definitions
                         footerSize = endFooter?.Row - startFooter.Row + 1 ?? 1;
                     }
                 }
-                startHeader = startFooter = endHeader = endFooter = null;
+
+                if(startHeader != null)
+                    ExcelApplication.ReleaseComObject(startHeader);
+                if (startFooter != null)
+                    ExcelApplication.ReleaseComObject(startFooter);
+                if (endHeader != null)
+                    ExcelApplication.ReleaseComObject(endHeader);
+                if (endFooter != null)
+                    ExcelApplication.ReleaseComObject(endFooter);
                 ExcelApplication.ReleaseComObject(searchRange);
             }
         }

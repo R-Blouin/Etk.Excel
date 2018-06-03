@@ -11,9 +11,9 @@ namespace Etk.Excel.BindingTemplates.Decorators
         private readonly ExcelRangeDecorator decorator;
         private readonly IBindingContextElement contextElement;
 
-        public ExcelElementDecorator(ExcelInterop.Range range, ExcelRangeDecorator decorator, IBindingContextElement contextElement)
+        public ExcelElementDecorator(ExcelInterop.Range range, int height, int width, ExcelRangeDecorator decorator, IBindingContextElement contextElement)
         {
-            this.range = range;
+            this.range = range[height, width];
             this.decorator = decorator;
             this.contextElement = contextElement;
         }

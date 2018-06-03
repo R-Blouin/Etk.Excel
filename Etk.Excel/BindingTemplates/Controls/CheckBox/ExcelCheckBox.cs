@@ -37,7 +37,7 @@ namespace Etk.Excel.BindingTemplates.Controls.CheckBox
         #region .ctors
         public ExcelCheckBox(ExcelInterop.Range range, ExcelCheckBoxDefinition definition)
         {
-            OwnerRange = range;
+            OwnerRange = range[1, 1];
             OwnerRange.Value2 = null;
             ExcelInterop.Worksheet worksheet = null;
             ExcelInterop.OLEObjects oleObjects = null;

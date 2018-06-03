@@ -71,7 +71,7 @@ namespace Etk.Excel.Application
         /// <summary> Implements <see cref="IExcelApplication.IsInEditMode"/> </summary> 
         public bool IsInEditMode()
         {
-            if (Application != null && newMenu == null)
+            if (Application == null || newMenu == null)
                 return false;
             return !newMenu.Enabled;
         }
@@ -140,14 +140,13 @@ namespace Etk.Excel.Application
         /// <summary> Implements <see cref="IExcelApplication.RangeSelectionDialog"/> </summary> 
         public ExcelInterop.Range RangeSelectionDialog(string title)
         {
-            ExcelInterop.Range selectedRange = null;
             if (string.IsNullOrEmpty(title))
                 title = "Select a Range";
 
             object obj = Application.InputBox(title, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, 8);
             if (obj is ExcelInterop.Range)
-                selectedRange = obj as ExcelInterop.Range;
-            return selectedRange;
+                return obj as ExcelInterop.Range;
+            return null;
         }
 
         /// <summary> Implements <see cref="IExcelApplication.GetActiveSheet"/> </summary> 
@@ -252,11 +251,6 @@ namespace Etk.Excel.Application
                     ReleaseComObject(font);
                     ReleaseComObject(withInterior);
                     ReleaseComObject(withFont);
-
-                    interior = null;
-                    font = null;
-                    withInterior = null;
-                    withFont = null;
                 }
             }
             finally
@@ -311,7 +305,7 @@ namespace Etk.Excel.Application
             if (refCpt < 0)
             {
                 Trace.WriteLine("'ReleaseComObject': RefCpt < 0");
-                MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                //MessageBox.Show("Aie !", "ReleaseComObject", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
 #endif
             return refCpt;

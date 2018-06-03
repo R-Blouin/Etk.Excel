@@ -78,8 +78,6 @@ namespace Etk.Excel.BindingTemplates.Controls
                 }
                 Marshal.ReleaseComObject(borders);
                 Marshal.ReleaseComObject(toMerge);
-                Marshal.ReleaseComObject(range);
-                Marshal.ReleaseComObject(source);
             }
             catch (Exception ex)
             {

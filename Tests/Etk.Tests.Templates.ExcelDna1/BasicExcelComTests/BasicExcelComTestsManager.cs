@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using ExcelInterop = Microsoft.Office.Interop.Excel;
 using Etk.Excel;
-using Etk.Excel.Application;
 
 namespace Etk.Tests.Templates.ExcelDna1.BasicExcelComTests
 {
@@ -45,8 +44,10 @@ namespace Etk.Tests.Templates.ExcelDna1.BasicExcelComTests
 
 
             PassARangeAsParameterUseItAndReleaseIt();
-            PassARangeAsParameterAffectItUseBothItAndReleaseBoth();
-            ResizeARangeUseItAndReleaseIt();
+            GetARangeFromARangeWithResizingUseItThenReleaseIt();
+            RetrieveTheFirstRangeOfARangeUseItAndReleaseIt();
+            PassARangeAsParameterAffectItUseBothAndReleaseBoth();
+            GetARangeFromAsheetReaffectItFromItselfThenReleaseIt();
             PassARangeAsParameterAffectItResizeItUseItAndReleaseIt();
             GetARangeFromARangeUseItAndReleaseIt();
             MergeRangeUseItUnmergedItReleaseIt();
@@ -86,8 +87,57 @@ namespace Etk.Tests.Templates.ExcelDna1.BasicExcelComTests
         }
         #endregion
 
+        void GetARangeFromARangeWithResizingUseItThenReleaseIt()
+        {
+            try
+            {
+                ExcelInterop.Worksheet sheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(null, TEST_SHEET_NAME);
+                ExcelInterop.Range range = sheet.Range["A1"];
+                range = range[1, 1];
+
+                ExcelInterop.Range range2 = range.Resize[2, 2];
+                range2.Value2 = "Yo";
+
+                if (ReleaseComObject(range2) != 0)
+                    throw new Exception("range2 com counter != 0");
+
+                if (ReleaseComObject(range) != 0)
+                    throw new Exception("range com counter != 0");
+
+                ReleaseComObject(sheet);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("'GetARangeFromARangeWithResizingUseItThenReleaseIt' Failed: {ex.Message}", ex);
+            }
+        }
+
+        void RetrieveTheFirstRangeOfARangeUseItAndReleaseIt()
+        {
+            try
+            {
+                ExcelInterop.Worksheet sheet = ETKExcel.ExcelApplication.GetWorkSheetFromName(null, TEST_SHEET_NAME);
+                ExcelInterop.Range range = sheet.Range["A1"];
+
+                ExcelInterop.Range range2 = range[1, 1];
+                range2.Value2 = "Yo";
+
+                if (ReleaseComObject(range2) != 0)
+                    throw new Exception("range2 com counter != 0");
+
+                if (ReleaseComObject(range) != 0)
+                    throw new Exception("range com counter != 0");
+
+                ReleaseComObject(sheet);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("'PassARangeAsParameterUseItAndReleaseIt' Failed: {ex.Message}", ex);
+            }
+        }
+
         #region PassARangeAsParameterAffectItUseBothItAndReleaseBoth
-        void PassARangeAsParameterAffectItUseBothItAndReleaseBoth()
+        void PassARangeAsParameterAffectItUseBothAndReleaseBoth()
         {
             try
             {
@@ -117,8 +167,7 @@ namespace Etk.Tests.Templates.ExcelDna1.BasicExcelComTests
             range.Value2 = "Yo !";
             refRange.Value2 = "Yo ! Yo !";
 
-            int cpt = ReleaseComObject(refRange);
-            if (cpt != 0)
+            if(ReleaseComObject(refRange) != 0)
                 throw new Exception("refRange com counter != 0");
         }
         #endregion
@@ -164,7 +213,7 @@ namespace Etk.Tests.Templates.ExcelDna1.BasicExcelComTests
             }
         }
 
-        void ResizeARangeUseItAndReleaseIt()
+        void GetARangeFromAsheetReaffectItFromItselfThenReleaseIt()
         {
             try
             {
@@ -183,7 +232,7 @@ namespace Etk.Tests.Templates.ExcelDna1.BasicExcelComTests
             }
             catch (Exception ex)
             {
-                throw new Exception("'PassARangeAsParameterAffectItResizeItUseItAndReleaseIt' Failed: {ex.Message}", ex);
+                throw new Exception("'GetARAngeFromAsheetReaffectItFromItselfThenReleaseIt' Failed: {ex.Message}", ex);
             }
         }
 
@@ -217,8 +266,7 @@ namespace Etk.Tests.Templates.ExcelDna1.BasicExcelComTests
             else
                 workingRange = range.Offset[Type.Missing, 1];
 
-            workingRange = workingRange.Resize[Type.Missing, Math.Abs(numberOfColumns)];
-            workingRange = workingRange.Resize[Type.Missing, Math.Abs(numberOfColumns)];
+            workingRange = workingRange.Resize[Type.Missing, 2];
 
             workingRange.Value2 = "Yo !";
 

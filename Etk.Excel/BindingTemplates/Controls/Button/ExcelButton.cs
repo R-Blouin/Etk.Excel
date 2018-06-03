@@ -74,7 +74,7 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
         #region .ctors
         public ExcelButton(ExcelInterop.Range range, ExcelButtonDefinition definition)
         {
-            OwnerRange = range;
+            OwnerRange = range[1, 1];
             OwnerRange.Value2 = null;
             ExcelInterop.Worksheet worksheet = null;
             ExcelInterop.OLEObjects oleObjects = null;
@@ -138,8 +138,6 @@ namespace Etk.Excel.BindingTemplates.Controls.Button
                 ExcelApplication.ReleaseComObject(commandButton);
                 ExcelApplication.ReleaseComObject(OwnerRange);
                 ExcelApplication.ReleaseComObject(worksheet);
-
-                commandButton = null;
             }
         }
 
