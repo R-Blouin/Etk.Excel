@@ -37,12 +37,12 @@
     <!--
       Enable/Disable packing of .dna files
     -->
-    <RunExcelDnaPack Condition="'$(RunExcelDnaPack)' == ''">true</RunExcelDnaPack>
+    <!--<RunExcelDnaPack Condition="'$(RunExcelDnaPack)' == ''">true</RunExcelDnaPack>-->
 
     <!--
       Suffix used for packed .xll files e.g. MyAddIn-packed.xll
     -->
-    <ExcelDnaPackXllSuffix Condition="'$(ExcelDnaPackXllSuffix)' == ''">-packed</ExcelDnaPackXllSuffix>
+    <!--<ExcelDnaPackXllSuffix Condition="'$(ExcelDnaPackXllSuffix)' == ''">-packed</ExcelDnaPackXllSuffix>-->
   </PropertyGroup>
 </Project>
 

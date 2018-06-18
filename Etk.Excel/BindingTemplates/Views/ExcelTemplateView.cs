@@ -780,7 +780,7 @@ namespace Etk.Excel.BindingTemplates.Views
         private void UnhighlightSelection()
         {
             // If not the first selection, redraw the borders of the previously selected range
-            if (highlightRangeRange != null)
+            if (highlightRangeRange != null && currentSelectedRangePattern.Count != 0)
             {
                 int cpt = 0;
                 foreach (ExcelInterop.Range cell in highlightRangeRange.Cells)

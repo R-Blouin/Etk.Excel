@@ -296,7 +296,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         private int RenderAfterLink(RenderingContext renderingContext, int bindingContextItemsCpt)
         {
-            int hOffset = 1;
+            int hOffset = 0;
             int startPosition = renderingContext.PosCurrentLink + 1;
             if (renderingContext.LinkedTemplateDefinition.Positioning == LinkedTemplatePositioning.Absolute )//&& renderingContext.ContextElement != null && renderingContext.ContextElement.BindingContextItems.Count > renderingContext.PosCurrentLink)
             {
@@ -332,6 +332,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                             Parent.ContextItems.Add(new List<IBindingContextItem>(new IBindingContextItem[currentRenderingTo.Column - Parent.FirstOutputCell.Column]));
                     }
 
+                    hOffset = 1;
                     ManageTemplatePart(renderingContext, ref bindingContextItemsCpt, ref hOffset, startPosition, realEnd);
                     for (int cpt = 0; cpt < renderingContext.ContextItems.Count; cpt++)
                         //Parent.ContextItems[parentDataRows + cpt].Add(renderingContext.ContextItems[cpt]);

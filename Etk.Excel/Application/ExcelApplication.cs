@@ -300,6 +300,8 @@ namespace Etk.Excel.Application
         #region static public methods
         public static int ReleaseComObject(object obj)
         {
+            if (obj == null)
+                return 0;
             int refCpt = Marshal.ReleaseComObject(obj);
 #if DEBUG
             if (refCpt < 0)

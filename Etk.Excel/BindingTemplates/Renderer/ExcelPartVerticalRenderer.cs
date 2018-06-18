@@ -160,7 +160,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
                             // RenderView link
                             IBindingContext linkedBindingContext = contextElement.LinkedBindingContexts[cptLinkedDefinition++];
-                            if (linkedBindingContext.Body != null && (renderingContext.LinkedTemplateDefinition.MinOccurencesMethod != null || linkedBindingContext.Body.ElementsToRender != null && linkedBindingContext.Body.ElementsToRender.Any()))
+                            if ((linkedBindingContext.Body?.ElementsToRender != null && linkedBindingContext.Body.ElementsToRender.Any()) || renderingContext.LinkedTemplateDefinition.MinOccurencesMethod != null)
                             {
                                 RenderLink(renderingContext, linkedBindingContext);
                                 renderingContext.CurrentWidth += renderingContext.LinkedViewRenderedOffset;
@@ -304,7 +304,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
 
         private int RenderAfterLink(RenderingContext renderingContext, int bindingContextItemsCpt)
         {
-            int vOffset = 1;
+            int vOffset = 0;
             int startPosition = renderingContext.PosCurrentLink + 1;
             if (renderingContext.LinkedTemplateDefinition.Positioning == LinkedTemplatePositioning.Absolute 
                 )//&& renderingContext.ContextElement != null && renderingContext.ContextElement.BindingContextItems.Count > renderingContext.PosCurrentLink)
@@ -341,6 +341,7 @@ namespace Etk.Excel.BindingTemplates.Renderer
                     if (renderingContext.LinkedViewRenderedOffset + startPosition - 1 > renderingContext.ContextItems.Count)
                         renderingContext.ContextItems.AddRange(new IBindingContextItem[renderingContext.LinkedViewRenderedOffset + startPosition - 1 - renderingContext.ContextItems.Count]);
 
+                    vOffset = 1;
                     ManageTemplatePart(renderingContext, ref bindingContextItemsCpt, ref vOffset, startPosition, realEnd);
                     renderingContext.CurrentWidth += realEnd - startPosition;
                 }
